@@ -11,6 +11,9 @@ import { runNpm } from './npm-cli.mjs';
 const REPOSITORY = 'NAMEWTA/skills-wta';
 const REGISTRY = 'https://registry.npmjs.org';
 const API = 'https://api.github.com';
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const STAGE_NOTICE_START = '<!-- skills-wta:npm-stage:start -->';
+const STAGE_NOTICE_END = '<!-- skills-wta:npm-stage:end -->';
 const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?$/;
 
 function validVersion(value) { return typeof value === 'string' && value.trim() === value && SEMVER.test(value); }
@@ -148,6 +151,96 @@ export function assertPublishedIntegrity(metadata, packed) {
   }
 }
 
+export async function findVerifiedStage(packed, { token, request = fetch, expectedTag = packed.version.includes('-') ? 'next' : 'latest' } = {}) {
+  if (!token) throw new Error('缺少 NODE_AUTH_TOKEN，无法只读核对 npm stage；OIDC 短期发布凭据不能替代 stage 查询凭据');
+  async function read(route, binary = false) {
+    let response;
+    try {
+      response = await request(`${REGISTRY}${route}`, {
+        method: 'GET', redirect: 'error',
+        headers: { Authorization: `Bearer ${token}`, Accept: binary ? 'application/octet-stream' : 'application/json' },
+        signal: AbortSignal.timeout(30_000),
+      });
+    } catch (error) { throw new Error(`npm stage 只读请求失败 ${route}：${error.message}`); }
+    if (!response.ok) throw new Error(`npm stage 只读请求 ${route} 返回 ${response.status}；无法确认暂存内容，停止发布，不将权限错误当作无 stage`);
+    return binary ? Buffer.from(await response.arrayBuffer()) : response.json();
+  }
+  const matches = [];
+  let received = 0;
+  for (let page = 0; ; page += 1) {
+    const query = new URLSearchParams({ page: String(page), perPage: '100', package: packed.name });
+    const result = await read(`/-/stage?${query}`);
+    if (!Array.isArray(result.items) || !Number.isSafeInteger(result.total) || result.total < 0) throw new Error('npm stage 列表不是预期的 {items,page,perPage,total} 响应');
+    matches.push(...result.items.filter(item => item?.packageName === packed.name && item.version === packed.version));
+    if (matches.length > 1) throw new Error(`发现多个 ${packed.name}@${packed.version} stage，停止自动选择`);
+    received += result.items.length;
+    if (received >= result.total || result.items.length < 100) break;
+  }
+  if (!matches.length) return null;
+  const listed = matches[0];
+  if (!UUID.test(listed.id ?? '')) throw new Error('npm stage 返回了无效的 UUID');
+  const stage = await read(`/-/stage/${listed.id}`);
+  if (stage.id !== listed.id || stage.packageName !== packed.name || stage.version !== packed.version || stage.tag !== expectedTag) {
+    throw new Error('npm stage 详情的 UUID、包名、版本或不可变 tag 与本次发布不符');
+  }
+  if (!/^[0-9a-f]{40}$/i.test(stage.shasum ?? '') || stage.shasum !== listed.shasum) throw new Error('npm stage 的 SHA-1 shasum 缺失或列表与详情不一致');
+  const bytes = await read(`/-/stage/${stage.id}/tarball`, true);
+  const sha1 = createHash('sha1').update(bytes).digest('hex');
+  const integrity = `sha512-${createHash('sha512').update(bytes).digest('base64')}`;
+  if (sha1 !== stage.shasum.toLowerCase() || integrity !== packed.integrity || !bytes.equals(readFileSync(packed.file))) {
+    throw new Error(`npm stage ${stage.id} 的 SHA-1、SHA-512 或原始字节与本次包不符；不批准、不重传、不覆盖`);
+  }
+  return stage;
+}
+
+export async function ensureNpmPublication(packed, { token, request = fetch, publishPackage, beforePublish = async () => {}, wait = milliseconds => new Promise(done => setTimeout(done, milliseconds)), output = console.log } = {}) {
+  const url = `${REGISTRY}/${encodeURIComponent(packed.name)}/${encodeURIComponent(packed.version)}`;
+  async function inspect() {
+    const metadata = await requestJson(url, { nullable: true, request });
+    if (metadata) { assertPublishedIntegrity(metadata, packed); return { published: true, stage: null }; }
+    const stage = token ? await findVerifiedStage(packed, { token, request }) : null;
+    return stage ? { published: false, stage } : null;
+  }
+  const existing = await inspect();
+  if (existing) return existing;
+  if (!token) output('没有 NODE_AUTH_TOKEN，无法只读查询 npm stage；仍可尝试已配置的 OIDC 发布，但无法自动识别待审批的暂存版本。');
+  await beforePublish();
+  let publishError;
+  try { await publishPackage(); } catch (error) { publishError = error; }
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    const result = await inspect();
+    if (result) return result;
+    if (publishError) throw publishError;
+    if (attempt === 0) await wait(1500);
+  }
+  throw new Error(`npm 命令已返回成功，但公开版本仍不可读${token ? '，也未找到可核验的 stage' : '；缺少 NODE_AUTH_TOKEN，无法只读识别是否进入 stage'}；保留当前版本并核对发布状态`);
+}
+
+export function stageNotice(body, stage = null) {
+  const text = body ?? '';
+  const start = text.indexOf(STAGE_NOTICE_START);
+  const end = text.indexOf(STAGE_NOTICE_END);
+  if ((start < 0) !== (end < 0) || (start >= 0 && (end < start || text.indexOf(STAGE_NOTICE_START, start + 1) >= 0 || text.indexOf(STAGE_NOTICE_END, end + 1) >= 0))) {
+    throw new Error('Release 的自动 npm stage 标记不完整或重复，保留原文并停止更新');
+  }
+  let notice = '';
+  if (stage) {
+    if (!UUID.test(stage.id ?? '')) throw new Error('无效 npm stage UUID');
+    const status = JSON.stringify(stage.status ?? null).replaceAll('`', '\\`');
+    notice = `${STAGE_NOTICE_START}\n## npm 尚未公开：等待维护者核对与 2FA 批准\n\n本草稿附件已与 npm stage 原始 tarball 核对 SHA-1、完整 SHA-512 和全部字节。\n\n- 包：\`${stage.packageName}@${stage.version}\`\n- Stage UUID：\`${stage.id}\`\n- Registry 原始 status：\`${status}\`（不据此推断已公开）\n\n维护者本人使用支持 stage 的 npm CLI（11.15.0+），先审查再完成 2FA：\n\n\`\`\`sh\nnpm stage view ${stage.id} --registry=https://registry.npmjs.org/\nnpm stage approve ${stage.id} --registry=https://registry.npmjs.org/\n\`\`\`\n\n也可在 npm 网站的 Staged Packages 标签页审查。批准完成后重跑同一提交的发布任务；公开版本完整性核对通过后，本草稿才会正式发布。不要重复 npm publish、覆盖版本或绕过 2FA。参见 [npm 官方 staged publishing 说明](https://docs.npmjs.com/staged-publishing/)。\n${STAGE_NOTICE_END}`;
+  }
+  if (start < 0) return stage ? `${text}\n\n${notice}` : text;
+  return `${text.slice(0, start)}${notice}${text.slice(end + STAGE_NOTICE_END.length)}`;
+}
+
+export async function finalizeRelease(api, release, { stage = null, makeLatest = false } = {}) {
+  if (stage && !release.draft) throw new Error(`npm stage ${stage.id} 尚未公开，但 GitHub Release 已被公开；保持现状并由维护者核对`);
+  const body = stageNotice(release.body, stage);
+  const changes = body !== (release.body ?? '') ? { body } : {};
+  if (!stage && release.draft) Object.assign(changes, { draft: false, make_latest: String(makeLatest) });
+  return Object.keys(changes).length ? api(`/releases/${release.id}`, { method: 'PATCH', body: changes }) : release;
+}
+
 async function inspectTag(api, tag, sha) {
   const ref = await api(`/git/ref/tags/${encodeURIComponent(tag)}`, { nullable: true });
   if (!ref) return false;
@@ -214,43 +307,40 @@ export async function publish() {
   const temporary = mkdtempSync(join(tmpdir(), 'skills-wta release '));
   try {
     const packed = packPackage(ROOT, temporary);
-    const registryUrl = `${REGISTRY}/${encodeURIComponent(packed.name)}/${encodeURIComponent(packed.version)}`;
-    let metadata = await requestJson(registryUrl, { nullable: true });
     async function inspectLatest(published) {
       if (plan.version.includes('-')) return { makeLatest: false };
       const npm = await requestJson(`${REGISTRY}/${encodeURIComponent(packed.name)}/latest`, { nullable: true });
       const github = await api('/releases/latest', { nullable: true });
       return latestPolicy({ version: plan.version, published, npmLatest: npm ? npm.version : null, githubLatest: github ? github.tag_name.replace(/^v/, '') : null });
     }
-    if (metadata) {
-      assertPublishedIntegrity(metadata, packed);
-      await inspectLatest(true);
-      console.log(`npm ${packed.name}@${packed.version} 已存在且完整性一致，继续核对 Release。`);
-    } else {
-      await inspectLatest(false);
-      if (!process.env.NODE_AUTH_TOKEN && !process.env.ACTIONS_ID_TOKEN_REQUEST_URL) throw new Error('缺少 NPM_TOKEN 或已配置的 npm trusted publisher');
-      const result = runNpm(['publish', packed.file, '--access', 'public', '--provenance', '--tag', plan.distTag, '--registry', REGISTRY, '--ignore-scripts'], { cwd: ROOT });
-      console.log(result.stdout.trim());
-      for (let attempt = 0; attempt < 8; attempt += 1) {
-        metadata = await requestJson(registryUrl, { nullable: true });
-        if (metadata) break;
-        await new Promise(done => setTimeout(done, 1500));
-      }
-      if (!metadata) throw new Error('npm 命令已返回成功，但尚未从 registry 读回版本；可重跑本次发布核对');
-      assertPublishedIntegrity(metadata, packed);
-    }
+    const publication = await ensureNpmPublication(packed, {
+      token: process.env.NODE_AUTH_TOKEN,
+      beforePublish: () => inspectLatest(false),
+      publishPackage: () => {
+        if (!process.env.NODE_AUTH_TOKEN && !process.env.ACTIONS_ID_TOKEN_REQUEST_URL) throw new Error('缺少 NPM_TOKEN 或已配置的 npm trusted publisher');
+        const result = runNpm(['publish', packed.file, '--access', 'public', '--provenance', '--tag', plan.distTag, '--registry', REGISTRY, '--ignore-scripts'], { cwd: ROOT });
+        console.log(result.stdout.trim());
+      },
+    });
+    const { stage } = publication;
+    await inspectLatest(publication.published);
+    if (stage && existingRelease && !existingRelease.draft) throw new Error(`npm stage ${stage.id} 尚未公开，已有 GitHub Release 也不应被当作 npm 发布成功；请由维护者核对`);
     if (!tagExists) await api('/git/refs', { method: 'POST', body: { ref: `refs/tags/${plan.tag}`, sha: plan.sha } });
     let release = existingRelease;
     if (!release) {
-      release = await api('/releases', { method: 'POST', body: { tag_name: plan.tag, target_commitish: plan.sha, name: plan.tag, body, draft: true, prerelease: plan.version.includes('-') } });
+      release = await api('/releases', { method: 'POST', body: { tag_name: plan.tag, target_commitish: plan.sha, name: plan.tag, body: stageNotice(body, stage), draft: true, prerelease: plan.version.includes('-') } });
     }
     const checksums = join(temporary, 'SHA256SUMS');
     writeFileSync(checksums, `${packed.sha256}  ${packed.filename}\n`);
     await uploadAsset(api, release, packed.file, 'application/gzip');
     await uploadAsset(api, release, checksums, 'text/plain');
-    if (release.draft) {
-      const { makeLatest } = await inspectLatest(true);
-      release = await api(`/releases/${release.id}`, { method: 'PATCH', body: { draft: false, make_latest: String(makeLatest) } });
+    const { makeLatest } = stage ? { makeLatest: false } : await inspectLatest(true);
+    release = await finalizeRelease(api, release, { stage, makeLatest });
+    if (stage) {
+      const summary = `## ${plan.tag} 已准备审查，npm 尚待维护者 2FA 批准\n\n- 包：\`${packed.name}@${packed.version}\`\n- Stage UUID：\`${stage.id}\`\n- GitHub Release 草稿：${release.html_url}\n- 提交：${plan.sha}\n- SHA-1：\`${stage.shasum}\`\n- SHA-512：\`${packed.integrity}\`\n- SHA-256：\`${packed.sha256}\`\n\n已逐字节核对 npm stage 与本草稿附件。维护者本人先运行 \`npm stage view ${stage.id}\` 审查，再运行 \`npm stage approve ${stage.id}\` 并完成 2FA；或在 npm 网站 Staged Packages 页面操作。批准后重跑同一提交，任务将读取公开版本并核对完整性后完成 Release。当前任务以非零状态结束，表示尚未正式发布。\n`;
+      console.log(summary);
+      if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+      throw new Error(`npm stage ${stage.id} 已核验，等待维护者本人完成 2FA 批准；GitHub Release 保持草稿：${release.html_url}`);
     }
     const summary = `## 已发布 ${plan.tag}\n\n- npm：https://www.npmjs.com/package/${packed.name}/v/${plan.version}\n- Release：${release.html_url}\n- 提交：${plan.sha}\n- SHA-256：\`${packed.sha256}\`\n`;
     console.log(summary);

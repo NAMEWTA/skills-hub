@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import {
   releasePlan, assertPublishedIntegrity, compareVersions, latestPolicy,
   findReleaseByTag, uploadAsset, requestJson,
+  findVerifiedStage, ensureNpmPublication, stageNotice, finalizeRelease,
 } from '../scripts/release.mjs';
 import { temporary, write } from './helpers.mjs';
 
@@ -204,4 +205,162 @@ test('a digestless attachment with different bytes is never overwritten', async 
     token: 'test-token', request: async () => new Response('different bytes'),
   }), /内容不同/);
   assert.deepEqual(fixture.operations.map(([method]) => method), ['GET']);
+});
+
+function stageFixture(t) {
+  const bytes = Buffer.from('verified original stage tarball');
+  const file = write(path.join(temporary(t), 'skills-wta-0.0.1.tgz'), bytes);
+  const packed = { name: 'skills-wta', version: '0.0.1', file, integrity: `sha512-${createHash('sha512').update(bytes).digest('base64')}` };
+  const stage = { id: '1de6f3db-2ed9-4d72-b3dd-8f0e2b474a2f', packageName: packed.name, version: packed.version, tag: 'latest', shasum: createHash('sha1').update(bytes).digest('hex'), status: 'unknown-server-state' };
+  const calls = [];
+  const json = data => new Response(JSON.stringify(data), { status: 200 });
+  const request = async (url, options) => {
+    calls.push(String(url));
+    const parsed = new URL(url);
+    assert.equal(parsed.origin, 'https://registry.npmjs.org');
+    assert.equal(options.method, 'GET');
+    if (!parsed.pathname.startsWith('/-/stage')) return new Response(null, { status: 404 });
+    assert.equal(options.headers.Authorization, 'Bearer test-token');
+    if (parsed.pathname === '/-/stage') {
+      assert.equal(parsed.searchParams.get('package'), packed.name);
+      assert.equal(parsed.searchParams.get('perPage'), '100');
+      return json({ items: [stage], page: Number(parsed.searchParams.get('page')), perPage: 100, total: 1 });
+    }
+    if (parsed.pathname === `/-/stage/${stage.id}`) return json(stage);
+    if (parsed.pathname === `/-/stage/${stage.id}/tarball`) return new Response(bytes);
+    throw new Error(`Unexpected stage request: ${url}`);
+  };
+  return { bytes, packed, stage, calls, json, request };
+}
+
+test('stage inspection paginates from zero and verifies the original tarball without interpreting status', async (t) => {
+  const f = stageFixture(t);
+  const request = async (url, options) => {
+    const parsed = new URL(url);
+    if (parsed.pathname === '/-/stage') {
+      f.calls.push(String(url));
+      assert.equal(options.method, 'GET');
+      assert.equal(options.headers.Authorization, 'Bearer test-token');
+      assert.equal(parsed.searchParams.get('package'), 'skills-wta');
+      const page = Number(parsed.searchParams.get('page'));
+      return f.json({ items: page === 0 ? Array.from({ length: 100 }, (_, index) => ({ packageName: 'skills-wta', version: `1.0.${index}` })) : [f.stage], page, perPage: 100, total: 101 });
+    }
+    return f.request(url, options);
+  };
+  assert.deepEqual(await findVerifiedStage(f.packed, { token: 'test-token', request }), f.stage);
+  assert.match(f.calls[0], /page=0&perPage=100&package=skills-wta/);
+  assert.match(f.calls[1], /page=1&perPage=100&package=skills-wta/);
+});
+
+test('stage lookup refuses duplicate matching versions', async (t) => {
+  const f = stageFixture(t);
+  await assert.rejects(findVerifiedStage(f.packed, {
+    token: 'test-token', request: async () => f.json({ items: [f.stage, { ...f.stage, id: '2de6f3db-2ed9-4d72-b3dd-8f0e2b474a2f' }], page: 0, perPage: 100, total: 2 }),
+  }), /多个/);
+});
+
+test('stage read failures and malformed lists are never treated as an absent version', async (t) => {
+  const f = stageFixture(t);
+  for (const status of [401, 403, 404]) {
+    await assert.rejects(findVerifiedStage(f.packed, { token: 'test-token', request: async () => new Response(null, { status }) }), new RegExp(`返回 ${status}`));
+  }
+  await assert.rejects(findVerifiedStage(f.packed, { token: 'test-token', request: async () => f.json({ versions: [] }) }), /列表不是预期/);
+  assert.equal(await findVerifiedStage(f.packed, { token: 'test-token', request: async () => f.json({ items: [], page: 0, perPage: 100, total: 0 }) }), null);
+});
+
+test('stage details must preserve the listed UUID, package identity and immutable tag', async (t) => {
+  const f = stageFixture(t);
+  for (const change of [{ id: '2de6f3db-2ed9-4d72-b3dd-8f0e2b474a2f' }, { packageName: 'other' }, { version: '0.0.2' }, { tag: 'next' }, { shasum: '0'.repeat(40) }]) {
+    await assert.rejects(findVerifiedStage(f.packed, { token: 'test-token', request: (url, options) => String(url).endsWith(`/-/stage/${f.stage.id}`) ? f.json({ ...f.stage, ...change }) : f.request(url, options) }), /不符|不一致/);
+  }
+});
+
+test('stage inspection rejects either a changed tarball or a different full SHA-512', async (t) => {
+  const f = stageFixture(t);
+  await assert.rejects(findVerifiedStage(f.packed, { token: 'test-token', request: (url, options) => String(url).endsWith('/tarball') ? new Response('changed') : f.request(url, options) }), /SHA-1、SHA-512 或原始字节/);
+  await assert.rejects(findVerifiedStage({ ...f.packed, integrity: 'sha512-other' }, { token: 'test-token', request: f.request }), /SHA-1、SHA-512 或原始字节/);
+  write(f.packed.file, 'local bytes changed');
+  await assert.rejects(findVerifiedStage(f.packed, { token: 'test-token', request: f.request }), /SHA-1、SHA-512 或原始字节/);
+});
+
+test('an existing verified stage suppresses npm publish completely', async (t) => {
+  const f = stageFixture(t);
+  const result = await ensureNpmPublication(f.packed, {
+    token: 'test-token', request: f.request,
+    publishPackage: () => { throw new Error('Must never publish an existing stage'); },
+  });
+  assert.deepEqual(result, { published: false, stage: f.stage });
+});
+
+test('a successful CLI response followed by public 404 is resolved through the newly created stage', async (t) => {
+  const f = stageFixture(t);
+  let published = 0;
+  const result = await ensureNpmPublication(f.packed, {
+    token: 'test-token',
+    request: (url, options) => new URL(url).pathname === '/-/stage' && !published ? f.json({ items: [], page: 0, perPage: 100, total: 0 }) : f.request(url, options),
+    publishPackage: () => { published += 1; },
+    wait: () => { throw new Error('A verified stage needs no polling'); },
+  });
+  assert.equal(published, 1);
+  assert.deepEqual(result, { published: false, stage: f.stage });
+});
+
+test('approval recovery trusts verified public metadata without republishing or reading stage', async (t) => {
+  const f = stageFixture(t);
+  const result = await ensureNpmPublication(f.packed, {
+    token: 'test-token',
+    request: async (url) => {
+      assert.equal(String(url), 'https://registry.npmjs.org/skills-wta/0.0.1');
+      return f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: f.packed.integrity } });
+    },
+    publishPackage: () => { throw new Error('An approved version must not be published twice'); },
+  });
+  assert.deepEqual(result, { published: true, stage: null });
+});
+
+test('OIDC-only publication remains available and absent stage-read credentials are explicit', async (t) => {
+  const f = stageFixture(t);
+  let published = 0;
+  const messages = [];
+  const result = await ensureNpmPublication(f.packed, {
+    request: async url => {
+      assert.equal(String(url), 'https://registry.npmjs.org/skills-wta/0.0.1');
+      return published ? f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: f.packed.integrity } }) : new Response(null, { status: 404 });
+    },
+    publishPackage: () => { published += 1; }, output: message => messages.push(message),
+  });
+  assert.equal(result.published, true);
+  assert.equal(published, 1);
+  assert.match(messages[0], /没有 NODE_AUTH_TOKEN/);
+  let reads = 0;
+  await assert.rejects(ensureNpmPublication(f.packed, {
+    request: async () => { reads += 1; return new Response(null, { status: 404 }); },
+    publishPackage() {}, wait() {}, output() {},
+  }), /缺少 NODE_AUTH_TOKEN/);
+  assert.equal(reads, 3);
+});
+
+test('pending and approved release updates preserve human content and only change our stage notice', async (t) => {
+  const f = stageFixture(t);
+  const human = '# 用户版本说明\n\n请保留这段原文。';
+  const release = { id: 1, draft: true, body: human };
+  const calls = [];
+  const api = async (route, options) => {
+    calls.push({ route, ...options });
+    return { ...release, ...options.body };
+  };
+  const pending = await finalizeRelease(api, release, { stage: f.stage });
+  assert.equal(pending.draft, true);
+  assert.ok(pending.body.startsWith(human));
+  assert.ok(pending.body.includes(`npm stage approve ${f.stage.id}`));
+  assert.equal(Object.hasOwn(calls[0].body, 'draft'), false);
+  pending.body += '\n\n维护者追加说明。';
+  const completed = await finalizeRelease(api, pending, { makeLatest: false });
+  assert.equal(completed.draft, false);
+  assert.equal(completed.make_latest, 'false');
+  assert.ok(completed.body.startsWith(human));
+  assert.ok(completed.body.endsWith('维护者追加说明。'));
+  assert.equal(completed.body.includes('skills-wta:npm-stage:'), false);
+  await assert.rejects(finalizeRelease(api, { ...release, draft: false }, { stage: f.stage }), /已被公开/);
+  assert.throws(() => stageNotice(`${human}\n<!-- skills-wta:npm-stage:start -->`, null), /标记不完整/);
 });

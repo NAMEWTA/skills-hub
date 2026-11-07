@@ -52,11 +52,11 @@ npm version 0.0.2 --no-git-tag-version
 
 工作流先固定提交及版本，将准备阶段的同一个 SHA 显式传给[跨平台验证](../.github/workflows/validate.yml)和发布任务，不在验证时重新解析标签。Linux 检查最低 Node.js 22.14.0，Windows 与 macOS 检查 Node.js 24；执行全部维护测试、状态图捕获轨迹回放，以及实际 npm 包的离线安装。发布任务依赖这些任务全部成功。
 
-仓库 Secret `NPM_TOKEN` 在发布步骤映射为 `NODE_AUTH_TOKEN`；不写入源码、包、技能、版本说明或日志。该 token 需要具有目标包的发布权限，不能是只读或仅允许暂存版本的 token。GitHub 自动提供的 `GITHUB_TOKEN` 只在发布任务拥有写 Release / 标签权限；普通验证任务保持只读。
+仓库 Secret `NPM_TOKEN` 在发布步骤映射为 `NODE_AUTH_TOKEN`；不写入源码、包、技能、版本说明或日志。token 的能力和包侧权限决定结果是直接发布还是进入暂存审批。需要维护者批准的暂存包会保留为待审查状态，不能把 CLI 的成功输出当作已经公开。只读识别 stage 还需要该凭据有本包的读取权限；权限错误会明确停止，不按“没有 stage”继续重发。GitHub 自动提供的 `GITHUB_TOKEN` 只在发布任务拥有写 Release / 标签权限；普通验证任务保持只读。
 
 发布任务使用 `--provenance` 并申请 `id-token: write`。如果以后为此包配置 npm trusted publisher，填写仓库 `NAMEWTA/skills-wta` 与工作流文件名 `release.yml`；当前工作流也具备 npm 使用 OIDC 的条件。npm 的当前政策正在调整 token 直接发布能力，长期使用可按[官方可信发布说明](https://docs.npmjs.com/trusted-publishers/)完成包侧绑定，不将修改账户权限混入普通技能安装。
 
-GitHub 自动创建的 Release 不依赖再次触发另一条工作流：npm 发布、标签、附件与 Release 完成都在同一发布任务中执行。
+GitHub 自动创建的 Release 不依赖再次触发另一条工作流：npm 公开版本核对、标签、附件与 Release 完成都在同一发布任务中执行；仍待 npm 审批时只准备 Release 草稿和审查信息。
 
 ## 重试与部分完成
 
@@ -68,6 +68,33 @@ npm 发布后会读回 registry 的版本与完整性；随后准备 GitHub Rele
 
 如果需要修改已发布包的内容，应发布新版本。即使修改只涉及发布脚本，新提交也不能替代已有版本标签指向的提交。标签已经存在时须保持原 SHA；若修复后的流程无法在原提交上完成，应明确处理剩余发布步骤，不能移动标签或覆盖 npm 版本。标签尚未创建时，只有实际 tarball 完整性相同且新提交通过全部检查，才能继续原版本的收尾。
 
+## npm 进入暂存审批时
+
+npm 暂存版本与正式版本共用版本号约束。若 CLI 返回成功，但公开版本仍为 404，或后续重试返回 `Cannot publish over previously staged version`，不要反复 `npm publish`、改写同版本内容或绕过 2FA。脚本在公开版本不可读时先查询已有 stage；发现已核验的同版本 stage 就停止重复 npm 上传。
+
+只读查询使用固定的 `https://registry.npmjs.org`，并按 npm CLI v12.2.1 的实现执行：
+
+| 操作 | GET 路径与响应 |
+| --- | --- |
+| 按包名列出 stage | `/-/stage?page=0&perPage=100&package=skills-wta`；响应为 `{items, page, perPage, total}`，页码从 0 开始 |
+| 读取唯一 stage 详情 | `/-/stage/<uuid>`；返回单个 item，核对 `id`、`packageName`、`version`、`tag`、`shasum` |
+| 下载待审查原件 | `/-/stage/<uuid>/tarball`；返回 tarball 原始字节 |
+
+列表和详情的已知字段包括 `id`、`packageName`、`version`、`tag`、`createdAt`、`actor`、`actorType`、`shasum`、`status`。项目不假设详情提供 `dist.integrity` 或审批 URL，也不根据未经确认的 `status` 语义推断已经公开。查询失败、身份不符、同版本匹配多个 stage 或摘要不符都会停止。
+
+脚本下载 stage 原件，核对它的 SHA-1 与列表/详情的 `shasum`，再计算完整 SHA-512 SRI，并逐字节比较本次打包文件。通过后创建或继续同一标签的 GitHub Release 草稿，附上完全相同的 `.tgz` 与 `SHA256SUMS`。Actions Summary 和草稿说明会显示实际 stage UUID、草稿地址、完整摘要与维护者操作；任务以非零状态结束，明确表示 npm 尚未正式发布。
+
+维护者本人在支持 stage 的 npm CLI（11.15.0+）中，使用 Summary 提供的实际 UUID：
+
+```sh
+npm stage view <stage-id> --registry=https://registry.npmjs.org/
+npm stage approve <stage-id> --registry=https://registry.npmjs.org/
+```
+
+先检查包名、版本与内容，再由本人完成批准所要求的 2FA；也可在 npm 网站的 **Staged Packages** 标签页审查和批准。自动流程不会调用 stage approve / reject，不修改审批权限，不收集验证码。批准完成后，重跑**原提交**的发布任务或选择对应版本标签：公开版本的完整性通过核对后，流程只移除自身的待审批标记，保留维护者已有正文和追加说明，然后正式发布 GitHub Release。
+
+没有 `NODE_AUTH_TOKEN` 的 OIDC 发布仍可运行，但 OIDC 短期发布凭据不能用于这些 stage 查询。若公开版本始终不可读，脚本会明确报告只读识别能力缺口，不假装已发布。CLI 返回后只做有限次数的公开版本/stage 核验，不无限轮询。
+
 ## 官方依据
 
 - [GitHub：发布 Node.js 包](https://docs.github.com/en/actions/tutorials/publish-packages/publish-nodejs-packages)：Release 触发、`setup-node` registry 配置、`NODE_AUTH_TOKEN` 与 provenance。
@@ -75,5 +102,7 @@ npm 发布后会读回 registry 的版本与完整性；随后准备 GitHub Rele
 - [GitHub：Release 附件 API](https://docs.github.com/en/rest/releases/assets)：授权下载附件，以及上传失败后 `starter` 空占位的处理。
 - [npm：访问令牌](https://docs.npmjs.com/about-access-tokens/)：granular token 的发布权限、2FA 与 stage-only 区别。
 - [npm：可信发布](https://docs.npmjs.com/trusted-publishers/)：OIDC、Node/npm 版本前提、仓库与工作流绑定。
+- [npm：暂存发布](https://docs.npmjs.com/staged-publishing/)及 [npm stage 命令](https://docs.npmjs.com/cli/v12/commands/npm-stage/)：维护者审查、2FA、只读命令与凭据限制。
+- npm CLI v12.2.1：[列表及分页](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/list.js)、[详情](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/view.js)、[tarball 下载](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/download.js)、[响应测试](https://github.com/npm/cli/blob/v12.2.1/test/lib/commands/stage/view.js)与 [摘要计算](https://github.com/npm/cli/blob/v12.2.1/lib/utils/tar.js)。
 
 本页描述发布机制，某次实际发布的成功状态以该提交的 Actions、npm 版本和 GitHub Release 为准。
