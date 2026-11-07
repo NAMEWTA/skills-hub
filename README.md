@@ -9,9 +9,9 @@
 需要 Node.js 22.14+。npm 包名为 `@namewta/skills-hub`，命令名为 `skills-hub`。可直接通过 npm 使用，无需预先克隆：
 
 ```bash
-npx @namewta/skills-hub@0.0.7 list
-npx @namewta/skills-hub@0.0.7 install --domain dev
-npx @namewta/skills-hub@0.0.7 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.0.8 list
+npx @namewta/skills-hub@0.0.8 install --domain dev
+npx @namewta/skills-hub@0.0.8 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。也可以克隆源码后离线运行安装器：
@@ -54,7 +54,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 
 ### 从 skills-wta 迁移
 
-从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.7`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时先检查再用 `--replace`；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版补齐 `.agents/skills-hub-licenses/`，新备份使用 `.agents/.skills-hub-backups/`；旧许可和备份保留。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次 scoped 包根据先前的 0.0.2 准备版本基于现有 npm `0.0.6` 递增发布 `0.0.7`，使用 `v0.0.7` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
+从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时先检查再用 `--replace`；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版补齐 `.agents/skills-hub-licenses/`，新备份使用 `.agents/.skills-hub-backups/`；旧许可和备份保留。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
 
 ## dev：完整开发流程
 

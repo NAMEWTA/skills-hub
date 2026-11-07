@@ -10,23 +10,23 @@
 
 ## npm 与源码入口
 
-npm 包名为 `@namewta/skills-hub`，安装后的命令名为 `skills-hub`。在目标项目根目录运行 `npx @namewta/skills-hub@0.0.7 list` 或 `npx @namewta/skills-hub@0.0.7 install --domain dev`。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
+npm 包名为 `@namewta/skills-hub`，安装后的命令名为 `skills-hub`。在目标项目根目录运行 `npx @namewta/skills-hub@0.0.8 list` 或 `npx @namewta/skills-hub@0.0.8 install --domain dev`。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
 
 `npx` 首次获取包需要网络；已有源码的安装器完全离线。npm 包只包含安装器、运行技能及完整许可，维护底稿保留在 Git 仓库。
 
 ## 从 skills-wta 迁移
 
-原包 `skills-wta@0.0.1` 的后续版本改用 `@namewta/skills-hub@0.0.7`。在原目标项目根目录，使用新包并选择原来需要的技能即可，例如：
+原包 `skills-wta@0.0.1` 的后续版本改用 `@namewta/skills-hub@0.0.8`。在原目标项目根目录，使用新包并选择原来需要的技能即可，例如：
 
 ```bash
-npx @namewta/skills-hub@0.0.7 install --domain dev
+npx @namewta/skills-hub@0.0.8 install --domain dev
 ```
 
-新旧版本都安装到 `.agents/skills/<技能名>/`，不会因项目改名生成第二份技能目录。相同内容返回 `unchanged`；有差异时默认停止，核对变化后使用 `npx @namewta/skills-hub@0.0.7 install --domain dev --replace`。只安装个别技能时保留原来的 `--skill` 选择。旧 `.agents/wtadev/` 不再作为新资料写入位置；开发与系统资料分别使用 `.agents/dev/` 和 `.agents/system/`，已有记录须按迁移指南处理。
+新旧版本都安装到 `.agents/skills/<技能名>/`，不会因项目改名生成第二份技能目录。相同内容返回 `unchanged`；有差异时默认停止，核对变化后使用 `npx @namewta/skills-hub@0.0.8 install --domain dev --replace`。只安装个别技能时保留原来的 `--skill` 选择。旧 `.agents/wtadev/` 不再作为新资料写入位置；开发与系统资料分别使用 `.agents/dev/` 和 `.agents/system/`，已有记录须按迁移指南处理。
 
 新版会补齐 `.agents/skills-hub-licenses/`，新备份写入 `.agents/.skills-hub-backups/`。旧 `.agents/skills-wta-licenses/` 与 `.agents/.skills-wta-backups/` 不迁移、不删除；恢复旧备份时继续从其原路径选择。
 
-已发布的 `skills-wta@0.0.1`、`v0.0.1` 标签与发布附件保留原有内容，不能作为本次改名重新写入。新 scoped 包在原 0.0.2 准备版本基础上以 npm 已有的 `0.0.6` 为基线递增发布 `0.0.7`，使用 `v0.0.7` 标签；不移动旧 `v0.0.1` 标签；GitHub 仓库使用 [NAMEWTA/skills-hub](https://github.com/NAMEWTA/skills-hub)。
+已发布的 `skills-wta@0.0.1`、`v0.0.1` 标签与发布附件保留原有内容，不能作为本次改名重新写入。新 scoped 包从已发布的 `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签；不移动旧 `v0.0.1` 标签；GitHub 仓库使用 [NAMEWTA/skills-hub](https://github.com/NAMEWTA/skills-hub)。
 
 ## 领域持久化根目录迁移
 

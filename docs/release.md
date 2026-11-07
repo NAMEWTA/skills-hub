@@ -2,26 +2,26 @@
 
 ## 分发内容
 
-包名为 `@namewta/skills-hub`，本次包版本为 `0.0.7`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
+包名为 `@namewta/skills-hub`，本次包版本为 `0.0.8`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
 
 在目标项目根目录运行：
 
 ```sh
-npx @namewta/skills-hub@0.0.7 list
-npx @namewta/skills-hub@0.0.7 install --domain dev
-npx @namewta/skills-hub@0.0.7 install --skill dev-spec system-proxy
-npx @namewta/skills-hub@0.0.7 install --domain dev --replace
+npx @namewta/skills-hub@0.0.8 list
+npx @namewta/skills-hub@0.0.8 install --domain dev
+npx @namewta/skills-hub@0.0.8 install --skill dev-spec system-proxy
+npx @namewta/skills-hub@0.0.8 install --domain dev --replace
 ```
 
 `npx` 负责取得 npm 包，安装器按明确选择把完整技能复制到当前项目的 `.agents/skills/`，并附带许可。包没有安装后自动执行的 lifecycle hook。源码方式仍可使用 `node /path/to/skills-hub/install.mjs`，参数一致。
 
-`package.json` 的文件白名单只分发安装器、技能、许可、README 与法律说明。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.7.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
+`package.json` 的文件白名单只分发安装器、技能、许可、README 与法律说明。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.8.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
 
 ## 仓库与旧版迁移
 
 本版发布身份固定为源码仓库 `NAMEWTA/skills-hub` 与 npm 包 `@namewta/skills-hub`。先完成 GitHub 仓库的实际改名，再运行发布；脚本核对 Actions 提供的仓库身份、包名、锁文件及源码仓库元数据，不把旧地址的重定向视为身份已经一致，也不移除 provenance 来绕过不一致。
 
-历史 `v0.0.1` 标签属于旧的 `skills-wta` 包，必须保留。本次 `@namewta/skills-hub@0.0.7` 使用 `v0.0.7` 标签；不移动旧 `v0.0.1`、不覆盖已发布的 npm 版本。后续版本继续使用常规 `v0.0.8` 等标签。npm 包名是独立身份，旧命令不会自动变成新包；使用本页的 scoped 安装命令取得新版。
+历史 `v0.0.1` 标签属于旧的 `skills-wta` 包，必须保留。本次 `@namewta/skills-hub@0.0.8` 使用 `v0.0.8` 标签；不移动旧 `v0.0.1`、不覆盖已发布的 npm 版本。后续版本继续使用常规 `v0.0.9` 等标签。npm 包名是独立身份，旧命令不会自动变成新包；使用本页的 scoped 安装命令取得新版。
 
 ## 自动发布入口
 
@@ -35,9 +35,9 @@ npx @namewta/skills-hub@0.0.7 install --domain dev --replace
 | 在 GitHub 发布 Release | 使用该 Release 的标签检出；版本一致并通过检查后发布 npm、补齐附件 |
 | 在 Actions 手动运行 Release 工作流 | 选择 main 或对应版本标签，填写同一版本号；用于明确发布或重试 |
 
-本次提交 `0.0.7` 的包配置并推送到 main，属于版本变化（本次从 npm 已有 `0.0.6` 版本递增 +0.0.1，早先本地 `0.0.3` 为未发布候选）。普通技能提交不会因为改了内容就自动复用旧版本发布；先递增版本。
+本次提交 `0.0.8` 的包配置并推送到 main，属于版本变化（本次从已发布的 `0.0.7` 版本递增 +0.0.1）。普通技能提交不会因为改了内容就自动复用旧版本发布；先递增版本。
 
-每次 main 推送只先检查发布条件；版本未变且没有明确重试 trailer 时，发布任务直接跳过。当前版本在验证阶段失败、尚未创建版本标签和 npm 版本时，修复后可以在提交说明末尾独立一段写 `Release-Retry: 0.0.7`，推送后对新提交重新执行完整发布。该标记不跳过任何门禁，也不允许移动已有标签或覆盖 npm 内容。
+每次 main 推送只先检查发布条件；版本未变且没有明确重试 trailer 时，发布任务直接跳过。当前版本在验证阶段失败、尚未创建版本标签和 npm 版本时，修复后可以在提交说明末尾独立一段写 `Release-Retry: 0.0.8`，推送后对新提交重新执行完整发布。该标记不跳过任何门禁，也不允许移动已有标签或覆盖 npm 内容。
 
 ## 发布下一版
 
@@ -47,10 +47,10 @@ npx @namewta/skills-hub@0.0.7 install --domain dev --replace
 npm run check:full
 npm run check:statechart
 npm run check:package
-npm version 0.0.8 --no-git-tag-version
+npm version 0.0.9 --no-git-tag-version
 ```
 
-后续在 `CHANGELOG.md` 增加 `## 0.0.8 — YYYY-MM-DD` 及本版说明，提交代码、两个版本文件和更新记录，再推送 main。工作流完成检查后创建 `v0.0.8`，不要求另外手动打标签。也可以使用标签或 Release 入口，但其版本必须与代码一致。
+后续在 `CHANGELOG.md` 增加 `## 0.0.9 — YYYY-MM-DD` 及本版说明，提交代码、两个版本文件和更新记录，再推送 main。工作流完成检查后创建 `v0.0.9`，不要求另外手动打标签。也可以使用标签或 Release 入口，但其版本必须与代码一致。
 
 稳定版发布到 npm `latest`；含预发布标识的版本，例如 `0.0.2-beta.1`，发布到 `next`，GitHub Release 标记为 prerelease。版本号不能重复用于不同内容。同仓库的发布任务串行执行；尚未发布且低于 npm 或 GitHub 现有 `latest` 的稳定版会明确失败，需递增版本。已经发布且完整性相同的旧版可以继续补齐 Release，但不会把 `latest` 指回旧版。
 
@@ -72,7 +72,7 @@ GitHub 自动创建的 Release 不依赖再次触发另一条工作流：npm 公
 
 | 查询 | 固定 registry 下的 GET 路径 |
 | --- | --- |
-| 当前版本与完整性 | `/%40namewta%2Fskills-hub/0.0.1` |
+| 当前版本与完整性 | `/%40namewta%2Fskills-hub/0.0.8` |
 | 当前 npm latest | `/%40namewta%2Fskills-hub/latest` |
 
 npm 发布后会读回 registry 的版本与完整性；随后准备 GitHub Release 草稿、上传压缩包与校验和，最后发布草稿。重跑时会分页查找同标签的既有草稿并继续；匹配到多个草稿时明确停止。只有草稿中上传失败遗留的 `state=starter`、大小为零的同名占位附件会被清理重传，正常附件仍核对内容且不覆盖。缺少服务端摘要的附件通过带授权的 GitHub asset API 下载核对，因此草稿也可恢复。

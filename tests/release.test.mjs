@@ -27,6 +27,15 @@ test('version increments from published npm 0.0.6 to 0.0.7', () => {
   assert.equal(releasePlan({ ...current, ref: 'refs/tags/v0.0.7' }).publish, true);
 });
 
+test('patch increment from 0.0.7 to 0.0.8 uses the correct tag without replacing old releases', () => {
+  const plan = releasePlan({ ...base, version: '0.0.8', previousVersion: '0.0.7' });
+  assert.equal(plan.publish, true);
+  assert.equal(plan.tag, 'v0.0.8');
+  assert.equal(plan.distTag, 'latest');
+  assert.equal(releasePlan({ ...base, version: '0.0.8', previousVersion: '0.0.8' }).publish, false);
+  assert.equal(releasePlan({ ...base, version: '0.0.8', previousVersion: '0.0.7', ref: 'refs/tags/v0.0.8' }).tag, 'v0.0.8');
+});
+
 test('the scoped release requires exact package, lockfile and source-repository identities', (t) => {
   const root = temporary(t);
   const pkg = { name: '@namewta/skills-hub', version: '0.0.2', repository: { type: 'git', url: 'git+https://github.com/NAMEWTA/skills-hub.git' } };
