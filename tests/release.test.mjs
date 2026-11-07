@@ -339,8 +339,8 @@ test('stage inspection paginates from zero and verifies the original tarball wit
     return f.request(url, options);
   };
   assert.deepEqual(await findVerifiedStage(f.packed, { token: 'test-token', request }), f.stage);
-  assert.match(f.calls[0], /page=0&perPage=100&package=@namewta%2fskills-hub/);
-  assert.match(f.calls[1], /page=1&perPage=100&package=@namewta%2fskills-hub/);
+  assert.match(f.calls[0], /page=0&perPage=100&package=%40namewta%2Fskills-hub/);
+  assert.match(f.calls[1], /page=1&perPage=100&package=%40namewta%2Fskills-hub/);
 });
 
 test('stage lookup refuses duplicate matching versions', async (t) => {
