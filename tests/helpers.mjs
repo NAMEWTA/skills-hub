@@ -38,13 +38,15 @@ export function command(executable, args, options = {}) {
   return result;
 }
 
-export function isolatedGitEnvironment() {
+export function isolatedGitEnvironment(configDirectory) {
   const environment = { ...process.env };
   for (const key of [
     'GIT_DIR', 'GIT_COMMON_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX',
-    'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_CONFIG_COUNT', 'GIT_CONFIG_PARAMETERS',
+    'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_CONFIG', 'GIT_CONFIG_COUNT', 'GIT_CONFIG_PARAMETERS',
   ]) delete environment[key];
-  environment.GIT_CONFIG_GLOBAL = os.devNull;
+  const directory = path.resolve(configDirectory);
+  environment.GIT_CONFIG_GLOBAL = write(path.join(directory, 'global.gitconfig'), '');
+  environment.GIT_CONFIG_SYSTEM = write(path.join(directory, 'system.gitconfig'), '');
   environment.GIT_CONFIG_NOSYSTEM = '1';
   return environment;
 }

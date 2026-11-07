@@ -74,3 +74,38 @@ fidelity('a changed asset cannot claim to be an original copy', (f) => {
 test('TSV parsing preserves quoted tabs, newlines and quotes', () => {
   assert.deepEqual(parseTsv('id\tadaptation\r\na001\t"中文\t字段\n保留""引号"\r\n'), [{ id: 'a001', adaptation: '中文\t字段\n保留"引号' }]);
 });
+
+function directoryAlias(t, target, alias) {
+  try { fs.symlinkSync(fs.realpathSync(target), alias, process.platform === 'win32' ? 'junction' : 'dir'); }
+  catch (error) {
+    if (['EPERM', 'EACCES', 'ENOSYS'].includes(error.code)) { t.skip('This environment cannot create directory aliases'); return false; }
+    throw error;
+  }
+  return true;
+}
+
+test('project root aliases preserve valid mappings for every material kind', (t) => {
+  const fixture = new MaterialFixture(t);
+  const alias = path.join(temporary(t), 'project-alias');
+  if (!directoryAlias(t, fixture.root, alias)) return;
+  for (const [kind, original, localized] of [
+    ['document', Buffer.from('# Original\n'), Buffer.from('# 完整中文译文\n')],
+    ['code', Buffer.from('export const ready = true;\n'), Buffer.from('export const ready = true;\n')],
+    ['fixture', Buffer.alloc(0), Buffer.alloc(0)],
+    ['asset', Buffer.from([0x89, 0x50, 0x4e, 0x47]), Buffer.from([0x89, 0x50, 0x4e, 0x47])],
+  ]) {
+    fixture.writePair(kind, original, localized);
+    assert.deepEqual(check(alias, { output() {} }), [], kind);
+  }
+});
+
+test('canonicalizing a root alias does not permit the skills directory to escape it', (t) => {
+  const fixture = new MaterialFixture(t);
+  fixture.writePair();
+  const alias = path.join(temporary(t), 'project-alias');
+  if (!directoryAlias(t, fixture.root, alias)) return;
+  const outside = temporary(t);
+  fs.renameSync(path.join(fixture.root, 'skills'), path.join(outside, 'skills'));
+  if (!directoryAlias(t, path.join(outside, 'skills'), path.join(fixture.root, 'skills'))) return;
+  assert.ok(check(alias, { output() {} }).some(error => error.includes('outside skills')));
+});

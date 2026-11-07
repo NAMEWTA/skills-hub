@@ -150,13 +150,27 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
   const before = git(repo, "worktree", "list", "--porcelain");
   const child = run(audit, ["--base", "main", "--transcripts", transcripts, repo], { env });
   assert.equal(child.status, 0, child.stderr);
-  const rows = new Map(child.stdout.trim().split("\n").slice(2).map((row) => {
-    const fields = row.split("\t"); return [path.resolve(fields.at(-1)), fields];
+  // Git 与 Node 在 Windows 上可能返回同一目录的不同盘符大小写或短路径。
+  // 比较真实文件系统身份，不把这些表示差异当成缺失工作树。
+  const identity = (directory) => {
+    const stats = fs.statSync(directory, { bigint: true });
+    return `${stats.dev}:${stats.ino}`;
+  };
+  const rows = new Map(child.stdout.trimEnd().split(/\r?\n/).slice(2).map((row) => {
+    const fields = row.split("\t");
+    assert.equal(fields.length, 9, `工作树 TSV 列数不符：${row}`);
+    return [identity(fields.at(-1)), fields];
   }));
-  assert.equal(rows.get(paths.clean)[7], "safe");
-  assert.equal(rows.get(paths.wip)[7], "hold-wip");
-  assert.equal(rows.get(paths.scratch)[3], "scratch:1");
-  assert.equal(rows.get(paths["chat [chosen]"])[7], "verify-recent-chat");
+  assert.equal(rows.size, Object.keys(paths).length, child.stdout);
+  const rowFor = (directory) => {
+    const row = rows.get(identity(directory));
+    assert.ok(row, `审计没有返回工作树 ${directory}：\n${child.stdout}`);
+    return row;
+  };
+  assert.equal(rowFor(paths.clean)[7], "safe");
+  assert.equal(rowFor(paths.wip)[7], "hold-wip");
+  assert.equal(rowFor(paths.scratch)[3], "scratch:1");
+  assert.equal(rowFor(paths["chat [chosen]"])[7], "verify-recent-chat");
   assert.equal(git(repo, "worktree", "list", "--porcelain"), before);
   assert.equal(fs.readFileSync(path.join(paths.scratch, "untracked"), "utf8"), "retain\n");
   const noChat = run(audit, ["--base", "main", repo], { env });

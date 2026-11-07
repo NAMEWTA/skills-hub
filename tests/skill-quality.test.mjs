@@ -65,7 +65,7 @@ class GitFixture {
     this.base = temporary(t, 'skills-wta gate-');
     this.root = path.join(this.base, 'repository');
     fs.mkdirSync(this.root);
-    this.environment = isolatedGitEnvironment();
+    this.environment = isolatedGitEnvironment(path.join(this.base, 'git-config'));
     this.entry = write(path.join(this.root, entry), valid);
     for (const filename of [
       'install.mjs', 'scripts/check.mjs', 'scripts/check-skill-quality.mjs',
@@ -118,6 +118,14 @@ function scenario(name, run, options = {}) {
     run(new GitFixture(t));
   });
 }
+
+scenario('Git config isolation uses real empty files on every platform', (f) => {
+  for (const [scope, key] of [['--global', 'GIT_CONFIG_GLOBAL'], ['--system', 'GIT_CONFIG_SYSTEM']]) {
+    assert.ok(fs.lstatSync(f.environment[key]).isFile());
+    assert.equal(fs.readFileSync(f.environment[key], 'utf8'), '');
+    assert.equal(f.git(['config', scope, '--list']).stdout, '');
+  }
+});
 
 scenario('the package validator also enforces the character budget', (f) => {
   write(f.entry, oversized);

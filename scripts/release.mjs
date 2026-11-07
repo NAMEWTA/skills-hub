@@ -79,13 +79,14 @@ function packageInfo() {
   return pkg;
 }
 
-export function releasePlan({ eventName, event, ref, sha, version, previousVersion }) {
+export function releasePlan({ eventName, event, ref, sha, version, previousVersion, retryVersion }) {
   if (!validVersion(version)) throw new Error('无效发布版本');
   const tag = `v${version}`;
   let publish = false;
   if (eventName === 'push' && ref === 'refs/heads/main') {
     if (event.after && event.after !== sha) throw new Error('推送事件与检出提交不一致');
-    publish = previousVersion !== version;
+    if (retryVersion !== undefined && retryVersion !== version) throw new Error('Release-Retry 必须是当前完整版本号');
+    publish = previousVersion !== version || retryVersion === version;
   } else if (eventName === 'push' && ref?.startsWith('refs/tags/')) {
     if (ref !== `refs/tags/${tag}`) throw new Error('Git 标签与 package.json 版本不一致');
     publish = true;
@@ -108,7 +109,10 @@ export function planFromEnvironment() {
   const event = JSON.parse(readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8'));
   const sha = git(['rev-parse', 'HEAD']).stdout.trim();
   let previousVersion;
+  let retryVersion;
   if (process.env.GITHUB_EVENT_NAME === 'push' && process.env.GITHUB_REF === 'refs/heads/main') {
+    const trailers = git(['show', '-s', '--format=%(trailers:key=Release-Retry,valueonly)', sha]).stdout.trim();
+    if (trailers) retryVersion = trailers;
     const before = event.before;
     if (before && !/^0+$/.test(before)) {
       if (!/^[0-9a-f]{40}$/.test(before)) throw new Error('推送基线不是有效提交');
@@ -117,7 +121,7 @@ export function planFromEnvironment() {
       if (previous.status === 0) previousVersion = JSON.parse(previous.stdout).version;
     }
   }
-  const plan = releasePlan({ eventName: process.env.GITHUB_EVENT_NAME, event, ref: process.env.GITHUB_REF, sha, version: pkg.version, previousVersion });
+  const plan = releasePlan({ eventName: process.env.GITHUB_EVENT_NAME, event, ref: process.env.GITHUB_REF, sha, version: pkg.version, previousVersion, retryVersion });
   if (plan.publish) {
     git(['merge-base', '--is-ancestor', sha, 'refs/remotes/origin/main']);
     releaseNotes(plan.version);

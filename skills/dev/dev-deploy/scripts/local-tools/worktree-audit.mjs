@@ -78,11 +78,19 @@ function transcriptFiles(directory) {
 }
 function lastConversation(files, worktree) {
   let timestamp = 0;
-  const paths = [...new Set([worktree, worktree.replace(/\\/g, "/"), worktree.replace(/\\/g, "\\\\")])];
+  if (!files.length) return timestamp;
+  const aliases = [worktree];
+  try { aliases.push(fs.realpathSync.native(worktree)); } catch { /* 仍可按 Git 原始路径查找。 */ }
+  const windows = process.platform === "win32";
+  const comparable = (value) => windows ? value.toLowerCase() : value;
+  const paths = [...new Set(aliases.flatMap((value) => {
+    const native = windows ? value.replace(/\//g, "\\") : value;
+    return [value, native, native.replace(/\\/g, "/"), native.replace(/\\/g, "\\\\")].map(comparable);
+  }))];
   for (const file of files) {
     const data = fs.readFileSync(file);
     if (data.includes(0)) continue;
-    const text = data.toString("utf8");
+    const text = comparable(data.toString("utf8"));
     if (paths.some((value) => [`${value}/`, `${value}\\`, `${value}"`].some((prefix) => text.includes(prefix))))
       timestamp = Math.max(timestamp, fs.statSync(file).mtimeMs);
   }

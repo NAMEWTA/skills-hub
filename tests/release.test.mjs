@@ -16,6 +16,15 @@ test('first committed version plans a release, unchanged versions do not', () =>
   assert.equal(releasePlan({ ...base, previousVersion: '0.0.1' }).publish, false);
   assert.equal(releasePlan({ ...base, version: '0.0.2', previousVersion: '0.0.1' }).publish, true);
 });
+test('a same-version main push retries only with an explicit matching release trailer', () => {
+  const unchanged = { ...base, previousVersion: '0.0.1' };
+  assert.equal(releasePlan(unchanged).publish, false);
+  assert.equal(releasePlan({ ...unchanged, retryVersion: '0.0.1' }).publish, true);
+  for (const retryVersion of ['0.0.2', '0.0.1\n0.0.1', '']) {
+    assert.throws(() => releasePlan({ ...unchanged, retryVersion }), /Release-Retry/);
+  }
+  assert.throws(() => releasePlan({ ...unchanged, retryVersion: '0.0.1', ref: 'refs/heads/other' }), /不允许/);
+});
 test('pushed version tags must match the package version', () => {
   assert.equal(releasePlan({ ...base, ref: 'refs/tags/v0.0.1' }).tag, 'v0.0.1');
   assert.throws(() => releasePlan({ ...base, ref: 'refs/tags/v0.0.2' }), /不一致/);

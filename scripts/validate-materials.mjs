@@ -38,6 +38,8 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
   const materials = path.join(root, 'materials');
   const manifest = path.join(materials, 'manifest.tsv');
   if (!fs.statSync(manifest, { throwIfNoEntry: false })?.isFile()) return ['materials/manifest.tsv is missing'];
+  const canonicalRoot = fs.realpathSync(root);
+  const skillsBoundary = path.join(canonicalRoot, 'skills');
   const rows = parseTsv(readUtf8(manifest));
   if (!rows.length) return ['The material manifest must not be empty'];
   const identities = new Set();
@@ -85,10 +87,10 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
     const destinations = (row.runtime_paths ?? '').split(';').filter(Boolean);
     if (destinations.length) mapped += 1;
     for (const relative of destinations) {
-      const target = path.resolve(root, relative);
+      const target = path.resolve(canonicalRoot, relative);
       let actual = target;
       try { actual = fs.realpathSync(target); } catch {}
-      if (!isWithin(actual, path.join(root, 'skills')) || !fs.statSync(target, { throwIfNoEntry: false })?.isFile()) failures.push(`${identity}: runtime destination missing or outside skills: ${relative}`);
+      if (!isWithin(actual, skillsBoundary) || !fs.statSync(target, { throwIfNoEntry: false })?.isFile()) failures.push(`${identity}: runtime destination missing or outside skills: ${relative}`);
     }
     if (!row.source_path || !row.adaptation) failures.push(`${identity}: preserve the source path and adaptation explanation`);
   }
