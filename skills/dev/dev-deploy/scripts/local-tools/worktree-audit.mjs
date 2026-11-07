@@ -76,11 +76,24 @@ function transcriptFiles(directory) {
   visit(directory);
   return files;
 }
-function lastConversation(files, worktree) {
+function lastConversation(files, worktree, sourceRoots) {
   let timestamp = 0;
   if (!files.length) return timestamp;
   const aliases = [worktree];
-  try { aliases.push(fs.realpathSync.native(worktree)); } catch { /* 仍可按 Git 原始路径查找。 */ }
+  for (const realpath of [fs.realpathSync, fs.realpathSync.native]) {
+    try { aliases.push(realpath(worktree)); } catch { /* 仍可按 Git 原始路径查找。 */ }
+  }
+  // Git 可返回长目录名，而显式仓库或记录目录仍使用短目录名、目录联接等别名。
+  // 沿这些已知来源目录重建路径，并核对同一目录身份后才纳入匹配；不枚举其他历史目录。
+  for (const root of sourceRoots) {
+    try {
+      const relative = path.relative(fs.realpathSync.native(root), fs.realpathSync.native(worktree));
+      const candidate = path.resolve(root, relative);
+      const expected = fs.statSync(worktree, { bigint: true });
+      const actual = fs.statSync(candidate, { bigint: true });
+      if (actual.isDirectory() && actual.ino !== 0n && actual.dev === expected.dev && actual.ino === expected.ino) aliases.push(candidate);
+    } catch { /* 无法证明是同一目录的候选不会扩展匹配范围。 */ }
+  }
   const windows = process.platform === "win32";
   const comparable = (value) => windows ? value.toLowerCase() : value;
   const paths = [...new Set(aliases.flatMap((value) => {
@@ -120,12 +133,14 @@ export function main(argv = process.argv.slice(2)) {
   try {
     const repo = options.repo ? fs.realpathSync(options.repo) : output(command("git", ["rev-parse", "--show-toplevel"], process.cwd()));
     if (!repo || output(git(repo, "rev-parse", "--git-dir")) === null) throw new Error("当前不在 Git 仓库中；请传入有效仓库路径");
+    const sourceRoots = [options.repo ? path.resolve(options.repo) : process.cwd()];
     let transcripts = [];
     if (options.transcripts) {
       try {
         const folder = fs.realpathSync(options.transcripts);
         if (!fs.statSync(folder).isDirectory()) throw new Error("对话路径必须是明确指定的目录");
         transcripts = transcriptFiles(folder);
+        sourceRoots.push(path.resolve(options.transcripts));
       } catch (error) { console.error(`错误：无法读取指定对话目录：${error.message}`); return 2; }
     }
     const listed = git(repo, "worktree", "list", "--porcelain", "-z");
@@ -176,7 +191,7 @@ export function main(argv = process.argv.slice(2)) {
       }
       const pr = branch ? prs.find((item) => item.head === branch) : null;
       const prText = pr ? `#${pr.number}/${pr.state}` : "-";
-      const last = lastConversation(transcripts, worktree);
+      const last = lastConversation(transcripts, worktree, sourceRoots);
       const recent = last > 0 && Math.floor((now - last) / 86400000) <= 4;
       let bucket = "review";
       if (dirty.startsWith("wip:") || dirty === "unknown") bucket = "hold-wip";

@@ -199,6 +199,22 @@ scenario('hook installation is explicit and idempotent', (f) => {
   f.git(['config', '--get', 'core.hooksPath'], { expected: 1 }); f.installHooks(); f.installHooks();
   assert.equal(f.git(['config', '--get', 'core.hooksPath']).stdout.trim(), '.githooks');
 });
+scenario('hook installation accepts aliases of the actual worktree root', (f) => {
+  const alias = path.join(f.base, 'repository-alias');
+  fs.symlinkSync(f.root, alias, process.platform === 'win32' ? 'junction' : 'dir');
+  const roots = process.platform === 'win32' ? [alias, alias.toUpperCase()] : [alias];
+  for (const root of roots) {
+    f.run(process.execPath, [path.join(repositoryRoot, 'scripts/install-hooks.mjs'), '--root', root]);
+  }
+  assert.equal(f.git(['config', '--get', 'core.hooksPath']).stdout.trim(), '.githooks');
+});
+scenario('a real subdirectory cannot install hooks even when it contains the hook files', (f) => {
+  const child = path.join(f.root, 'nested');
+  fs.cpSync(path.join(f.root, '.githooks'), path.join(child, '.githooks'), { recursive: true });
+  const result = f.run(process.execPath, [path.join(repositoryRoot, 'scripts/install-hooks.mjs'), '--root', child], { expected: 1 });
+  assert.match(result.stderr, /不能在任意子目录安装 hooks/);
+  f.git(['config', '--get', 'core.hooksPath'], { expected: 1 });
+});
 scenario('reinstall repairs missing execute bits on our hooks', (f) => {
   f.installHooks(); const hook = path.join(f.root, '.githooks/pre-commit'); fs.chmodSync(hook, 0o644);
   f.installHooks(); assert.ok(fs.statSync(hook).mode & 0o111);

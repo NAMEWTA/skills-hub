@@ -145,7 +145,8 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
   fs.writeFileSync(path.join(paths.scratch, "untracked"), "retain\n");
   const transcripts = path.join(folder, "transcripts");
   fs.mkdirSync(transcripts);
-  fs.writeFileSync(path.join(transcripts, "record.txt"), JSON.stringify({ file: paths["chat [chosen]"].replace(/\\/g, "/") + "/data" }));
+  const record = path.join(transcripts, "record.txt");
+  fs.writeFileSync(record, JSON.stringify({ file: paths["chat [chosen]"].replace(/\\/g, "/") + "/data" }));
   const env = { ...process.env, SKILLS_WTA_TRANSCRIPTS_DIR: "" };
   const before = git(repo, "worktree", "list", "--porcelain");
   const child = run(audit, ["--base", "main", "--transcripts", transcripts, repo], { env });
@@ -156,11 +157,12 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
     const stats = fs.statSync(directory, { bigint: true });
     return `${stats.dev}:${stats.ino}`;
   };
-  const rows = new Map(child.stdout.trimEnd().split(/\r?\n/).slice(2).map((row) => {
+  const readRows = (stdout) => new Map(stdout.trimEnd().split(/\r?\n/).slice(2).map((row) => {
     const fields = row.split("\t");
     assert.equal(fields.length, 9, `工作树 TSV 列数不符：${row}`);
     return [identity(fields.at(-1)), fields];
   }));
+  const rows = readRows(child.stdout);
   assert.equal(rows.size, Object.keys(paths).length, child.stdout);
   const rowFor = (directory) => {
     const row = rows.get(identity(directory));
@@ -170,7 +172,24 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
   assert.equal(rowFor(paths.clean)[7], "safe");
   assert.equal(rowFor(paths.wip)[7], "hold-wip");
   assert.equal(rowFor(paths.scratch)[3], "scratch:1");
-  assert.equal(rowFor(paths["chat [chosen]"])[7], "verify-recent-chat");
+  const pathEvidence = (value) => ({
+    path: value, realpath: fs.realpathSync(value), native: fs.realpathSync.native(value), identity: identity(value),
+  });
+  const chatDiagnostic = (stdout, origin) => JSON.stringify({
+    repository: pathEvidence(origin),
+    fixture: pathEvidence(paths["chat [chosen]"]),
+    reported: pathEvidence(readRows(stdout).get(identity(paths["chat [chosen]"]))[8]),
+    record: fs.readFileSync(record, "utf8"), stdout,
+  }, null, 2);
+  assert.equal(rowFor(paths["chat [chosen]"])[7], "verify-recent-chat", chatDiagnostic(child.stdout, repo));
+  // 使用实际目录别名再执行一次；Windows 使用无需符号链接特权的目录联接。
+  const alias = path.join(folder, "source alias");
+  fs.symlinkSync(folder, alias, "junction");
+  const aliasedRepo = path.join(alias, "repo");
+  fs.writeFileSync(record, JSON.stringify({ file: path.join(alias, "chat [chosen]", "data") }));
+  const aliased = run(audit, ["--base", "main", "--transcripts", transcripts, aliasedRepo], { env });
+  assert.equal(aliased.status, 0, aliased.stderr);
+  assert.equal(readRows(aliased.stdout).get(identity(paths["chat [chosen]"]))[7], "verify-recent-chat", chatDiagnostic(aliased.stdout, aliasedRepo));
   assert.equal(git(repo, "worktree", "list", "--porcelain"), before);
   assert.equal(fs.readFileSync(path.join(paths.scratch, "untracked"), "utf8"), "retain\n");
   const noChat = run(audit, ["--base", "main", repo], { env });

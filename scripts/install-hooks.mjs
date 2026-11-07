@@ -14,8 +14,9 @@ export function install(root) {
     if (result.status !== 0) throw new Error(result.stderr.trim() || '无法读取 Git 配置');
     return result.stdout.trim();
   }
-  const actualRoot = fs.realpathSync(git(['rev-parse', '--show-toplevel']));
-  if (actualRoot !== fs.realpathSync(root)) throw new Error('请指定仓库根目录，不能在任意子目录安装 hooks');
+  if (git(['rev-parse', '--is-inside-work-tree']) !== 'true' || git(['rev-parse', '--show-prefix']) !== '') {
+    throw new Error('请指定仓库根目录，不能在任意子目录安装 hooks');
+  }
   const hookRoot = path.join(root, '.githooks');
   const directory = fs.lstatSync(hookRoot, { throwIfNoEntry: false });
   if (!directory?.isDirectory() || directory.isSymbolicLink()) throw new Error('缺少本仓库的常规 hook 目录：.githooks');
