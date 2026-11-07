@@ -3,13 +3,15 @@ name: Validate skills and installer
 on:
   push:
   pull_request:
+  workflow_call:
+    inputs:
+      ref:
+        description: '发布准备阶段固定的提交 SHA'
+        required: true
+        type: string
 
 permissions:
   contents: read
-
-env:
-  PYTHONUTF8: '1'
-  PYTHONIOENCODING: utf-8
 
 jobs:
   validate:
@@ -18,16 +20,25 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            python: '3.10'
+            node: '22.14.0'
           - os: windows-latest
-            python: '3.13'
+            node: '24'
           - os: macos-latest
-            python: '3.13'
+            node: '24'
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
-          python-version: ${{ matrix.python }}
-      - name: Validate skill budgets, packages, materials and behavior
-        run: python scripts/check.py --full
+          ref: ${{ inputs.ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: ${{ matrix.node }}
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Validate budgets, packages, materials and behavior
+        run: npm run check:full
+      - name: Replay captured statechart results
+        run: npm run check:statechart
+      - name: Install and verify the actual npm tarball
+        run: npm run check:package

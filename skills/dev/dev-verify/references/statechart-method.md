@@ -6,15 +6,15 @@
 
 ## 运行
 
-将 `SKILL_DIR` 设为本技能 `SKILL.md` 所在目录。先读[本地运行环境](runtime.md)，核对 TypeScript 运行时、Java 和 TLC；此命令不联网、不自动安装依赖。主入口为[本地命令](../scripts/statechart)。
+将 `SKILL_DIR` 设为本技能 `SKILL.md` 所在目录。先读[本地运行环境](runtime.md)，核对 TypeScript 运行时、Java 和 TLC；此命令不联网、不自动安装依赖。主入口为[本地命令](../scripts/statechart.mjs)。
 
 在仓库之外的临时目录中工作。编写 TLA+ 规格及其配置，然后运行：
 
 ```sh
-"$SKILL_DIR/scripts/statechart" SPEC.tla [--config FILE] [--view FILE] [--out DIR]
+node "$SKILL_DIR/scripts/statechart.mjs" SPEC.tla [--config FILE] [--view FILE] [--out DIR]
 ```
 
-`scripts/statechart.ts` 是 TypeScript，因此要使用能够执行 TypeScript 的运行时。
+`scripts/statechart.mjs` 使用 Node.js 22.14 或更高版本直接执行，无需 TypeScript 编译器。
 
 使用本地 `TLA2TOOLS` 指向 `tla2tools.jar`，可选 `JAVA` 指定 Java 可执行文件。原始模型和配置不被改写；输出目录必须是新目录或空目录。需要示范时，使用[额度预留模型](../assets/Reservation.tla)、[故障配置](../assets/Reservation.cfg)、[修复配置](../assets/Reservation.fixed.cfg)和[中文视图](../assets/view.mjs)。案例参数只服务于该示例，不是其他系统的默认规模。
 

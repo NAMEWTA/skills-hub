@@ -1,4 +1,4 @@
 interface:
-  display_name: "Slack 问题自动化配置"
-  short_description: "配置 Slack 来源、分诊身份及 UI 修复管道，验证线程、控制能力与实际触发器"
-  default_prompt: "请使用 $dev-issue-setup 为当前项目配置 Slack 报告分诊与 UI 复现修复管道，复用已有授权，完成配置和验证。"
+  display_name: "报告来源与监控配置"
+  short_description: "按实际目标配置来源与触发，保留收集汇总、缺陷分诊和 UI 修复的边界"
+  default_prompt: "请使用 $dev-issue-setup 为当前项目配置所需来源、触发和实际任务目标，核实真实能力，再按已有授权准备收集汇总、缺陷分诊或 UI 修复任务。"

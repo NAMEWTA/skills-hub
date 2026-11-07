@@ -81,7 +81,7 @@
 
 ## 可用模板与工具
 
-- [manual-reproduction.sh](../scripts/manual-reproduction.sh)
+- [manual-reproduction.mjs](../scripts/manual-reproduction.mjs)
 
 ## 测试先行与接口设计
 

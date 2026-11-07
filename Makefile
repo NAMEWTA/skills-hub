@@ -1,11 +1,11 @@
-PYTHON ?= python3
+NODE ?= node
 
 .PHONY: check build hooks
 
 check:
-	$(PYTHON) scripts/check.py --full
+	$(NODE) scripts/check.mjs --full
 
 build: check
 
 hooks:
-	$(PYTHON) scripts/install_hooks.py
+	$(NODE) scripts/install-hooks.mjs

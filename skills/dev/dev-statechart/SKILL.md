@@ -11,14 +11,14 @@ description: 基于已有或明确需要建立的 TLA+ 模型运行 TLC，生成
 
 | 当前需要 | 读取 |
 | --- | --- |
-| 确认工具、运行命令与依赖 | [本地运行环境](references/runtime.md)、[命令入口](scripts/statechart) |
+| 确认工具、运行命令与依赖 | [本地运行环境](references/runtime.md)、[命令入口](scripts/statechart.mjs) |
 | 建模、配置、选择标签、运行检查与解释反例 | [完整状态图方法](references/statechart-method.md) |
 | 将 Mermaid 交付为图片 | [渲染说明](references/render.md)、[渲染脚本](scripts/render.mjs) |
 | 查看完整模型、失败与修复示例 | [额度模型](assets/Reservation.tla)、[失败配置](assets/Reservation.cfg)、[修复配置](assets/Reservation.fixed.cfg)、[中文视图](assets/view.mjs) |
 
 ## 执行边界
 
-- 先核对 TypeScript 运行时、Java 与本地 TLC；不把缺少依赖说成规则通过，不为普通解释图自动安装形式化工具。
+- 先核对 Node.js 运行时、Java 与本地 TLC；不把缺少依赖说成规则通过，不为普通解释图自动安装形式化工具。
 - 按完整方法保留不变量、终态、投影、隐藏迁移、状态上限与未完成检查的语义。不能为了生成更简单的图而隐藏或弱化真实违规。
 - 模型描述代码时，把反例逐步回放到真实实现，区分代码缺陷、建模错误和待查反例。没有红色节点不等于系统正确。
 - 记录实际命令、工具与模型版本、初始条件、范围、退出结果和证据位置。模型与验证代码保留在项目真实位置；新增图与检查记录放在 `.agents/wtadev/changes/<日期-主题>/verification/`。

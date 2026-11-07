@@ -1,2 +1,5 @@
-#!/bin/sh
-exec "$(dirname "$0")/run-check" --staged
+#!/usr/bin/env node
+import('./run-check.mjs').then(({ run }) => run('--staged')).catch((error) => {
+  console.error(error.message);
+  process.exitCode = 1;
+});

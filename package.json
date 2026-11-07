@@ -1,0 +1,42 @@
+{
+  "name": "skills-wta",
+  "version": "0.0.1",
+  "description": "独立中文 Agent Skills：按领域安装，覆盖开发交付、项目知识与系统维护。",
+  "type": "module",
+  "bin": {
+    "skills-wta": "./install.mjs"
+  },
+  "files": [
+    "install.mjs",
+    "skills/",
+    "licenses/",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "engines": {
+    "node": ">=22.14.0"
+  },
+  "scripts": {
+    "check": "node scripts/check.mjs",
+    "check:full": "node scripts/check.mjs --full",
+    "check:package": "node scripts/check-package.mjs",
+    "check:statechart": "node scripts/check-statechart-replay.mjs",
+    "test": "node --test",
+    "build": "node scripts/check.mjs --full",
+    "hooks": "node scripts/install-hooks.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NAMEWTA/skills-wta.git"
+  },
+  "homepage": "https://github.com/NAMEWTA/skills-wta#readme",
+  "bugs": {
+    "url": "https://github.com/NAMEWTA/skills-wta/issues"
+  },
+  "keywords": ["agent-skills", "skills", "ai", "chinese", "development", "codex", "claude"],
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
+}

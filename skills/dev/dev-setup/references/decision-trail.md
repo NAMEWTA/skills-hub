@@ -28,10 +28,10 @@
 
 同一执行可以跨多轮对话和摘要，不因每轮回复重复开日志。接手者或新会话回来时，先读末尾和当前差异，标明接续位置、之前证据范围和新的责任者。多人工作优先每位执行者拥有自己的记录，再在读取边界汇总；共享文件采用单写入者或项目已有并发机制。
 
-若采用 TSV，按[表头模板](../assets/decision-log.tsv)保留 `ts/phase/decision/why/evidence/result` 六列。真实有 Bash 时，可运行本包[追加脚本](../scripts/append-decision-tsv.sh)：
+若采用 TSV，按[表头模板](../assets/decision-log.tsv)保留 `ts/phase/decision/why/evidence/result` 六列。已有 Node.js 时，可运行本包[追加脚本](../scripts/append-decision-tsv.mjs)：
 
 ```bash
-bash <本技能实际路径>/scripts/append-decision-tsv.sh <日志路径> <阶段> <决定> <理由> <证据> <结果>
+node <本技能实际路径>/scripts/append-decision-tsv.mjs <日志路径> <阶段> <决定> <理由> <证据> <结果>
 ```
 
 每个参数按当前 shell 规则作为独立数据引用，不把不可信文本拼成命令。脚本补 UTC 时间、首行表头、清除单元格内制表符与换行，对以 `=`、`+`、`-`、`@` 开头的值加单引号，避免电子表格把它当公式。它只负责格式，不检查证据真实性，也不提供并发锁；同一日志串行写入。没有 Bash 就使用 Markdown，不要求为日志安装工具。

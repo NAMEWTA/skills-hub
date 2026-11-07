@@ -1,0 +1,73 @@
+name: Release to npm and GitHub
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+    paths: [package.json, package-lock.json]
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '已提交的版本号，必须与所选 main 或版本标签一致，例如 0.0.1'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      publish: ${{ steps.plan.outputs.publish }}
+      version: ${{ steps.plan.outputs.version }}
+      sha: ${{ steps.plan.outputs.sha }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ github.event.release.tag_name || github.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - id: plan
+        run: node scripts/release.mjs plan
+
+  validate:
+    needs: prepare
+    if: needs.prepare.outputs.publish == 'true'
+    uses: ./.github/workflows/validate.yml
+    with:
+      ref: ${{ needs.prepare.outputs.sha }}
+
+  publish:
+    needs: [prepare, validate]
+    if: needs.prepare.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: npm-${{ github.repository }}
+      cancel-in-progress: false
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Publish the verified package and complete the release
+        run: node scripts/release.mjs publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

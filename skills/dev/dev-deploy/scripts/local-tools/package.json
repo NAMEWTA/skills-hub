@@ -5,10 +5,7 @@
   "scripts": {
     "watch-pr": "node watch-pr/watch-pr.mjs"
   },
-  "dependencies": {
-    "commander": "14.0.0"
-  },
   "engines": {
-    "node": ">=24"
+    "node": ">=22.14"
   }
 }

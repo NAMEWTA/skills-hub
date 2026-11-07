@@ -12,6 +12,7 @@
 - 主入口按任务、产物与实际前提区分；沿用已有阶段和记录。成熟方法优先保留，入口冲突直接修正，不以个人文风替代完整步骤。维护与同步遵循 [关键开发约束](docs/development-constraints.md)。
 - 不引入流程 JSON、强制状态机、固定模型或重复审批。用户已经授权的步骤持续执行，环境与工具绑定根据实际能力适配。
 - 项目资料统一以 `.agents/wtadev/` 为持久化根目录，按职责放入 changes、notes、deploy、archive、project、context、system 等子目录，按需创建。技能仍安装在 `.agents/skills/`。已有外部文档按真实位置引用；迁移资料时保留内容并修复入链。代码和运行结果说明现状，用户目标说明期望；知识保留理由、语义和导航，不复述整个代码实现。
+- 维护脚本、测试、技能执行脚本与可执行示例统一使用 `.mjs` / `.js`，Node.js 22.14+；不要引入 Python、Shell 或 TypeScript 运行依赖。Git 的固定 hook 文件名是 JavaScript 薄入口。来源 `.txt` 底稿保留原件，不执行。
 - 版权许可不能丢失。法律原文集中放在 `licenses/`，安装器自动附带到 `.agents/skills-wta-licenses/`，不放进运行技能。
 
 ## 资料的角色
@@ -24,14 +25,15 @@
 
 - 编写或整合技能：看 [技能编写指南](docs/skill-authoring.md)。
 - 修改入口预算、提交或 CI 检查：看 [质量门禁](docs/skill-quality.md)。
-- 改安装器：看 [安装契约](docs/installation.md) 与 `install.py`。
+- 改安装器：看 [安装契约](docs/installation.md) 与 `install.mjs`。
 - 改开发衔接：看 [开发流程](docs/workflow.md)。
 - 改学习、归档或持久化：看 [知识与记忆](docs/knowledge.md)。
 - 核对全文与适配：看 [资源组织](docs/resources.md) 和 [本地资料索引](materials/README.md)。
+- 改 npm 包或发布：看 [版本发布](docs/release.md)，验证实际 tarball 后才发版。
 - 检查许可：看 [第三方声明](THIRD_PARTY_NOTICES.md)。
 
 ## 验证
 
-`python3 scripts/check.py` 统一检查入口预算、名称、元数据、独立资源、链接和完整资料；正文最多 500 物理行、12000 个非空白 Unicode 字符，完整参考不计入入口预算。超限时拆分并说明读取条件，不删实质方法或用长行绕过。修改安装或验证行为后运行 `python3 scripts/check.py --full`，隔离检查不接触用户项目或生产环境。按需用 `python3 scripts/install_hooks.py` 为本检出启用提交与推送快照检查，不覆盖已有用户 hooks。
+`node scripts/check.mjs` 统一检查入口预算、名称、元数据、独立资源、链接和完整资料；正文最多 500 物理行、12000 个非空白 Unicode 字符，完整参考不计入入口预算。超限时拆分并说明读取条件，不删实质方法或用长行绕过。修改安装或验证行为后运行 `node scripts/check.mjs --full`，隔离检查不接触用户项目或生产环境。按需用 `node scripts/install-hooks.mjs` 为本检出启用提交与推送快照检查，不覆盖已有用户 hooks。
 
 结构校验只证明包装契约。译文仍需对照原件检查完整性，运行步骤仍需核实是否满足用户意图和项目约定。没有必要为可逆文字调整增加重复测试；真正影响行为的改动根据剩余风险补验证。

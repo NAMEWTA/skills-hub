@@ -15,7 +15,7 @@ routes:
       error_signatures:
         - "账单错误占位符"
     destination:
-      slack_channel: "账单频道占位符"
+      source_destination: "账单团队已核实接收位置"
       tracker_team: "账单团队占位符"
     owners:
       - "账单负责人占位符"
@@ -30,7 +30,7 @@ routes:
       error_signatures:
         - "桌面端错误占位符"
     destination:
-      slack_channel: "桌面端频道占位符"
+      source_destination: "桌面端团队已核实接收位置"
       tracker_team: "桌面端团队占位符"
     owners:
       - "桌面端负责人占位符"
@@ -58,4 +58,4 @@ ping_policy:
 - 不要在公开副本中包含私人数据。
 - 不要把原始用户或频道 ID 粘贴进将要发布的示例。
 - 在目标团队同意之前，保持功能负责人提醒关闭。
-- 转交只是告诉报告者应去哪里。自动化绝不跨频道发帖。
+- 转交只是告诉报告者应去哪里。自动化不跨容器或接收者发帖。

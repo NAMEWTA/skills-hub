@@ -16,7 +16,7 @@
 
 ## 本仓库的可执行上限
 
-检查范围为 `skills/<domain>/<domain>-xxx/SKILL.md`。阈值集中在 [入口检查脚本](../scripts/check_skill_quality.py)，由现有 [包装验证器](../scripts/validate.py) 和统一检查入口复用。
+检查范围为 `skills/<domain>/<domain>-xxx/SKILL.md`。阈值集中在 [入口检查脚本](../scripts/check-skill-quality.mjs)，由现有 [包装验证器](../scripts/validate.mjs) 和统一检查入口复用。
 
 | 项目 | 本仓库门禁 |
 | --- | --- |
@@ -33,39 +33,39 @@
 
 ## 本地检查与构建
 
-使用 Python 3.10+，无需安装 Python 依赖。Windows 可以将下列 `python3` 换为 `py -3` 或实际可用的 `python`。
+使用 Node.js 22.14+，不需要 Python 或额外 npm 运行依赖。Windows、macOS 与 Linux 使用相同的命令。
 
 ```sh
 # 快速结构检查：入口预算、独立包、链接、资料配对与映射
-python3 scripts/check.py
+node scripts/check.mjs
 
 # 完整检查：增加隔离回归测试及有限状态示例的真实故障注入
-python3 scripts/check.py --full
+node scripts/check.mjs --full
 
 # 仅查看所有入口的篇幅统计
-python3 scripts/check_skill_quality.py --report
+node scripts/check-skill-quality.mjs --report
 ```
 
-本项目分发 Markdown、模板与脚本，没有另一个需要编译的应用。`make check` 和 `make build` 都调用同一个完整检查；没有 Make 的环境直接用 Python 命令。原有 `validate.py` 和 `validate_materials.py` 仍可单独运行。
+本项目分发 Markdown、模板与脚本，没有另一个需要编译的应用。`make check` 和 `make build` 都调用同一个完整检查；没有 Make 的环境使用 `npm run build` 或直接运行 Node 命令。`validate.mjs` 和 `validate-materials.mjs` 也可单独运行。
 
 ## 提交和推送前检查
 
 本地 hooks 需要开发者显式启用一次：
 
 ```sh
-python3 scripts/install_hooks.py
+node scripts/install-hooks.mjs
 ```
 
 安装器只设置当前仓库的 `core.hooksPath=.githooks`。如果已经有其他 hooks 路径或默认 hooks 目录中的自定义内容，它会保留原配置并给出接入命令，不覆盖、不删除、不悄悄禁用现有 hooks。已经启用本项目 hooks 时可重复执行。
 
-hooks 使用 Git 提供的 shell，依次寻找 Python 3.10+ 的 `python3`、`python` 或 Windows `py -3`。仓库的 LF 规则保证脚本在 Git for Windows 中仍使用正确换行。
+hooks 由 Node.js 执行。Git 要求入口文件名为 `pre-commit`、`pre-push`，这两个固定名称是无扩展名的 JavaScript 薄入口，实际逻辑在 `run-check.mjs` 和维护脚本中；不包含 Shell 或 Python 启动器。
 
 | 入口 | 实际检查对象 |
 | --- | --- |
-| `python3 scripts/check.py` | 当前工作区，包括尚未提交的文件 |
-| `python3 scripts/check.py --staged` | 完整 Git index 快照；用于 pre-commit |
-| `python3 scripts/check.py --revision HEAD` | 指定提交的文件树，忽略未提交的工作区改动 |
-| `python3 scripts/check.py --pre-push` | Git 从标准输入提供的每个非删除更新的目标提交；用于 pre-push |
+| `node scripts/check.mjs` | 当前工作区，包括尚未提交的文件 |
+| `node scripts/check.mjs --staged` | 完整 Git index 快照；用于 pre-commit |
+| `node scripts/check.mjs --revision HEAD` | 指定提交的文件树，忽略未提交的工作区改动 |
+| `node scripts/check.mjs --pre-push` | Git 从标准输入提供的每个非删除更新的目标提交；用于 pre-push |
 
 pre-commit 检查暂存内容，不能由工作区里尚未暂存的修正掩盖错误。pre-push 检查实际推送的分支或标签目标，不用当前 HEAD 代替；带注释的标签先解析到提交，同一提交只检查一次。范围是各更新引用的目标文件树，不逐个重跑全部中间历史提交；仅删除引用没有文件树需要检查。
 
@@ -75,9 +75,15 @@ pre-commit 检查暂存内容，不能由工作区里尚未暂存的修正掩盖
 
 ## CI
 
-[验证工作流](../.github/workflows/validate.yml) 在每次 push 和 pull request 后运行 `python scripts/check.py --full`，覆盖 Linux、Windows、macOS。任一预算、包装、资料或行为检查失败都会使任务失败。
+[验证工作流](../.github/workflows/validate.yml) 在每次 push 和 pull request 后运行 `node scripts/check.mjs --full`，覆盖 Linux、Windows、macOS，并运行状态图回放及实际 npm 压缩包的离线安装检查。任一预算、包装、资料或行为检查失败都会使任务失败。
 
 本地 hooks 由开发者启用，Git 允许调用者跳过它们；CI 是独立的检查。CI 在推送后运行，是否阻止分支合并由仓库的 required checks 等分支规则决定，本脚本不会自行改动仓库权限。
+
+## JavaScript 运行约定
+
+维护脚本、测试、技能脚本和可执行示例使用 `.mjs` 或 `.js`。门禁拒绝源码运行目录中的 Python、Shell 与 TypeScript 脚本；Git 规定的两个 hook 文件名除外，它们仍执行 JavaScript。`materials/` 的 `.txt` 是不可执行的来源对照，保留原字节，不作为运行依赖。
+
+发布检查实际打包后安装 tarball，逐一核对技能资源与许可，防止源码可用但 npm 漏文件。发布流程见[版本发布](release.md)。
 
 ## 超限时怎样调整
 
@@ -87,4 +93,4 @@ pre-commit 检查暂存内容，不能由工作区里尚未暂存的修正掩盖
 
 减少重复表述时保留成熟方法的判断条件、关键步骤、例子、反例和数值。更新引用、同包副本及资料映射后重新检查。入口变短不能证明能力更好，静态校验也不能代替调用场景和执行结果验证。
 
-隔离回归见 [门禁测试](../tests/test_skill_quality.py)：覆盖中文长行、阈值边界、参考不计入入口、暂存与工作区不一致、推送非 HEAD 分支和标签、已有 hooks 保留，以及真实 Git 提交/本地远端推送被阻止的情形。
+隔离回归见 [门禁测试](../tests/skill-quality.test.mjs)：覆盖中文长行、阈值边界、参考不计入入口、暂存与工作区不一致、推送非 HEAD 分支和标签、已有 hooks 保留，以及真实 Git 提交/本地远端推送被阻止的情形。

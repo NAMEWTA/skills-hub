@@ -6,7 +6,15 @@
 
 ## 安装
 
-需要 Python 3.10+，无第三方运行依赖。先把本仓库克隆到任意位置：
+需要 Node.js 22.14+。可直接通过 npm 使用，无需预先克隆：
+
+```bash
+npx skills-wta@0.0.1 list
+npx skills-wta@0.0.1 install --domain dev
+npx skills-wta@0.0.1 install --skill dev-grill dev-spec system-proxy
+```
+
+在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。也可以克隆源码后离线运行安装器：
 
 ```bash
 git clone https://github.com/NAMEWTA/skills-wta.git
@@ -16,28 +24,28 @@ git clone https://github.com/NAMEWTA/skills-wta.git
 
 ```bash
 # 查看所有领域和技能
-python3 /path/to/skills-wta/install.py list
+node /path/to/skills-wta/install.mjs list
 
 # 安装开发领域全部技能
-python3 /path/to/skills-wta/install.py install --domain dev
+node /path/to/skills-wta/install.mjs install --domain dev
 
 # 同时安装两个领域
-python3 /path/to/skills-wta/install.py install --domain dev system
+node /path/to/skills-wta/install.mjs install --domain dev system
 
 # 只安装指定技能，可跨领域
-python3 /path/to/skills-wta/install.py install --skill dev-grill dev-spec system-proxy
+node /path/to/skills-wta/install.mjs install --skill dev-grill dev-spec system-proxy
 
 # 预览，不创建任何文件
-python3 /path/to/skills-wta/install.py install --domain dev --dry-run
+node /path/to/skills-wta/install.mjs install --domain dev --dry-run
 
 # 仓库更新后，备份并替换存在差异的技能
-python3 /path/to/skills-wta/install.py install --domain dev --replace
+node /path/to/skills-wta/install.mjs install --domain dev --replace
 ```
 
-Windows 可将 `python3` 换成 `py -3`，脚本路径使用本机路径，例如：
+Windows、macOS 和 Linux 使用相同的 `node` / `npx` 命令。源码安装时使用本机路径，例如：
 
 ```powershell
-py -3 C:\tools\skills-wta\install.py install --domain dev
+node C:\tools\skills-wta\install.mjs install --domain dev
 ```
 
 仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。技能自带所需的中文参考文件、模板与示例，单独安装也能工作。安装器同时把完整许可附带到 `.agents/skills-wta-licenses/`；许可位于技能目录之外，不进入技能执行上下文。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
@@ -56,8 +64,8 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 | [dev-personalize](skills/dev/dev-personalize/SKILL.md) | 从已授权的工作历史提炼个人习惯，生成可维护的项目技能 |
 | [dev-status](skills/dev/dev-status/SKILL.md) | 只读汇总当前或指定历史范围的进度与待决事项，按需制作报告视频 |
 | [dev-intake](skills/dev/dev-intake/SKILL.md) | 合并聊天、Issue、截图、日志、评审等来源，保留出处与范围 |
-| [dev-issue-setup](skills/dev/dev-issue-setup/SKILL.md) | 配置指定 Slack 报告管道的来源、角色、控制能力及故障补偿 |
-| [dev-issue-triage](skills/dev/dev-issue-triage/SKILL.md) | 按已配置 Slack 线程契约分类、查重与分流，不运行复现 |
+| [dev-issue-setup](skills/dev/dev-issue-setup/SKILL.md) | 配置报告来源、追踪器、仓库路由、控制能力与实际监控触发器 |
+| [dev-issue-triage](skills/dev/dev-issue-triage/SKILL.md) | 按已配置来源适配器分类、查重与分流，不运行复现 |
 | [dev-issue-fix](skills/dev/dev-issue-fix/SKILL.md) | 对可信报告双次 UI 复现，验证已有修复或交付授权内草稿 PR |
 | [dev-grill](skills/dev/dev-grill/SKILL.md) | 按设计决策树澄清问题，先查事实，再问真正的产品选择 |
 | [dev-spec](skills/dev/dev-spec/SKILL.md) | 把意图转成行为规格、验收、边界与非目标 |
@@ -163,20 +171,24 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 
 逐文件关系与运行适配规则见 [资源组织](docs/resources.md)。测试驱动、行为回归、真实运行证据与形式化方法都可以使用，按用户目标和风险选择。形式化结果只说明给定假设与属性下的结论，不能代替用户判断意图，也不能代替模型与实际代码的对照。来源特有的目录、外部技能调用、固定模型和复杂工作流网关，也在运行版中改为本项目可独立执行的方法。
 
+## 版本发布
+
+通过 npm 分发独立技能包。更新版本号与 `CHANGELOG.md` 并推送 main 后，GitHub Actions 会完成跨平台检查、实际压缩包安装验证、npm 发布及 GitHub Release。发布任务使用仓库 Secret `NPM_TOKEN`，附带与 npm 相同的压缩包和校验和。标签、手动 Release 与失败重试方式见[版本发布](docs/release.md)。
+
 ## 维护与验证
 
 从 [AGENTS.md](AGENTS.md) 开始；[关键开发约束](docs/development-constraints.md)说明成熟方法的保留、入口归属和上游同步，[技能编写指南](docs/skill-authoring.md)说明写法，[质量门禁](docs/skill-quality.md)说明预算与提交检查，实际检查结果见 [验证记录](docs/validation.md)。
 
 ```bash
-python3 scripts/check.py
-python3 scripts/check.py --full
-python3 scripts/check_skill_quality.py --report
+node scripts/check.mjs
+node scripts/check.mjs --full
+node scripts/check-skill-quality.mjs --report
 
 # 为本检出启用提交与推送快照检查
-python3 scripts/install_hooks.py
+node scripts/install-hooks.mjs
 ```
 
-校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。
+校验同时拒绝非 JavaScript 运行脚本；执行 `npm run check:package` 验证实际分发包。校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。
 
 ## 致谢与许可
 

@@ -1,6 +1,4 @@
-__pycache__/
 node_modules/
-*.py[cod]
 .DS_Store
 .agents/skills/
 .agents/skills-wta-licenses/
@@ -8,3 +6,7 @@ node_modules/
 .env
 .env.*
 !.env.example
+*.tgz
+dist/
+.npmrc
+npm-debug.log*

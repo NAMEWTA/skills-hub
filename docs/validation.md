@@ -1,6 +1,28 @@
 # 验证记录
 
-## 2026-11-07：入口分工、UI 合并与质量门禁
+本页按变更批次保存实测证据。当前代码统一使用 Node.js；历史章节中的 Python、Bun 和 TypeScript 记录只说明当时执行过什么，不再作为安装前提。当前可复现命令见文末。
+
+## 2026-11-07：Node.js、来源配置与 0.0.1 发布链路
+
+本轮从 `b1425e0f0add39644677cea401ada6863dfaf679` 迁移。安装器、维护检查、技能工具、示例与测试均改为 JavaScript，运行基线为 Node.js 22.14+。本地执行环境为 Linux、Node.js 24.22.1、npm 11.9.0。
+
+| 检查 | 本地实测结果 |
+| --- | --- |
+| 最终完整门禁 | `npm run check:full` 通过，181 项测试通过、0 失败、0 跳过，并实际执行有限状态故障注入 |
+| 安装与质量门禁 | 93 项通过：安装契约 44 项、资源验证 12 项、材料完整性 11 项、篇幅与精确快照 26 项；包含嵌套测试发现及拒绝伪装的非 JavaScript 启动器 |
+| PR 观察器与运行工具 | 68 项通过：54 项既有观察器行为及 14 项迁移边界；包括真实进程清理、Git 工作树、有限状态故障注入、输出保护及实际子进程参数 |
+| 发布边界 | 20 项通过：版本与事件、不可变内容、跨页草稿恢复、失败上传占位、授权附件核对及 latest 防回退 |
+| 状态图捕获回放 | 33 组全部通过；验证当前 Node 解析、投影、反例与报告代码，不是新一轮 TLC 求解 |
+| 实际 npm 压缩包 | `npm pack` 得到 1229 个分发文件，离线安装到隔离消费者，再安装全部 34 个技能；完整资源、许可、执行位及重复安装通过 |
+| 原件与对照 | 648 组身份、源路径、Git blob 和双方摘要保持不变；只更新运行文件映射及本地适配说明 |
+
+脚本不依赖 Python、Bash、Bun 或 TypeScript 编译器。Git 的两个固定 hook 文件名仍为 `pre-commit` / `pre-push`，内容是 Node.js 薄入口。Java/TLC、Git、已认证的 GitHub CLI 及可选 SVG 渲染器是对应功能的明确工具前提，不作为所有技能的安装条件。
+
+来源配置另以六个自然请求独立检查入口和完整方法，覆盖手工截图、邮件与独立追踪器、复用来源 Issue、模型配置、CLI 告警和只复现 UI。修正了仅复现被修复占用误挡，以及需求汇总误用缺陷分诊模板的边界。此检查没有创建实际后台任务、发送消息或运行真实业务 UI。
+
+发布脚本经过独立审查后，验证、打包与发布使用同一个固定 SHA；发布任务按仓库串行，已存在的版本和附件先核对完整性再续传。Windows、macOS、最低 Node 版本及某次 npm / GitHub Release 的真实成功状态，以对应提交的 [验证 Actions](https://github.com/NAMEWTA/skills-wta/actions/workflows/validate.yml) 和 [发布 Actions](https://github.com/NAMEWTA/skills-wta/actions/workflows/release.yml) 为准。工作流配置与本地测试不等于远端已经发布成功。
+
+## 历史：2026-11-07 入口分工、UI 合并与质量门禁
 
 本轮从 `4fe0c70d297be49c8d3c765fccf5a890c4c8b73e` 调整当前技能，未更新来源版本。下面只记录本轮实际完成的检查；后文完整资源重整的结果保留为历史证据。
 
@@ -122,7 +144,7 @@ UTF-8 输出在受限 locale 下实际验证。持续集成还会在三个操作
 
 这些问题在正文步骤处直接修复，同源副本同步核对，没有只在顶部加一句例外说明。完整方法、判断标准和失败分支继续保留。
 
-## 实际执行范围与尚未执行的内容
+## 历史重整的执行范围与当时未执行的内容
 
 - 本地 Python 3.12.14、Node 24.22.1、Java 17.0.20 可用。三个操作系统的结果以当前提交的 GitHub Actions 运行记录为准；工作流配置本身不代表已经通过。
 - 当前环境没有本地 TLC JAR 和 Pele 1.9.0；获取所需发布物的尝试被网络拒绝。因此没有声称执行了新的 TLC 求解或真实 Pele SVG 渲染。已验证缺依赖错误与本地 Mermaid 产物路径。
@@ -139,12 +161,11 @@ UTF-8 输出在受限 locale 下实际验证。持续集成还会在三个操作
 ## 复现入口
 
 ```bash
-python3 scripts/validate.py
-python3 scripts/validate_materials.py
-python3 -m unittest discover -s tests -v
-python3 skills/dev/dev-formal-verify/scripts/demo.py
-# 有适用 Node 与 POSIX shell 时：
-python3 scripts/check_statechart_replay.py
+node scripts/check.mjs --full
+node scripts/check-statechart-replay.mjs
+node scripts/check-package.mjs
 ```
 
-精确原件、中文全文与运行映射见 [资料清单](../materials/manifest.tsv)。持续集成定义见 [校验工作流](../.github/workflows/validate.yml)。这些结果只支持实际检查过的范围，后续修改应针对变化重新选择验证。
+需要 Node.js 22.14+；维护测试中的真实临时仓库需要 Git，npm 包检查需要随 Node 安装的 npm。三个命令不要求 Python、Bun 或 TypeScript 编译器。状态图回放使用本地已捕获资料，不要求新运行 TLC。
+
+精确原件、中文全文与运行映射见 [资料清单](../materials/manifest.tsv)。持续集成定义见 [校验工作流](../.github/workflows/validate.yml)，发版与重试见 [版本发布](release.md)。这些结果只支持实际检查过的范围，后续修改应针对变化重新选择验证。

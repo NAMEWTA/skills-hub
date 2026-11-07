@@ -8,36 +8,36 @@
 
 | 对象 | 本地文件与符号 | 含义 |
 | --- | --- | --- |
-| 被检查代码 | [实现](../assets/example/implementation.py)中的 `read_available`、`commit_reservation` | 真正被枚举器调用的纯函数 |
+| 被检查代码 | [实现](../assets/example/implementation.mjs)中的 `readAvailable`、`commitReservation` | 真正被枚举器调用的纯函数 |
 | 状态 | 同文件 `State` | 可用名额、两个请求的阶段、已持有集合 |
-| 迁移与属性 | [模型](../assets/example/model.py)中的 `transitions`、`INVARIANTS` | 枚举两次调用顺序，检查三个状态不变量 |
-| 检查工具 | [检查器](../scripts/check_model.py) | 广度优先搜索，保存第一次到达每个状态的父指针 |
-| 故障演示 | [演示脚本](../scripts/demo.py) | 在临时副本移除提交保护、验证失败并恢复 |
+| 迁移与属性 | [模型](../assets/example/model.mjs)中的 `transitions`、`INVARIANTS` | 枚举两次调用顺序，检查三个状态不变量 |
+| 检查工具 | [检查器](../scripts/check-model.mjs) | 广度优先搜索，保存第一次到达每个状态的父指针 |
+| 故障演示 | [演示脚本](../scripts/demo.mjs) | 在临时副本移除提交保护、验证失败并恢复 |
 
-一次函数调用被当作一个原子步骤，这是示例的明确假设。真实服务若把检查与写入拆到不同事务或可交错步骤，模型也必须拆分；不能用“Python 有 GIL”代替项目原子性证据。
+一次函数调用被当作一个原子步骤，这是示例的明确假设。真实服务若把检查与写入拆到不同事务或可交错步骤，模型也必须拆分；不能用“JavaScript 同步函数不会交错”代替数据库事务或真实服务原子性证据。
 
 ## 实际运行
 
 将 `SKILL_DIR` 设为本技能 `SKILL.md` 所在目录：
 
 ```sh
-python3 "$SKILL_DIR/scripts/demo.py"
-python3 "$SKILL_DIR/scripts/check_model.py" "$SKILL_DIR/assets/example/model.py" \
+node "$SKILL_DIR/scripts/demo.mjs"
+node "$SKILL_DIR/scripts/check-model.mjs" "$SKILL_DIR/assets/example/model.mjs" \
   --max-states 100 --max-transitions 1000
 ```
 
-演示依次检查原实现、把临时副本中真实 `commit_reservation` 的再次检查移除、恢复原实现。三个结果必须依次为通过、发现反例、通过。发生异常也恢复临时副本；不接触用户产品代码，不修改技能内示例。
+演示依次检查原实现、把临时副本中真实 `commitReservation` 的再次检查移除、恢复原实现。三个结果必须依次为通过、发现反例、通过。发生异常也恢复临时副本；不接触用户产品代码，不修改技能内示例。
 
 ## 检查器接口
 
-模型是可信的本地 Python 代码，会被执行。提供：
+模型是可信的本地 JavaScript 模块，会被执行。导出：
 
-- `initial_states()`：生成至少一个不可变、可哈希的初始状态。
-- `transitions(state)`：生成有限个 `(动作名称, 后继状态)`；动作名为非空字符串。
-- `INVARIANTS`：非空字典，规则名映射到返回 `bool` 的状态检查函数。
+- `initialStates()`：生成至少一个可按值比较的初始状态。
+- `transitions(state)`：生成有限个 `[动作名称, 后继状态]`；动作名为非空字符串。
+- `INVARIANTS`：非空对象，规则名映射到返回 `boolean` 的状态检查函数。
 - `describe(state)`：可选，把状态描述为便于阅读的中文文本。
 
-每个状态必须把所有影响下一步行为或属性的值纳入相等性与哈希。遗漏关键字段会合并本来不同的状态。函数必须只依赖传入状态和固定模型常量；不可隐藏随机数、时钟、网络或搜索过程中的可变全局值。
+状态使用有限 JSON 值，并把普通对象与数组递归 `Object.freeze`；不接受可变对象、循环引用、访问器、符号属性、稀疏数组或特殊类实例。检查器按全部字段的规范表示比较状态。每个状态必须包含所有影响下一步行为或属性的值；遗漏关键字段会合并本来不同的状态。函数必须只依赖传入状态和固定模型常量；不可隐藏随机数、时钟、网络或搜索过程中的可变全局值。
 
 `--max-states` 必须显式指定；`--max-transitions` 默认 100000，只是搜索资源保护。达到任一预算时报告未完成。模型函数本身必须有限返回；外部自动运行还应设置符合本次任务的时间与内存限制。
 

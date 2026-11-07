@@ -31,13 +31,13 @@ description: "为高风险代码建立并维护可执行的形式化验证：选
 
 将 `SKILL_DIR` 设为本技能 `SKILL.md` 所在目录。
 
-- [TLC 运行脚本](assets/run-tlc.sh)调用本地 Java 与 JAR，保留结果与退出码；复制到项目验证包后填写真实模型路径。
-- [有限状态检查器](scripts/check_model.py)使用 Python 3.10+ 标准库，穷举可信 Python 模型给出的可达状态并检查状态不变量，保留最短反例。它不解释 TLA+、不检查时序逻辑或公平性，也不替代通用证明器。
-- [示例说明](references/example.md)介绍一个有两个请求、一个名额的演示；[运行演示](scripts/demo.py)真实检查示例代码、在临时副本中移除提交校验并证明检查捕获故障。例子数字是教学边界，不是其他项目的默认配置。
+- [TLC 运行脚本](assets/run-tlc.mjs)调用本地 Java 与 JAR，保留结果与退出码；复制到项目验证包后填写真实模型路径。
+- [有限状态检查器](scripts/check-model.mjs)使用 Node.js 22.14+ 标准库，穷举可信 JavaScript 模型给出的可达状态并检查状态不变量，保留最短反例。它不解释 TLA+、不检查时序逻辑或公平性，也不替代通用证明器。
+- [示例说明](references/example.md)介绍一个有两个请求、一个名额的演示；[运行演示](scripts/demo.mjs)真实检查示例代码、在临时副本中移除提交校验并证明检查捕获故障。例子数字是教学边界，不是其他项目的默认配置。
 
 ```sh
-python3 "$SKILL_DIR/scripts/demo.py"
-python3 "$SKILL_DIR/scripts/check_model.py" /absolute/project/model.py --max-states 1000
+node "$SKILL_DIR/scripts/demo.mjs"
+node "$SKILL_DIR/scripts/check-model.mjs" /absolute/project/model.mjs --max-states 1000
 ```
 
 第二条命令的 `1000` 只是命令格式示例；实际预算从本次模型的规模和资源限制决定。达到预算而未穷尽时，报告未完成。图示可选使用已安装的 `dev-statechart`，本技能的执行与解释不依赖它。

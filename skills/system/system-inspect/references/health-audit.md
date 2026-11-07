@@ -10,14 +10,14 @@
 
 先确认目标是用户本机、远程主机、WSL 还是容器；工具所在环境不能替代用户设备。默认仅审计。已有明确具体改动授权也不直接套用一键优化；先验证前置条件和回滚。
 
-Python 3.10+ 的 [基线脚本](../scripts/inspect.py) 不联网、不提权、不递归扫描、不调用包管理器、不改设置。`SKILL_DIR` 为本技能 `SKILL.md` 所在目录（本文件的上一级目录）：
+Node.js 22.14+ 的 [基线脚本](../scripts/inspect.mjs) 不联网、不提权、不递归扫描、不调用包管理器、不改设置。`SKILL_DIR` 为本技能 `SKILL.md` 所在目录（本文件的上一级目录）：
 
 ```bash
-python3 "$SKILL_DIR/scripts/inspect.py"
-python3 "$SKILL_DIR/scripts/inspect.py" --path /path/on/target/volume
+node "$SKILL_DIR/scripts/inspect.mjs"
+node "$SKILL_DIR/scripts/inspect.mjs" --path /path/on/target/volume
 ```
 
-PowerShell 使用 `& python "$SKILL_DIR\scripts\inspect.py" --path 'C:\'`，先验证解释器；有 py launcher 可用 `py -3`。路径包含空格必须引用。输出隐藏用户名和路径，只说明所选文件系统；CPU 数量和磁盘余量不是性能评分。
+PowerShell 使用 `node "$SKILL_DIR\scripts\inspect.mjs" --path 'C:\'`，先确认 Node.js 版本。路径包含空格必须引用。输出隐藏用户名和路径，只说明所选文件系统；CPU 数量和磁盘余量不是性能评分。
 
 按系统读取 [平台工作流](platforms.md)，采集与症状相关的短时证据。复用已有结果，避免反复全盘扫描。记录版本、架构、权限、工具存在性、采样时间/负载、磁盘可用量以及失败/未知项。默认不导出完整环境、进程命令行、凭据或日志。
 

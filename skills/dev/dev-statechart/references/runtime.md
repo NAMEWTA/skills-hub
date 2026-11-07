@@ -6,13 +6,13 @@
 
 | 组件 | 要求 | 用途 |
 | --- | --- | --- |
-| 操作系统 | Linux、macOS，或具备 `/bin/sh` 的 WSL 环境 | 启动器、进程组终止、临时目录回收 |
-| TypeScript 运行时 | Node 22.18 至 22.x、Node 23.6+，或 Bun 1.1.5+，或 Deno 2.0+ | 运行本技能完整脚本 |
+| 操作系统 | Linux、macOS 或 Windows | Node 启动器与临时目录回收；Windows 进程树清理使用系统自带的 `taskkill` |
+| JavaScript 运行时 | Node.js 22.14 或更高版本 | 直接运行本技能的 `.mjs` 文件，无需编译器或其他脚本解释器 |
 | Java | 11 或更高版本，按所选 TLC 版本要求核实 | 执行语法分析与模型检查 |
 | TLC | 本地 `tla2tools.jar`，兼容性基线为 1.7.4 | SANY 与 TLC |
 | Pele | 仅生成 SVG 时需要 `pele@1.9.0` | 本地 Mermaid 渲染 |
 
-主命令不会下载、升级或替换这些工具。使用宿主已配置的包管理器或用户认可的安装渠道准备缺失依赖；工具安装需要网络时如实说明。核心文本报告不依赖 Pele。原生 Windows 未验证，选择 WSL 或其他已支持环境，不声称 PowerShell 能直接执行 POSIX 启动器。
+主命令不会下载、升级或替换这些工具。使用宿主已配置的包管理器或用户认可的安装渠道准备缺失依赖；工具安装需要网络时如实说明。核心文本报告不依赖 Pele。各平台仍须核实实际 Java、TLC 与进程终止权限；录制输出的回放通过不能代替真实 TLC 执行或进程中断验证。
 
 TLC 1.7.4 对应 JAR 的 SHA-256 为 `936a262061c914694dfd669a543be24573c45d5aa0ff20a8b96b23d01e050e88`。通过实际文件摘要核验，不因为文件名相同就视为同一版本。其他 TLC 版本可能改变消息协议、状态枚举或 SANY 输出，使用前运行代表性模型并记录差异。
 
@@ -23,16 +23,18 @@ TLC 1.7.4 对应 JAR 的 SHA-256 为 `936a262061c914694dfd669a543be24573c45d5aa0
 ```sh
 export TLA2TOOLS=/absolute/tools/tla2tools.jar
 export JAVA=/absolute/java/bin/java
-"$SKILL_DIR/scripts/statechart" --help
+node "$SKILL_DIR/scripts/statechart.mjs" --help
 "$JAVA" -version
 "$JAVA" -cp "$TLA2TOOLS" tlc2.TLC -help
-"$SKILL_DIR/scripts/statechart" /absolute/models/Reservation.tla \
+node "$SKILL_DIR/scripts/statechart.mjs" /absolute/models/Reservation.tla \
   --config /absolute/models/Reservation.cfg \
   --view /absolute/models/view.mjs \
   --out /absolute/runs/reservation-001
 ```
 
 `JAVA` 未设置时使用当前 PATH 中的 `java`。确认解释器与 JAR 为本次项目允许的本地工具。配置和视图文件都应可信；视图是执行的 JavaScript 模块，并非被动数据。
+
+在 PowerShell 中以 `$env:TLA2TOOLS`、`$env:JAVA` 设置环境变量，再运行 `node "$SKILL_DIR/scripts/statechart.mjs" ...`。参数中的目录始终加引号；不需要 Bash 或 WSL。
 
 ## SVG 可选依赖
 

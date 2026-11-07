@@ -9,7 +9,7 @@
 ```sh
 export TLA2TOOLS=/absolute/tools/tla2tools.jar
 export JAVA=/absolute/java/bin/java
-sh "$SKILL_DIR/assets/run-tlc.sh" /absolute/models/Model.tla \
+node "$SKILL_DIR/assets/run-tlc.mjs" /absolute/models/Model.tla \
   /absolute/models/Model.cfg /absolute/runs/model-001
 ```
 

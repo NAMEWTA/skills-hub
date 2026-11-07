@@ -8,22 +8,16 @@
 
 | 工具 | 必需条件 | 未满足时 |
 |---|---|---|
-| PR 观察器 | Node.js 24，或能执行本包 TypeScript 的 Bun；本地 `commander` 14.0.0；真实查询需要已认证的 `gh` 和对应仓库读取权限。 | 启动器不会安装依赖。缺少 `commander` 时以 69 退出；没有 `gh` 或读取权限时明确报告失败。 |
-| 工作树审计 | Bash、Git、`du`、`awk`、`grep`、`sort`、`sed`、`stat`、`date`。Git 必须支持 `worktree list --porcelain -z`。 | 缺少基础条件时停止，不能把无结果解释为安全。 |
-| 可选 PR 查询 | 审计显式传 `--with-pr`，另需 `jq` 与已认证的 Origin 或 `gh`。 | 查询失败时报告限制，保留本地证据。 |
-| 可选聊天关联 | 审计显式传 `--transcripts <目录>`，或由用户设置 `SKILLS_WTA_TRANSCRIPTS_DIR`；需要 `rg`。 | 默认不读任何聊天记录，不推断宿主目录。 |
+| PR 观察器 | Node.js 22.14 或更高版本；真实查询需要已认证的 `gh` 和对应仓库读取权限。 | 没有 `gh` 或读取权限时明确报告查询失败。 |
+| 工作树审计 | Node.js 22.14 或更高版本；Git 必须支持 `worktree list --porcelain -z`。 | 缺少基础条件时停止，不能把无结果解释为安全。 |
+| 可选 PR 查询 | 审计显式传 `--with-pr`，另需已认证的 Origin 或 `gh`。 | 查询失败时报告限制，保留本地证据。 |
+| 可选聊天关联 | 审计显式传 `--transcripts <目录>`，或由用户设置 `SKILLS_WTA_TRANSCRIPTS_DIR`。 | 默认不读任何聊天记录，不推断宿主目录。 |
 
-依赖版本在[工具包声明](../scripts/local-tools/package.json)中固定。使用项目已经准备好的本地依赖，或由用户提供的离线安装包。依赖缓存已经包含该版本时，可明确执行下面的离线安装；缓存缺失会失败，不转为联网下载：
-
-```bash
-npm --prefix "$SKILL_DIR/scripts/local-tools" install --offline --ignore-scripts --no-audit --no-fund --omit=dev
-```
-
-Node.js 24 可直接运行这里的可擦除 TypeScript，无需构建。Bun 路径执行同一份代码；不要将未在当前环境执行过的 Bun 路径写成已验证。工具不会自行创建循环任务、安装运行时、登录账户或读取其他项目上下文。
+运行时要求记录在[工具包声明](../scripts/local-tools/package.json)中。脚本仅使用 Node 标准库，无需 `npm install` 或编译；文件统计、JSON 解析与文本检索也在 Node 内完成。工具不会自行创建循环任务、安装运行时、登录账户或读取其他项目上下文。
 
 ## PR 观察器
 
-[启动器](../scripts/local-tools/watch-pr/watch-pr.mjs)使用[命令行入口](../scripts/local-tools/watch-pr/cli.ts)、[GitHub 读取器](../scripts/local-tools/watch-pr/github.ts)、[判定与队列逻辑](../scripts/local-tools/watch-pr/policy.ts)、[输出格式](../scripts/local-tools/watch-pr/render.ts)和[类型契约](../scripts/local-tools/watch-pr/types.ts)。全部功能在本包内。
+[启动器](../scripts/local-tools/watch-pr/watch-pr.mjs)使用[命令行入口](../scripts/local-tools/watch-pr/cli.mjs)、[GitHub 读取器](../scripts/local-tools/watch-pr/github.mjs)、[判定与队列逻辑](../scripts/local-tools/watch-pr/policy.mjs)、[输出格式](../scripts/local-tools/watch-pr/render.mjs)和[值校验辅助](../scripts/local-tools/watch-pr/types.mjs)。全部功能在本包内。
 
 先看帮助，或只读取一次状态：
 
@@ -32,7 +26,7 @@ node "$SKILL_DIR/scripts/local-tools/watch-pr/watch-pr.mjs" --help
 node "$SKILL_DIR/scripts/local-tools/watch-pr/watch-pr.mjs" --owner OWNER --repo REPO --pr 123 --status-only --pretty
 ```
 
-有本地 Bun 时，可将命令中的 `node` 换成 `bun`。PR 观察器只支持 GitHub。Origin 的 PR 状态应使用其实际 CLI 直接读取，不把这个 GitHub 观察器的结论套到其他托管平台。
+PR 观察器只支持 GitHub。Origin 的 PR 状态应使用其实际 CLI 直接读取，不把这个 GitHub 观察器的结论套到其他托管平台。
 
 ### 三种观察方式
 
@@ -73,21 +67,22 @@ node "$SKILL_DIR/scripts/local-tools/watch-pr/watch-pr.mjs" --owner OWNER --repo
 | 6 | 草稿、要求修改或关闭未合并等门槛。 |
 | 7 | 查询证据不可用，或错误预算耗尽。 |
 | 64 | 命令用法错误。 |
-| 69 | 本地运行依赖缺失。 |
 
 名为 `Code Review Gate` 的检查会单独归类，不作为普通失败或待完成检查等待人处理。依照[PR 跟进](babysit.md)区分需要人批准的事项，并在实际合并前按[交付方法](verified-landing.md)检查平台当前门槛、当前补丁证据和授权。`READY` 不能越过这些要求。
 
 ## 工作树审计
 
-[审计脚本](../scripts/local-tools/worktree-audit.sh)默认只读取本地已有 Git 引用，不执行 `fetch`。只有明确加 `--with-pr` 才查询托管平台，只有明确给对话目录才搜索该目录：
+[审计脚本](../scripts/local-tools/worktree-audit.mjs)默认只读取本地已有 Git 引用，不执行 `fetch`。只有明确加 `--with-pr` 才查询托管平台，只有明确给对话目录才搜索该目录：
 
 ```bash
-bash "$SKILL_DIR/scripts/local-tools/worktree-audit.sh" --base main "/path/to/project"
-bash "$SKILL_DIR/scripts/local-tools/worktree-audit.sh" --base origin/main --with-pr "/path/to/project"
-bash "$SKILL_DIR/scripts/local-tools/worktree-audit.sh" --base main --transcripts "/path/to/chosen-transcripts" "/path/to/project"
+node "$SKILL_DIR/scripts/local-tools/worktree-audit.mjs" --base main "/path/to/project"
+node "$SKILL_DIR/scripts/local-tools/worktree-audit.mjs" --base origin/main --with-pr "/path/to/project"
+node "$SKILL_DIR/scripts/local-tools/worktree-audit.mjs" --base main --transcripts "/path/to/chosen-transcripts" "/path/to/project"
 ```
 
 输出按工作树大小降序排列，跳过主工作树。列的含义是：`SIZE` 大小，`AGE` 距离头提交的天数，`MERGED` 是否为基础引用的祖先，`DIRTY` 是否存在已跟踪修改或未跟踪文件，`REMOTE` 与本地远程引用的关系，`PR` 关联状态，`LAST_CHAT` 明确搜索范围内的最近记录，`BUCKET` 建议分组，`WORKTREE` 真实目录。路径中的制表符和换行在表格中转义，空格保留。
+
+目录大小不跟随符号链接，并对同一工作树中的硬链接去重；文件系统提供分配块数时使用分配大小，否则使用逻辑字节数。聊天关联只遍历显式目录中的普通文本文件，跳过隐藏路径、符号链接和二进制文件；按内容中的工作树绝对路径查找关联，不读取其他目录，也不依赖 Git 忽略规则。
 
 | 分组 | 后续判断 |
 |---|---|

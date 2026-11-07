@@ -19,14 +19,14 @@ description: 在真实目标主机上只读定位磁盘、CPU、内存、进程�
 
 ## 可选离线基线
 
-有 Python 3.10+ 时，可运行本目录的 [只读脚本](scripts/inspect.py)。`SKILL_DIR` 表示本 SKILL.md 所在目录：
+有 Node.js 22.14+ 时，可运行本目录的 [只读脚本](scripts/inspect.mjs)。`SKILL_DIR` 表示本 SKILL.md 所在目录：
 
 ```bash
-python3 "$SKILL_DIR/scripts/inspect.py"
-python3 "$SKILL_DIR/scripts/inspect.py" --path "/path/on/target/volume"
+node "$SKILL_DIR/scripts/inspect.mjs"
+node "$SKILL_DIR/scripts/inspect.mjs" --path "/path/on/target/volume"
 ```
 
-原生 PowerShell 使用已确认的 `python` 或 `py -3`。脚本仅读取当前 OS、架构、CPU 数量、所选路径所在文件系统空间与可用的 load average；不联网、不扫描目录、不读取日志或配置。它不能识别所有虚拟化边界，也不是性能评分。CPU 数量不代表容器可用配额。
+原生 PowerShell 使用已确认的 `node`。脚本仅读取当前 OS、架构、CPU 数量、所选路径所在文件系统空间与可用的 load average；不联网、不扫描目录、不读取日志或配置。它不能识别所有虚拟化边界，也不是性能评分。CPU 数量不代表容器可用配额。
 
 ## 交付与记录
 
