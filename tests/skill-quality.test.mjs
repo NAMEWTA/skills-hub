@@ -69,7 +69,7 @@ class GitFixture {
     this.entry = write(path.join(this.root, entry), valid);
     for (const filename of [
       'install.mjs', 'scripts/check.mjs', 'scripts/check-skill-quality.mjs',
-      'scripts/validate.mjs', 'scripts/validate-materials.mjs', 'scripts/install-hooks.mjs',
+      'scripts/validate.mjs', 'scripts/validate-materials.mjs', 'scripts/check-persistence-roots.mjs', 'scripts/install-hooks.mjs',
       '.githooks/pre-commit', '.githooks/pre-push', '.githooks/run-check.mjs',
     ]) {
       const target = path.join(this.root, filename); fs.mkdirSync(path.dirname(target), { recursive: true });
