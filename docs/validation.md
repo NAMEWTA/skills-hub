@@ -18,7 +18,7 @@
 
 脚本不依赖 Python、Bash、Bun 或 TypeScript 编译器。Git 的两个固定 hook 文件名仍为 `pre-commit` / `pre-push`，内容是 Node.js 薄入口。Java/TLC、Git、已认证的 GitHub CLI 及可选 SVG 渲染器是对应功能的明确工具前提，不作为所有技能的安装条件。
 
-提交 `08afd30616be936c9b1702e1c6a9376d707e9b79` 的[实际三平台验证](https://github.com/NAMEWTA/skills-wta/actions/runs/42371011778)全部成功：Linux / Node.js 22.14.0、macOS / Node.js 24、Windows / Node.js 24，均完成全部门禁、33 组状态图回放和真实 npm 包安装。当时发布测试为 21 项，总计 187 项；Windows 184 项通过，3 项仅针对 POSIX 执行位的检查明确跳过，实际 Git commit / pre-push 检查没有跳过。新增的 10 项暂存恢复检查计入上表，远端结果以包含它们的后续提交为准。
+发布提交 `9de899dcb0a27d46fd3f82750ed96b51c8967655` 的[实际三平台验证](https://github.com/NAMEWTA/skills-wta/actions/runs/42372499669)全部成功：Linux / Node.js 22.14.0、macOS / Node.js 24、Windows / Node.js 24，均完成全部门禁、33 组状态图回放和真实 npm 包安装。Linux 与 macOS 的 197 项测试全部通过；Windows 194 项通过，3 项仅针对 POSIX 执行位的检查明确跳过，实际 Git commit / pre-push 检查没有跳过。[发布工作流](https://github.com/NAMEWTA/skills-wta/actions/runs/42372499686)对同一个固定 SHA 再次完成三平台验证，随后发布任务成功。
 
 跨平台执行发现并修正了目录别名比较、Git 空配置路径和工作树路径表示差异。Windows 的 hook 根目录识别改由 Git 的工作树与前缀信息判断；显式对话路径按已知来源重建别名，并以真实目录身份核对。真实别名夹具在 Linux 上复现原来的漏匹配，修复后通过；没有扩大历史读取范围或弱化原有分类断言。
 
@@ -26,7 +26,11 @@
 
 发布脚本经过独立审查后，验证、打包与发布使用同一个固定 SHA；发布任务按仓库串行，已存在的版本和附件先核对完整性再续传。Windows、macOS、最低 Node 版本及某次 npm / GitHub Release 的真实成功状态，以对应提交的 [验证 Actions](https://github.com/NAMEWTA/skills-wta/actions/workflows/validate.yml) 和 [发布 Actions](https://github.com/NAMEWTA/skills-wta/actions/workflows/release.yml) 为准。工作流配置与本地测试不等于远端已经发布成功。
 
-首次实际发布的 npm CLI 返回 `+ skills-wta@0.0.1`，公开版本却仍为 404；随后同一提交重试明确返回 `Cannot publish over previously staged version "0.0.1"`。因此此时只能确认 npm 暂存已接收，不能宣称公开发布成功。后续只调整未分发的发布脚本、测试与文档，重新打包的 SHA-1 为 `df3f4b300594e17a5f362a863ea86470784b1e85`、SHA-256 为 `53474c60cca92724c7777033858542c2ba159a96fde5802f3f7fed24a8e05b6d`，与上传原件一致。恢复流程会只读核验 stage 并准备 GitHub 草稿；正式发布仍须以维护者完成 npm 审批后、公开版本完整性核对成功为依据。详见[暂存审批与续跑](release.md#npm-进入暂存审批时)。
+首次实际发布的 npm CLI 返回 `+ skills-wta@0.0.1`，公开版本却仍为 404；随后同一提交重试明确返回 `Cannot publish over previously staged version "0.0.1"`。当时只确认 npm 暂存已接收，没有将其记为公开发布成功。后续只调整未分发的发布脚本、测试与文档，重新打包的 SHA-1 为 `df3f4b300594e17a5f362a863ea86470784b1e85`、SHA-256 为 `53474c60cca92724c7777033858542c2ba159a96fde5802f3f7fed24a8e05b6d`，与上传原件一致。
+
+最终发布任务于 2026-11-07 12:28 UTC 读到 npm 公开的 `skills-wta@0.0.1`，核对完整 SHA-512 后继续完成 [GitHub Release v0.0.1](https://github.com/NAMEWTA/skills-wta/releases/tag/v0.0.1)。API 回读确认 `draft=false`、`prerelease=false`，标签指向上述发布提交，`.tgz` 与 `SHA256SUMS` 两个附件均上传完成，压缩包摘要与原件一致。正式发布时间为 `2026-11-07T12:28:58Z`。
+
+本次成功路径是“识别已经公开且内容相同的 npm 版本，再完成 GitHub Release”，没有执行 npm stage 批准操作，也不推断此前暂存状态解除的操作者。暂存分支的只读 API、原件校验、草稿保持和审批后续跑由 10 项隔离测试覆盖；没有把这些模拟结果记为实际 stage 审批联调。后续若再次遇到待审批版本，处理方式见[暂存审批与续跑](release.md#npm-进入暂存审批时)。
 
 ## 历史：2026-11-07 入口分工、UI 合并与质量门禁
 
