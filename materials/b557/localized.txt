@@ -1,0 +1,224 @@
+import { describe, expect, it } from "bun:test";
+import { type CliRuntime, main, parseArgs } from "./cli.ts";
+import { fakeReader, passingCheck } from "./fakes.test-helper.ts";
+import { renderJson, renderPretty } from "./render.ts";
+import type { GitHubReader, WatcherVerdict } from "./types.ts";
+import { parsePrNumber } from "./types.ts";
+
+const silentIo = { stdout: () => {}, stderr: () => {} };
+
+function testRuntime(reader: GitHubReader): {
+  readonly runtime: CliRuntime;
+  readonly stdout: string[];
+  readonly stderr: string[];
+} {
+  const stdout: string[] = [];
+  const stderr: string[] = [];
+  return {
+    stdout,
+    stderr,
+    runtime: {
+      reader,
+      clock: {
+        now: () => 0,
+        observedAt: () => "2026-07-26T00:00:00.000Z",
+        async sleep() {
+          throw new Error("测试意外进入等待");
+        },
+      },
+      stdout: (value) => stdout.push(value),
+      stderr: (value) => stderr.push(value),
+    },
+  };
+}
+
+describe("parseArgs", () => {
+  it("使用指定默认值", () => {
+    expect(parseArgs([], silentIo)).toMatchObject({
+      owner: null,
+      repo: null,
+      pr: null,
+      mode: "single",
+      stackPrs: [],
+      statusOnly: false,
+      pretty: false,
+      polling: {
+        interval: 60,
+        sweepInterval: 300,
+        timeout: 0,
+        maxQueryErrors: 5,
+        allowDraft: false,
+      },
+    });
+  });
+
+  it("按自底向上顺序解析固定队列堆叠", () => {
+    const parsed = parseArgs(
+      [
+        "--queued-stack",
+        "--stack-prs",
+        "#10, 11,#12",
+        "--interval",
+        "2.5",
+        "--sweep-interval",
+        "30",
+        "--timeout",
+        "0",
+        "--max-query-errors",
+        "3",
+        "--allow-draft",
+        "--pretty",
+      ],
+      silentIo
+    );
+    expect(parsed.mode).toBe("queued-stack");
+    expect(parsed.stackPrs.map(Number)).toEqual([10, 11, 12]);
+    expect(parsed.polling).toEqual({
+      interval: 2.5,
+      sweepInterval: 30,
+      timeout: 0,
+      maxQueryErrors: 3,
+      allowDraft: true,
+    });
+    expect(parsed.pretty).toBe(true);
+  });
+
+  it("将所有无效模式和数值形状归为用法错误", async () => {
+    const invalid = [
+      ["--unknown"],
+      ["--interval", "0"],
+      ["--sweep-interval", "-1"],
+      ["--timeout", "-1"],
+      ["--max-query-errors", "1.5"],
+      ["--stack", "--queued-stack"],
+      ["--stack-prs", "1,2"],
+      ["--queued-stack", "--stack-prs", "1,1"],
+    ];
+    for (const argv of invalid) {
+      const harness = testRuntime(fakeReader());
+      expect(await main(argv, harness.runtime)).toBe(64);
+      expect(harness.stdout).toEqual([]);
+      expect(harness.stderr.join("")).toContain("error:");
+    }
+  });
+});
+
+describe("渲染", () => {
+  const context = {
+    owner: "owner",
+    repo: "repo",
+    number: parsePrNumber(1),
+  };
+  const status = {
+    schemaVersion: 1,
+    sequence: 1,
+    observedAt: "2026-07-26T00:00:00.000Z",
+    mode: "single",
+    kind: "STATUS",
+    terminal: true,
+    exitCode: 0,
+    reason: "status-only",
+    rows: [
+      {
+        kind: "merged",
+        context,
+        facts: {
+          context,
+          mergeable: "MERGEABLE",
+          mergeStateStatus: "CLEAN",
+          reviewDecision: "APPROVED",
+          headRefOid: "head",
+          headRefName: "feature",
+          baseRefName: "main",
+          state: "MERGED",
+          mergedAt: "now",
+          isDraft: false,
+        },
+      },
+    ],
+  } satisfies WatcherVerdict;
+
+  it("默认输出紧凑且有效的 JSON", () => {
+    const rendered = renderJson(status);
+    expect(rendered.endsWith("\n")).toBe(true);
+    expect(JSON.parse(rendered)).toEqual(status);
+  });
+
+  it("只根据同一裁决渲染 Markdown 表格", () => {
+    const rendered = renderPretty(status);
+    expect(rendered).toContain("| PR | CI | 审查 | 合并 |");
+    expect(rendered).toContain(
+      "| [#1](https://github.com/owner/repo/pull/1) | \u2014 | \u2014 | ✅ 已合并 |"
+    );
+  });
+});
+
+describe("main", () => {
+  it("返回 EX_USAGE 64，只向 stderr 写用法错误", async () => {
+    const harness = testRuntime(fakeReader());
+    expect(await main(["--interval", "0"], harness.runtime)).toBe(64);
+    expect(harness.stdout).toEqual([]);
+    expect(harness.stderr.join("")).toContain(
+      "option '--interval <seconds>' argument '0' is invalid"
+    );
+  });
+
+  it("queued-stack 的 status-only 跳过队列状态机", async () => {
+    const reader = fakeReader();
+    const harness = testRuntime(reader);
+    const code = await main(
+      [
+        "--owner",
+        "owner",
+        "--repo",
+        "repo",
+        "--queued-stack",
+        "--stack-prs",
+        "1",
+        "--status-only",
+      ],
+      harness.runtime
+    );
+    expect(code).toBe(0);
+    expect(harness.stdout).toHaveLength(1);
+    const verdict: unknown = JSON.parse(harness.stdout[0]);
+    expect(verdict).toMatchObject({
+      kind: "STATUS",
+      terminal: true,
+      exitCode: 0,
+      mode: "queued-stack",
+    });
+    expect(harness.stdout[0]).not.toContain('"kind":"QUEUE"');
+  });
+
+  it("GitHub 侧隐藏的 CI 拒绝返回退出码 4", async () => {
+    const reader = fakeReader({
+      facts: { mergeStateStatus: "BLOCKED" },
+      fastPath: { kind: "checks", checks: [passingCheck()] },
+      commitRollups: [{ oid: "head", state: "FAILURE" }],
+    });
+    const harness = testRuntime(reader);
+    const code = await main(
+      ["--owner", "owner", "--repo", "repo", "--pr", "1"],
+      harness.runtime
+    );
+    expect(code).toBe(4);
+    expect(harness.stdout).toHaveLength(1);
+    expect(JSON.parse(harness.stdout[0])).toMatchObject({
+      kind: "BLOCKER",
+      exitCode: 4,
+      blocker: {
+        kind: "failing-checks",
+        ci: { kind: "ci-github-rejected" },
+      },
+    });
+  });
+
+  it("不调用读取器即可显示帮助", async () => {
+    const reader = fakeReader();
+    const harness = testRuntime(reader);
+    expect(await main(["--help"], harness.runtime)).toBe(0);
+    expect(harness.stdout.join("")).toContain("JSON（轮询时为 NDJSON）");
+    expect(reader.calls).toEqual([]);
+  });
+});

@@ -1,0 +1,23 @@
+skills-wta license bundle
+
+This directory accompanies all installed skills-wta skill packages.
+Retain this entire directory when redistributing any of those packages.
+
+Original skills-wta material: PROJECT-LICENSE.txt
+Licensed source material and Chinese adaptations:
+- DeepSeek: deepseek-harness-MIT.txt
+- Matt Pocock: mattpocock-skills-MIT.txt
+- Lauren Tan: pstack-MIT.txt
+- Elaya: ai-design-skills-MIT.txt
+- wta: Speculo-MIT.txt
+- Leonxlnx: taste-skill-MIT.txt
+
+Individual copyright and permission notices remain unchanged in these files.
+
+PR visual-explanation material credited to Dex Horthy / HumanLayer:
+- Apache License 2.0: humanlayer-Apache-2.0.txt
+- Original notice: humanlayer-NOTICE.txt
+The PR material has been translated into Chinese and adapted to skills-wta.
+The original attribution is preserved in the repository material collection.
+The other component names in the reproduced HumanLayer NOTICE do not imply
+that those software components are included in skills-wta.

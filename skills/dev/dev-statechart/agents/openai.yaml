@@ -1,0 +1,4 @@
+interface:
+  display_name: "状态图与反例路径"
+  short_description: "检查有限状态模型并用中文状态图呈现约束违例与最短反例路径"
+  default_prompt: "使用 $dev-statechart 为当前功能建立贴合代码的状态模型，运行检查并解释反例。"

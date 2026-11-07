@@ -1,0 +1,4 @@
+interface:
+  display_name: "问题复现与修复"
+  short_description: "通过真实界面复现缺陷，验证已有修复，完成有前后证据的范围受限修复。"
+  default_prompt: "请使用 $dev-issue-fix 处理已分诊的问题，通过真实界面确认复现，优先验证已有补丁，再按授权修复。"

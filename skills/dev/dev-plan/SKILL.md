@@ -5,9 +5,9 @@ description: 把开发规格、大需求或迁移拆成可独立验收的垂直�
 
 # 垂直切片与实施计划
 
-保留 Matt Pocock `to-tickets` 的 **tracer bullet**：每个切片贯穿完成该行为所需的层，交付一件可以演示或验证的事情。计划服务于实施，不建立额外的工作流状态机。
+使用**曳光弹式垂直切片**：每个切片贯穿完成该行为所需的层，交付一件可以演示或验证的事情。计划服务于实施，不建立额外的工作流状态机。
 
-按 SDD 安排规格、实现和实现后的验证；禁止把 TDD、先写失败测试或红绿重构作为切片步骤。
+每个切片说明目标行为、真实依赖与验收方式；可以采用 TDD 短循环、实现后行为验证或适合该切片的其他方式。
 
 ## 从完整上下文开始
 
@@ -62,4 +62,18 @@ description: 把开发规格、大需求或迁移拆成可独立验收的垂直�
 
 本技能交付一张可执行的工作图。可选接 `dev-build`；单独安装时也能完成全部计划工作。
 
-[来源与适配说明](references/sources.md)
+## 本地完整方法
+
+| 任务形态 | 本包材料 |
+| --- | --- |
+| 已有规格，需要拆成端到端切片 | [完整切片方法](references/vertical-slicing.md) |
+| 大需求尚看不清路线 | [决策地图](references/uncertainty-map.md)，区分已知问题、尚未明确和范围之外 |
+| 组织实现分工与共享写入边界 | [功能执行](references/feature-execution.md) |
+| 跨阶段或多个 PR，需要实施与证据清单 | [多阶段完整计划模板](references/multiphase-plan.md)，按规模保留适用部分 |
+| 没有外部 tracker | [本地工作记录](references/local-work-records.md) |
+| 还缺产品选择或准确术语 | [决策访谈](references/decision-interview.md)、[领域建模](references/domain-modeling.md)、[词汇表格式](references/glossary-format.md) |
+| 需要记录持久取舍 | [决定记录格式](references/decision-format.md) |
+| 未知问题能通过实际运行解决 | [原型方法](references/prototype-method.md)、[逻辑原型](references/logic-prototype.md)、[界面原型](references/ui-prototype.md) |
+| 未知问题依赖技术资料或代码事实 | [研究方法](references/research-method.md) |
+
+以上资源均为本包文件。复杂模板提供完整可选覆盖面，不要求小任务机械填满全部栏目。

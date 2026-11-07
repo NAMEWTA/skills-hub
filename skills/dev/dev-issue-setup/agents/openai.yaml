@@ -1,0 +1,4 @@
+interface:
+  display_name: "问题自动化配置"
+  short_description: "配置独立的报告分诊与复现修复流程，验证集成、线程安全和实际自动化能力。"
+  default_prompt: "请使用 $dev-issue-setup 为当前项目配置问题分诊与复现自动化，复用已有授权，先完成可审查配置和验证。"

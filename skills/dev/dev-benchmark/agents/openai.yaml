@@ -1,0 +1,4 @@
+interface:
+  display_name: "性能测量与持续优化"
+  short_description: "核验性能数字的限制因素、错误、完成工作量与复现性，指导真实收益的持续优化。"
+  default_prompt: "使用 $dev-benchmark 检查这项性能结论，并按真实工作负载设计或执行比较。"

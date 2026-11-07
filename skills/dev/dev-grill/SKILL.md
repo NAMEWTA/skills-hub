@@ -5,9 +5,9 @@ description: 澄清含糊需求、方案与产品决策。用于“grill me”�
 
 # 需求澄清
 
-把模糊想法变成双方一致的行为契约。保留 Matt Pocock 的 **决策树与问题前沿**：先解决前置决策，再展开依赖它的下一轮问题。
+把模糊想法变成双方一致的行为契约。使用**决策树与问题前沿**：先解决前置决策，再展开依赖它的下一轮问题。
 
-后续开发采用 SDD：规格明确后实现，再按风险验证；禁止 TDD、测试先行和红绿重构循环。
+澄清后的行为与边界指导后续开发；按任务选择规格驱动、TDD 或原型验证，复用已经解决的产品决定。
 
 ## 建立已有共识
 
@@ -53,4 +53,17 @@ description: 澄清含糊需求、方案与产品决策。用于“grill me”�
 
 输出应让接手者知道：要实现什么、为何这样取舍、哪里仍不确定、去哪里查证。可选交给 `dev-spec`；本技能独立安装即可完成澄清。
 
-[来源与适配说明](references/sources.md)
+## 本地完整方法
+
+| 当前需要 | 本包材料 |
+| --- | --- |
+| 深入访谈的轮次、前沿、问答格式和结束条件 | [决策访谈全文](references/decision-interview.md)；单纯访谈可用[直接入口](references/interview-entry.md) |
+| 术语冲突、领域关系和代码对照 | [领域建模](references/domain-modeling.md) |
+| 保存用户别名与规范概念 | [词汇表格式](references/glossary-format.md) |
+| 保存真正重要的设计取舍 | [决定记录格式](references/decision-format.md) |
+| 纸面讨论无法决定，先做可运行证据 | [原型方法](references/prototype-method.md) |
+| 检查业务逻辑、状态或数据形状 | [逻辑原型完整流程](references/logic-prototype.md) |
+| 比较布局、信息层级和交互入口 | [界面原型完整流程](references/ui-prototype.md) |
+| 决定依赖未知技术事实 | [研究方法](references/research-method.md) |
+
+这些资源按需读取。原型回答问题后更新同一份共识；研究只解除所依赖的问题，不阻塞其他已明确工作。

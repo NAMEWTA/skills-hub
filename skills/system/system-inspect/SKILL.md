@@ -35,3 +35,7 @@ python3 "$SKILL_DIR/scripts/inspect.py" --path "/path/on/target/volume"
 报告不带密钥、完整环境变量、进程参数或私有日志。不要把单次快照、空闲磁盘或脚本成功退出说成“系统已优化”。
 
 空间问题可继续交给 `system-cleanup`，代理问题可交给 `system-proxy`，配置变更可交给 `system-config`；这些是可选协作技能，未安装时直接交付同等明确的计划。
+
+## 完整本地材料
+
+按目标平台、故障层或配置类型，从[材料导航](references/index.md)读取完整操作说明与模板。全部必要资料在本技能内，单独安装后可用；按需要读取，不每次加载全部材料。

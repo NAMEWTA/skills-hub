@@ -5,7 +5,7 @@
 - [找实际配置来源](#找实际配置来源)
 - [规则和 DNS 分开处理](#规则和-dns-分开处理)
 - [加载与实际请求](#加载与实际请求)
-- [来源](#来源)
+- [本地完整资料](#本地完整资料)
 
 ## 找实际配置来源
 
@@ -52,14 +52,38 @@ DNS-over-HTTPS 需要正确证书与 SNI，不机械把域名替换成 IP。不�
 
 不要仅依据 resolver 出口国家推断成功/泄漏；anycast、转发和地理库都会影响显示。DNS 通过不能代替真实业务请求，某个网站 403 也不自动证明解析错误。
 
-## 来源
+## 本地完整资料
 
-参考 NAMEWTA/Speculo 的 `skills-hub/system/clash-client-profile/` 分层方法，基线提交 `9199c3bd0cf983c131efbc6340e44ac8b83a583d`。本版不搬用其 JSON 计划引擎、DNS 生成器和固定 resolver 策略。
+- 持久配置与生成结果：[Clash Verge Rev](clash-verge.md)、[FlClash](flclash.md)。
+- 字段含义、优先级和协议：[DNS 字段与类型](dns-fields.md)。
+- 方案、启动依赖和实际报文：[DNS 工作流](dns-workflow.md)。
+- 系统接管与地址族：[TUN 与系统 DNS](tun-dns.md)、[平台 DNS](platform-dns.md)。
+- 浏览器旁路：[浏览器隐私](browser-privacy.md)。
+- 分阶段变更、证据与恢复：[事务验收](acceptance.md)。
+- 规则失败与性能：[分层排错](troubleshooting.md)、[网络性能](network-performance.md)。
 
-2026-11-07 对照了 MetaCubeX 官方文档；部署时仍以用户实际内核版本为准：
+字段说明用于形成与检查方案，不是可以直接覆盖用户配置的模板。先核验实际版本，再确定本轮修改。
 
-- [DNS](https://github.com/MetaCubeX/Meta-Docs/blob/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b/docs/config/dns/index.md)：blob `a5d963ddd440387299b67c7f4ee39210e1ac4e99`。
-- [TUN](https://github.com/MetaCubeX/Meta-Docs/blob/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b/docs/config/inbound/tun.md)：blob `cd41261cb8acceb57186f314777b21478b22ad78`。
-- [DNS 类型](https://github.com/MetaCubeX/Meta-Docs/blob/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b/docs/config/dns/type.md)：blob `1af102b318922129708518570709284f5d1be5a4`。
+## 本地完整资料
 
-这些页面是能力说明，不是可以直接覆盖用户配置的模板。
+- 持久配置与生成结果：[Clash Verge Rev](clash-verge.md)、[FlClash](flclash.md)。
+- 字段含义、优先级和协议：[DNS 字段与类型](dns-fields.md)。
+- 方案、启动依赖和实际报文：[DNS 工作流](dns-workflow.md)。
+- 系统接管与地址族：[TUN 与系统 DNS](tun-dns.md)、[平台 DNS](platform-dns.md)。
+- 浏览器旁路：[浏览器隐私](browser-privacy.md)。
+- 分阶段变更、证据与恢复：[事务验收](acceptance.md)。
+- 规则失败与性能：[分层排错](troubleshooting.md)、[网络性能](network-performance.md)。
+
+字段说明用于形成与检查方案，不是可以直接覆盖用户配置的模板。先核验实际版本，再确定本轮修改。
+
+## 本地完整资料
+
+- 持久配置与生成结果：[Clash Verge Rev](clash-verge.md)、[FlClash](flclash.md)。
+- 字段含义、优先级和协议：[DNS 字段与类型](dns-fields.md)。
+- 方案、启动依赖和实际报文：[DNS 工作流](dns-workflow.md)。
+- 系统接管与地址族：[TUN 与系统 DNS](tun-dns.md)、[平台 DNS](platform-dns.md)。
+- 浏览器旁路：[浏览器隐私](browser-privacy.md)。
+- 分阶段变更、证据与恢复：[事务验收](acceptance.md)。
+- 规则失败与性能：[分层排错](troubleshooting.md)、[网络性能](network-performance.md)。
+
+字段说明用于形成与检查方案，不是可以直接覆盖用户配置的模板。先核验实际版本，再确定本轮修改。

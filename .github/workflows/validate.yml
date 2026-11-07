@@ -27,5 +27,12 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Validate packages and links
         run: python scripts/validate.py
+      - name: Validate full local material pairs
+        run: python scripts/validate_materials.py
       - name: Verify installer behavior
         run: python -m unittest discover -s tests -v
+      - name: Run finite-state example and real fault injection
+        env:
+          PYTHONUTF8: '1'
+          PYTHONIOENCODING: utf-8
+        run: python skills/dev/dev-formal-verify/scripts/demo.py

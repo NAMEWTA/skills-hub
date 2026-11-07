@@ -61,7 +61,7 @@
 
 目录表达职责，Markdown 表达事实和理由，Git 表达版本变化。没有任务编译器、准入网关、固定 lifecycle 枚举、哈希封印或必须按顺序生成的一组 JSON。
 
-这保留了 DeepSeek Notes 中有价值的做法：现行事实跟着代码变化，重要决定保留取舍，完整与部分替代分开判断。同时结合用户要求，去掉上游特定工程所需的双语三件套及机械门禁。`index.md` 只是少量常用入口，不是所有文件都要登记的全局索引。
+现行事实跟着代码变化，重要决定保留取舍，完整与部分替代分开判断。知识按需要自然增长，不要求双语三件套或机械门禁。`index.md` 只是少量常用入口，不是所有文件都要登记的全局索引。
 
 ## 学习与记忆形成循环
 
@@ -73,9 +73,6 @@
 
 部署资料保存账号用途、配置键与秘密的真实保管位置。密码、token、私钥或含认证信息的连接串不进入普通项目知识。安全存储使用项目已有密钥系统或受限未跟踪配置，不能凭空写一个 URI 就声称已保管。
 
-## 方法来源
+## 本地操作资料
 
-- [DeepSeek Agent Notes](https://github.com/deepseek-ai/deepseek-harness/blob/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/.agents/notes/README.md)：决策价值、现行事实与替代关系。
-- [OpenAI Harness Engineering](https://openai.com/index/harness-engineering/)：短 AGENTS 导航、仓库内知识、按需发现与文档维护。
-- [OpenAI 技能写作](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)：准确触发、按需加载、明确完成目标。
-- [Speculo](https://github.com/NAMEWTA/Speculo/tree/9199c3bd0cf983c131efbc6340e44ac8b83a583d/template/workflows)：仅参考目录职责，不复制其复杂状态与 schema。
+归档与知识维护的完整步骤在 [dev-archive](../skills/dev/dev-archive/SKILL.md) 及其包内参考中；理解模块的方法在 [dev-learn](../skills/dev/dev-learn/SKILL.md)。每个技能安装后都保留自己的完整资源，使用时不用回到本仓库或访问外部文档。资料对照与适配规则见 [资源组织](resources.md)。

@@ -1,0 +1,498 @@
+import { describe, expect, it } from "bun:test";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import {
+  ChecksUnavailable,
+  WatcherQueryError,
+  buildReviewThreads,
+  mapRollupNode,
+  orderStack,
+  parseFastCheck,
+  parsePullRequest,
+  parseReviewThreadPage,
+  resolveChecks,
+  resolveContext,
+  resolveReviewThreads,
+} from "./github.ts";
+import {
+  fakeReader,
+  failedCheck,
+  passingCheck,
+  pendingCheck,
+} from "./fakes.test-helper.ts";
+import { parsePrNumber } from "./types.ts";
+
+const context = {
+  owner: "owner",
+  repo: "repo",
+  number: parsePrNumber(42),
+};
+
+describe("检查的回退链", () => {
+  it("快速路径结果非空时不查询汇总", async () => {
+    const reader = fakeReader({
+      fastPath: { kind: "checks", checks: [passingCheck("fast")] },
+    });
+    const read = await resolveChecks(reader, context);
+    expect(read.source).toBe("gh-pr-checks");
+    expect(read.checks.map((check) => check.name)).toEqual(["fast"]);
+    expect(reader.calls).toEqual(["checksFastPath"]);
+  });
+
+  it("快速路径不可用时对 GraphQL 分页", async () => {
+    const reader = fakeReader({
+      fastPath: { kind: "unusable", exitCode: 8, stderr: "" },
+      rollupPages: [
+        { checks: [passingCheck("first")], endCursor: "next" },
+        { checks: [failedCheck("second")], endCursor: null },
+      ],
+    });
+    const read = await resolveChecks(reader, context);
+    expect(read.source).toBe("graphql-rollup");
+    expect(read.checks.map((check) => check.name)).toEqual(["first", "second"]);
+    expect(reader.calls).toEqual([
+      "checksFastPath",
+      "checkRollupPage:null",
+      "checkRollupPage:next",
+    ]);
+  });
+
+  it("有效的快速路径 JSON 为空列表时回退", async () => {
+    const reader = fakeReader({
+      fastPath: { kind: "checks", checks: [] },
+      rollupPages: [{ checks: [pendingCheck("fallback")], endCursor: null }],
+    });
+    expect((await resolveChecks(reader, context)).checks[0].name).toBe(
+      "fallback"
+    );
+    expect(reader.calls).toEqual(["checksFastPath", "checkRollupPage:null"]);
+  });
+
+  it("两条路径都为空时按保守策略失败", async () => {
+    const reader = fakeReader({
+      fastPath: {
+        kind: "unusable",
+        exitCode: 8,
+        stderr: "credential cannot read checks",
+      },
+    });
+    await expect(resolveChecks(reader, context)).rejects.toBeInstanceOf(
+      ChecksUnavailable
+    );
+    expect(reader.calls).toEqual(["checksFastPath", "checkRollupPage:null"]);
+  });
+});
+
+describe("汇总节点映射", () => {
+  it("保守映射终态及非终态 CheckRun 状态", () => {
+    const cases = [
+      ["IN_PROGRESS", null, "pending", "PENDING"],
+      ["COMPLETED", "SUCCESS", "passed", "SUCCESS"],
+      ["COMPLETED", "NEUTRAL", "skipped", "NEUTRAL"],
+      ["COMPLETED", "SKIPPED", "skipped", "SKIPPED"],
+      ["COMPLETED", "ACTION_REQUIRED", "failed", "ACTION_REQUIRED"],
+      ["COMPLETED", "TIMED_OUT", "failed", "FAILURE"],
+      ["COMPLETED", "FUTURE_VALUE", "failed", "FAILURE"],
+    ] as const;
+    for (const [status, conclusion, kind, reportedState] of cases) {
+      expect(
+        mapRollupNode({
+          __typename: "CheckRun",
+          name: "ci",
+          status,
+          conclusion,
+        })
+      ).toMatchObject({ kind, reportedState });
+    }
+  });
+
+  it("将汇总中正在执行的 Code Review Gate 归为审批门槛", () => {
+    expect(
+      mapRollupNode({
+        __typename: "CheckRun",
+        name: "Code Review Gate",
+        status: "IN_PROGRESS",
+        conclusion: null,
+      })
+    ).toMatchObject({ kind: "code-review-gate" });
+    expect(
+      mapRollupNode({
+        __typename: "StatusContext",
+        context: "Code Review Gate",
+        state: "PENDING",
+      })
+    ).toMatchObject({ kind: "code-review-gate" });
+  });
+
+  it("将等待所有者批准的 Code Review Gate 归为审批门槛", () => {
+    expect(
+      mapRollupNode({
+        __typename: "CheckRun",
+        name: "Code Review Gate",
+        status: "COMPLETED",
+        conclusion: "ACTION_REQUIRED",
+        description: "1 of 2 policies",
+      })
+    ).toMatchObject({
+      kind: "code-review-gate",
+      reportedState: "ACTION_REQUIRED",
+    });
+  });
+
+  it("将快速路径中等待所有者批准的 Code Review Gate 归为审批门槛", () => {
+    expect(
+      parseFastCheck({
+        name: "Code Review Gate",
+        state: "ACTION_REQUIRED",
+        bucket: "fail",
+      })
+    ).toMatchObject({
+      kind: "code-review-gate",
+      reportedState: "ACTION_REQUIRED",
+    });
+    expect(
+      parseFastCheck({ name: "ci", state: "ACTION_REQUIRED", bucket: "fail" })
+    ).toMatchObject({ kind: "failed", reportedState: "ACTION_REQUIRED" });
+  });
+
+  it("映射 StatusContext 状态并丢弃未知类型名", () => {
+    expect(
+      mapRollupNode({
+        __typename: "StatusContext",
+        context: "ci",
+        state: "EXPECTED",
+      })
+    ).toMatchObject({ kind: "pending", reportedState: "PENDING" });
+    expect(
+      mapRollupNode({
+        __typename: "StatusContext",
+        context: "ci",
+        state: "FUTURE_VALUE",
+      })
+    ).toMatchObject({ kind: "failed", reportedState: "FUTURE_VALUE" });
+    expect(mapRollupNode({ __typename: "FutureNode" })).toBeNull();
+  });
+});
+
+describe("封闭枚举解析", () => {
+  const rawPullRequest = {
+    mergeable: "MERGEABLE",
+    mergeStateStatus: "CLEAN",
+    reviewDecision: "APPROVED",
+    headRefOid: "head",
+    headRefName: "feature",
+    baseRefName: "main",
+    state: "OPEN",
+    mergedAt: null,
+    isDraft: false,
+  };
+
+  it("接受 mergeStateStatus 为 CONFLICTING", () => {
+    expect(
+      parsePullRequest(
+        { ...rawPullRequest, mergeStateStatus: "CONFLICTING" },
+        context
+      ).mergeStateStatus
+    ).toBe("CONFLICTING");
+  });
+
+  it("将 gh 的空 reviewDecision 视为没有决定，而非解析失败", () => {
+    expect(
+      parsePullRequest({ ...rawPullRequest, reviewDecision: "" }, context)
+        .reviewDecision
+    ).toBeNull();
+  });
+
+  it("仍然拒绝未知的 reviewDecision", () => {
+    expect(() =>
+      parsePullRequest({ ...rawPullRequest, reviewDecision: "MAYBE" }, context)
+    ).toThrow(WatcherQueryError);
+  });
+
+  it("拒绝未知枚举值，作为携带原值的可重试错误", () => {
+    try {
+      parsePullRequest(
+        { ...rawPullRequest, mergeStateStatus: "FUTURE_STATE" },
+        context
+      );
+      throw new Error("预期解析器抛出异常");
+    } catch (error) {
+      expect(error).toBeInstanceOf(WatcherQueryError);
+      if (!(error instanceof WatcherQueryError)) throw error;
+      expect(error.failure).toMatchObject({
+        kind: "missing-key",
+        retryable: true,
+        rawValue: '"FUTURE_STATE"',
+      });
+    }
+  });
+});
+
+it("为 Bugbot 讨论标注不同审查轮次的数量", () => {
+  const response = {
+    data: {
+      repository: {
+        pullRequest: {
+          reviewThreads: {
+            pageInfo: { hasNextPage: false, endCursor: null },
+            nodes: [
+              {
+                id: "one",
+                isResolved: false,
+                comments: {
+                  nodes: [
+                    {
+                      body: "RUN_ID: run-1",
+                      createdAt: "now",
+                      path: "a.ts",
+                      line: 1,
+                      author: { login: "bugbot" },
+                    },
+                  ],
+                },
+              },
+              {
+                id: "two",
+                isResolved: false,
+                comments: {
+                  nodes: [
+                    {
+                      body: "CURSOR_AUTOMATION_ID: run-2 severity high",
+                      createdAt: "now",
+                      path: null,
+                      line: null,
+                      author: { login: "cursor" },
+                    },
+                  ],
+                },
+              },
+              {
+                id: "resolved",
+                isResolved: true,
+                comments: {
+                  nodes: [
+                    {
+                      body: "RUN_ID: run-3",
+                      createdAt: "now",
+                      path: null,
+                      line: null,
+                      author: { login: "bugbot" },
+                    },
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      },
+    },
+  };
+  const threads = buildReviewThreads(parseReviewThreadPage(response).threads);
+  expect(threads).toHaveLength(2);
+  expect(threads.map((thread) => thread.isBugbot)).toEqual([true, true]);
+  expect(threads.map((thread) => thread.bugbotReviewPasses)).toEqual([3, 3]);
+});
+
+describe("审查讨论分页", () => {
+  const thread = (id: string, resolved = false) => ({
+    id,
+    firstComment: {
+      authorLogin: "someone",
+      body: "please fix",
+      path: "a.ts",
+      line: 1,
+      createdAt: "now",
+    },
+    resolved,
+  });
+
+  it("持续读取分页，直到游标耗尽", async () => {
+    const reader = fakeReader({
+      threadPages: [
+        { threads: [thread("one")], endCursor: "next" },
+        { threads: [thread("two")], endCursor: "last" },
+        { threads: [thread("three")], endCursor: null },
+      ],
+    });
+    const threads = await resolveReviewThreads(reader, context);
+    expect(threads.map((item) => item.id)).toEqual(["one", "two", "three"]);
+    expect(reader.calls).toEqual([
+      "reviewThreadPage:null",
+      "reviewThreadPage:next",
+      "reviewThreadPage:last",
+    ]);
+  });
+
+  it("能够发现第一页之后的未解决讨论", async () => {
+    const reader = fakeReader({
+      threadPages: [
+        { threads: [thread("early", true)], endCursor: "next" },
+        { threads: [thread("late")], endCursor: null },
+      ],
+    });
+    const threads = await resolveReviewThreads(reader, context);
+    expect(threads.map((item) => item.id)).toEqual(["late"]);
+  });
+
+  it("游标耗尽时读取一页后停止", async () => {
+    const reader = fakeReader({
+      threadPages: [{ threads: [thread("only")], endCursor: null }],
+    });
+    expect((await resolveReviewThreads(reader, context)).length).toBe(1);
+    expect(reader.calls).toEqual(["reviewThreadPage:null"]);
+  });
+
+  it("跨所有分页统计 Bugbot 审查轮次", async () => {
+    const bugbot = (id: string, runId: string) => ({
+      id,
+      firstComment: {
+        authorLogin: "bugbot",
+        body: `RUN_ID: ${runId}`,
+        path: "a.ts",
+        line: 1,
+        createdAt: "now",
+      },
+      resolved: false,
+    });
+    const reader = fakeReader({
+      threadPages: [
+        { threads: [bugbot("one", "run-1")], endCursor: "next" },
+        { threads: [bugbot("two", "run-2")], endCursor: null },
+      ],
+    });
+    const threads = await resolveReviewThreads(reader, context);
+    expect(threads.map((item) => item.bugbotReviewPasses)).toEqual([2, 2]);
+  });
+
+  it("后续分页中已解决的讨论也会被过滤", async () => {
+    const reader = fakeReader({
+      threadPages: [
+        { threads: [thread("one")], endCursor: "next" },
+        { threads: [thread("two", true)], endCursor: null },
+      ],
+    });
+    expect(
+      (await resolveReviewThreads(reader, context)).map((item) => item.id)
+    ).toEqual(["one"]);
+  });
+
+  it("拒绝缺少 pageInfo 的页面，不假定只有一页", async () => {
+    const response = {
+      data: {
+        repository: {
+          pullRequest: { reviewThreads: { nodes: [] } },
+        },
+      },
+    };
+    expect(() => parseReviewThreadPage(response)).toThrow(WatcherQueryError);
+  });
+});
+
+describe("上下文与堆叠发现", () => {
+  it("无需调用读取器即可返回完全显式的上下文", async () => {
+    const reader = fakeReader();
+    expect(
+      await resolveContext({
+        reader,
+        owner: "explicit",
+        repo: "repo",
+        pr: context.number,
+      })
+    ).toEqual({ owner: "explicit", repo: "repo", number: context.number });
+    expect(reader.calls).toEqual([]);
+  });
+
+  it("显式编号先使用本地 origin，再尝试 currentPr", async () => {
+    const reader = fakeReader({ origin: { owner: "local", repo: "checkout" } });
+    expect(
+      await resolveContext({
+        reader,
+        owner: null,
+        repo: null,
+        pr: context.number,
+      })
+    ).toEqual({ owner: "local", repo: "checkout", number: context.number });
+    expect(reader.calls).toEqual(["originRepo"]);
+  });
+
+  it("按自底向上顺序排列相连的堆叠", () => {
+    const ordered = orderStack(context, [
+      {
+        number: parsePrNumber(41),
+        headRefName: "base-feature",
+        isCrossRepository: false,
+        baseRefName: "main",
+      },
+      {
+        number: context.number,
+        headRefName: "feature",
+        isCrossRepository: false,
+        baseRefName: "base-feature",
+      },
+      {
+        number: parsePrNumber(43),
+        headRefName: "upstack",
+        isCrossRepository: false,
+        baseRefName: "feature",
+      },
+    ]);
+    expect(ordered.map((item) => Number(item.number))).toEqual([41, 42, 43]);
+  });
+  it("不把派生仓库的同名头分支作为堆叠父项", () => {
+    const ordered = orderStack(context, [
+      { number: parsePrNumber(41), headRefName: "base-feature", baseRefName: "main", isCrossRepository: true },
+      { number: context.number, headRefName: "feature", baseRefName: "base-feature", isCrossRepository: false },
+    ]);
+    expect(ordered.map((item) => Number(item.number))).toEqual([42]);
+  });
+
+  it("不把主仓库分支的子项附到派生仓库头分支", () => {
+    const ordered = orderStack(context, [
+      { number: context.number, headRefName: "feature", baseRefName: "main", isCrossRepository: true },
+      { number: parsePrNumber(43), headRefName: "upstack", baseRefName: "feature", isCrossRepository: false },
+    ]);
+    expect(ordered.map((item) => Number(item.number))).toEqual([42]);
+  });
+
+  it("无关派生仓库以 main 对 main 打开 PR 时仍能结束", () => {
+    // 限制子进程时长，让这项回归检查报告失败，而不是挂住整套测试。
+    const program = `import { orderStack } from ${JSON.stringify(import.meta.dir + "/github.ts")};
+      console.log(JSON.stringify(orderStack(${JSON.stringify(context)}, [
+        { number: 41, headRefName: "main", baseRefName: "main", isCrossRepository: true },
+        { number: 42, headRefName: "feature", baseRefName: "main", isCrossRepository: false }
+      ])));`;
+    const child = spawnSync(process.execPath, ["-e", program], { encoding: "utf8", timeout: 2000 });
+    expect(child.error).toBeUndefined();
+    expect(child.status).toBe(0);
+    expect(JSON.parse(child.stdout).map((item: { number: number }) => item.number)).toEqual([42]);
+  });
+
+  it("发现堆叠前从 gh 请求并解析派生仓库身份", () => {
+    const directory = mkdtempSync(join(tmpdir(), "watch-pr-fork-"));
+    try {
+      writeFileSync(join(directory, "gh"), `#!/bin/sh
+case "$*" in
+  *number,headRefName,baseRefName,isCrossRepository*) ;;
+  *) exit 2 ;;
+esac
+printf '%s\\n' '[{"number":42,"headRefName":"feature","baseRefName":"main","isCrossRepository":true}]'
+`, { mode: 0o755 });
+      const program = `import { GhGitHubReader } from ${JSON.stringify(import.meta.dir + "/github.ts")};
+        console.log(JSON.stringify(await new GhGitHubReader().openPullRequests({ owner: "owner", repo: "repo" })));`;
+      const child = spawnSync(process.execPath, ["-e", program], {
+        encoding: "utf8", timeout: 2000,
+        env: { ...process.env, PATH: directory + ":" + process.env.PATH },
+      });
+      expect(child.error).toBeUndefined();
+      expect(child.status).toBe(0);
+      expect(JSON.parse(child.stdout)).toEqual([
+        { number: 42, headRefName: "feature", baseRefName: "main", isCrossRepository: true },
+      ]);
+    } finally {
+      rmSync(directory, { recursive: true, force: true });
+    }
+  });
+
+});

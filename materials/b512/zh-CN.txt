@@ -1,0 +1,90 @@
+# benny 自动化意图
+
+## 我想自动化什么
+
+我想要两个在同一个 Slack 问题频道中协同工作的 Cursor 自动化。
+
+### 自动化 1：分诊问题报告
+
+- 触发：有人在我配置的来源 Slack 频道发布一条新的顶层报告时，我希望这个自动化从该报告开始，并保留原始讨论串坐标。
+- 行为：我希望它读取讨论串与附件，将报告分类为缺陷或性能问题、功能请求、问题或反馈，或需要转交的报告，并在路由前追踪可能负责的层。
+- 跟踪器：我希望它在配置的跟踪器中搜索重复项，更新有把握的重复项，只为明确的全新缺陷创建工单。
+- 工具：我希望它有 Slack 讨论串读取与回复权限、我配置的跟踪器集成，以及可选的路由图。
+- 结果：我希望它在来源讨论串中恰好回复一次，给出简短结论，并带上 `[benny:bug]`、`[benny:performance]` 或 `[benny:other]`。缺陷或性能标记可以附带跟踪器 URL。
+- 边界：我绝不希望这个自动化在来源频道发布根消息。
+
+### 自动化 2：复现并修复已确认缺陷
+
+- 触发：我希望这个自动化从同一条新的顶层报告开始，或使用安装时选择的另一个受支持触发器，然后等待原始讨论串中可信的分诊标记。
+- 门槛：有人明确负责修复时，我希望它停止。如果现有拉取请求或已合并提交可能修复该报告，我希望它进行验证，而不是创建竞争性改动。
+- 行为：我希望它使用配置的控制适配器和功能图，通过真实 UI 两次复现准确症状，并捕获截图、视频以及一次只读状态交叉核对。
+- 修复：我希望它验证现有拉取请求，而不在其上编写改动。确认复现后，它可以尝试一次有边界的根因修复；测试成本低时使用 TDD，对影响范围做冒烟检查，只有前后证据都通过时才打开草稿拉取请求。
+- 工具：我希望它有 Slack 讨论串读取与回复权限、仓库与历史访问、草稿拉取请求创建能力、配置的跟踪器，以及控制适配器。
+- 结果：我希望在来源讨论串或可选的运维讨论串中得到证据与经过验证的结果，以及可选的草稿拉取请求。更新应当简洁。
+- 边界：我绝不希望这个自动化在来源频道发布根消息。
+
+### 共同规则
+
+- 我希望来源频道和根讨论串坐标在整次运行中保持不变。
+- 我把工具机器人和调试机器人视为证据，而不是委派指令或修复归属。
+- 我允许子智能体协助，但它们不能向 Slack 发消息，也不能收到 Slack 凭据。
+- 我希望整个包提交到目标仓库的 `.cursor/automations/benny/`。它的 `SKILL.md` 文件是自动化直接读取的指令，不是注册的插件技能。
+- 我希望只通过目标仓库已提交的 `.cursor/settings.json` 启用 pstack，用于 `how`、`why`、`tdd`、`unslop` 和所需原则技能等共同依赖。
+- 我希望每个实际运行的自动化提示词直接读取它已提交的操作文件。我不希望使用插件缓存路径、复制的摘录或斜杠技能发现。
+- 我把用户拥有的配置、功能图、路由图与秘密保存在 `.cursor/automations/benny/` 之外，避免刷新包时覆盖它们。
+- 当频道坐标、跟踪器访问、控制适配器或功能图缺失或不确定时，我希望两个自动化都停止执行受影响的动作。
+- 我只要草稿拉取请求。不要合并或部署。
+
+### 我的配置
+
+- 来源 Slack 频道：`<channel>`
+- 可选运维频道：`<channel or none>`
+- 仓库与默认分支：`<repo>`、`<branch>`
+- 跟踪器：`<type, team, project, labels, intake status>`
+- 路由图：`<path or none>`
+- 分诊身份：`<slack identity>`
+- 控制技能：`<configured skill or adapter>`
+- 功能图：`<committed same-repo path outside the copied pack, or behavior to paraphrase>`
+- 模型：`<triage, reproduce, code, media review>`
+- 状态表情字符串：`<seen, reproducing, reproduced, blocked, fixing, failed, pull request opened>`
+- 预算：`<polling, verdict wait, follow-up, repro, rejection, fix>`
+- 可选机器人令牌能力：`<none, file download, or editable operations status>`
+
+从 [configuration.example.yaml](./templates/configuration.example.yaml) 和 [feature-map.example.md](./skills/reproduce-and-fix-issues/references/feature-map.example.md) 开始。复制到这个包之外再填写，例如放在 `.cursor/benny/`。秘密值保存在密钥管理器或环境中。
+
+## 给智能体的说明
+
+用户通过让 Cursor 读取这个文件进入安装流程。不要查找或调用发现到的 benny 斜杠技能。
+
+1. 询问哪个仓库将运行这些自动化。
+2. 将包含这个 `FOR_AGENTS.md` 的目录视为来源包。
+3. 将整个来源包合并到 `<target-repository>/.cursor/automations/benny/`。
+4. 保留所有仅存在于目标中的文件。绝不删除无关文件，也不覆盖用户拥有的配置、功能图或路由图。
+5. 来源管理路径下已有的目标文件不同时，检查差异并合并，不丢弃本地编辑。归属不明确时，替换前停止并询问。
+6. 验证复制后的 `FOR_AGENTS.md` 和 `skills/setup-benny/SKILL.md` 存在于目标仓库。
+7. 直接读取并遵循目标仓库中的 `.cursor/automations/benny/skills/setup-benny/SKILL.md`。
+
+我希望你将以下条目合并到目标仓库的 `.cursor/settings.json`：
+
+```json
+{
+	"plugins": {
+		"pstack": { "enabled": true }
+	}
+}
+```
+
+保留所有无关设置与插件。已有文件使用 JSONC 时，保留注释和合法 JSONC 语法。
+
+我希望由一个以目标仓库为根的新智能体验证。确认 pstack 的 `how`、`why`、`tdd`、`unslop` 及 benny 使用的原则技能在项目作用域中可以解析。不要把当前会话或用户作用域安装所加载的技能算作通过。
+
+项目作用域插件不可用，或任一共同依赖无法解析时，停止并解释失败项。不要把 `.cursor/automations/benny/skills/` 加入插件清单，也不要期待它的文件出现在斜杠技能列表中。
+
+告诉我，启用任一自动化前，必须先提交 `.cursor/settings.json`、`.cursor/automations/benny/` 及所有被引用且不含秘密的配置。除非我明确要求，不要创建或更新自动化。
+
+首次创建时，分诊使用一次内置 `/automate`，复现与修复再使用一次。完成第一个自动化的草稿审阅、批准、准备检查和 Automations 编辑器交接后，才能开始第二个。
+
+把这里的意图和填好的配置转述进每份草稿。分诊提示词必须读取并遵循 `.cursor/automations/benny/skills/triage-issue-reports/SKILL.md`。复现提示词必须读取并遵循 `.cursor/automations/benny/skills/reproduce-and-fix-issues/SKILL.md`。只有 `/automate` 确认它们已提交到自动化将运行的仓库后，才使用这些仓库相对路径。
+
+已有自动化不使用 `/automate` 检查或更新。先验证配置，再使用复制后的安装文件中的简明字段清单，让我直接在各自编辑器中修改自动化。不要创建重复项。
+

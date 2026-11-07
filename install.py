@@ -21,6 +21,19 @@ from uuid import uuid4
 
 REPOSITORY = Path(__file__).resolve().parent
 SKILL_ROOT = REPOSITORY / "skills"
+LICENSE_ROOT = REPOSITORY / "licenses"
+LICENSE_BUNDLE_FILES = (
+    "PROJECT-LICENSE.txt",
+    "THIRD_PARTY_NOTICES.txt",
+    "deepseek-harness-MIT.txt",
+    "mattpocock-skills-MIT.txt",
+    "pstack-MIT.txt",
+    "ai-design-skills-MIT.txt",
+    "Speculo-MIT.txt",
+    "taste-skill-MIT.txt",
+    "humanlayer-Apache-2.0.txt",
+    "humanlayer-NOTICE.txt",
+)
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
@@ -37,7 +50,8 @@ class Skill:
 
 @dataclass(frozen=True)
 class Action:
-    skill: Skill
+    source: Path
+    name: str
     destination: Path
     kind: str
 
@@ -117,30 +131,34 @@ def check_directory(path: Path) -> None:
 
 
 def plan(skills: list[Skill], project: Path, replace: bool) -> list[Action]:
-    if project.resolve().is_relative_to(SKILL_ROOT.resolve()):
-        raise InstallError("Run from the target project, outside this repository's source skills directory.")
+    if any(project.resolve().is_relative_to(source.resolve()) for source in (SKILL_ROOT, LICENSE_ROOT)):
+        raise InstallError("Run from the target project, outside this repository's source skills and licenses directories.")
+    regular_files(LICENSE_ROOT)
+    if any(not (LICENSE_ROOT / name).is_file() for name in LICENSE_BUNDLE_FILES):
+        raise InstallError("The repository license bundle is incomplete; restore licenses before installing.")
     agents = project / ".agents"
     target = agents / "skills"
-    for path in (agents, target, agents / ".skills-wta-backups"):
+    for path in (agents, target, agents / ".skills-wta-backups", agents / "skills-wta-licenses"):
         check_directory(path)
     actions = []
     conflicts = []
-    for skill in skills:
-        destination = target / skill.name
+    packages = [(skill.source, skill.name, target / skill.name) for skill in skills]
+    packages.append((LICENSE_ROOT, ".licenses", agents / "skills-wta-licenses"))
+    for source, name, destination in packages:
         check_directory(destination)
         if not destination.exists():
             kind = "install"
-        elif tree_digest(skill.source) == tree_digest(destination):
+        elif tree_digest(source) == tree_digest(destination):
             kind = "unchanged"
         elif replace:
             kind = "replace"
         else:
-            conflicts.append(skill.name)
+            conflicts.append(name if name != ".licenses" else "license notices")
             continue
-        actions.append(Action(skill, destination, kind))
+        actions.append(Action(source, name, destination, kind))
     if conflicts:
         raise InstallError(
-            "Existing skills differ: " + ", ".join(conflicts)
+            "Existing packages differ: " + ", ".join(conflicts)
             + ". No skills were changed. Inspect them first; --replace saves backups before replacement."
         )
     return actions
@@ -166,7 +184,7 @@ def apply(skills: list[Skill], project: Path, replace: bool) -> tuple[list[Actio
         staging = Path(tempfile.mkdtemp(prefix=".skills-wta-stage-", dir=agents))
         for action in actions:
             if action.kind != "unchanged":
-                shutil.copytree(action.skill.source, staging / action.skill.name)
+                shutil.copytree(action.source, staging / action.name)
         (agents / "skills").mkdir(exist_ok=True)
         if any(action.kind == "replace" for action in actions):
             stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
@@ -178,10 +196,10 @@ def apply(skills: list[Skill], project: Path, replace: bool) -> tuple[list[Actio
             backup = None
             if action.kind == "replace":
                 assert backup_root is not None
-                backup = backup_root / action.skill.name
+                backup = backup_root / action.name
                 os.replace(action.destination, backup)
                 completed.append((action.destination, backup))
-            os.replace(staging / action.skill.name, action.destination)
+            os.replace(staging / action.name, action.destination)
             if backup is None:
                 completed.append((action.destination, None))
         return actions, backup_root
@@ -240,7 +258,10 @@ def main(argv: list[str] | None = None) -> int:
             actions, backup = apply(selected, project, arguments.replace)
         print(f"Destination: {project / '.agents' / 'skills'}")
         for action in actions:
-            print(f"{'would ' if arguments.dry_run else ''}{action.kind:9} {action.skill.name}")
+            if action.name != ".licenses":
+                print(f"{'would ' if arguments.dry_run else ''}{action.kind:9} {action.name}")
+            elif action.kind != "unchanged":
+                print(f"{'Would copy' if arguments.dry_run else 'Copied'} license notices: {action.destination}")
         if backup is not None:
             print(f"Backups: {backup}")
         return 0

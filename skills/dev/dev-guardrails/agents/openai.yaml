@@ -1,0 +1,4 @@
+interface:
+  display_name: "工程约束与代码纪律"
+  short_description: "按真实风险选择类型、边界、幂等、并发与注释策略，形成可检查的工程约束。"
+  default_prompt: "使用 $dev-guardrails 检查本次改动的结构和约束，给出有证据且适用的修正。"

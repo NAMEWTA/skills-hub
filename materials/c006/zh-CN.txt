@@ -1,0 +1,41 @@
+# Agent Note: 单一 Harness 主目录解析器
+
+Status: implemented
+
+英文 | [中文](2026-07-24-single-harness-home-resolver.zh.md)
+
+## 问题
+
+Harness 对“DeepSeek Harness 用户数据存放在哪里”曾存在两套不一致约定：
+
+- `@deepseek-ai/dsh-home` 按 `configured ?? $DSH_HOME ?? ~/.dsh` 解析。
+- `@deepseek-ai/dsh-home-paths` 交付了**第二个** `resolveDshHome`，优先级相同，但增加波浪号展开。这几乎是 `dsh-home` 的副本；由于两者位于不同包，检查未能发现，而且已经分化，只有其中一个展开波浪号。
+
+同一跨领域事实有两个解析器，意味着没有统一的主目录策略。
+
+## 决策
+
+由 `@deepseek-ai/dsh-home-paths` 中唯一解析器负责 Harness 主目录，采用单根目录：
+
+```
+显式配置路径  >  $DSH_HOME  >  ~/.dsh
+```
+
+空字符串或只有空白的 `$DSH_HOME` 按未设置处理；否则 `resolve('')` 会悄悄把主目录放到当前工作目录。Harness 把全部用户数据保存在一个根目录下，不按 XDG 拆分配置、数据与缓存。`dshHomePath(...segments)` 将由部署负责的子路径拼接到该根目录；`dsh-app-boot` 在挂载条目前将它暴露给 Loader 的 `!!js` 配置表达式，使交付组合能派生 `sessions` 和 `storages`，无需复制解析器。`dshHomeDisplay()` 为面向用户的路径给已解析根目录生成符号化名称：默认主目录使用 `~/.dsh`，任何配置主目录使用 `$DSH_HOME`，因此用户全局 `AGENTS.md` 标签不泄露机器绝对路径。它替代了 agent-instructions 自行判断默认目录与 `$DSH_HOME` 的逻辑。主目录是进程策略，不是配置行选项：`dsh-agent-instructions` 不接受主目录覆盖，避免某个组合把指令加载指向会话、技能和存储不会读取的根目录。`resolveAgentsHome()` 和 `agentsHomeDisplay()` 为共享 Agent 配置根目录（`$DSH_AGENTS_HOME` 或 `~/.agents`）应用同样的优先级、波浪号展开和符号标签；该目录仍位于 Harness 主目录外，因为其他 Agent 工具也共享它（[共享 Agent 根目录](2026-10-05-shared-agents-root-instructions.md)）。`dsh-skill-filesystem` 仍接受自己的 `dshHome` 与 `agentsHome` 字段，用于选择自己的技能根目录；在指令加载变更中，这些字段通过共享解析器解析。
+
+`dshCachePath(...segments)` 派生已解析主目录下 `cache` 目录中的路径。首个 `{ dshHome }` 选项保留提供方显式覆盖主目录的能力。它只解析路径，不创建目录；创建目录由调用者负责。`attachment-local` 使用此辅助函数保存可重新生成的请求图像变体，持久附件对象仍留在其带版本的存储树中，因此清理缓存不会删除 Session 附件。已有请求图像缓存项保留原位，不读取也不复制；缓存未命中时，从持久附件重新生成变体。
+
+`@deepseek-ai/dsh-home` 已删除。负责主目录的提供方和启动包从 `dsh-home-paths` 导入 `resolveDshHome`；组合包只保存解析后的配置行。
+
+依据 [SDK 项目工具链移除](../../archived/simplification/2026-08-11-remove-sdk-project-toolchain.md)，`dsh-telemetry` 及其独立主目录策略已不存在，此解析器成为唯一主目录策略。
+
+## 考虑过的替代方案
+
+**保留两个 `resolveDshHome` 副本。** 它们已分化，一个展开波浪号而另一个不展开，并把同一跨领域事实编码两遍。集中共用逻辑正是 `util/` 层的目的；重复解析器是潜在分化缺陷。
+
+**采用 XDG，即遵守 `$XDG_CONFIG_HOME`，或将配置、数据、缓存拆成不同目录树。** 考虑后放弃，选择一个显而易见的根目录。单一 `$DSH_HOME || ~/.dsh` 事实来源与 `~/.claude` / `~/.aws` 一致，无需为每个 `~/.dsh` 消费者按类别重新分类，也不会留下需要协调的解析器不对称。
+
+## 后果
+
+- 一个主目录事实，一个解析器。`dsh-home-paths` 是唯一负责者；`util/` 分组移除 `home` 包。
+

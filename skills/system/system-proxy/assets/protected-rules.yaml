@@ -1,0 +1,7 @@
+# 规则模式的片段模板，不是完整订阅，不能直接启动。
+# 替换为本轮证实需要保护的真实域名及已存在的代理组。
+# example.com 是占位域名；不要原样添加到真实配置。
+prepend:
+  - DOMAIN-SUFFIX,example.com,PROTECTED_GROUP
+# 核对第一命中顺序、进程规则、IP 规则、RULE-SET 和 MATCH。
+# global 模式不使用此处的规则选择；应核对 GLOBAL 的实际叶子。

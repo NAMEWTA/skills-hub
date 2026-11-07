@@ -22,7 +22,7 @@ description: 将已实现的项目部署或升级到指定环境，验证真实�
 5. 在真实入口验证版本、健康及至少一条相关业务路径。授权内使用可识别的验证数据并清理；只看端口打开、进程存活或 CI 成功不算上线验收。
 6. 有失败先保留证据、停止依赖失败结果的后续步骤，再按已批准的恢复方案处理。不得删除数据库或盲目重复有副作用的迁移。
 
-按需读取 [环境与发布方式](references/environments.md) 和 [凭据、备份与恢复](references/secrets-recovery.md)。这是 SDD 交付阶段；严禁引入 TDD。发布后验证针对实际行为，不为凑覆盖率增加测试。
+按需读取 [环境与发布方式](references/environments.md) 和 [凭据、备份与恢复](references/secrets-recovery.md)。发布验证针对指定环境中的实际行为。开发方法不限制交付：使用已有行为检查、必要的部署探针与真实业务操作，选择能够证明当前制品的证据，不为凑覆盖率增加测试。
 
 ## 持久化
 
@@ -35,6 +35,7 @@ description: 将已实现的项目部署或升级到指定环境，验证真实�
 
 部署结束后把有长期价值的环境约束、决策和错误经验交给 `dev-archive` 或直接整理到 `.agents/notes/`。没有上线成功就明确标记失败、回滚或待部署，不把整个需求写成“已交付”。
 
-## 来源
 
-采用 [pstack shipping](https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/skills/poteto-mode/playbooks/shipping.md) 的真实交付结果与当前版本核验语义，保留 MIT。部署资料分区参考 [Speculo project-deploy](https://github.com/NAMEWTA/Speculo/blob/9199c3bd0cf983c131efbc6340e44ac8b83a583d/template/workflows/ops/ops-d-project-deploy/SKILL.md)，没有复制其执行网关、JSON 合同或状态机。
+## 完整本地资料
+
+按 [资料索引](references/method-index.md) 选择本技能内的完整流程、检查规则、示例和模板。所有运行必需资源都在本包中，不依赖安装其他技能；只读取当前任务分支需要的内容。

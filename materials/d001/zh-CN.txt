@@ -1,0 +1,105 @@
+# AI Design Skills
+
+[![skills.sh](https://skills.sh/b/elayadesign/ai-design-skills)](https://skills.sh/elayadesign/ai-design-skills)
+
+一个不断扩充的设计技能集合，适用于 Claude Code、Cursor、Codex、Windsurf，以及其他能读取 Markdown 规则文件的 AI 编码工具。
+
+每项技能都是自包含文件夹。按需安装。
+
+---
+
+## 技能
+
+| 技能 | 作用 |
+|---|---|
+| [`landing-page-design`](./skills/landing-page-design/SKILL.md) | 从零构建落地页，包括需求采集问题、页面结构、转化文案，以及完整视觉体系：字体、间距、圆角和动效。 |
+| [`figma-designer`](./skills/figma-designer/SKILL.md) | 在 Figma 中构建具有真实结构的设计：间距、圆角和颜色变量，命名文本样式，自动布局，包含全部状态的组件，以及随设计变量更新的 Foundations 框架。 |
+
+后续还会增加更多技能。[想改进现有网站，而不是构建新站？](https://github.com/elayadesign/redesign-skill) 该技能早于本集合，所以存放在独立仓库。
+
+<a href="https://slopscan.co"><img src="./assets/slopscan-banner.png" alt="SlopScan：审查现有网站。按同一套规则检查在线页面，并为你的 Agent 提供修复提示词。" width="100%"></a>
+
+---
+
+## 安装
+
+使用 [skills CLI](https://skills.sh)，需要 Node.js。
+
+```bash
+npx skills add elayadesign/ai-design-skills
+```
+
+它列出此仓库的技能，并询问安装哪些、安装给哪些 Agent。添加参数可以跳过提示：
+
+```bash
+# 一项技能
+npx skills add elayadesign/ai-design-skills --skill landing-page-design
+
+# 选择 Agent
+npx skills add elayadesign/ai-design-skills -a claude-code -a cursor
+
+# 用户级安装，而非项目级安装
+npx skills add elayadesign/ai-design-skills -g
+
+# 只查看可用内容，不安装
+npx skills add elayadesign/ai-design-skills --list
+```
+
+添加 `-y` 跳过确认。Claude Code 的技能放在 `.claude/skills/`，Cursor、Codex 和其他 Agent 的技能放在 `.agents/skills/`。以后运行 `npx skills update` 拉取变化。
+
+随后直接用自然语言提出技能覆盖的任务即可。
+
+<details>
+<summary><b>手动安装</b></summary>
+
+Claude Code：
+
+```bash
+mkdir -p .claude/skills
+git clone https://github.com/elayadesign/ai-design-skills.git /tmp/ai-design-skills
+cp -r /tmp/ai-design-skills/skills/<skill-name> .claude/skills/
+```
+
+Cursor：
+
+```bash
+mkdir -p .cursor/rules
+curl -o .cursor/rules/<skill-name>.md   https://raw.githubusercontent.com/elayadesign/ai-design-skills/main/skills/<skill-name>/SKILL.md
+```
+
+或将文件粘贴到 **Settings → Rules for AI**。
+
+Codex、Windsurf 和其他工具：把技能的 `SKILL.md` 复制到工具规则文件。
+
+| 工具 | 路径 |
+|---|---|
+| Codex | `AGENTS.md` |
+| Windsurf | `.windsurfrules` |
+| Cline | `.clinerules` |
+| 通用工具 | 粘贴到系统提示词 |
+</details>
+
+<details>
+<summary><b>Claude.ai（无终端）</b></summary>
+
+下载技能的 `SKILL.md` 并上传到 Project，或附加到聊天，说明“遵循这个文件”。
+</details>
+
+---
+
+## 按需调整
+
+每项技能的设计数值，包括字体、颜色、间距和动效，集中在文件靠近底部的一节。派生本仓库、编辑该节，技能其他部分会自动遵循。
+
+---
+
+## 致谢
+
+`landing-page-design` 改编了 Leon Lin 的 [Leonxlnx/taste-skill](https://github.com/Leonxlnx/taste-skill) 中关于内容真实性与动效的思路，使用 MIT 许可。详情见[对应 SKILL.md](./skills/landing-page-design/SKILL.md#credits) 末尾。
+
+---
+
+## 许可
+
+MIT。可以使用、派生、发布，以及销售由此构建的内容。无需署名。
+

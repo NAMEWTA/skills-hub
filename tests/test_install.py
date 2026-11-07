@@ -52,6 +52,14 @@ class InstallContractTests(unittest.TestCase):
         self.project = self.root / "project"
         self.project.mkdir()
         self.skill_root = self.repository / "skills"
+        self.license_root = self.repository / "licenses"
+        self.license_root.mkdir()
+        for name in (*installer.LICENSE_BUNDLE_FILES, "third-party.txt"):
+            (self.license_root / name).write_text(f"Fixture legal notice: {name}\n")
+        self.license_target = self.project / ".agents" / "skills-wta-licenses"
+        license_patch = mock.patch.object(installer, "LICENSE_ROOT", self.license_root)
+        license_patch.start()
+        self.addCleanup(license_patch.stop)
         self.target = self.project / ".agents" / "skills"
         self.sources = {
             "dev-alpha": self.write_skill("dev", "dev-alpha"),
@@ -66,7 +74,6 @@ class InstallContractTests(unittest.TestCase):
             "references/details.md": b"Fixture reference.\n",
             "assets/nested/example.bin": bytes(range(16)),
             "scripts/check.py": b"#!/usr/bin/env python3\nprint('fixture')\n",
-            "LICENSE": b"Fixture license: preserve this notice.\n",
         }
         for relative, content in resources.items():
             path = folder / relative
@@ -143,7 +150,7 @@ class InstallContractTests(unittest.TestCase):
         self.assert_no_temporary_artifacts()
 
     def test_install_inside_source_tree_is_rejected_without_writes(self) -> None:
-        for directory in (self.skill_root, self.sources["dev-alpha"], self.sources["dev-alpha"] / "references"):
+        for directory in (self.skill_root, self.sources["dev-alpha"], self.sources["dev-alpha"] / "references", self.license_root):
             for extra in ([], ["--dry-run"]):
                 with self.subTest(directory=directory, extra=extra):
                     before = snapshot(self.repository)
@@ -152,7 +159,7 @@ class InstallContractTests(unittest.TestCase):
                         cwd=directory, capture_output=True, text=True, timeout=20, check=False,
                     )
                     self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
-                    self.assertIn("outside this repository's source skills directory", result.stderr)
+                    self.assertIn("outside this repository's source skills and licenses directories", result.stderr)
                     self.assertEqual(snapshot(self.repository), before)
 
     def test_select_named_skills_from_different_domains(self) -> None:
@@ -178,7 +185,8 @@ class InstallContractTests(unittest.TestCase):
         result = self.run_cli("install", "--skill", "dev-alpha")
         self.assert_success(result)
         self.assertEqual(snapshot(self.target / "dev-alpha"), snapshot(self.sources["dev-alpha"]))
-        self.assertEqual((self.target / "dev-alpha" / "LICENSE").read_bytes(), b"Fixture license: preserve this notice.\n")
+        self.assertFalse((self.target / "dev-alpha" / "LICENSE").exists())
+        self.assertEqual(snapshot(self.license_target), snapshot(self.license_root))
         if os.name != "nt":
             mode = stat.S_IMODE((self.target / "dev-alpha" / "scripts" / "check.py").stat().st_mode)
             self.assertEqual(mode, 0o755)
@@ -189,7 +197,7 @@ class InstallContractTests(unittest.TestCase):
         installed = self.target / "dev-alpha" / "scripts" / "check.py"
         installed.chmod(0o644)
         conflict = self.assert_failure_without_writes("install", "--skill", "dev-alpha")
-        self.assertIn("Existing skills differ", conflict.stderr)
+        self.assertIn("Existing packages differ", conflict.stderr)
         self.assertEqual(stat.S_IMODE(installed.stat().st_mode), 0o644)
         result = self.run_cli("install", "--skill", "dev-alpha", "--replace")
         self.assert_success(result)
@@ -270,7 +278,7 @@ class InstallContractTests(unittest.TestCase):
     def test_conflict_preflight_prevents_partial_install(self) -> None:
         self.seed_existing("dev-beta", differing=True)
         result = self.assert_failure_without_writes("install", "--domain", "dev")
-        self.assertIn("Existing skills differ", result.stderr)
+        self.assertIn("Existing packages differ", result.stderr)
         self.assertFalse((self.target / "dev-alpha").exists())
         self.assert_no_temporary_artifacts()
 
@@ -441,6 +449,74 @@ class InstallContractTests(unittest.TestCase):
         self.assertEqual(len(backups), 1)
         self.assertEqual(snapshot(backups[0]), old_contents)
         self.assertIn(str(backups[0].parent), str(raised.exception))
+        self.assert_no_temporary_artifacts()
+
+    def test_missing_license_bundle_blocks_install_without_writes(self) -> None:
+        (self.license_root / "PROJECT-LICENSE.txt").unlink()
+        result = self.assert_failure_without_writes("install", "--skill", "dev-alpha")
+        self.assertIn("license bundle is incomplete", result.stderr)
+
+    def test_missing_third_party_notice_blocks_install_without_writes(self) -> None:
+        (self.license_root / "humanlayer-NOTICE.txt").unlink()
+        result = self.assert_failure_without_writes("install", "--skill", "dev-alpha")
+        self.assertIn("license bundle is incomplete", result.stderr)
+
+    def test_unchanged_skill_restores_missing_license_bundle(self) -> None:
+        self.seed_existing("dev-alpha")
+        result = self.run_cli("install", "--skill", "dev-alpha")
+        self.assert_success(result)
+        self.assertIn("unchanged", result.stdout)
+        self.assertEqual(snapshot(self.license_target), snapshot(self.license_root))
+
+    def test_license_conflict_prevents_partial_install(self) -> None:
+        self.assert_success(self.run_cli("install", "--skill", "dev-alpha"))
+        (self.license_target / "third-party.txt").write_text("Retain local notice.\n")
+        result = self.assert_failure_without_writes("install", "--skill", "dev-beta")
+        self.assertIn("license notices", result.stderr)
+        self.assertFalse((self.target / "dev-beta").exists())
+
+    def test_license_only_update_is_backed_up_and_replaced(self) -> None:
+        self.assert_success(self.run_cli("install", "--skill", "dev-alpha"))
+        original = snapshot(self.license_target)
+        (self.license_root / "third-party.txt").write_text("Updated copyright notice.\n")
+        result = self.run_cli("install", "--skill", "dev-alpha", "--replace")
+        self.assert_success(result)
+        self.assertEqual(snapshot(self.license_target), snapshot(self.license_root))
+        backups = list((self.project / ".agents" / ".skills-wta-backups").glob("*/.licenses"))
+        self.assertEqual(len(backups), 1)
+        self.assertEqual(snapshot(backups[0]), original)
+
+    def test_license_destination_symlink_is_not_followed(self) -> None:
+        outside = self.root / "outside-licenses"
+        outside.mkdir()
+        self.create_symlink(self.license_target, outside)
+        self.assert_failure_without_writes("install", "--all")
+        self.assertEqual(snapshot(outside), {})
+
+    def test_license_source_symlink_is_not_followed(self) -> None:
+        source = self.license_root / "third-party.txt"
+        source.unlink()
+        outside = self.root / "private-source.txt"
+        outside.write_text("Do not copy this file.\n")
+        self.create_symlink(source, outside, directory=False)
+        self.assert_failure_without_writes("install", "--all")
+
+    def test_license_publish_failure_rolls_back_skill_install(self) -> None:
+        selected = self.selected("dev-alpha", "dev-beta")
+        real_replace = os.replace
+
+        def failing_replace(source, destination):
+            source = Path(source)
+            if source.name == ".licenses" and source.parent.name.startswith(".skills-wta-stage-"):
+                raise OSError("simulated license publication failure")
+            return real_replace(source, destination)
+
+        with mock.patch.object(installer.os, "replace", side_effect=failing_replace):
+            with self.assertRaisesRegex(installer.InstallError, "rolled back"):
+                installer.apply(selected, self.project, replace=False)
+        self.assertFalse((self.target / "dev-alpha").exists())
+        self.assertFalse((self.target / "dev-beta").exists())
+        self.assertFalse(self.license_target.exists())
         self.assert_no_temporary_artifacts()
 
 

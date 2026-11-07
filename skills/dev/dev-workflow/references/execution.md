@@ -31,7 +31,3 @@
 读取当前分支/提交、工作区差异、当前需求记录和最新用户指令。重新核对记录指向的文件和实际服务状态，不直接相信旧进度。保留已解决问题，更新已经失效的假设。只恢复仍存在的工作，后来的指令决定新的范围。
 
 中断前记录最后成功操作、未提交改动、运行中的资源、阻碍和精确下一步。不要把恢复点扩写成每一次工具调用的日记。
-
-## 来源
-
-适配 pstack 的 [outcome-oriented execution](https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/skills/principle-outcome-oriented-execution/SKILL.md)、[shipping](https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/skills/poteto-mode/playbooks/shipping.md)、[session-pickup](https://github.com/cursor/plugins/blob/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack/skills/poteto-mode/playbooks/session-pickup.md)，MIT。保留方法，移除绑定特定 harness 的执行门禁。

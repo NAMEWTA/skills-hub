@@ -1,0 +1,126 @@
+# Agent Notes
+
+英文 | [中文](README.zh.md)
+
+这里存放一种设计文档。**Agent Note** 记录影响本代码库的决策或提案，即*为什么这样做*以及*放弃了什么*，这些是代码与普通文档无法承载的内容。本文件规定 Agent Notes 的位置、写作时机和[文件内部格式](#文件格式)。
+
+## 目录与命名
+
+每篇 Agent Note 有两个维度，都编码在**路径**中：`{lifecycle}/{class}/yyyy-mm-dd-topic-title.md`。
+
+- **生命周期**，即顶层文件夹，是 Agent Note 的状态，状态变化时笔记在文件夹间移动：
+  - **`proposed/`**：在实施前评审的提案，尚未构建或只完成部分。
+  - **`implemented/`**：决策已交付。文件记录作出的决策及拒绝的方案，并且**与实际交付保持一致**：后续代码移动文件、重命名包或改变键与默认值时，在同一次变更中同步更新 Agent Note，只更新路径、名称、结构等事实，不改变决策本身。见 [implemented/AGENTS.md](implemented/AGENTS.md)。
+  - **`rejected/`**：提案经过考虑后被拒绝。只要其理由仍能阻止有诱惑力、有意义的错误选择，就保留；否则删除完整三文件组。
+- **类别**，即嵌套文件夹，说明决策类型，见下方[分类](#分类)。
+
+文件名中的日期是该主题**首次提出**的日期，依据 Git 历史。Agent Notes 之间用相对 Markdown 链接引用，例如 `[主题](../../implemented/architecture/2026-…-….md)`，不只写文字或编号，以便机械检查，并在文件夹移动后仍可维护。
+
+活动生命周期目录树就是工作清单：浏览生命周期与类别目录，或搜索仓库。不添加集中式 `INDEX.md`，因为它重复路径元数据，并让无关笔记变更争用同一个生成文件。具有历史决策价值、但对未来指导有限的已实施记录，移到下面说明的独立冻结 [`archived/`](archived/AGENTS.md) 目录树。
+
+## 分类
+
+每篇 Agent Note 都属于 `scripts/agent-note-tree.ts` 封闭集合中的一个路径编码类别；分类检查拒绝其他目录。新增类别须更新规范集合与本节。
+
+| 类别 | 覆盖内容 |
+|---|---|
+| `feature` | 面向用户或模型的新能力。 |
+| `bug-fix` | 修复缺陷，或补上复盘发现的缺口。 |
+| `simplification` | 删除代码、行为或接口范围，不增加能力。 |
+| `architecture` | 关于**交付源码**的结构性决策，例如包之间的关系、运行时术语。 |
+| `process` | 代码**周边**的工具、政策或工作流，例如检查、包管理器、内置依赖；不是运行时行为。 |
+| `testing` | 测试基础设施与策略。 |
+
+`architecture` 与 `process` 的分界：**architecture** 讨论交付源码，**process** 讨论周边工具和工作流。特意没有 `refactor`，因为它与 `simplification` 重叠，而后者的判断问题“可观察行为是否变化”已经覆盖它。
+
+## 归档与删除
+
+删除只描述小型界面调整或纯机械性变更的已实施 Agent Note；英文、中文和附属文件一起删除，并修复或移除入站链接。局部缺陷修复、性能变更、新能力或实质性的行为决策，不能仅因实现很小就符合删除条件。其他已实施笔记，只有在交付决策完成、理由不太可能指导未来工作、且仍有历史决策价值时才归档。如果备选方案、责任边界、否定保证、持久化或传输语义、安全规则、重新引入条件仍然有用，就保持活动。提议中笔记永不归档：过时提案应拒绝。已拒绝笔记只有在防止合理误判时才保留，否则英文、中文和附属文件一起删除。使用经过校准的 [`dsh-archive-agent-notes`](../skills/dsh-archive-agent-notes/SKILL.md) 工作流，不按字数、年代或目标配额决定。
+
+归档路径为 `archived/{class}/yyyy-mm-dd-topic-title.md`；有意不包含 `implemented`，因为只有已实施笔记能进入。归档变更移动完整英文、中文、附属记录三文件组，保留 `Status: implemented`，在两个语言文件紧接该状态后插入相同的 `Archived: YYYY-MM-DD` 行，重新记录附属文件，并修复或删除入站链接。这是归档时唯一允许的内容变化。已有标题标点、空行布局和语言切换文字不阻止归档，连同正文保留。
+
+封存后，每个归档三文件组永久冻结。不编辑、翻译、重排格式、更新、移动或删除，也不把它当作当前行为的权威依据。文档检查跳过归档来源，包括其出站链接；活动正文仍可在有意引用历史时链接到归档笔记。[`verify-archived-agent-notes`](../../scripts/verify-archived-agent-notes.ts) 约束封闭类别树、完整三文件组、归档元数据、附属哈希，以及只追加的冻结内容清单，只有[归档说明](archived/AGENTS.md)记录的精确封存转换例外除外。[归档策略 Agent Note](implemented/process/2026-07-26-frozen-agent-note-archive.md) 负责说明理由。
+
+## 何时撰写
+
+只有代码、测试与现有文档尚未解释的长期决策理由，才在同一个 PR 中新增或更新 Agent Note。未来实质工作提案从 `proposed/` 开始；已经作出的决策从 `implemented/` 开始。根据决策选择类别文件夹，见[分类](#分类)。
+
+更新已经负责该决策的 Agent Note 就满足规则，不创建重复记录。机械性或局部编辑免除，包括局部界面呈现与交互变化。不能把 Agent Note 编辑成*另一个决策*：用新笔记替代，并让两篇相互链接，除非后来依据下述规则完全合并旧笔记。编辑 `implemented/` 中的 Agent Note，使其跟踪既有决策当前位于何处，是必须做的，不是禁止事项；见 [implemented/AGENTS.md](implemented/AGENTS.md)。
+
+完全被替代的已实施 Agent Note 可以合并到当前负责该决策的笔记，再删除旧笔记。删除前，当前负责者必须保留每项独特理由、备选方案、后果、必要验证，以及明确覆盖缺口；修复全部入站链接；并在同一次变更中删除中文对应文件和一致性记录。部分替代不符合条件：两篇保持交叉链接，并更新仍然有效的每项事实。合并不能把旧文件改写成相反结论，也不能仅依赖 Git 历史保留理由。
+
+新增功能笔记只有在该功能已从生产代码、配置、Schema、持久化或传输格式、迁移和兼容行为中完全消失，没有当前文档声称它仍可用，也没有测试将它作为受支持行为时，才能合并到后来的移除笔记。移除理由和验证其不存在的测试可以保留。移除笔记须保留原始动机、为什么该动机不再足以支持功能、完全移除之外的方案、放弃的能力、重新引入条件，以及完全不存在的验证。过时的实现清单和仅验证已删除行为的测试，不属于当前验证证据。只移除一个传输、默认值、实现或呈现方式，属于部分替代；仍存在持久数据或兼容处理也属于部分替代。
+
+## 文件格式
+
+每篇活动 Agent Note 遵循统一内部格式，由 `pnpm run verify-agent-note-format` 强制检查（[scripts/verify-agent-note-format.ts](../../scripts/verify-agent-note-format.ts)，属于 `doc-sync`）；格式理由及其拒绝的备选方案见[已归档的统一格式 Agent Note](archived/process/2026-07-05-uniform-agent-note-format.md)。归档笔记保留封存时格式，再加上述归档日期行。
+
+### 头部块
+
+每篇 Agent Note 的前三行严格如下：
+
+```markdown
+# Agent Note: <标题>
+
+Status: <状态>
+```
+
+之后空一行。`Status:` 值有三种形式，且必须与文件所在生命周期目录一致，检查器会交叉核验：
+
+- `Status: proposed`
+- `Status: implemented`
+- `Status: rejected — <用一行说明原因>`
+
+状态不附日期或括号说明：文件名保存首次提议日期，其余由 Git 保存；“经修改后接受”属于正文，应在陈述决策处说明修改。拒绝理由是唯一带额外内容的状态，因为读者查找已拒绝 Agent Note 时要了解的就是拒绝结论。
+
+### 正文骨架
+
+每篇 Agent Note 正文以 `## Problem` 开头，独立说明动机，不依赖解决方案。后续结构取决于生命周期；重复出现的章节只使用以下规范名称，而真正专用的技术章节，例如包拓扑、传输约定、Schema，可以在必需章节之间自由组织。
+
+#### `proposed/`
+
+```markdown
+## Problem
+## Proposal
+…专用章节…
+## Alternatives considered
+## Acceptance criteria
+## Risks
+```
+
+`## Proposal` 说明预期变更，可以合理使用将来时；尚未构建时，计划、迁移步骤和未决问题放在这里。`## Acceptance criteria` 说明达到什么可观察状态才算完成。`## Risks` 既覆盖可能出错的地方，也覆盖明知会放弃的东西。
+
+#### `implemented/`
+
+```markdown
+## Problem
+## Decision
+…专用章节…
+## Alternatives considered
+## Consequences
+```
+
+`## Decision` 用现在时描述已交付现实，整篇文件依据 [implemented/AGENTS.md](implemented/AGENTS.md) 与现实保持一致。`## Consequences` 同时记录取舍**付出的代价与获得的收益**。提案时期标题在此属于规划语言，检查器拒绝它们：已实施 Agent Note 不得包含 `## Proposal`、`## Plan`、`## Migration plan` 和 `## Acceptance criteria`，原因见[冗余文案清单](../../docs/AGENTS.md)。`## Testing`、`## Deferred` 或 `## Related` 在陈述当前事实时可以使用。
+
+#### `rejected/`
+
+已拒绝 Agent Note 是冻结的提案：保留提案时期所有章节，包括 `## Acceptance criteria` 或 `## Plan`，结论位于 `Status:` 行。只要求头部块、`## Problem` 开头、`## Proposal` 章节，以及下方必须记录备选方案的要求。
+
+### 考虑过的替代方案——必需
+
+每篇 Agent Note 都有 `## Alternatives considered`：记录每个真实备选方案及其落选原因，每个方案用加粗开头段落，或对有争议的方案使用 `### Why not <X>?` 子节。只记录结论、不说明它胜过什么，会引发反复争论；这正是 Agent Notes 要防止的问题。
+
+备选方案必须真实记录，不能编造。日期早于 2026-07-05，且无法从记录重建备选方案的 Agent Note，使用以下精确注释代替该章节；检查器仅对格式规范之前的文件接受它：
+
+```markdown
+<!-- agent-note-format: alternatives-not-recorded (pre-format Agent Note) -->
+```
+
+### 生命周期之间移动
+
+文件移到另一个生命周期目录时，必须在同一次变更中更新 `Status:` 并满足目标目录骨架，否则检查失败。具体而言，`proposed/` → `implemented/` 将 `## Proposal` 改为现在时的 `## Decision`，将 `## Acceptance criteria` 与 `## Risks` 合并到 `## Consequences`，或记录当前行为依据的现在时 `## Testing` / `## Verification`，并将计划替换为实际交付内容。这把 [implemented/AGENTS.md](implemented/AGENTS.md) 要求的改写机械化。`proposed/` → `rejected/` 只在 `Status:` 行增加原因，然后冻结文件。
+
+### 中文对应文件
+
+依据 [i18n 约定](../../docs/i18n/README.md)，`.zh.md` 对应文件逐节镜像英文文件结构；机器检查的头部标记（`# Agent Note: ` 和 `Status:` 行）保留原样英文。格式检查跳过 `.zh.md` 文件，配对检查负责一致性。
+
