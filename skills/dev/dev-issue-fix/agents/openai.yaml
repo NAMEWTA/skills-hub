@@ -1,4 +1,4 @@
 interface:
-  display_name: "问题复现与修复"
-  short_description: "通过真实界面复现缺陷，验证已有修复，完成有前后证据的范围受限修复。"
-  default_prompt: "请使用 $dev-issue-fix 处理已分诊的问题，通过真实界面确认复现，优先验证已有补丁，再按授权修复。"
+  display_name: "可信报告复现与修复"
+  short_description: "在已配置的 Slack 管道中复现可信分诊的 UI 缺陷，以前后证据验证或修复"
+  default_prompt: "请使用 $dev-issue-fix 处理已配置 Slack 管道中带可信分诊标记的报告，通过真实 UI 双次复现，优先验证已有补丁，再按授权修复。"

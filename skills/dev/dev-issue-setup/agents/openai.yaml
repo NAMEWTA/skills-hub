@@ -1,4 +1,4 @@
 interface:
-  display_name: "问题自动化配置"
-  short_description: "配置独立的报告分诊与复现修复流程，验证集成、线程安全和实际自动化能力。"
-  default_prompt: "请使用 $dev-issue-setup 为当前项目配置问题分诊与复现自动化，复用已有授权，先完成可审查配置和验证。"
+  display_name: "Slack 问题自动化配置"
+  short_description: "配置 Slack 来源、分诊身份及 UI 修复管道，验证线程、控制能力与实际触发器"
+  default_prompt: "请使用 $dev-issue-setup 为当前项目配置 Slack 报告分诊与 UI 复现修复管道，复用已有授权，完成配置和验证。"

@@ -6,7 +6,7 @@
 
 1. [配置 本项目技能](guide-setup.md)：确认安装与宿主能力，按需要配置角色与预算。
 2. [通过 `$dev-workflow` 分派工作](guide-routing.md)：给它目标，看它选择流程。
-3. [理解代码](guide-understanding.md)：先只读调查，再在修改前用 `$dev-learn`、`$dev-why`、`$dev-learn` 和 `$dev-learn`。
+3. [理解代码](guide-understanding.md)：按当前机制、历史理由、教学或任务接续选择所需方法，沿用已有证据。
 4. [设计变更](guide-design.md)：在代码固定形状前使用 `$dev-architecture`、`$dev-parallel`、`$dev-parallel`、`$dev-review`、原型和计划。
 5. [构建并清理变更](guide-building.md)：构建流程、`$dev-tdd`、`$dev-writing` 和 `$dev-guardrails`。
 6. [验证并交付](guide-verification.md)：在真实应用中证明行为，形式化验证测试难触达的情况，用 `$dev-benchmark` 核验数字，再开一个聚焦的 PR 并推进到合并。

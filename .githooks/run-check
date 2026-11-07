@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+
+SKILLS_WTA_ROOT=$(git rev-parse --show-toplevel)
+export PYTHONUTF8=1 PYTHONIOENCODING=utf-8
+
+if command -v python3 >/dev/null 2>&1 && python3 -c 'import sys; sys.exit(sys.version_info < (3, 10))'; then
+    exec python3 "$SKILLS_WTA_ROOT/scripts/check.py" "$@"
+elif command -v python >/dev/null 2>&1 && python -c 'import sys; sys.exit(sys.version_info < (3, 10))'; then
+    exec python "$SKILLS_WTA_ROOT/scripts/check.py" "$@"
+elif command -v py >/dev/null 2>&1 && py -3 -c 'import sys; sys.exit(sys.version_info < (3, 10))'; then
+    exec py -3 "$SKILLS_WTA_ROOT/scripts/check.py" "$@"
+fi
+
+echo "skills-wta checks require Python 3.10+ (python3, python, or py -3)." >&2
+exit 1

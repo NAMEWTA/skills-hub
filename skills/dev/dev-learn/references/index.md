@@ -14,7 +14,9 @@
 
 - [按复杂度拆分模块探索](module-exploration.md)。
 
-## 完整串联与补充方法
+## 当前学习所需的补充方法
+
+历史调查、目标复述和背景恢复用于补足本次讲解的证据。独立历史理由调查以 `dev-why` 为主，需求意图对齐以 `dev-intake` 为主，继续开发以 `dev-workflow` 为主；单包使用时保留同样的完整方法。
 
 - [清理机械写作](clear-writing.md)。
 - [回忆工作上下文](context-recall.md)。

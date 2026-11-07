@@ -1,11 +1,13 @@
 ---
 name: dev-personalize
-description: 从用户明确提供或授权的当前项目记录中提炼稳定工程偏好，创建或更新独立的个人工作方式技能，并把会话经验、重复错误和技能评测分开处理。用于“把我的工作方式做成技能”“更新我的工程习惯”“从这些记录提炼偏好”；不扫描无关私人聊天，不把一次失败自动写成永久规则。
+description: 从用户明确提供或授权的项目记录中提炼稳定工程偏好，创建、更新并验证独立的个人工作方式技能。用于“把我的工作方式做成技能”“更新我的工程习惯”“从这些记录提炼偏好”；项目知识归档与代码防错机制分别由 dev-archive、dev-guardrails 承接。
 ---
 
 # 个人工程方式
 
 交付一份能改变后续行为、范围明确且可由用户审查的技能。先区分用户当前明确选择、反复观察到的习惯和仅一次发生的现象，当前明确要求优先。
+
+先判断最终改变的对象。项目事实、ADR 和错误经验进入项目知识；类型、接口、lint 或 CI 属于工程约束；个人技能只保存稳定的工作方式。需要其他类型的改进时沿当前任务交接，不把它们都写成个人偏好。
 
 ## 主流程
 
@@ -15,16 +17,18 @@ description: 从用户明确提供或授权的当前项目记录中提炼稳定�
 
 输出位置沿用用户指定源仓库。新技能使用 `skills/dev/dev-<标识>-mode/` 等领域前缀结构，安装后为 `.agents/skills/dev-<标识>-mode/`。不写插件缓存，不自动安装为个人全局技能。
 
-## 选择正确的改进方式
+## 维护个人方式所需的方法
 
 | 目标 | 本地完整方法 |
 | --- | --- |
 | 形成个人工作风格 | [偏好提炼](references/derive-preferences.md) 与 [最小技能模板](assets/personal-mode.md) |
-| 从一次任务找可复用经验 | [会话反思](references/reflection-method.md) |
-| 修复反复出现的工程错误 | [重复纠正治理](references/recurring-corrections.md) |
-| 编写具体工作流技能 | [技能编写](references/authoring-a-skill.md) 与 [本地结构规则](references/skill-authoring.md) |
-| 判断技能变化是否改善行为 | [独立评测](references/eval.md) |
+| 从本次使用发现个人方式需要怎样调整 | [会话反思](references/reflection-method.md) |
+| 判断问题是否更适合由工程结构预防 | [重复纠正治理](references/recurring-corrections.md)，需要代码约束时以 `dev-guardrails` 为主 |
+| 起草或修订这份个人模式技能 | [技能编写](references/authoring-a-skill.md) 与 [本地结构规则](references/skill-authoring.md) |
+| 判断个人模式变化是否改善行为 | [独立评测](references/eval.md) |
 | 了解这些方法如何组合 | [完整工作方式演进指南](references/evolve-workflow.md) |
+
+本地方法保留完整，单独安装时仍可完成已明确授权的相关改进。通用工作流技能编写由 `dev-workflow` 的技能维护流程负责；专用应用验证与形式化验证分别以 `dev-verify`、`dev-formal-verify` 为主。
 
 ## 持久化与交付
 

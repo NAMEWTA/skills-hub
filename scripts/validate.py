@@ -14,6 +14,7 @@ from urllib.parse import unquote, urlsplit
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from install import InstallError, LICENSE_BUNDLE_FILES, LICENSE_ROOT, catalog, regular_files  # noqa: E402
+from scripts.check_skill_quality import entry_issues  # noqa: E402
 
 PROVENANCE = re.compile(
     r"deepseek|matt[ -]?pocock|mattpocock|ask-matt|cursor/plugins|pstack|poteto|"
@@ -150,8 +151,7 @@ def check_skill_metadata(skill) -> list[str]:
     description = fields.get("description", "").strip().strip("\"'")
     if not description or len(description) > 1024 or "<" in description or ">" in description:
         failures.append(f"{manifest.relative_to(ROOT)}: missing or invalid description")
-    if len(content.splitlines()) > 500:
-        failures.append(f"{manifest.relative_to(ROOT)}: move long detail to local references")
+    failures.extend(entry_issues(manifest.relative_to(ROOT).as_posix(), content))
     if not re.search(r"[\u3400-\u9fff]", content):
         failures.append(f"{manifest.relative_to(ROOT)}: expected Chinese skill content")
     metadata = skill.source / "agents" / "openai.yaml"

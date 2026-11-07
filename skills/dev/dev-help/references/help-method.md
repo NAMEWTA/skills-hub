@@ -2,7 +2,7 @@
 
 回答用户关于本项目技能的问题，给出一个可直接使用的提示词，并链接到包内完整材料。独立的“怎么做”问题只需解释；用户已经要求执行时继续已授权目标，不要求其再发一遍相同请求。既有任务中的提问也不自动暂停原任务。
 
-要求执行工作，例如“用 本项目技能 修复这个 bug”，不是帮助问题。读取 [`dev-workflow`](workflow/references/operating-method.md)，按它执行，并按实际宿主能力说明如何让约定持续生效。
+要求执行工作，例如“用 本项目技能 修复这个 bug”，不是帮助问题。读取 [`dev-workflow`](workflow/entry.md)，按它执行，并按实际宿主能力说明如何让约定持续生效。
 
 本文将问题映射到包含答案的技能与指南页；细节由这些文件负责。在引用前读取对应文件，与本映射冲突时以实际文件为准。向用户提供当前安装包内可打开的相对路径；所有方法与指南都保存在本包，不用外部页面代替内容。
 
@@ -43,7 +43,7 @@
 
 ## 用 `$dev-workflow` 开始任务
 
-`$dev-workflow` 把任务匹配到一个操作流程，把其步骤复制到任务清单，并在需要时运行其他技能。跳过的步骤仍以 `skip: <reason>` 留在清单中。好的提示词说明目标及完成判据，不列技能清单，因为手工序列容易丢失或重排流程会保留的步骤。帮助组织提示词前先读 [`references/prompting.md`](prompting.md)。例子见[指南第 2 页](guide-routing.md)。
+`$dev-workflow` 按目标与当前阶段选择所需方法，沿用已有规格和证据。复杂任务把适用步骤列入清单，只有影响交付或审计的省略才记录原因。好的提示词说明目标及完成判据，不列技能清单，因为手工序列容易丢失或重排流程会保留的步骤。帮助组织提示词前先读 [`references/prompting.md`](prompting.md)。例子见[指南第 2 页](guide-routing.md)。
 
 `$dev-workflow` 如何保持可见，要核对当前宿主的真实机制：
 
@@ -55,17 +55,17 @@
 
 ## 选择技能
 
-默认答案是 `$dev-workflow`，它在步骤需要时运行大多数其他技能。用户希望比流程默认更多或更少地做某件事时，才直接指定技能。推荐前先读取该技能，并给一个示例提示词。
+跨阶段目标或当前阶段不明时使用 `$dev-workflow`；已有明确阶段时直接推荐对应入口，例如按规格实施用 `$dev-build`、普通故障用 `$dev-debug`。推荐前先读取该技能，并给一个示例提示词。
 
 | 用户想做什么 | 技能 |
 |---|---|
-| 严谨完成任何非平凡任务 | [`$dev-workflow`](workflow/references/operating-method.md) |
+| 协调跨阶段目标、恢复阶段未明的任务或完成约定交付 | [`$dev-workflow`](workflow/entry.md) |
 | 开始前确认代理理解目标与问题 | [`$dev-intake`](capabilities.md) |
 | 发送前深化提示词而不扩大范围：专业人士会增加什么、原始材料与方法是什么、外部如何核验；只返回提示词而不执行 | [`$dev-sharpen`](capabilities.md) |
 | 理解代码现在如何工作、新代码应放在哪里 | [`$dev-learn`](workflow/references/module-exploration.md) |
 | 理解代码为何如此组织、某个数字从哪里来 | [`$dev-why`](workflow/references/decision-investigation.md) |
 | 用简单语言理解改动或子系统 | [`$dev-learn`](capabilities.md) |
-| 回顾自己最近在某个话题上的工作 | [`$dev-learn`](workflow/references/context-recall.md) |
+| 回顾自己指定时间或话题的工作进展 | [`$dev-status`](capabilities.md)，跨会话资料按[背景恢复方法](workflow/references/context-recall.md)核对 |
 | 用通俗文字与小图回顾本对话自上条消息以来的变化，列全等待自己决定的事项，并让回复本身足以决策 | [`$dev-status`](capabilities.md) |
 | 将 `$dev-status` 回顾做成短字幕幻灯视频，并在下方用文字列出等待决定的事项 | [`$dev-status`](capabilities.md) |
 | 知道一个小 diff 可能在自身之外破坏什么 | [`$dev-review`](workflow/references/change-impact.md) |
@@ -85,25 +85,25 @@
 | 覆盖代码变化后同步形式化验证，并判断失败属于漂移还是缺陷 | [`$dev-formal-verify`](capabilities.md) |
 | 向产品经理或设计师展示经 TLA+ 模型检查的用户行为图，以及到达每个违规状态的最短路径 | [`$dev-statechart`](capabilities.md) |
 | 报告或依据性能数字行动前审查它 | [`$dev-benchmark`](principles/measurement-checklist.md) |
-| 执行大型、跨领域或离开后回来审查的变更 | [`$dev-sharpen`](capabilities.md) |
-| 执行中保存决定日志，随后复核 | [`$dev-benchmark`](capabilities.md) |
+| 执行大型、跨领域或需要事后审计的变更 | [`$dev-workflow`](workflow/entry.md)，无合适现成流程时用[定制执行](workflow/references/custom-workflow.md) |
+| 执行中保存决定日志，随后复核 | [`$dev-workflow`](workflow/references/decision-trail.md)；性能实验记录由 `$dev-benchmark` 负责 |
 | 为每个角色选择模型和推理预算 | [`$dev-setup`](capabilities.md) |
 | 将自己的工作习惯变成个人模式技能 | [`$dev-personalize`](capabilities.md) |
-| 将已完成任务的经验转成技能修改 | [`$dev-archive`](workflow/references/reflection-method.md) |
+| 从完成任务中提炼经验 | [完整反思方法](workflow/references/reflection-method.md)；项目知识归 `$dev-archive`，个人方式归 `$dev-personalize`，结构约束归 `$dev-guardrails` |
 | 阻止代理在本仓库重复同样错误 | [`$dev-guardrails`](principles/recurring-corrections.md) |
-| 构建按钮连接已支持 webhook 的操作页面 | [`$dev-status`](capabilities.md) |
+| 构建按钮连接已支持 webhook 的操作页面 | `$dev-build`，使用本包[操作界面方法](context/personal/references/action-ui.md) |
 | 熟悉 本项目技能 的使用方式 | `$dev-help` |
 
 其他已安装技能不在表中时，读取其 frontmatter 并按 description 选择。完整原则见本包[原则指南](principles/guide-principles.md)。
 
 容易混淆的选择：
 
-- `$dev-learn` 解释代码做什么，`$dev-why` 解释理由，`$dev-learn` 运行一个或两者，再用简单语言讲解结果。
+- `$dev-learn` 解释当前机制与修改入口，教学中按需要补充已有历史依据；独立追查历史决定由 `$dev-why` 负责。
 - `$dev-parallel` 给每个执行者同一简报并融合优点；`$dev-parallel` 划分切片或竞速，返回一份报告。
 - `$dev-architecture` 按用户范围设计或实施；只要求设计时交付设计，明确要求执行时继续。要保留人审节点，可以直接说“实施前让我看设计”，不需要专有口令。
 - `$dev-review` 审查 diff；`$dev-review` 查找 diff 以外的破坏，并证明让改动安全的关键事实。
-- `$dev-learn` 从最近多次对话重建上下文；`$dev-status` 只覆盖本对话自用户上次消息以来的变化。恢复某个具体对话或分支使用 Session pickup 流程。
-- `$dev-sharpen` 设计一次严谨执行；Orchestrate 流程协调跨多日、多 PR 的项目；Autonomous run 流程把单个任务推进到完成条件。
+- `$dev-status` 给人读的进展报告，默认本轮，也可按用户指定时间或主题核对；恢复背景并继续实施由 `$dev-workflow` 的上下文恢复或会话接续方法负责。
+- `$dev-sharpen` 深化待执行请求；`$dev-workflow` 在无合适现成流程时定制执行，多日多 PR 使用项目编排，单任务持续推进使用自主执行。
 
 技能包不自动提供宿主能力：
 
@@ -122,7 +122,7 @@
 - “full autopilot on this queue”运行 Autopilot-full；“autopilot, don't merge”运行 Autopilot-stack。
 - “run the eval playbook”运行 Eval。
 
-相近名称可能被宿主匹配到其他技能，执行前应读取实际内容并核对目标。[`dev-workflow`](workflow/references/operating-method.md) 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](guide-verification.md) 说明开启、跟进和落地 PR。
+相近名称可能被宿主匹配到其他技能，执行前应读取实际内容并核对目标。[`dev-workflow`](workflow/entry.md) 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](guide-verification.md) 说明开启、跟进和落地 PR。
 
 本项目有按任务选择的规格、计划与实施方法；宿主真实提供计划模式时可配合使用。跨阶段或堆叠 PR 的工作，要求 `$dev-workflow` 制订计划会运行[多阶段计划流程](workflow/references/multi-phase-plan.md)，只写计划而不实施。设计问题先通过 Prototype 流程或 `$dev-architecture` 用代码厘清。
 
@@ -146,7 +146,7 @@
 ## 将 本项目技能 变成自己的工作方式
 
 - [`$dev-personalize`](capabilities.md) 从用户明确提供或授权的项目记录起草个人模式技能，与 `$dev-workflow` 一起使用。
-- 一次会话后用 [`$dev-archive`](workflow/references/reflection-method.md) 将经验变成具体的技能修改；已有维护授权时直接完成，没有时给可审查差异。
+- 一次会话后按[反思方法](workflow/references/reflection-method.md)提炼有证据的经验，按项目知识、个人方式或结构约束选择归属；只有已授权修改的对象才实际编辑。
 - `$dev-workflow write a skill for <workflow>` 运行技能编写流程；eval 流程盲测技能变化。
 - 技能修正与产品功能的范围分别说明；只有项目流程或用户目标需要时开 PR，直接推送授权不强制改成 PR。
 

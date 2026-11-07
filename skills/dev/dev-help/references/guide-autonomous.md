@@ -33,7 +33,7 @@
 - 有实际事件订阅、调度或后台机制才配置它。没有时，在当前会话内持续执行并保存恢复点，不声称会话结束或机器关闭后仍在运行。
 - 退出方式和资源上限允许在真正死路停下，防止空转或悄悄改写目标。
 
-复杂且需要回来后审查的任务，先按 [自定义工作流程](context/setup/references/custom-workflow.md) 设计阶段，再接上 [决策证据](context/setup/references/decision-trail.md)。不为简单改动制造多层编排。
+复杂且需要回来后审查的任务，先按 [自定义工作流程](workflow/references/custom-workflow.md) 设计阶段，再接上 [决策证据](workflow/references/decision-trail.md)。不为简单改动制造多层编排。
 
 用户明确要求暂停或关停相关运行时，采用 [安全暂停](context/setup/references/safe-pause.md) 保存或撤回当前原子步骤、按授权保存检查点，并写恢复说明。新会话按 [会话接续](context/setup/references/session-resume.md) 恢复。“继续”不触发暂停；仅用户暂时不回复也不是停止指令。
 
@@ -55,7 +55,7 @@ flowchart TD
 
 ## 回来后的审计
 
-[决策证据方法](context/setup/references/decision-trail.md) 记录时间、阶段、决定、理由、证据指针和结果。新增记录统一用 Markdown 写入 `.agents/wtadev/changes/<日期-主题>/decisions.md`。确有表格处理需要才使用随包的可选 TSV，不强制日志格式。
+[决策证据方法](workflow/references/decision-trail.md) 记录时间、阶段、决定、理由、证据指针和结果。新增记录统一用 Markdown 写入 `.agents/wtadev/changes/<日期-主题>/decisions.md`。确有表格处理需要才使用随包的可选 TSV，不强制日志格式。
 
 新增记录统一留在 `.agents/wtadev/changes/<日期-主题>/`。任务范围较大、审查者需要过程证据时，按既有交付授权一并保存。公开提交前移除秘密、无关个人记录和不应公开的内部信息。
 

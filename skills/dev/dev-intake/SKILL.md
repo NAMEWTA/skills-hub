@@ -1,13 +1,13 @@
 ---
 name: dev-intake
-description: 整理聊天、Issue、PR 评审、截图、日志或文档中的开发需求，保留来源并区分事实、目标与待决问题。用于开始新需求或整合追加反馈。
+description: 整理聊天、普通 Issue、PR 评审、截图、日志或文档中的开发需求，保留来源并区分事实、目标与待决问题。用于汇总多处反馈、确认需求范围，或“用自己的话复述你理解的目标”，交付可继续澄清或实施的需求简报。
 ---
 
 # 接收与对齐需求
 
 先读原始材料和它涉及的实际代码。用户的一句话也可以是充分的输入，不要求必须有 Issue、PRD 或外部系统。
 
-用户要求“用你自己的话说说我的目标”时，先用[目标复述](references/goal-restatement.md)说明所理解的目标和问题。用户要求把上一条讲得更简单时，直接用[普通语言重述](references/plain-restatement.md)。复述用于对齐理解，不新增等待确认的门槛；已有目标与授权清楚时继续工作。
+用户要求“用你自己的话说说我的目标”时，先用[目标复述](references/goal-restatement.md)说明所理解的目标和问题。用[普通语言重述](references/plain-restatement.md)写清需求中的复杂表达。复述用于对齐理解，不新增等待确认的门槛；已有目标与授权清楚时继续工作。
 
 ## 提炼可实施的意图
 
@@ -20,6 +20,8 @@ description: 整理聊天、Issue、PR 评审、截图、日志或文档中的�
 根据任务大小，把这些内容写成一段 brief，或用 [需求简报](assets/brief.md) 保存到 `.agents/wtadev/changes/<日期-主题>/brief.md`。已有项目格式就继续使用；不创建重复知识库。
 
 多来源、缺陷、截图、评审和追加需求的具体处理见 [来源处理](references/input-evidence.md)。
+
+已明确的故障复现与修复以 `dev-debug` 为主；已配置 Slack 来源线程的自动分诊可选用 `dev-issue-triage`。普通 Issue 不需要自动化的线程配置或可信标记。没有其他技能时，按本包完整分诊方法推进当前目标。
 
 ## 交接
 
@@ -35,7 +37,7 @@ description: 整理聊天、Issue、PR 评审、截图、日志或文档中的�
 
 | 需要解决的问题 | 本包材料 |
 | --- | --- |
-| 核对理解中的目标，或把上一条改成普通语言 | [目标复述](references/goal-restatement.md)、[普通语言重述](references/plain-restatement.md) |
+| 核对理解中的目标，写清需求表达 | [目标复述](references/goal-restatement.md)、[普通语言重述](references/plain-restatement.md) |
 | 报告、工单或 PR 要怎样分类、查重、验证和继续上次讨论 | [完整分诊方法](references/requirement-triage.md) |
 | 怎样写清当前与目标行为、接口、验收和范围 | [实现简报模板及四类示例](references/implementation-brief.md) |
 | 怎样记录曾被拒绝的功能，避免把已实现误判为被拒绝 | [范围决定知识库](references/scope-boundaries.md) |

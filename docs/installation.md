@@ -33,6 +33,18 @@
 
 `.agents/.skills-wta-install.lock/` 防止本安装器并发写入。若异常终止留下锁，先确认没有安装进程，再移除锁并检查备份。不要在进程运行时删除锁。
 
+## 合并后的 UI 入口
+
+`dev-figma-design` 已合并到 `dev-ui-design`。设计系统、颜色与语义 token、组件状态和视觉检查完整保留在新包内，直接用于项目代码，无需 Figma。
+
+安装器只更新本次选定的名称，不自动删除已退役或未选中的目录。如果目标项目此前安装过旧入口：
+
+1. 检查 `.agents/skills/dev-figma-design/` 是否有自行修改；将需要保留的偏好与当前 UI 资源对照处理。
+2. 将整个旧目录移到 `.agents/.skills-wta-backups/<本次唯一标识>/dev-figma-design/` 或其他技能扫描目录之外。不要仅在 `.agents/skills/` 内改名，避免旧入口继续被发现。
+3. 在目标项目根目录，使用更新后的安装器安装 `dev-ui-design`；需要更新现有同名包时使用 `install --skill dev-ui-design --replace`。也可更新整个 `dev` 领域。
+
+这个过程只迁移技能入口；项目中的设计记录仍按原位置引用，新记录使用 `.agents/wtadev/`。
+
 ## 恢复与卸载
 
 恢复前关闭可能正在读取或写入这些技能的工具，核对备份内容，将现有对应技能另行保留，再把选定备份目录移回 `.agents/skills/<技能名>/`。只恢复所选技能，不用整个 `.agents` 覆盖项目资料。

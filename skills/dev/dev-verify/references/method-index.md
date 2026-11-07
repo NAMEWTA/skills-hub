@@ -4,7 +4,7 @@
 
 ## 主要任务方法
 
-- [测试行为，不测试实现](behavior-verification.md)
+- [测试行为，不测试实现](behavior-tests.md)
 - [验证结果并打开 PR](verification-and-delivery.md)
 - [创建验证技能](verification-authoring.md)
 - [维护验证技能](verification-maintenance.md)
@@ -28,7 +28,6 @@
 ## 执行、测试与交付原则
 
 - [babysit](babysit.md)
-- [测试行为，不测试实现](behavior-tests.md)
 - [影响范围](change-impact.md)
 - [本地执行支持](execution-support.md)
 - [解释数字](explain-numbers.md)
@@ -40,7 +39,6 @@
 - [并行群体执行](parallel-coverage.md)
 - [pull-request-procedure](pull-request-procedure.md)
 - [证明它确实有效](real-evidence-guardrails.md)
-- [证明它确实有效](real-evidence.md)
 - [把重复纠正转成可靠约束](recurring-corrections.md)
 - [构建执行工具](repeatable-tools.md)
 - [verified-landing](verified-landing.md)

@@ -46,31 +46,30 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 
 ## dev：完整开发流程
 
-共 31 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，平时用 `dev-workflow` 推进任务；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
+共 30 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，跨阶段任务用 `dev-workflow`，明确阶段直接使用对应技能；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
 
 | 技能 | 用途 |
 | --- | --- |
 | [dev-help](skills/dev/dev-help/SKILL.md) | 完整本地使用指南、场景配方、能力选择与常见问题 |
 | [dev-setup](skills/dev/dev-setup/SKILL.md) | 核对宿主工具、模型角色、推理预算及长任务配置 |
-| [dev-workflow](skills/dev/dev-workflow/SKILL.md) | 总入口：按需求路由、持续实施、恢复任务、完成交付 |
+| [dev-workflow](skills/dev/dev-workflow/SKILL.md) | 协调跨阶段交付、恢复未明阶段任务、记录与复核任务决定 |
 | [dev-personalize](skills/dev/dev-personalize/SKILL.md) | 从已授权的工作历史提炼个人习惯，生成可维护的项目技能 |
-| [dev-status](skills/dev/dev-status/SKILL.md) | 汇总当前进度与待决事项，按需生成图示、演示或视频简报 |
+| [dev-status](skills/dev/dev-status/SKILL.md) | 只读汇总当前或指定历史范围的进度与待决事项，按需制作报告视频 |
 | [dev-intake](skills/dev/dev-intake/SKILL.md) | 合并聊天、Issue、截图、日志、评审等来源，保留出处与范围 |
-| [dev-issue-setup](skills/dev/dev-issue-setup/SKILL.md) | 配置 Issue 自动化的角色、范围、信任标记及故障补偿 |
-| [dev-issue-triage](skills/dev/dev-issue-triage/SKILL.md) | 核对 Issue 真实复现，去重、分流并产出可实施的修复简报 |
-| [dev-issue-fix](skills/dev/dev-issue-fix/SKILL.md) | 以复现证据修复单个 Issue，核对已有修复并推进已授权 PR |
+| [dev-issue-setup](skills/dev/dev-issue-setup/SKILL.md) | 配置指定 Slack 报告管道的来源、角色、控制能力及故障补偿 |
+| [dev-issue-triage](skills/dev/dev-issue-triage/SKILL.md) | 按已配置 Slack 线程契约分类、查重与分流，不运行复现 |
+| [dev-issue-fix](skills/dev/dev-issue-fix/SKILL.md) | 对可信报告双次 UI 复现，验证已有修复或交付授权内草稿 PR |
 | [dev-grill](skills/dev/dev-grill/SKILL.md) | 按设计决策树澄清问题，先查事实，再问真正的产品选择 |
 | [dev-spec](skills/dev/dev-spec/SKILL.md) | 把意图转成行为规格、验收、边界与非目标 |
 | [dev-architecture](skills/dev/dev-architecture/SKILL.md) | 对比结构方案，明确领域、接口、状态所有权及取舍 |
 | [dev-plan](skills/dev/dev-plan/SKILL.md) | 拆分可交付的垂直切片与真正的依赖 |
-| [dev-sharpen](skills/dev/dev-sharpen/SKILL.md) | 深入打磨当前任务的目标、契约、结构和验收 |
+| [dev-sharpen](skills/dev/dev-sharpen/SKILL.md) | 用四问深化待执行请求、原始材料、方法与独立证据 |
 | [dev-parallel](skills/dev/dev-parallel/SKILL.md) | 分工覆盖、多个候选比选、交叉评审与统一集成 |
-| [dev-ui-design](skills/dev/dev-ui-design/SKILL.md) | 产品界面与落地页设计，包含完整中文设计规范与实例 |
-| [dev-figma-design](skills/dev/dev-figma-design/SKILL.md) | Figma 设计系统、变量、自动布局与组件体系 |
+| [dev-ui-design](skills/dev/dev-ui-design/SKILL.md) | 产品界面、设计系统与落地页，完整 token、组件状态与视觉规范 |
 | [dev-build](skills/dev/dev-build/SKILL.md) | 根据规格实施、集成并验证当前成果 |
 | [dev-tdd](skills/dev/dev-tdd/SKILL.md) | 在真实公共接口逐行为进行红绿循环，保留能经受重构的测试 |
 | [dev-guardrails](skills/dev/dev-guardrails/SKILL.md) | 把重复问题转为类型、接口、lint、预算与其他结构约束 |
-| [dev-statechart](skills/dev/dev-statechart/SKILL.md) | 提取隐含状态、转换与不变量，生成可审查状态图并回放轨迹 |
+| [dev-statechart](skills/dev/dev-statechart/SKILL.md) | 基于 TLA+ / TLC 生成带规则标记和最短反例的状态图，并核对代码 |
 | [dev-formal-verify](skills/dev/dev-formal-verify/SKILL.md) | 为高价值状态和并发属性建立、运行并维护形式化验证 |
 | [dev-debug](skills/dev/dev-debug/SKILL.md) | 基于运行证据定位根因，修复并回到原始场景验证 |
 | [dev-review](skills/dev/dev-review/SKILL.md) | 分别审查规格符合度与工程质量 |
@@ -107,7 +106,7 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 | --- | --- | --- |
 | 结构约束 | `dev-guardrails`：类型、lint、接口、幂等与预算规则 | 让已知错误更难再次写入，不替代对实际行为的检查 |
 | 经验验证 | `dev-tdd`、`dev-verify`、`dev-benchmark`：行为测试、真实操作、评测与测量 | 在实际执行的输入、环境和工作负载上观察到什么 |
-| 状态可视化 | `dev-statechart`：状态、事件、守卫、轨迹、代码映射 | 让隐含行为可读，帮助人审查系统是否符合意图；画出图本身不证明正确 |
+| 模型结果可视化 | `dev-statechart`：TLA+ / TLC 结果、状态、轨迹、代码映射 | 让隐含行为可读，帮助人审查系统是否符合意图；普通解释图不要求模型检查 |
 | 形式化分析 | `dev-formal-verify`：模型、属性、假设、反例与核对记录 | 在声明的模型、假设和边界内检查属性，并通过实际代码验证防止漂移 |
 | 交付与记忆 | `dev-review`、`dev-deploy`、`dev-archive` | 审查、指定环境真实运行、更新仍有效的项目知识 |
 
@@ -148,6 +147,10 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 
 已有 `docs/` 等位置的有效文档按真实位置引用，避免重复保存正文。迁移本套技能的既有资料时，保留原有子目录与内容，更新项目导航及入链。当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；归档时核对引用、修复过期事实、保留仍重要的理由。详见 [知识与记忆](docs/knowledge.md)。
 
+## UI 入口合并
+
+设计系统、双层颜色、文本样式、完整语义 token 与组件状态现已并入 `dev-ui-design`，无需 Figma。旧版本已经安装独立 Figma 技能的项目，请按[迁移说明](docs/installation.md#合并后的-ui-入口)先将旧包备份移出技能发现目录，再更新 UI 包，避免旧入口继续参与选择。
+
 ## 独立内容与本地资料
 
 每个技能是一个完整安装包：`SKILL.md` 说明何时使用、如何判断、做到什么程度；`references/` 放按需读取的完整中文方法；`assets/` 放可以复制到目标项目的模板；需要确定性操作时才提供 `scripts/`。`agents/openai.yaml` 提供界面元数据。
@@ -162,12 +165,15 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 
 ## 维护与验证
 
-从 [AGENTS.md](AGENTS.md) 开始；技能编写约定见 [技能编写指南](docs/skill-authoring.md)，本次实际检查结果见 [验证记录](docs/validation.md)。
+从 [AGENTS.md](AGENTS.md) 开始；[关键开发约束](docs/development-constraints.md)说明成熟方法的保留、入口归属和上游同步，[技能编写指南](docs/skill-authoring.md)说明写法，[质量门禁](docs/skill-quality.md)说明预算与提交检查，实际检查结果见 [验证记录](docs/validation.md)。
 
 ```bash
-python3 scripts/validate.py
-python3 scripts/validate_materials.py
-python3 -m unittest discover -s tests -v
+python3 scripts/check.py
+python3 scripts/check.py --full
+python3 scripts/check_skill_quality.py --report
+
+# 为本检出启用提交与推送快照检查
+python3 scripts/install_hooks.py
 ```
 
 校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。

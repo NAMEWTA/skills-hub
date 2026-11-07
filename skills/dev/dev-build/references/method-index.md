@@ -27,6 +27,7 @@
 | 设计危险信号 | [design-signals.md](design-signals.md) |
 | 对领域建模 | [domain-structure.md](domain-structure.md) |
 | 功能开发 | [feature-delivery.md](feature-delivery.md) |
+| 构建连接真实 webhook 的操作界面 | [action-ui.md](action-ui.md) |
 | 按请求实现 | [implement-request.md](implement-request.md) |
 | 按任务图实现 | [implement-task-graph.md](implement-task-graph.md) |
 | 原型 | [prototype.md](prototype.md) |
@@ -104,7 +105,7 @@
 
 ## 可用模板与工具
 
-本技能的完整模板位于上表对应方法内。
+本技能的完整模板位于上表对应方法内。操作界面的请求、权限与验证使用[接口约定](../assets/action-contract.md)。
 
 ## 测试先行与接口设计
 

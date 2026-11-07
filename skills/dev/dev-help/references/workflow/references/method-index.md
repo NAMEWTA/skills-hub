@@ -12,14 +12,16 @@
 | 自动堆叠 | [autopilot-stack.md](autopilot-stack.md) |
 | 推进与恢复 | [execution.md](execution.md) |
 | 交接方法 | [handoff-method.md](handoff-method.md) |
+| 没有合适现成流程的复杂任务 | [custom-workflow.md](custom-workflow.md) |
+| 通用任务决策记录与事后审计 | [decision-trail.md](decision-trail.md) |
 | 多阶段或多 PR 计划 | [multi-phase-plan.md](multi-phase-plan.md) |
-| 开发执行总规程 | [operating-method.md](operating-method.md) |
+| 已选任务的工程执行方法 | [operating-method.md](operating-method.md) |
 | 面向结果执行 | [outcome-execution.md](outcome-execution.md) |
 | 阶段边界 | [phase-boundaries.md](phase-boundaries.md) |
 | 项目编排 | [program-coordination.md](program-coordination.md) |
 | 安全暂停 | [safe-pause.md](safe-pause.md) |
 | 会话接续 | [session-resume.md](session-resume.md) |
-| 开发阶段路由 | [workflow-routing.md](workflow-routing.md) |
+| 需求到实施的阶段衔接 | [workflow-routing.md](workflow-routing.md) |
 
 ## 设计与实现
 
@@ -125,6 +127,6 @@
 
 ## 完整工程原则与委派角色
 
-- [24 条工程原则完整指南](principles/guide-principles.md)
-- [注释审查与保留判断](principles/comment-review.md)
+- [24 条工程原则完整指南](../../principles/guide-principles.md)
+- [注释审查与保留判断](../../principles/comment-review.md)
 - [委派执行者任务书](delegate-role.md)

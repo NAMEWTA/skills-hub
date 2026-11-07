@@ -13,4 +13,4 @@
 **回复：** 退出条件、执行轮数、落地内容、丢弃内容、最终判据状态。
 
 
-具体依据见[可验证单元](verifiable-units.md)、[真实行为证据](real-evidence.md)、[决策记录](decision-trail.md)与[当前宿主能力](../../../harness-adapter.md)。
+具体依据见[可验证单元](verifiable-units.md)、[真实行为证据](real-evidence.md)、[决策记录](../../../workflow/references/decision-trail.md)与[当前宿主能力](../../../harness-adapter.md)。
