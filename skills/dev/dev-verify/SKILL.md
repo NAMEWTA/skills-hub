@@ -34,7 +34,7 @@ description: 通过真实应用入口验证用户行为、可观察结果和副�
 
 完整参考 [功能图索引](references/feature-map-index.md)、[创建笔记示例](references/feature-map-example.md) 和 [搜索笔记示例](references/feature-search-example.md)。示例展示用户入口、前置条件、驱动动作、预期状态与陷阱，命令只属于示例应用；移植时替换为当前项目真实能力并运行证明。
 
-按功能维护轻量 Markdown，不建立强制状态机或复杂 Schema。项目专用验证包按用户指定位置编写；安装时扁平放入 `.agents/skills/dev-verify-<app>/`。新增运行记录与证据统一放 `.agents/wtadev/changes/<日期-主题>/evidence.md` 及其明确引用的产物目录，不写入通用技能安装包。
+按功能维护轻量 Markdown，不建立强制状态机或复杂 Schema。项目专用验证包按用户指定位置编写；安装时扁平放入 `.agents/skills/dev-verify-<app>/`。新增运行记录与证据统一放 `.agents/dev/changes/<日期-主题>/evidence.md` 及其明确引用的产物目录，不写入通用技能安装包。
 
 ## 交付验证结果
 

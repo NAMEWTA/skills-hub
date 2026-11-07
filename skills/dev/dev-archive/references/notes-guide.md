@@ -4,23 +4,23 @@
 
 ## 目录与命名
 
-新增项目笔记统一以 `.agents/wtadev/` 为根，按需要创建以下内容。已有资料按真实位置查阅引用；明确迁移时保留内容、命名与编号，并修复相关链接，不擅自搬迁目标项目文件：
+新增项目笔记统一以 `.agents/dev/` 为根，按需要创建以下内容。已有资料按真实位置查阅引用；明确迁移时保留内容、命名与编号，并修复相关链接，不擅自搬迁目标项目文件：
 
 | 内容 | 路径 | 维护方式 |
 | --- | --- | --- |
-| 当前需求、提案、验证 | `.agents/wtadev/changes/<YYYY-MM-DD-topic>/` | 随本次需求更新 |
-| 领域用语和别名 | `.agents/wtadev/notes/glossary.md` | 指向真实实体和所属领域 |
-| 模块背景 | `.agents/wtadev/notes/context/<topic>.md` | 当前职责、约束和代码入口 |
-| 决策理由 | `.agents/wtadev/notes/decisions/<YYYY-MM-DD-topic>.md` | 保留真实取舍，更新实现事实 |
-| 错误经验 | `.agents/wtadev/notes/errors/<topic>.md` | 症状、条件、证据、处理与验证 |
-| 学习导读 | `.agents/wtadev/notes/learning/<topic>.md` | 串联完整业务路径 |
-| 需求历史 | `.agents/wtadev/archive/changes/<YYYY-MM-DD-topic>/` | 保留交付或取消事实 |
-| 退役笔记 | `.agents/wtadev/archive/notes/` | 保留独立历史价值 |
-| 环境记录 | `.agents/wtadev/deploy/<environment>/` | 运行手册与发布证据分开 |
+| 当前需求、提案、验证 | `.agents/dev/changes/<YYYY-MM-DD-topic>/` | 随本次需求更新 |
+| 领域用语和别名 | `.agents/dev/notes/glossary.md` | 指向真实实体和所属领域 |
+| 模块背景 | `.agents/dev/notes/context/<topic>.md` | 当前职责、约束和代码入口 |
+| 决策理由 | `.agents/dev/notes/decisions/<YYYY-MM-DD-topic>.md` | 保留真实取舍，更新实现事实 |
+| 错误经验 | `.agents/dev/notes/errors/<topic>.md` | 症状、条件、证据、处理与验证 |
+| 学习导读 | `.agents/dev/notes/learning/<topic>.md` | 串联完整业务路径 |
+| 需求历史 | `.agents/dev/archive/changes/<YYYY-MM-DD-topic>/` | 保留交付或取消事实 |
+| 退役笔记 | `.agents/dev/archive/notes/` | 保留独立历史价值 |
+| 环境记录 | `.agents/dev/deploy/<environment>/` | 运行手册与发布证据分开 |
 
 日期表示首次提出主题的时间，依据真实记录；不要为已有笔记批量重新命名。跨文档使用项目内相对 Markdown 链接。当前源码位置还应提供可搜索符号，不能只依靠容易漂移的行号。
 
-目录与关键词搜索已经能定位时不建中央目录。内容增长后可增加 `.agents/wtadev/notes/index.md`，只记录主题、何时读取和链接，不复制正文，不把索引当作事实数据库。根 `AGENTS.md` 保持简短，只存高频约束和读取入口。
+目录与关键词搜索已经能定位时不建中央目录。内容增长后可增加 `.agents/dev/notes/index.md`，只记录主题、何时读取和链接，不复制正文，不把索引当作事实数据库。根 `AGENTS.md` 保持简短，只存高频约束和读取入口。
 
 ## 决策的当前状态
 
@@ -131,7 +131,7 @@
 
 ## 维护与复核
 
-当前笔记检查现有路径与符号、逻辑事实、实际验证及入站链接。默认检索只读当前知识和代码，查历史时才明确进入 `.agents/wtadev/archive/`。归档资料出站链接可能已经过时，不给历史做无止境的链接追赶。
+当前笔记检查现有路径与符号、逻辑事实、实际验证及入站链接。默认检索只读当前知识和代码，查历史时才明确进入 `.agents/dev/archive/`。归档资料出站链接可能已经过时，不给历史做无止境的链接追赶。
 
 只更新亲自复核的范围，不批量刷新整库日期。没有运行环境就写“源码分析，运行未验证”；上线需要对应环境与版本的发布证据。当前代码说明实际行为，最新明确需求说明预期行为，两者不一致时并列说明差距。
 

@@ -63,7 +63,7 @@ export function releaseNotes(version, root = ROOT) {
   const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
   const section = changelog.split(`## ${version} —`)[1]?.split('\n## ')[0];
   if (!section || section.indexOf('\n') < 0) throw new Error('CHANGELOG.md 缺少当前版本说明');
-  return section.slice(section.indexOf('\n')).trim() + `\n\n## 安装\n\n\`npx ${PACKAGE_NAME}@${version} install --domain dev\`\n\nNode.js >=22.14.0；安装目标为当前项目的 \`.agents/skills/\`。\n\nnpm 包与本发布附件来自同一压缩包；校验和见 SHA256SUMS。`;
+  return section.slice(section.indexOf('\n')).trim() + `\n\n## 安装\n\n\`npx ${PACKAGE_NAME}@${version} install --domain dev\`\n\nNode.js >=22.14.0；安装目标为当前项目的 \`.agents/skills/\`。项目持久化按领域分离：\`.agents/dev/\`、\`.agents/system/\`。\n\nnpm 包与本发布附件来自同一压缩包；校验和见 SHA256SUMS。`;
 }
 
 function git(args, { optional = false } = {}) {
@@ -86,7 +86,8 @@ export function packageInfo(root = ROOT) {
 
 export function releasePlan({ eventName, event, ref, sha, version, previousVersion, retryVersion }) {
   if (!validVersion(version)) throw new Error('无效发布版本');
-  const tag = `v${version}`;
+  // 旧 v0.0.1 属于原 skills-wta 包；为新 scoped 包保留独立首次发布标签。
+  const tag = version === '0.0.1' ? 'skills-hub-v0.0.1' : `v${version}`;
   let publish = false;
   if (eventName === 'push' && ref === 'refs/heads/main') {
     if (event.after && event.after !== sha) throw new Error('推送事件与检出提交不一致');
@@ -155,7 +156,7 @@ export async function readLatestPolicy(packed, api, { published = false, request
   if (packed.version.includes('-')) return { makeLatest: false };
   const npm = await requestJson(npmMetadataUrl(packed.name, 'latest'), { nullable: true, request });
   const github = await api('/releases/latest', { nullable: true });
-  return latestPolicy({ version: packed.version, published, npmLatest: npm ? npm.version : null, githubLatest: github ? github.tag_name.replace(/^v/, '') : null });
+  return latestPolicy({ version: packed.version, published, npmLatest: npm ? npm.version : null, githubLatest: github ? github.tag_name.replace(/^(?:skills-hub-v|v)/, '') : null });
 }
 
 export function assertPublishedIntegrity(metadata, packed) {

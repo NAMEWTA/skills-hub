@@ -26,7 +26,7 @@
 
 每个技能独立安装后仍须成立。内部链接只能指向自己的包，不链接兄弟技能、仓库根目录、全文对照库或外部站点。交接到其他技能时说明这是可选能力，并保留当前技能能独立完成的必要方法。命令示例只能引用已提供的脚本或宿主实际拥有的工具，不能写不存在的专用 API。
 
-技能运行产生的项目资料统一使用 `.agents/wtadev/` 为根目录，按 changes、notes、deploy、archive、project、context、system 的职责按需保存。技能入口和模板都应使用一致的路径；项目资料不写入 `.agents/skills/` 安装包。已有外部文档引用真实位置，迁移资料后核对导航与入链。
+技能运行产生的项目资料统一使用 `.agents/dev/` 为根目录，按 changes、notes、deploy、archive、project、context、system 的职责按需保存。技能入口和模板都应使用一致的路径；项目资料不写入 `.agents/skills/` 安装包。已有外部文档引用真实位置，迁移资料后核对导航与入链。
 
 有确定性、重复而且容易出错的步骤时才增加脚本。依赖和输出要明确；普通推理不必包成脚本。模板提供最小有用结构，允许根据任务裁剪，不要求填写没有事实支持的字段。
 
@@ -51,3 +51,7 @@
 ## 修改后的检查
 
 运行 `node scripts/check.mjs` 检查预算、包装、自包含和资料映射；用 `node scripts/check-skill-quality.mjs --report` 查看各入口占用。修改安装器、门禁或验证器行为后执行 `node scripts/check.mjs --full`。再按实际改动阅读完整资料，路由与执行条件变化时使用不提供预期答案的独立任务检查；包装通过不表示选择行为已经得到验证。
+
+## 领域持久化路径
+
+运行技能写入长期项目资料时，路径必须来自自身领域：`skills/dev/` 对应 `.agents/dev/`，`skills/system/` 对应 `.agents/system/`；后续领域依此类推。技能安装目录 `.agents/skills/` 不承载项目记录。旧 `.agents/wtadev/` 只能作为迁移输入，详见[领域持久化](persistence-roots.md)。

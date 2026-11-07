@@ -1,8 +1,8 @@
 # ADR 格式
 
-ADR 存放在 `.agents/wtadev/notes/decisions/`，采用顺序编号：`0001-slug.md`、`0002-slug.md`，以此类推。
+ADR 存放在 `.agents/dev/notes/decisions/`，采用顺序编号：`0001-slug.md`、`0002-slug.md`，以此类推。
 
-延迟创建 `.agents/wtadev/notes/decisions/` 目录：只有需要第一份 ADR 时才创建。
+延迟创建 `.agents/dev/notes/decisions/` 目录：只有需要第一份 ADR 时才创建。
 
 ## 模板
 
@@ -24,7 +24,7 @@ ADR 存放在 `.agents/wtadev/notes/decisions/`，采用顺序编号：`0001-slu
 
 ## 编号
 
-扫描 `.agents/wtadev/notes/decisions/` 中已有的最大编号，加一。
+扫描 `.agents/dev/notes/decisions/` 中已有的最大编号，加一。
 
 ## 何时建议 ADR
 
@@ -46,4 +46,4 @@ ADR 存放在 `.agents/wtadev/notes/decisions/`，采用顺序编号：`0001-slu
 - **代码中看不到的约束。** “合规要求导致不能使用 AWS。”“合作方 API 合同要求响应时间低于 200ms。”
 - **被拒绝原因并不显然的备选方案。** 如果考虑过 GraphQL，因细微理由选择 REST，就记下来；否则半年后又会有人提议 GraphQL。
 
-未同时满足正式 ADR 的三项条件，但仍有长期价值的背景和约束，统一保存到 `.agents/wtadev/notes/context/`，按真实位置引用已有背景；错误与恢复方法进 `errors/`，术语进 `glossary.md`。不因未达到 ADR 门槛删除有效知识，也不强制迁移项目已有记录。
+未同时满足正式 ADR 的三项条件，但仍有长期价值的背景和约束，统一保存到 `.agents/dev/notes/context/`，按真实位置引用已有背景；错误与恢复方法进 `errors/`，术语进 `glossary.md`。不因未达到 ADR 门槛删除有效知识，也不强制迁移项目已有记录。

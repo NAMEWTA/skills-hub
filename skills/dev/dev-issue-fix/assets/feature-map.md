@@ -2,7 +2,7 @@
 
 映射 问题自动化 可能复现的每个面向用户的功能。在操作应用之前阅读相关章节。让此映射保持用户视角。在运行时发现内部机制和当前代码路径，而不要将它们固化在这里。
 
-把本文件复制到技能安装包之外，例如 `.agents/wtadev/project/issue-automation/feature-map.md`，并把 `control.feature_map_path` 设为该副本。更新技能包时不得覆盖它。
+把本文件复制到技能安装包之外，例如 `.agents/dev/project/issue-automation/feature-map.md`，并把 `control.feature_map_path` 设为该副本。更新技能包时不得覆盖它。
 
 ## 每个功能的模板
 

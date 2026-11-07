@@ -50,7 +50,7 @@ UI 需求写清主要状态、交互、布局约束及参考依据；部署需�
 
 ## 保存与交接
 
-先查阅已有规格并保留引用；新增规格统一写入 `.agents/wtadev/changes/<YYYY-MM-DD-slug>/spec.md`，并在已有 `brief.md` 中引用。小改动只需一份简短规格，不强制多个文件。
+先查阅已有规格并保留引用；新增规格统一写入 `.agents/dev/changes/<YYYY-MM-DD-slug>/spec.md`，并在已有 `brief.md` 中引用。小改动只需一份简短规格，不强制多个文件。
 
 只有用户已授权发布到 issue tracker 时才发布；否则本地 Markdown 就是交接物。一次发布使用同一规格引用，避免本地与远端各自成为不同契约。
 

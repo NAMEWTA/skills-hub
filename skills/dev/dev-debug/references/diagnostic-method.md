@@ -2,7 +2,7 @@
 
 用于困难缺陷的一套纪律。只有明确说明理由时才跳过阶段。
 
-探索代码库时，阅读项目已有术语表（例如 `GLOSSARY.md` 或 `.agents/wtadev/notes/glossary.md`），建立相关模块的清晰心智模型，并检查所涉及区域的 ADR。
+探索代码库时，阅读项目已有术语表（例如 `GLOSSARY.md` 或 `.agents/dev/notes/glossary.md`），建立相关模块的清晰心智模型，并检查所涉及区域的 ADR。
 
 ## 脱敏
 

@@ -1,6 +1,6 @@
 # 分流映射示例
 
-把本文件复制到技能安装包之外，例如 `.agents/wtadev/project/issue-automation/routing.md`，并替换每个占位符。让 `routing.map_path` 指向该副本。更新技能包时不得覆盖它。
+把本文件复制到技能安装包之外，例如 `.agents/dev/project/issue-automation/routing.md`，并替换每个占位符。让 `routing.map_path` 指向该副本。更新技能包时不得覆盖它。
 
 分诊技能把它当作数据。路由需要报告或原因追踪中的证据。仅有关键词匹配并不够。
 

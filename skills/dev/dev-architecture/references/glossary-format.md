@@ -33,9 +33,9 @@ _用户别名_：Client、buyer、account
 
 ## 单上下文与多上下文仓库
 
-**单上下文，大多数仓库：** 新增术语统一保存在 `.agents/wtadev/notes/glossary.md`；已有词汇表先按真实位置核对引用，避免重复定义。
+**单上下文，大多数仓库：** 新增术语统一保存在 `.agents/dev/notes/glossary.md`；已有词汇表先按真实位置核对引用，避免重复定义。
 
-**多上下文：** 新增 `.agents/wtadev/notes/glossary-map.md` 列出上下文、真实位置及相互关系，并引用项目已有的 `glossary-map.md`：
+**多上下文：** 新增 `.agents/dev/notes/glossary-map.md` 列出上下文、真实位置及相互关系，并引用项目已有的 `glossary-map.md`：
 
 ```md
 # 词汇表映射
@@ -57,6 +57,6 @@ _用户别名_：Client、buyer、account
 
 - 如果存在 `glossary-map.md`，阅读它寻找上下文。
 - 如果只有一份项目词汇表，采用单上下文。
-- 如果都不存在，在首个术语确定时才创建 `.agents/wtadev/notes/glossary.md`。
+- 如果都不存在，在首个术语确定时才创建 `.agents/dev/notes/glossary.md`。
 
 存在多个上下文时，推断当前主题属于哪个上下文；无法确定时询问。

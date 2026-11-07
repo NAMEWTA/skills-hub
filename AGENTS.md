@@ -11,7 +11,7 @@
 - 名称使用小写连字符、领域前缀且不超过 64 字符；`SKILL.md` 头部只用 `name` 和准确的 `description`。入口保持聚焦，详细资料按需加载。
 - 主入口按任务、产物与实际前提区分；沿用已有阶段和记录。成熟方法优先保留，入口冲突直接修正，不以个人文风替代完整步骤。维护与同步遵循 [关键开发约束](docs/development-constraints.md)。
 - 不引入流程 JSON、强制状态机、固定模型或重复审批。用户已经授权的步骤持续执行，环境与工具绑定根据实际能力适配。
-- 项目资料统一以 `.agents/wtadev/` 为持久化根目录，按职责放入 changes、notes、deploy、archive、project、context、system 等子目录，按需创建。技能仍安装在 `.agents/skills/`。已有外部文档按真实位置引用；迁移资料时保留内容并修复入链。代码和运行结果说明现状，用户目标说明期望；知识保留理由、语义和导航，不复述整个代码实现。
+- 各领域独立持久化：`dev-*` 使用 `.agents/dev/`（changes、notes、deploy、archive、project、context）；`system-*` 使用 `.agents/system/<host>/`。后续领域 `skills/<domain>/` 对应 `.agents/<domain>/`，不加通用外层根。技能仍安装在 `.agents/skills/`。已有外部文档按真实位置引用；迁移资料时保留内容并修复入链。代码和运行结果说明现状，用户目标说明期望；知识保留理由、语义和导航，不复述整个代码实现。
 - 维护脚本、测试、技能执行脚本与可执行示例统一使用 `.mjs` / `.js`，Node.js 22.14+；不要引入 Python、Shell 或 TypeScript 运行依赖。Git 的固定 hook 文件名是 JavaScript 薄入口。来源 `.txt` 底稿保留原件，不执行。
 - 版权许可不能丢失。法律原文集中放在 `licenses/`，安装器自动附带到 `.agents/skills-hub-licenses/`，不放进运行技能。
 
@@ -27,7 +27,7 @@
 - 修改入口预算、提交或 CI 检查：看 [质量门禁](docs/skill-quality.md)。
 - 改安装器：看 [安装契约](docs/installation.md) 与 `install.mjs`。
 - 改开发衔接：看 [开发流程](docs/workflow.md)。
-- 改学习、归档或持久化：看 [知识与记忆](docs/knowledge.md)。
+- 改学习、归档或持久化：看 [领域持久化](docs/persistence-roots.md)和[知识与记忆](docs/knowledge.md)。
 - 核对全文与适配：看 [资源组织](docs/resources.md) 和 [本地资料索引](materials/README.md)。
 - 改 npm 包或发布：看 [版本发布](docs/release.md)，验证实际 tarball 后才发版。
 - 检查许可：看 [第三方声明](THIRD_PARTY_NOTICES.md)。

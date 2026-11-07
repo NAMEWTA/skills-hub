@@ -20,6 +20,14 @@ test('first committed version plans a release, unchanged versions do not', () =>
   assert.equal(releasePlan({ ...base, version: '0.0.3', previousVersion: '0.0.2' }).publish, true);
 });
 
+test('scoped package initial 0.0.1 uses a non-conflicting tag and preserves legacy v0.0.1', () => {
+  const original = { ...base, version: '0.0.1', previousVersion: '0.0.2' };
+  assert.equal(releasePlan(original).tag, 'skills-hub-v0.0.1');
+  assert.equal(releasePlan({ ...original, ref: 'refs/tags/skills-hub-v0.0.1' }).publish, true);
+  assert.throws(() => releasePlan({ ...original, ref: 'refs/tags/v0.0.1' }), /标签与 package.json 版本不一致/);
+  assert.equal(releasePlan({ ...original, eventName: 'release', event: { action: 'published', release: { tag_name: 'skills-hub-v0.0.1' } } }).publish, true);
+});
+
 test('the scoped release requires exact package, lockfile and source-repository identities', (t) => {
   const root = temporary(t);
   const pkg = { name: '@namewta/skills-hub', version: '0.0.2', repository: { type: 'git', url: 'git+https://github.com/NAMEWTA/skills-hub.git' } };

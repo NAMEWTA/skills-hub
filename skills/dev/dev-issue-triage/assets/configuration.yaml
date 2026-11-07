@@ -36,7 +36,7 @@ monitor:
   filter: "" # 范围、报告类型；排除本任务的结论和运维更新
   schedule: ""
   timezone: ""
-  checkpoint_path: ".agents/wtadev/project/issue-automation/monitor.md"
+  checkpoint_path: ".agents/dev/project/issue-automation/monitor.md"
 
 operations:
   target: "" # 可选，不能替换原报告身份
@@ -69,14 +69,14 @@ tracker:
   require_compensation_action: true
 
 routing:
-  map_path: ".agents/wtadev/project/issue-automation/routing.md"
+  map_path: ".agents/dev/project/issue-automation/routing.md"
   owner_pings_default: false
   allow_feature_owner_ping: false
   allow_confirmed_regression_author_ping: false
 
 control:
   skill_name: "control-target-app"
-  feature_map_path: ".agents/wtadev/project/issue-automation/feature-map.md"
+  feature_map_path: ".agents/dev/project/issue-automation/feature-map.md"
   environment: "安全测试环境占位值"
   artifact_directory: "实际运行器的临时工件目录"
   artifact_retention_hours: 24

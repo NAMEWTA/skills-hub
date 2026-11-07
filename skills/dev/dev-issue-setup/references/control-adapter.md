@@ -4,7 +4,7 @@
 
 在 `control.skill_name` 中设置其技能名称。
 
-在 `control.feature_map_path` 中设置填写完整的用户视角功能映射路径。把 [功能映射示例](../assets/feature-map.md) 复制到技能安装包之外的项目资料目录并填写，例如 `.agents/wtadev/project/issue-automation/feature-map.md`，而不要编辑安装包里的示例本身。
+在 `control.feature_map_path` 中设置填写完整的用户视角功能映射路径。把 [功能映射示例](../assets/feature-map.md) 复制到技能安装包之外的项目资料目录并填写，例如 `.agents/dev/project/issue-automation/feature-map.md`，而不要编辑安装包里的示例本身。
 
 如果技能、功能映射或某项所需能力缺失、含糊或不完整，复现和修复工作必须停止。
 

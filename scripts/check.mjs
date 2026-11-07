@@ -98,6 +98,7 @@ export function checkTree(root, { full = false } = {}) {
   }
   const commands = [
     ['独立包、元数据和本地引用', ['scripts/validate.mjs']],
+    ['领域持久化路径', ['scripts/check-persistence-roots.mjs']],
     ['原件、中文底稿和运行映射', ['scripts/validate-materials.mjs']],
   ];
   if (full) commands.push(

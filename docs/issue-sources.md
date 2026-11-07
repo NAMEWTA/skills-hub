@@ -47,14 +47,14 @@
 
 这里保存的是经真实工具确认的动作和范围。配置文件不会安装连接器、创建服务或自动授予外发和持续运行权限。默认手工模式、运行输出和继承当前模型；只填写所选阶段需要的字段。
 
-项目持久化统一放在 `.agents/wtadev/project/issue-automation/`：
+项目持久化统一放在 `.agents/dev/project/issue-automation/`：
 
 - `configuration.yaml`：简短的非秘密配置；多个来源确有需要时分成独立小文件。
 - `routing.md`：产品领域、转交方向与有依据的负责人映射。
 - `feature-map.md`：选择 UI 复现时的用户视角功能与状态。
 - `monitor.md`：仅在平台没有检查点时保存实际任务、查询范围、已确认游标与待核对项。
 
-一次运行的证据和恢复点继续放 `.agents/wtadev/changes/<日期-报告>/evidence.md`。秘密只记录密钥管理位置或环境变量名；不保存令牌值。不另建状态数据库或复杂 Schema。
+一次运行的证据和恢复点继续放 `.agents/dev/changes/<日期-报告>/evidence.md`。秘密只记录密钥管理位置或环境变量名；不保存令牌值。不另建状态数据库或复杂 Schema。
 
 ## 来源与运行方式
 

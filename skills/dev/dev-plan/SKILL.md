@@ -42,9 +42,9 @@ description: 把开发规格、大需求或迁移拆成可独立验收的垂直�
 
 ## 写计划与任务
 
-使用 [计划与切片模板](references/plan-template.md)。已授权的 tracker 继续按实际能力使用；新增本地计划与切片资料统一放在 `.agents/wtadev/changes/`，已有计划按真实位置引用：
+使用 [计划与切片模板](references/plan-template.md)。已授权的 tracker 继续按实际能力使用；新增本地计划与切片资料统一放在 `.agents/dev/changes/`，已有计划按真实位置引用：
 
-- `.agents/wtadev/changes/<YYYY-MM-DD-slug>/plan.md` 保存目标、切片索引、依赖与执行顺序。
+- `.agents/dev/changes/<YYYY-MM-DD-slug>/plan.md` 保存目标、切片索引、依赖与执行顺序。
 - 只有内容足够大、需要多人分工时才使用 `tasks/<NN>-<slug>.md`，每个文件描述一个切片。
 - `progress.md` 保存当前进展、证据入口和下一步。计划中的目标与执行结果分开。
 

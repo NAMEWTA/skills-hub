@@ -37,6 +37,6 @@ description: 在用户明确要求 TDD、测试先行、red-green-refactor，或
 
 应用、UI、CLI 或部署结果还需要 [真实对象证据](references/real-evidence.md)：通过测试不自动证明当前环境已经正确启动、发布或产生用户期望的副作用。按风险运行必要路径，检查充分后停止重复验证。
 
-输出实现的行为、测试接口、观察到的失败与通过结果、当前制品以及尚未覆盖的风险。需要持久化时统一写入 `.agents/wtadev/changes/<日期-主题>/evidence.md`。测试和任务产物留在目标项目，不能写进本技能安装目录。
+输出实现的行为、测试接口、观察到的失败与通过结果、当前制品以及尚未覆盖的风险。需要持久化时统一写入 `.agents/dev/changes/<日期-主题>/evidence.md`。测试和任务产物留在目标项目，不能写进本技能安装目录。
 
 工具、授权与持续工作的具体约定见 [本地执行支持](references/execution-support.md)。全部资源可从 [资料索引](references/method-index.md) 按需选择，本技能不依赖安装其他技能。

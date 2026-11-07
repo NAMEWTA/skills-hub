@@ -17,7 +17,7 @@ description: 按已明确的目标行为、规格或垂直切片实现功能、�
 
 明确故障的调查修复以 `dev-debug` 为主，性能指标改善以 `dev-benchmark` 为主，显式测试先行采用 `dev-tdd` 方法。当前已在实施的任务复用这些方法与证据，不因为换用方法而重新规划或另开任务。
 
-新增工作记录统一使用 `.agents/wtadev/changes/<YYYY-MM-DD-slug>/`，按需维护 `spec.md`、`plan.md`、`progress.md` 与 `evidence.md`。这些是项目工作记录，不属于技能安装目录。
+新增工作记录统一使用 `.agents/dev/changes/<YYYY-MM-DD-slug>/`，按需维护 `spec.md`、`plan.md`、`progress.md` 与 `evidence.md`。这些是项目工作记录，不属于技能安装目录。
 
 ## 从前沿推进
 

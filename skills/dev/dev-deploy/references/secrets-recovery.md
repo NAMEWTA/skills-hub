@@ -18,4 +18,4 @@
 
 ## 发布记录与长期经验
 
-发布记录保存当时发生的事实；当前 runbook 跟随环境变化更新。一次性错误留在 release evidence；会再次踩到的原因与修复条件才写入 `.agents/wtadev/notes/errors/`。不要把一次部署的临时状态写成永久规则。
+发布记录保存当时发生的事实；当前 runbook 跟随环境变化更新。一次性错误留在 release evidence；会再次踩到的原因与修复条件才写入 `.agents/dev/notes/errors/`。不要把一次部署的临时状态写成永久规则。

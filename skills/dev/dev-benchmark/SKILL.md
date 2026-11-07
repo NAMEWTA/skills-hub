@@ -34,7 +34,7 @@ description: 以延迟、吞吐、资源使用或指定指标为目标，诊断�
 
 [真实证据](references/real-evidence.md)检查实际产物；[可重跑工具](references/repeatable-tools.md)使测量可复查；[可验证单元](references/verifiable-units.md)安排迭代；[共享状态隔离](references/shared-state.md)避免试验污染；[上下文预算](references/context-budget.md)处理大型捕获；[最小改动](references/minimal-change.md)与[结构化经验](references/structural-learning.md)限制额外负担。
 
-按[测量记录](assets/measurement.md)保存目标、环境、命令、样本、错误、工作量、限制因素和结论。持续优化可用[试验日志](assets/experiments.md)。新增测量记录和可持久化的结果放在 `.agents/wtadev/changes/<日期-主题>/`；已有产物按真实位置引用，私有原始数据留在受控位置。不记录凭据或无关业务数据。
+按[测量记录](assets/measurement.md)保存目标、环境、命令、样本、错误、工作量、限制因素和结论。持续优化可用[试验日志](assets/experiments.md)。新增测量记录和可持久化的结果放在 `.agents/dev/changes/<日期-主题>/`；已有产物按真实位置引用，私有原始数据留在受控位置。不记录凭据或无关业务数据。
 
 长时间性能实验按[决策证据方法](references/decision-trail.md)记录重要选择并对照真实产物复核，可参考[决策记录](assets/decision-trail.md)。试验日志已包含同样信息时复用它，不再维护重复账本。Markdown 为默认；TSV 与本地追加脚本只是该方法中的可选输出。通用开发任务的决策审计由 `dev-workflow` 承接。
 

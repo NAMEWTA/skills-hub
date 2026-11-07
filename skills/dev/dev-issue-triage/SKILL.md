@@ -28,7 +28,7 @@ description: 对指定的问题报告做缺陷分类、查重、分流与可信�
 
 ## 配置和资源
 
-从 [配置模板](assets/configuration.yaml) 与 [分流映射](assets/routing.md) 创建包外项目副本。只要求本次分诊实际使用的字段和能力；未启用复现流程时，不因未填写 UI 控制项阻塞只读分诊。新增配置统一保存在 `.agents/wtadev/project/issue-automation/`，已有配置先按真实位置读取与引用。
+从 [配置模板](assets/configuration.yaml) 与 [分流映射](assets/routing.md) 创建包外项目副本。只要求本次分诊实际使用的字段和能力；未启用复现流程时，不因未填写 UI 控制项阻塞只读分诊。新增配置统一保存在 `.agents/dev/project/issue-automation/`，已有配置先按真实位置读取与引用。
 
 后台任务提示词使用 [完整分诊模板](assets/triage-prompt.md)。只有实际工具支持所需触发、读取稳定操作文件，且用户已经授权持续运行时，才能配置或启用任务；否则明确交付的是手动方法或草稿。
 
@@ -42,4 +42,4 @@ description: 对指定的问题报告做缺陷分类、查重、分流与可信�
 
 给出分类、证据、追踪器动作或未执行原因、最终结论和真实发布结果。不把草稿说成已发送，不把相关问题说成已确认重复。重复运行先查来源链接和既有结论，避免重复工单与回复。
 
-把本次需要恢复的事实统一放 `.agents/wtadev/changes/<日期-报告>/evidence.md`，记录实际源引用、判断、动作和剩余缺口。配置和知识不写回技能包；秘密不进入文档。工具、授权和轻量记录约定见 [本地执行支持](references/execution-support.md)。
+把本次需要恢复的事实统一放 `.agents/dev/changes/<日期-报告>/evidence.md`，记录实际源引用、判断、动作和剩余缺口。配置和知识不写回技能包；秘密不进入文档。工具、授权和轻量记录约定见 [本地执行支持](references/execution-support.md)。

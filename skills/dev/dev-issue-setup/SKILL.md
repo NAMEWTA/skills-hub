@@ -12,7 +12,7 @@ description: 初始化或维护项目的报告来源、触发与监控方式、�
 ## 完成配置
 
 1. 确定目标仓库和现有任务身份，把完整包无损安装到 `.agents/skills/dev-issue-setup/`。保护用户本地编辑、仅目标存在的文件和包外配置。
-2. 从 [配置模板](assets/configuration.yaml)、[功能图](assets/feature-map.md) 和 [分流图](assets/routing.md) 创建项目副本。新增配置统一使用 `.agents/wtadev/project/issue-automation/`；已有配置按真实位置查阅引用。
+2. 从 [配置模板](assets/configuration.yaml)、[功能图](assets/feature-map.md) 和 [分流图](assets/routing.md) 创建项目副本。新增配置统一使用 `.agents/dev/project/issue-automation/`；已有配置按真实位置查阅引用。
 3. 先保存用户的目标、完整处理方法与输出要求，再填写来源范围、稳定报告身份和实际触发器；按所选阶段补分诊、追踪器、仓库、控制及预算。先读现有事实，只问关键缺失决定。
 4. 核对真实读取、原报告回复或运行输出、附件、追踪器去重与补偿。来源本身已是目标追踪器问题时复用它，不另建副本。秘密只存密钥管理器或环境。
 5. 选择 UI 复现时，按 [控制契约](references/control-adapter.md) 执行九步无害检查。只配置分诊或汇总时不要求 UI、录像或 PR 能力。
@@ -39,4 +39,4 @@ description: 初始化或维护项目的报告来源、触发与监控方式、�
 
 交付配置路径、来源和触发选择、完整提示词、实际任务标识、适配器及交接验证、停止方式和仍受阻的能力。没有真实工具返回或回读证明时，不宣称任务已经运行。
 
-项目配置和功能图独立于技能包，更新包时保留。运行记录默认用 `.agents/wtadev/changes/<日期-任务>/evidence.md`，长期理由与术语沿用 `.agents/wtadev/notes/`。只记录恢复所需事实、证据和决定，不引入复杂 Schema、固定状态迁移或逐次工具调用台账。通用约定见 [本地执行支持](references/execution-support.md)。
+项目配置和功能图独立于技能包，更新包时保留。运行记录默认用 `.agents/dev/changes/<日期-任务>/evidence.md`，长期理由与术语沿用 `.agents/dev/notes/`。只记录恢复所需事实、证据和决定，不引入复杂 Schema、固定状态迁移或逐次工具调用台账。通用约定见 [本地执行支持](references/execution-support.md)。
