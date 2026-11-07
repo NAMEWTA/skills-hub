@@ -10,7 +10,7 @@ const hash = (algorithm, value) => createHash(algorithm).update(value).digest('h
 
 class MaterialFixture {
   constructor(t) {
-    this.root = temporary(t, 'skills-wta-materials-');
+    this.root = temporary(t, 'skills-hub-materials-');
     this.materials = path.join(this.root, 'materials');
     this.pair = path.join(this.materials, 'a001');
     fs.mkdirSync(this.pair, { recursive: true });

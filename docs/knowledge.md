@@ -8,7 +8,7 @@
 
 ## 资料分区
 
-本套技能生成的项目资料统一存放在 `.agents/wtadev/` 下，以下路径均相对于目标项目根目录。技能安装与配套许可分别位于 `.agents/skills/` 和 `.agents/skills-wta-licenses/`。项目根目录的 `AGENTS.md` 继续作为宿主可发现的导航入口，完整知识放在持久化根目录中。
+本套技能生成的项目资料统一存放在 `.agents/wtadev/` 下，以下路径均相对于目标项目根目录。技能安装与配套许可分别位于 `.agents/skills/` 和 `.agents/skills-hub-licenses/`。项目根目录的 `AGENTS.md` 继续作为宿主可发现的导航入口，完整知识放在持久化根目录中。
 
 | 类型 | 位置 | 更新方式 |
 | --- | --- | --- |

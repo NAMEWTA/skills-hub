@@ -11,7 +11,7 @@
 | PR 观察器 | Node.js 22.14 或更高版本；真实查询需要已认证的 `gh` 和对应仓库读取权限。 | 没有 `gh` 或读取权限时明确报告查询失败。 |
 | 工作树审计 | Node.js 22.14 或更高版本；Git 必须支持 `worktree list --porcelain -z`。 | 缺少基础条件时停止，不能把无结果解释为安全。 |
 | 可选 PR 查询 | 审计显式传 `--with-pr`，另需已认证的 Origin 或 `gh`。 | 查询失败时报告限制，保留本地证据。 |
-| 可选聊天关联 | 审计显式传 `--transcripts <目录>`，或由用户设置 `SKILLS_WTA_TRANSCRIPTS_DIR`。 | 默认不读任何聊天记录，不推断宿主目录。 |
+| 可选聊天关联 | 审计显式传 `--transcripts <目录>`，或由用户设置 `SKILLS_HUB_TRANSCRIPTS_DIR`。 | 默认不读任何聊天记录，不推断宿主目录。新变量未设置时兼容旧 `SKILLS_WTA_TRANSCRIPTS_DIR`；新变量为空则禁用环境变量来源。 |
 
 运行时要求记录在[工具包声明](../scripts/local-tools/package.json)中。脚本仅使用 Node 标准库，无需 `npm install` 或编译；文件统计、JSON 解析与文本检索也在 Node 内完成。工具不会自行创建循环任务、安装运行时、登录账户或读取其他项目上下文。
 

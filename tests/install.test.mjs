@@ -8,7 +8,7 @@ import { temporary, write, snapshot, command } from './helpers.mjs';
 class InstallFixture {
   constructor(t) {
     this.t = t;
-    this.root = temporary(t, 'skills-wta-install-');
+    this.root = temporary(t, 'skills-hub-install-');
     this.repository = path.join(this.root, 'repository');
     this.project = path.join(this.root, 'project');
     fs.mkdirSync(this.project);
@@ -17,7 +17,7 @@ class InstallFixture {
     this.skillRoot = path.join(this.repository, 'skills');
     this.licenseRoot = path.join(this.repository, 'licenses');
     for (const name of [...licenseBundleFiles, 'third-party.txt']) write(path.join(this.licenseRoot, name), `Fixture legal notice: ${name}\n`);
-    this.licenseTarget = path.join(this.project, '.agents', 'skills-wta-licenses');
+    this.licenseTarget = path.join(this.project, '.agents', 'skills-hub-licenses');
     this.target = path.join(this.project, '.agents', 'skills');
     this.sources = {
       'dev-alpha': this.writeSkill('dev', 'dev-alpha'),
@@ -66,11 +66,13 @@ class InstallFixture {
   }
   noTemporaryArtifacts() {
     const agents = path.join(this.project, '.agents');
-    assert.ok(!fs.existsSync(path.join(agents, '.skills-wta-install.lock')));
-    if (fs.existsSync(agents)) assert.deepEqual(fs.readdirSync(agents).filter((name) => name.startsWith('.skills-wta-stage-')), []);
+    for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
+      assert.ok(!fs.existsSync(path.join(agents, name)), `Installer left a lock: ${name}`);
+    }
+    if (fs.existsSync(agents)) assert.deepEqual(fs.readdirSync(agents).filter((name) => name.startsWith('.skills-hub-stage-')), []);
   }
   backups(suffix = '') {
-    const parent = path.join(this.project, '.agents', '.skills-wta-backups');
+    const parent = path.join(this.project, '.agents', '.skills-hub-backups');
     return fs.readdirSync(parent).map((name) => path.join(parent, name, suffix)).filter((name) => fs.existsSync(name));
   }
 }
@@ -245,12 +247,44 @@ contract('destination nested symlink is not copied or removed', (f) => {
 });
 contract('backup root symlink is not followed', (f) => {
   f.seed('dev-alpha', true); const outside = path.join(f.root, 'outside-backups'); fs.mkdirSync(outside);
-  if (!f.link(path.join(f.project, '.agents/.skills-wta-backups'), outside)) return;
+  if (!f.link(path.join(f.project, '.agents/.skills-hub-backups'), outside)) return;
   f.failure('install', '--skill', 'dev-alpha', '--replace'); assert.deepEqual(snapshot(outside), {});
 });
-contract('an existing installer lock is preserved', (f) => {
-  const lock = path.join(f.project, '.agents/.skills-wta-install.lock'); fs.mkdirSync(lock, { recursive: true });
+for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) contract(`an existing ${name} is preserved without leaving another lock`, (f) => {
+  const lock = path.join(f.project, '.agents', name); fs.mkdirSync(lock, { recursive: true });
   assert.match(f.failure('install', '--domain', 'dev').stderr, /installer lock exists/); assert.ok(fs.statSync(lock).isDirectory());
+});
+contract('writes hold both old and new installer locks and exclude either installer', (f) => {
+  const observed = [];
+  const installer = f.installer({ cpSync(source, destination, options) {
+    for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
+      const lock = path.join(f.project, '.agents', name);
+      assert.throws(() => fs.mkdirSync(lock), { code: 'EEXIST' });
+      observed.push(name);
+    }
+    assert.match(f.failure('install', '--skill', 'dev-beta').stderr, /installer lock exists/);
+    return fs.cpSync(source, destination, options);
+  } });
+  installer.apply(f.selected('dev-alpha'), f.project);
+  assert.ok(observed.length > 0);
+  f.noTemporaryArtifacts();
+});
+contract('renamed installation reuses skills and retains old notices and backups', (f) => {
+  const skill = f.seed('dev-alpha');
+  const sample = path.join(skill, 'SKILL.md');
+  const mtime = fs.statSync(sample, { bigint: true }).mtimeNs;
+  const legacyLicenses = path.join(f.project, '.agents', 'skills-wta-licenses');
+  const legacyBackups = path.join(f.project, '.agents', '.skills-wta-backups');
+  write(path.join(legacyLicenses, 'notice.txt'), 'Retain old legal notices.\n');
+  write(path.join(legacyBackups, 'saved', 'SKILL.md'), 'Retain previous recovery data.\n');
+  const oldLicenses = snapshot(legacyLicenses);
+  const oldBackups = snapshot(legacyBackups);
+  assert.match(f.success(f.cli('install', '--skill', 'dev-alpha')).stdout, /unchanged/);
+  assert.equal(fs.statSync(sample, { bigint: true }).mtimeNs, mtime);
+  assert.deepEqual(snapshot(f.licenseTarget), snapshot(f.licenseRoot));
+  assert.deepEqual(snapshot(legacyLicenses), oldLicenses);
+  assert.deepEqual(snapshot(legacyBackups), oldBackups);
+  f.noTemporaryArtifacts();
 });
 contract('staging failure preserves existing skills', (f) => {
   f.seed('dev-beta', true); const before = snapshot(f.target);
@@ -264,7 +298,7 @@ contract('staging failure preserves existing skills', (f) => {
 contract('publish failure rolls back new installation and replacement', (f) => {
   f.seed('dev-beta', true); const before = snapshot(f.target);
   const installer = f.installer({ renameSync(source, destination) {
-    if (path.basename(source) === 'dev-beta' && path.basename(path.dirname(source)).startsWith('.skills-wta-stage-')) throw new Error('simulated publish failure');
+    if (path.basename(source) === 'dev-beta' && path.basename(path.dirname(source)).startsWith('.skills-hub-stage-')) throw new Error('simulated publish failure');
     return fs.renameSync(source, destination);
   } });
   assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project, true), /rolled back/);
@@ -273,8 +307,8 @@ contract('publish failure rolls back new installation and replacement', (f) => {
 contract('failed rollback preserves a recoverable backup', (f) => {
   const old = f.seed('dev-alpha', true); const previous = snapshot(old);
   const installer = f.installer({ renameSync(source, destination) {
-    if (path.basename(source) === 'dev-beta' && path.basename(path.dirname(source)).startsWith('.skills-wta-stage-')) throw new Error('simulated publish failure');
-    if (source.split(path.sep).includes('.skills-wta-backups')) throw new Error('simulated restore failure');
+    if (path.basename(source) === 'dev-beta' && path.basename(path.dirname(source)).startsWith('.skills-hub-stage-')) throw new Error('simulated publish failure');
+    if (source.split(path.sep).includes('.skills-hub-backups')) throw new Error('simulated restore failure');
     return fs.renameSync(source, destination);
   } });
   let failure;
@@ -312,7 +346,7 @@ contract('a license source symlink is not followed', (f) => {
 });
 contract('license publication failure rolls back installed skills', (f) => {
   const installer = f.installer({ renameSync(source, destination) {
-    if (path.basename(source) === '.licenses' && path.basename(path.dirname(source)).startsWith('.skills-wta-stage-')) throw new Error('simulated license publication failure');
+    if (path.basename(source) === '.licenses' && path.basename(path.dirname(source)).startsWith('.skills-hub-stage-')) throw new Error('simulated license publication failure');
     return fs.renameSync(source, destination);
   } });
   assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project), /rolled back/);
@@ -320,8 +354,8 @@ contract('license publication failure rolls back installed skills', (f) => {
   assert.ok(!fs.existsSync(f.licenseTarget)); f.noTemporaryArtifacts();
 });
 contract('help and package version do not install anything', (f) => {
-  write(path.join(f.repository, 'package.json'), JSON.stringify({ version: '0.0.1' }));
-  assert.match(f.success(f.cli('--help')).stdout, /Usage: skills-wta/);
-  assert.equal(f.success(f.cli('--version')).stdout.trim(), '0.0.1');
+  write(path.join(f.repository, 'package.json'), JSON.stringify({ version: '0.0.2' }));
+  assert.match(f.success(f.cli('--help')).stdout, /Usage: skills-hub/);
+  assert.equal(f.success(f.cli('--version')).stdout.trim(), '0.0.2');
   assert.ok(!fs.existsSync(path.join(f.project, '.agents')));
 });

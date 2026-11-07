@@ -1,5 +1,5 @@
 {
-  "name": "@skills-wta/deployment-tools",
+  "name": "@namewta/skills-hub-deployment-tools",
   "private": true,
   "type": "module",
   "scripts": {

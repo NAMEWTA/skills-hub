@@ -41,7 +41,7 @@ export function withSnapshot(root, tree, inspect) {
     records.push({ mode, objectId, relative });
   }
   const blobs = records.length ? git(root, ['cat-file', '--batch'], records.map((entry) => `${entry.objectId}\n`).join('')) : Buffer.alloc(0);
-  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'skills-wta-check-'));
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), 'skills-hub-check-'));
   let offset = 0;
   try {
     for (const { mode, objectId, relative } of records) {

@@ -137,11 +137,11 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     }
     const agents = path.join(project, '.agents');
     const target = path.join(agents, 'skills');
-    for (const filename of [agents, target, path.join(agents, '.skills-wta-backups'), path.join(agents, 'skills-wta-licenses')]) checkDirectory(filename);
+    for (const filename of [agents, target, path.join(agents, '.skills-hub-backups'), path.join(agents, 'skills-hub-licenses')]) checkDirectory(filename);
     const actions = [];
     const conflicts = [];
     const packages = skills.map((skill) => ({ source: skill.source, name: skill.name, destination: path.join(target, skill.name) }));
-    packages.push({ source: licenseRoot, name: '.licenses', destination: path.join(agents, 'skills-wta-licenses') });
+    packages.push({ source: licenseRoot, name: '.licenses', destination: path.join(agents, 'skills-hub-licenses') });
     for (const item of packages) {
       checkDirectory(item.destination);
       let kind;
@@ -162,18 +162,28 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     if (actions.every((action) => action.kind === 'unchanged')) return { actions, backup: null };
     const agents = path.join(project, '.agents');
     fsOps.mkdirSync(agents, { recursive: true });
-    const lock = path.join(agents, '.skills-wta-install.lock');
-    try { fsOps.mkdirSync(lock); }
-    catch (error) {
-      if (error.code !== 'EEXIST') throw error;
-      throw new InstallError(`An installer lock exists: ${lock}. Check for a running installer before removing a stale lock.`);
+    const locks = [];
+    try {
+      // 先取得旧版共用锁，使改名前后的安装器不会同时写入 .agents/skills。
+      for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
+        const lock = path.join(agents, name);
+        try { fsOps.mkdirSync(lock); }
+        catch (error) {
+          if (error.code !== 'EEXIST') throw error;
+          throw new InstallError(`An installer lock exists: ${lock}. Check for a running installer before removing a stale lock.`);
+        }
+        locks.push(lock);
+      }
+    } catch (error) {
+      for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
+      throw error;
     }
     let staging = null;
     let backup = null;
     const completed = [];
     try {
       actions = plan(skills, project, replace);
-      staging = fsOps.mkdtempSync(path.join(agents, '.skills-wta-stage-'));
+      staging = fsOps.mkdtempSync(path.join(agents, '.skills-hub-stage-'));
       for (const action of actions) {
         if (action.kind !== 'unchanged') {
           fsOps.cpSync(action.source, path.join(staging, action.name), { recursive: true, errorOnExist: true, force: false });
@@ -182,7 +192,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
       fsOps.mkdirSync(path.join(agents, 'skills'), { recursive: true });
       if (actions.some((action) => action.kind === 'replace')) {
         const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-        backup = path.join(agents, '.skills-wta-backups', `${stamp}-${randomUUID().replaceAll('-', '').slice(0, 8)}`);
+        backup = path.join(agents, '.skills-hub-backups', `${stamp}-${randomUUID().replaceAll('-', '').slice(0, 8)}`);
         fsOps.mkdirSync(backup, { recursive: true });
       }
       for (const action of actions) {
@@ -211,7 +221,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
       throw new InstallError(`Installation failed; changed skill directories were rolled back: ${error.message}`);
     } finally {
       if (staging !== null) fsOps.rmSync(staging, { recursive: true, force: true });
-      fsOps.rmdirSync(lock);
+      for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
     }
   }
   return { catalog, plan, apply };
@@ -219,8 +229,8 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
 
 export function catalog(repository = repositoryRoot) { return createInstaller({ repository }).catalog(); }
 
-const usage = `Usage: skills-wta <list|install> [--domain DOMAIN ...] [--skill NAME ...] [--all]
-       skills-wta install <selection> [--dry-run] [--replace]
+const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill NAME ...] [--all]
+       skills-hub install <selection> [--dry-run] [--replace]
 
 Install complete skills into the current project's .agents/skills/. No destination option.
 --dry-run  Preview without writing files.

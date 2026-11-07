@@ -8,12 +8,13 @@ import { spawnSync } from 'node:child_process';
 import { ROOT, packPackage } from './check-package.mjs';
 import { runNpm } from './npm-cli.mjs';
 
-const REPOSITORY = 'NAMEWTA/skills-wta';
+const REPOSITORY = 'NAMEWTA/skills-hub';
+const PACKAGE_NAME = '@namewta/skills-hub';
 const REGISTRY = 'https://registry.npmjs.org';
 const API = 'https://api.github.com';
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const STAGE_NOTICE_START = '<!-- skills-wta:npm-stage:start -->';
-const STAGE_NOTICE_END = '<!-- skills-wta:npm-stage:end -->';
+const STAGE_NOTICE_START = '<!-- skills-hub:npm-stage:start -->';
+const STAGE_NOTICE_END = '<!-- skills-hub:npm-stage:end -->';
 const SEMVER = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?$/;
 
 function validVersion(value) { return typeof value === 'string' && value.trim() === value && SEMVER.test(value); }
@@ -58,11 +59,11 @@ export function latestPolicy({ version, published = false, npmLatest = null, git
   return { makeLatest: newer.length === 0 };
 }
 
-function releaseNotes(version) {
-  const changelog = readFileSync(join(ROOT, 'CHANGELOG.md'), 'utf8');
+export function releaseNotes(version, root = ROOT) {
+  const changelog = readFileSync(join(root, 'CHANGELOG.md'), 'utf8');
   const section = changelog.split(`## ${version} —`)[1]?.split('\n## ')[0];
   if (!section || section.indexOf('\n') < 0) throw new Error('CHANGELOG.md 缺少当前版本说明');
-  return section.slice(section.indexOf('\n')).trim() + `\n\n## 安装\n\n\`npx skills-wta@${version} install --domain dev\`\n\nNode.js >=22.14.0；安装目标为当前项目的 \`.agents/skills/\`。\n\nnpm 包与本发布附件来自同一压缩包；校验和见 SHA256SUMS。`;
+  return section.slice(section.indexOf('\n')).trim() + `\n\n## 安装\n\n\`npx ${PACKAGE_NAME}@${version} install --domain dev\`\n\nNode.js >=22.14.0；安装目标为当前项目的 \`.agents/skills/\`。\n\nnpm 包与本发布附件来自同一压缩包；校验和见 SHA256SUMS。`;
 }
 
 function git(args, { optional = false } = {}) {
@@ -72,13 +73,14 @@ function git(args, { optional = false } = {}) {
   return result;
 }
 
-function packageInfo() {
-  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'));
-  const lock = JSON.parse(readFileSync(join(ROOT, 'package-lock.json'), 'utf8'));
+export function packageInfo(root = ROOT) {
+  const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
+  const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'));
   if (!validVersion(pkg.version)) throw new Error(`发布版本不是受支持的语义版本：${pkg.version}`);
-  if (pkg.name !== 'skills-wta' || lock.name !== pkg.name || lock.version !== pkg.version || lock.packages?.['']?.version !== pkg.version) {
+  if (pkg.name !== PACKAGE_NAME || lock.name !== pkg.name || lock.version !== pkg.version || lock.packages?.['']?.name !== pkg.name || lock.packages?.['']?.version !== pkg.version) {
     throw new Error('package.json 与 package-lock.json 的名称或版本不一致');
   }
+  if (pkg.repository?.type !== 'git' || pkg.repository?.url !== `git+https://github.com/${REPOSITORY}.git`) throw new Error('包的源码仓库必须与指定发布仓库一致');
   return pkg;
 }
 
@@ -145,6 +147,17 @@ export async function requestJson(url, { token, nullable = false, method = 'GET'
   return response.json();
 }
 
+export function npmMetadataUrl(name, versionOrTag) {
+  return `${REGISTRY}/${encodeURIComponent(name)}/${encodeURIComponent(versionOrTag)}`;
+}
+
+export async function readLatestPolicy(packed, api, { published = false, request = fetch } = {}) {
+  if (packed.version.includes('-')) return { makeLatest: false };
+  const npm = await requestJson(npmMetadataUrl(packed.name, 'latest'), { nullable: true, request });
+  const github = await api('/releases/latest', { nullable: true });
+  return latestPolicy({ version: packed.version, published, npmLatest: npm ? npm.version : null, githubLatest: github ? github.tag_name.replace(/^v/, '') : null });
+}
+
 export function assertPublishedIntegrity(metadata, packed) {
   if (metadata.name !== packed.name || metadata.version !== packed.version || metadata.dist?.integrity !== packed.integrity) {
     throw new Error('该 npm 版本已经存在，但内容与本次压缩包不一致；请递增版本，不能覆盖已发布版本');
@@ -194,7 +207,7 @@ export async function findVerifiedStage(packed, { token, request = fetch, expect
 }
 
 export async function ensureNpmPublication(packed, { token, request = fetch, publishPackage, beforePublish = async () => {}, wait = milliseconds => new Promise(done => setTimeout(done, milliseconds)), output = console.log } = {}) {
-  const url = `${REGISTRY}/${encodeURIComponent(packed.name)}/${encodeURIComponent(packed.version)}`;
+  const url = npmMetadataUrl(packed.name, packed.version);
   async function inspect() {
     const metadata = await requestJson(url, { nullable: true, request });
     if (metadata) { assertPublishedIntegrity(metadata, packed); return { published: true, stage: null }; }
@@ -304,15 +317,10 @@ export async function publish() {
   const api = (path, options = {}) => requestJson(`${API}/repos/${REPOSITORY}${path}`, { token: process.env.GITHUB_TOKEN, ...options });
   const tagExists = await inspectTag(api, plan.tag, plan.sha);
   const existingRelease = await findReleaseByTag(api, plan.tag);
-  const temporary = mkdtempSync(join(tmpdir(), 'skills-wta release '));
+  const temporary = mkdtempSync(join(tmpdir(), 'skills-hub release '));
   try {
     const packed = packPackage(ROOT, temporary);
-    async function inspectLatest(published) {
-      if (plan.version.includes('-')) return { makeLatest: false };
-      const npm = await requestJson(`${REGISTRY}/${encodeURIComponent(packed.name)}/latest`, { nullable: true });
-      const github = await api('/releases/latest', { nullable: true });
-      return latestPolicy({ version: plan.version, published, npmLatest: npm ? npm.version : null, githubLatest: github ? github.tag_name.replace(/^v/, '') : null });
-    }
+    const inspectLatest = published => readLatestPolicy(packed, api, { published });
     const publication = await ensureNpmPublication(packed, {
       token: process.env.NODE_AUTH_TOKEN,
       beforePublish: () => inspectLatest(false),

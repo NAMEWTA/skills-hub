@@ -66,15 +66,30 @@ function runNode(file, args, cwd) {
   return result;
 }
 
+export function installedPackagePath(prefix, name) {
+  if (typeof name !== 'string' || !/^(?:@[a-z0-9][a-z0-9._-]*\/)?[a-z0-9][a-z0-9._-]*$/.test(name)) {
+    throw new Error(`npm 包名称不能作为安装路径：${name}`);
+  }
+  return join(prefix, 'node_modules', ...name.split('/'));
+}
+
 export function checkPackage(root = ROOT) {
-  const temporary = mkdtempSync(join(tmpdir(), 'skills-wta npm package '));
+  const temporary = mkdtempSync(join(tmpdir(), 'skills-hub npm package '));
   try {
     const packed = packPackage(root, temporary);
     const prefix = join(temporary, 'consumer');
     runNpm(['install', '--prefix', prefix, '--ignore-scripts', '--no-package-lock', '--no-save', '--no-audit', '--no-fund', '--offline', packed.file], { cwd: temporary });
-    const installed = join(prefix, 'node_modules', packed.name);
+    const installed = installedPackagePath(prefix, packed.name);
     const cli = join(installed, 'install.mjs');
+    const metadata = JSON.parse(readFileSync(join(installed, 'package.json'), 'utf8'));
+    if (metadata.name !== packed.name || metadata.version !== packed.version) throw new Error('离线安装后的包身份不一致');
+    if (!['install.mjs', './install.mjs'].includes(metadata.bin?.['skills-hub'])) throw new Error('npm 包未声明 skills-hub CLI');
+    const bin = join(prefix, 'node_modules', '.bin', process.platform === 'win32' ? 'skills-hub.cmd' : 'skills-hub');
+    if (!existsSync(bin)) throw new Error('npm 离线安装没有生成 skills-hub 命令入口');
+    const commandVersion = runNpm(['exec', '--offline', '--no', '--prefix', prefix, '--', 'skills-hub', '--version'], { cwd: prefix }).stdout.trim();
+    if (commandVersion !== packed.version) throw new Error('npm 生成的 skills-hub 命令入口未运行当前包');
     if (runNode(cli, ['--version'], temporary).stdout.trim() !== packed.version) throw new Error('已打包 CLI 的 --version 不正确');
+    if (!/^Usage: skills-hub /m.test(runNode(cli, ['--help'], temporary).stdout)) throw new Error('已打包 CLI 的 --help 未使用 skills-hub 名称');
     runNode(cli, ['list'], temporary);
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
@@ -98,13 +113,13 @@ export function checkPackage(root = ROOT) {
       }
     }
     for (const relative of regularFiles(join(root, 'licenses'))) {
-      if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(prefix, '.agents', 'skills-wta-licenses', relative)))) {
+      if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(prefix, '.agents', 'skills-hub-licenses', relative)))) {
         throw new Error(`npm 安装后许可不一致：${relative}`);
       }
     }
     runNode(cli, ['install', '--all'], prefix);
-    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；离线安装、完整资源、许可与重复安装通过。`);
-    return { name: packed.name, version: packed.version, skills, files: packed.files.length, integrity: packed.integrity };
+    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；离线安装、命令入口、完整资源、许可与重复安装通过。`);
+    return { name: packed.name, version: packed.version, filename: packed.filename, skills, files: packed.files.length, integrity: packed.integrity };
   } finally {
     rmSync(temporary, { recursive: true, force: true });
   }

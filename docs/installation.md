@@ -2,7 +2,7 @@
 
 ## 源码和安装结构
 
-源码由 `skills/<domain>/<domain>-xxx/SKILL.md` 自动发现，不另建人工维护的技能注册表。安装后完整复制到当前工作目录的 `.agents/skills/<domain>-xxx/`，保留 references、assets、scripts 和 agents 等全部运行资源。完整许可从仓库 `licenses/` 自动附带到 `.agents/skills-wta-licenses/`，不放进技能目录。只安装一个技能也附带完整许可，使用者不需要选择或维护许可组合。
+源码由 `skills/<domain>/<domain>-xxx/SKILL.md` 自动发现，不另建人工维护的技能注册表。安装后完整复制到当前工作目录的 `.agents/skills/<domain>-xxx/`，保留 references、assets、scripts 和 agents 等全部运行资源。完整许可从仓库 `licenses/` 自动附带到 `.agents/skills-hub-licenses/`，不放进技能目录。只安装一个技能也附带完整许可，使用者不需要选择或维护许可组合。
 
 使用技能产生的项目资料统一保存到 `.agents/wtadev/`，按需建立需求、知识、部署、归档和配置等子目录。安装器不预建这些目录，也不移动、覆盖或删除其中的项目记录；更新技能包后，新任务按新持久化路径执行。
 
@@ -10,9 +10,23 @@
 
 ## npm 与源码入口
 
-在目标项目根目录运行 `npx skills-wta@0.0.1 list` 或 `npx skills-wta@0.0.1 install --domain dev`。也可从源码运行 `node /path/to/skills-wta/install.mjs`，命令参数完全相同。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
+npm 包名为 `@namewta/skills-hub`，安装后的命令名为 `skills-hub`。在目标项目根目录运行 `npx @namewta/skills-hub@0.0.2 list` 或 `npx @namewta/skills-hub@0.0.2 install --domain dev`。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
 
 `npx` 首次获取包需要网络；已有源码的安装器完全离线。npm 包只包含安装器、运行技能及完整许可，维护底稿保留在 Git 仓库。
+
+## 从 skills-wta 迁移
+
+原包 `skills-wta@0.0.1` 的后续版本改用 `@namewta/skills-hub@0.0.2`。在原目标项目根目录，使用新包并选择原来需要的技能即可，例如：
+
+```bash
+npx @namewta/skills-hub@0.0.2 install --domain dev
+```
+
+新旧版本都安装到 `.agents/skills/<技能名>/`，不会因项目改名生成第二份技能目录。相同内容返回 `unchanged`；有差异时默认停止，核对变化后使用 `npx @namewta/skills-hub@0.0.2 install --domain dev --replace`。只安装个别技能时保留原来的 `--skill` 选择。项目资料路径 `.agents/wtadev/` 不变。
+
+新版会补齐 `.agents/skills-hub-licenses/`，新备份写入 `.agents/.skills-hub-backups/`。旧 `.agents/skills-wta-licenses/` 与 `.agents/.skills-wta-backups/` 不迁移、不删除；恢复旧备份时继续从其原路径选择。
+
+已发布的 `skills-wta@0.0.1`、`v0.0.1` 标签与发布附件保留原有内容，不能作为本次改名重新写入。新的名称与安装说明通过 `0.0.2` 发布；GitHub 仓库使用 [NAMEWTA/skills-hub](https://github.com/NAMEWTA/skills-hub)。
 
 ## 选择
 
@@ -33,11 +47,11 @@
 
 第一次安装直接复制。相同文件内容再次安装返回 `unchanged`，不修改技能。已有同名目录或配套许可目录但内容不同，默认整次安装停止；在任何技能变更前先完成冲突检查。许可缺失会在下次安装时补齐，即使选定技能内容没有改变。
 
-更新源码后，先查看改动，再运行 `--replace`。旧目录保留在 `.agents/.skills-wta-backups/<UTC时间-随机后缀>/<技能名>/`。备份在技能扫描目录之外，不会作为重复技能加载。未选中的技能不改动。配套许可的旧副本保存在同批备份的 `.licenses/` 中；许可与所选技能一起暂存、切换并在失败时恢复。
+更新源码后，先查看改动，再运行 `--replace`。旧目录保留在 `.agents/.skills-hub-backups/<UTC时间-随机后缀>/<技能名>/`。备份在技能扫描目录之外，不会作为重复技能加载。未选中的技能不改动。配套许可的旧副本保存在同批备份的 `.licenses/` 中；许可与所选技能一起暂存、切换并在失败时恢复。
 
 安装先把所有新文件复制到同文件系统的临时目录，再逐个切换。普通复制或切换异常会尝试撤销本次已切换目录；撤销失败时明确报告需要人工恢复的位置。它不承诺断电、强制终止或外部程序同时修改下的完整事务。
 
-`.agents/.skills-wta-install.lock/` 防止本安装器并发写入。若异常终止留下锁，先确认没有安装进程，再移除锁并检查备份。不要在进程运行时删除锁。
+安装事务依次取得 `.agents/.skills-wta-install.lock/` 和 `.agents/.skills-hub-install.lock/`，同时持有两把锁，防止新旧安装器并发写入同一批技能。旧锁名有意保留以兼容 `skills-wta`；安装结束仅释放本次自己取得的锁。若异常终止留下锁，先确认没有新旧安装进程，再移除遗留锁并检查备份。不要在进程运行时删除锁。
 
 ## 合并后的 UI 入口
 
@@ -46,7 +60,7 @@
 安装器只更新本次选定的名称，不自动删除已退役或未选中的目录。如果目标项目此前安装过旧入口：
 
 1. 检查 `.agents/skills/dev-figma-design/` 是否有自行修改；将需要保留的偏好与当前 UI 资源对照处理。
-2. 将整个旧目录移到 `.agents/.skills-wta-backups/<本次唯一标识>/dev-figma-design/` 或其他技能扫描目录之外。不要仅在 `.agents/skills/` 内改名，避免旧入口继续被发现。
+2. 将整个旧目录移到 `.agents/.skills-hub-backups/<本次唯一标识>/dev-figma-design/` 或其他技能扫描目录之外。不要仅在 `.agents/skills/` 内改名，避免旧入口继续被发现。
 3. 在目标项目根目录，使用更新后的安装器安装 `dev-ui-design`；需要更新现有同名包时使用 `install --skill dev-ui-design --replace`。也可更新整个 `dev` 领域。
 
 这个过程只迁移技能入口；项目中的设计记录仍按原位置引用，新记录使用 `.agents/wtadev/`。
@@ -55,7 +69,7 @@
 
 恢复前关闭可能正在读取或写入这些技能的工具，核对备份内容，将现有对应技能另行保留，再把选定备份目录移回 `.agents/skills/<技能名>/`。只恢复所选技能，不用整个 `.agents` 覆盖项目资料。
 
-不再使用某技能时，移走其 `.agents/skills/<技能名>/` 文件夹即可。安装器不提供一键递归清空功能。它从不删除 `.agents/wtadev/` 下的知识、需求记录或部署资料。仍保留任何本项目技能时，保留 `.agents/skills-wta-licenses/`；转移或再次分发技能时同时附带该目录。卸载全部技能后才可移走这份配套许可。
+不再使用某技能时，移走其 `.agents/skills/<技能名>/` 文件夹即可。安装器不提供一键递归清空功能。它从不删除 `.agents/wtadev/` 下的知识、需求记录或部署资料。仍保留任何本项目技能时，保留 `.agents/skills-hub-licenses/`；转移或再次分发技能时同时附带该目录。卸载全部技能后才可移走这份配套许可。
 
 ## 平台与工具
 

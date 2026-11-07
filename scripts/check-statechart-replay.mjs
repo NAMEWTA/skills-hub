@@ -52,7 +52,7 @@ process.exit(fs.existsSync(status) ? Number(fs.readFileSync(status, "utf8")) : 0
 
 export async function main() {
   console.log("回放已捕获的 TLC 输出，检查解析、图与报告；不是新的 TLC 模型求解。");
-  const base = fs.mkdtempSync(path.join(os.tmpdir(), "skills-wta-statechart-replay-"));
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "skills-hub-statechart-replay-"));
   try {
     const corpus = path.join(base, "corpus");
     for (const row of materialRows()) {

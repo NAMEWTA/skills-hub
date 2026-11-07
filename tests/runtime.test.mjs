@@ -147,7 +147,7 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
   fs.mkdirSync(transcripts);
   const record = path.join(transcripts, "record.txt");
   fs.writeFileSync(record, JSON.stringify({ file: paths["chat [chosen]"].replace(/\\/g, "/") + "/data" }));
-  const env = { ...process.env, SKILLS_WTA_TRANSCRIPTS_DIR: "" };
+  const env = { ...process.env, SKILLS_HUB_TRANSCRIPTS_DIR: "", SKILLS_WTA_TRANSCRIPTS_DIR: "" };
   const before = git(repo, "worktree", "list", "--porcelain");
   const child = run(audit, ["--base", "main", "--transcripts", transcripts, repo], { env });
   assert.equal(child.status, 0, child.stderr);
@@ -182,6 +182,21 @@ test("工作树审计真实路径、修改、未跟踪文件与显式对话范�
     record: fs.readFileSync(record, "utf8"), stdout,
   }, null, 2);
   assert.equal(rowFor(paths["chat [chosen]"])[7], "verify-recent-chat", chatDiagnostic(child.stdout, repo));
+  const renamedEnvironment = run(audit, ["--base", "main", repo], {
+    env: { ...env, SKILLS_HUB_TRANSCRIPTS_DIR: transcripts, SKILLS_WTA_TRANSCRIPTS_DIR: path.join(folder, "unused-old-path") },
+  });
+  assert.equal(renamedEnvironment.status, 0, renamedEnvironment.stderr);
+  assert.equal(readRows(renamedEnvironment.stdout).get(identity(paths["chat [chosen]"]))[7], "verify-recent-chat");
+  const legacyEnvironment = { ...env, SKILLS_WTA_TRANSCRIPTS_DIR: transcripts };
+  delete legacyEnvironment.SKILLS_HUB_TRANSCRIPTS_DIR;
+  const legacy = run(audit, ["--base", "main", repo], { env: legacyEnvironment });
+  assert.equal(legacy.status, 0, legacy.stderr);
+  assert.equal(readRows(legacy.stdout).get(identity(paths["chat [chosen]"]))[7], "verify-recent-chat");
+  const explicitlyDisabled = run(audit, ["--base", "main", repo], {
+    env: { ...env, SKILLS_WTA_TRANSCRIPTS_DIR: transcripts },
+  });
+  assert.equal(explicitlyDisabled.status, 0, explicitlyDisabled.stderr);
+  assert.ok(!explicitlyDisabled.stdout.includes("verify-recent-chat"));
   // 使用实际目录别名再执行一次；Windows 使用无需符号链接特权的目录联接。
   const alias = path.join(folder, "source alias");
   fs.symlinkSync(folder, alias, "junction");

@@ -11,11 +11,12 @@ const USAGE = `用法：node worktree-audit.mjs [-b|--base REF] [--with-pr]
 仓库路径默认为当前仓库；MERGED 只对照本地引用，不执行 fetch。
 未指定 --base 时依次尝试 origin/HEAD、origin/main、origin/master。
 --with-pr 才读取已认证 Origin 或 gh 的 PR；不登录或修改远端。
---transcripts 或 SKILLS_WTA_TRANSCRIPTS_DIR 只允许搜索明确给出的目录。
+--transcripts 或 SKILLS_HUB_TRANSCRIPTS_DIR 只允许搜索明确给出的目录。
+旧 SKILLS_WTA_TRANSCRIPTS_DIR 仅在新变量未设置时兼容；新变量设为空可禁用环境变量来源。
 safe 仅表示可以进一步评估回收，不表示已经获得删除授权。`;
 
 export function parseOptions(argv) {
-  const result = { base: "", withPr: false, transcripts: process.env.SKILLS_WTA_TRANSCRIPTS_DIR || "", repo: null, help: false };
+  const result = { base: "", withPr: false, transcripts: process.env.SKILLS_HUB_TRANSCRIPTS_DIR ?? process.env.SKILLS_WTA_TRANSCRIPTS_DIR ?? "", repo: null, help: false };
   const args = [...argv];
   while (args.length) {
     const option = args.shift();

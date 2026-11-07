@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: '已提交的版本号，必须与所选 main 或版本标签一致，例如 0.0.1'
+        description: '已提交的版本号，必须与所选 main 或版本标签一致，例如 0.0.2'
         required: true
         type: string
 

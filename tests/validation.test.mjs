@@ -6,7 +6,7 @@ import { markdownDestinations, localTarget, runtimeIssues, unreachableMarkdown, 
 import { temporary, write } from './helpers.mjs';
 
 function fixture(t) {
-  const root = temporary(t, 'skills-wta-links-');
+  const root = temporary(t, 'skills-hub-links-');
   const skill = path.join(root, 'dev-sample');
   const entry = write(path.join(skill, 'SKILL.md'), '# 示例\n');
   const reference = write(path.join(skill, 'references/完整说明.md'), '# 完整说明\n');
@@ -72,7 +72,7 @@ test('HTML entities cannot hide an external reference', () => {
   for (const body of ['<a href="https&colon;&sol;&sol;docs.example.edu/reference">说明</a>', '[说明](&#x68;ttps://docs.example.edu/reference)']) assert.ok(runtimeIssues(body).length > 0, body);
 });
 test('script format checking rejects Python, shell, TypeScript and disguised launchers but preserves archived data', (t) => {
-  const root = temporary(t, 'skills-wta-script-format-');
+  const root = temporary(t, 'skills-hub-script-format-');
   for (const file of ['scripts/check.py', 'skills/dev/dev-sample/scripts/run.sh', 'tests/sample.ts']) write(path.join(root, file), 'old runtime');
   for (const file of ['scripts/check.mjs', 'skills/dev/dev-sample/assets/example.js', 'materials/a001/original.txt', 'materials/a001/historical.py']) write(path.join(root, file), 'data or JavaScript');
   write(path.join(root, 'scripts/hidden-shell'), '#!/bin/sh\nexit 0\n');

@@ -1,4 +1,4 @@
-# skills-wta
+# skills-hub
 
 这是独立中文技能的源码仓库。领域结构为 `skills/<domain>/<domain>-xxx/`；安装目标固定为使用者当前项目的 `.agents/skills/<domain>-xxx/`，安装后没有领域中间层。
 
@@ -13,7 +13,7 @@
 - 不引入流程 JSON、强制状态机、固定模型或重复审批。用户已经授权的步骤持续执行，环境与工具绑定根据实际能力适配。
 - 项目资料统一以 `.agents/wtadev/` 为持久化根目录，按职责放入 changes、notes、deploy、archive、project、context、system 等子目录，按需创建。技能仍安装在 `.agents/skills/`。已有外部文档按真实位置引用；迁移资料时保留内容并修复入链。代码和运行结果说明现状，用户目标说明期望；知识保留理由、语义和导航，不复述整个代码实现。
 - 维护脚本、测试、技能执行脚本与可执行示例统一使用 `.mjs` / `.js`，Node.js 22.14+；不要引入 Python、Shell 或 TypeScript 运行依赖。Git 的固定 hook 文件名是 JavaScript 薄入口。来源 `.txt` 底稿保留原件，不执行。
-- 版权许可不能丢失。法律原文集中放在 `licenses/`，安装器自动附带到 `.agents/skills-wta-licenses/`，不放进运行技能。
+- 版权许可不能丢失。法律原文集中放在 `licenses/`，安装器自动附带到 `.agents/skills-hub-licenses/`，不放进运行技能。
 
 ## 资料的角色
 

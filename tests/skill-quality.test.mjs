@@ -62,7 +62,7 @@ test('test discovery rejects symlinks instead of walking outside the snapshot', 
 
 class GitFixture {
   constructor(t) {
-    this.base = temporary(t, 'skills-wta gate-');
+    this.base = temporary(t, 'skills-hub gate-');
     this.root = path.join(this.base, 'repository');
     fs.mkdirSync(this.root);
     this.environment = isolatedGitEnvironment(path.join(this.base, 'git-config'));
