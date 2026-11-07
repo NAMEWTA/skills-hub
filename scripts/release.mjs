@@ -148,7 +148,8 @@ export async function requestJson(url, { token, nullable = false, method = 'GET'
 }
 
 export function npmMetadataUrl(name, versionOrTag) {
-  return `${REGISTRY}/${encodeURIComponent(name)}/${encodeURIComponent(versionOrTag)}`;
+  const encoded = name.startsWith('@') ? '@' + encodeURIComponent(name.slice(1)).replace(/%2F/gi, '%2f') : encodeURIComponent(name);
+  return `${REGISTRY}/${encoded}/${encodeURIComponent(versionOrTag)}`;
 }
 
 export async function readLatestPolicy(packed, api, { published = false, request = fetch } = {}) {

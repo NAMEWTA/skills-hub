@@ -20,11 +20,11 @@ test('first committed version plans a release, unchanged versions do not', () =>
   assert.equal(releasePlan({ ...base, version: '0.0.3', previousVersion: '0.0.2' }).publish, true);
 });
 
-test('version increments from prepared 0.0.2 to published 0.0.3', () => {
-  const current = { ...base, version: '0.0.3', previousVersion: '0.0.2' };
-  assert.equal(releasePlan(current).tag, 'v0.0.3');
+test('version increments from published npm 0.0.6 to 0.0.7', () => {
+  const current = { ...base, version: '0.0.7', previousVersion: '0.0.3' };
+  assert.equal(releasePlan(current).tag, 'v0.0.7');
   assert.equal(releasePlan(current).publish, true);
-  assert.equal(releasePlan({ ...current, ref: 'refs/tags/v0.0.3' }).publish, true);
+  assert.equal(releasePlan({ ...current, ref: 'refs/tags/v0.0.7' }).publish, true);
 });
 
 test('the scoped release requires exact package, lockfile and source-repository identities', (t) => {
@@ -72,7 +72,7 @@ test('release notes install the scoped package at the exact release version', (t
 test('scoped registry metadata keeps the package in one percent-encoded path segment', () => {
   for (const selector of ['0.0.2', '0.0.3-beta.1', 'latest', 'next']) {
     const url = npmMetadataUrl('@namewta/skills-hub', selector);
-    assert.equal(url, `https://registry.npmjs.org/%40namewta%2Fskills-hub/${selector}`);
+    assert.equal(url, `https://registry.npmjs.org/@namewta%2fskills-hub/${selector}`);
     assert.deepEqual(new URL(url).pathname.split('/').slice(1).map(decodeURIComponent), ['@namewta/skills-hub', selector]);
   }
 });
@@ -90,7 +90,7 @@ test('latest lookup queries the scoped package and preserves the old GitHub rele
       return new Response(null, { status: 404 });
     },
   });
-  assert.deepEqual(calls, ['https://registry.npmjs.org/%40namewta%2Fskills-hub/latest', '/releases/latest']);
+  assert.deepEqual(calls, ['https://registry.npmjs.org/@namewta%2fskills-hub/latest', '/releases/latest']);
   assert.deepEqual(policy, { makeLatest: true });
 });
 
@@ -98,7 +98,7 @@ test('scoped latest queries still reject rollback and skip latest for prerelease
   const packed = { name: '@namewta/skills-hub', version: '0.0.2' };
   const api = async () => ({ tag_name: 'v0.0.3' });
   const request = async (url) => {
-    assert.equal(url, 'https://registry.npmjs.org/%40namewta%2Fskills-hub/latest');
+    assert.equal(url, 'https://registry.npmjs.org/@namewta%2fskills-hub/latest');
     return new Response(JSON.stringify({ name: packed.name, version: '0.0.3' }), { status: 200 });
   };
   await assert.rejects(readLatestPolicy(packed, api, { request }), /低于现有 latest/);
@@ -339,8 +339,8 @@ test('stage inspection paginates from zero and verifies the original tarball wit
     return f.request(url, options);
   };
   assert.deepEqual(await findVerifiedStage(f.packed, { token: 'test-token', request }), f.stage);
-  assert.match(f.calls[0], /page=0&perPage=100&package=%40namewta%2Fskills-hub/);
-  assert.match(f.calls[1], /page=1&perPage=100&package=%40namewta%2Fskills-hub/);
+  assert.match(f.calls[0], /page=0&perPage=100&package=@namewta%2fskills-hub/);
+  assert.match(f.calls[1], /page=1&perPage=100&package=@namewta%2fskills-hub/);
 });
 
 test('stage lookup refuses duplicate matching versions', async (t) => {
@@ -413,7 +413,7 @@ test('approval recovery trusts verified public metadata without republishing or 
   const result = await ensureNpmPublication(f.packed, {
     token: 'test-token',
     request: async (url) => {
-      assert.equal(String(url), 'https://registry.npmjs.org/%40namewta%2Fskills-hub/0.0.2');
+      assert.equal(String(url), 'https://registry.npmjs.org/@namewta%2fskills-hub/0.0.2');
       return f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: f.packed.integrity } });
     },
     publishPackage: () => { throw new Error('An approved version must not be published twice'); },
@@ -427,7 +427,7 @@ test('OIDC-only publication remains available and absent stage-read credentials 
   const messages = [];
   const result = await ensureNpmPublication(f.packed, {
     request: async url => {
-      assert.equal(String(url), 'https://registry.npmjs.org/%40namewta%2Fskills-hub/0.0.2');
+      assert.equal(String(url), 'https://registry.npmjs.org/@namewta%2fskills-hub/0.0.2');
       return published ? f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: f.packed.integrity } }) : new Response(null, { status: 404 });
     },
     publishPackage: () => { published += 1; }, output: message => messages.push(message),
