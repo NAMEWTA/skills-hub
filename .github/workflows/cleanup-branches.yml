@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   cleanup:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'Branch-Cleanup: confirmed')
+    if: "github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, 'Branch-Cleanup: confirmed')"
     runs-on: ubuntu-latest
     permissions:
       contents: write
