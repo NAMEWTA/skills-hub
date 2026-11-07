@@ -86,8 +86,7 @@ export function packageInfo(root = ROOT) {
 
 export function releasePlan({ eventName, event, ref, sha, version, previousVersion, retryVersion }) {
   if (!validVersion(version)) throw new Error('无效发布版本');
-  // 旧 v0.0.1 属于原 skills-wta 包；为新 scoped 包保留独立首次发布标签。
-  const tag = version === '0.0.1' ? 'skills-hub-v0.0.1' : `v${version}`;
+  const tag = `v${version}`;
   let publish = false;
   if (eventName === 'push' && ref === 'refs/heads/main') {
     if (event.after && event.after !== sha) throw new Error('推送事件与检出提交不一致');
