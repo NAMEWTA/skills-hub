@@ -1,0 +1,4 @@
+interface:
+  display_name: "代理与网络诊断"
+  short_description: "沿应用、代理、DNS 与路由分层排查问题，最小调整配置并验证真实请求路径"
+  default_prompt: "使用 $system-proxy 排查当前代理问题，确认生效范围并验证目标应用的网络请求。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "系统与工具配置"
+  short_description: "核对版本和配置作用域，保留备份并修改必要字段，验证实际生效与恢复方式"
+  default_prompt: "使用 $system-config 调整这项配置，保留无关字段并核实软件实际加载的结果。"

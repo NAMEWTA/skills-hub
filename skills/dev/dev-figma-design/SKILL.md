@@ -1,0 +1,34 @@
+---
+name: dev-figma-design
+description: 在用户指定的 Figma 文件中创建、编辑或审查页面、组件和设计系统，保留 Elaya 的真实变量、语义颜色、文字样式、自动布局与状态体系。用于明确的 Figma 任务或 Figma 链接；普通代码 UI 任务无需使用。
+---
+
+# Figma 设计系统
+
+读 [Elaya 完整 Figma 原文](references/figma-upstream.md)。保留它的变量绑定、两层颜色、完整 token 表、Foundations 展示、组件状态和逐区域截图检查，按当前任务应用。
+
+## 接入当前工具和项目
+
+先确认用户指定的文件/节点和本轮操作范围，读取已有 variable collections、text styles、libraries 和相邻页面。复用现有设计资产，不覆盖无关画板。
+
+上游提到的 `figma-use`、`figma-generate-design`、`figma-generate-library` 与 `use_figma` 是其宿主的工具名称。本技能不捆绑这些工具。实际操作前读取当前可用 Figma 工具的文档；若不存在写入能力，完成可交接的设计规格，说明 Figma 文件尚未更改。不要伪造 API、为安装外部技能阻塞可完成的工作，或自动改用其他账号/文件。
+
+用户方向与已有项目设计系统优先。新建无既定系统的文件使用上游完整默认；已有系统保留其命名和值，记录与上游的对应关系。Figma 和代码的字号/字重必须采用同一份项目约定，不能混用两份上游的不同默认。
+
+## 实施
+
+1. 从当前需求/spec 选定一条关键用户路径。先做 foundations 缺口，再做组件与页面；不要为了局部修改重新建立全部库。
+2. 让颜色通过 Core Colors → Color System 的用途语义绑定；light/dark 采用 mode。文字使用命名 style，spacing/radius 绑定变量，避免离散硬编码。
+3. 需要新建系统时完整遵循原文 token reference 与组件变体。页面改造则只补当前系统缺少且任务需要的变量/变体。
+4. 为复用元素建立组件与属性，交互覆盖适用的 hover、pressed、focus、disabled、error、filled；数据区域补加载、空与失败。
+5. 按区域构建，截图后检查布局、主题、长文案、对比和目标视口。默认不移动或删除用户既有层。
+
+若本轮是营销页，还读 [Elaya 完整 landing page 原文](references/landing-page-upstream.md) 的策略与文案章节。本地已经包含它，不依赖其他 skill。产品工作台、表单和后台页面不增加营销章节。真实价格、证明和客户评价必须有来源；虚构 demo 内容要标明。
+
+按 SDD：先明确行为、布局与设计约束，再制作和验收，禁止 TDD。减少动效模式时提供最终可读状态。
+
+## 交付
+
+报告实际修改的文件/节点链接、设计决定、复用/新增的变量与组件、截图验证范围和待补资源。把代码交接需要的状态、token 对应、响应式行为写入当前变更的 `design.md`，引用 Figma 节点与项目实现位置。
+
+完整落地后，稳定的术语或设计约定仅用短说明和来源链接进入项目已有文档或 `.agents/notes/`；不要把整个 Figma 文件描述复制到 AGENTS.md。尚未执行的 prototype、移动视口或外部文件写入明确标为未验证。

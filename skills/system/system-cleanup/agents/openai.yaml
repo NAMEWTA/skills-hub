@@ -1,0 +1,4 @@
+interface:
+  display_name: "磁盘与缓存清理"
+  short_description: "从真实占用识别可清理对象，限定范围、保留重要数据并验证实际释放的空间"
+  default_prompt: "使用 $system-cleanup 诊断磁盘占用，执行已授权的清理范围并核对回收结果。"

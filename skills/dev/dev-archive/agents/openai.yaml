@@ -1,0 +1,4 @@
+interface:
+  display_name: "归档与项目记忆"
+  short_description: "以当前代码和交付证据整理术语、背景与决策，处理过期引用及完整或部分替代"
+  default_prompt: "使用 $dev-archive 核对本次交付，整理有用知识、修复旧引用并归档已结束记录。"

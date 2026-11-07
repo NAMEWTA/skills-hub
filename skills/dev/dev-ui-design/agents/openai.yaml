@@ -1,0 +1,4 @@
+interface:
+  display_name: "界面与落地页设计"
+  short_description: "按产品界面或营销目标选择完整设计方法，复用现有组件并验证实际视觉与交互"
+  default_prompt: "使用 $dev-ui-design 为当前需求设计界面，沿用已有设计系统并检查完整状态与交互。"
