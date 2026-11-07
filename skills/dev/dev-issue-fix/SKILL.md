@@ -19,7 +19,7 @@ description: 对已经可信分诊的缺陷通过真实 UI 两次复现，验证
 
 读取 [控制适配器契约](references/control-adapter.md)、包外项目配置及完整功能图。实际能力必须覆盖启动、映射功能与状态、真实交互、只读检查、截图、录像和清理。缺失能力如实标为受阻；不要用注入状态、源码推断或单元测试冒充 UI 复现。
 
-从 [配置模板](assets/configuration.yaml) 和 [功能映射模板](assets/feature-map.md) 创建项目副本，默认目录为 `.agents/project/issue-automation/`，或沿用既有约定。模板中的示例动作必须替换成真实可用且已经验证的操作。
+从 [配置模板](assets/configuration.yaml) 和 [功能映射模板](assets/feature-map.md) 创建项目副本，统一保存在 `.agents/wtadev/project/issue-automation/`；已有配置按真实路径读取，不因目录调整擅自搬迁。模板中的示例动作必须替换成真实可用且已经验证的操作。
 
 ## 执行证据闭环
 
@@ -40,6 +40,6 @@ description: 对已经可信分诊的缺陷通过真实 UI 两次复现，验证
 
 创建持续任务时可采用 [完整修复提示词](assets/fix-prompt.md)，但安装技能不自动启用任务。给出实际基线与修补版本、两次结果、前后证据、聚焦测试、影响范围、PR 或未交付原因。
 
-始终清理自己创建的进程、会话和临时数据，保护用户已有工作。截图、录像、日志与令牌不进入源码控制，保留期按配置执行。需要恢复或长期解释的内容用项目 Markdown 记录，默认 `.agents/changes/<日期-报告>/evidence.md`；稳定经验只留下代码导航和理由。
+始终清理自己创建的进程、会话和临时数据，保护用户已有工作。截图、录像、日志与令牌不进入源码控制，保留期按配置执行。需要恢复或长期解释的内容用项目 Markdown 记录，默认 `.agents/wtadev/changes/<日期-报告>/evidence.md`；稳定经验只留下代码导航和理由。
 
 全部资源见 [本地资料索引](references/method-index.md)，能力、授权和记录约定见 [本地执行支持](references/execution-support.md)。

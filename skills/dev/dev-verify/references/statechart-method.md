@@ -18,7 +18,7 @@
 
 使用本地 `TLA2TOOLS` 指向 `tla2tools.jar`，可选 `JAVA` 指定 Java 可执行文件。原始模型和配置不被改写；输出目录必须是新目录或空目录。需要示范时，使用[额度预留模型](../assets/Reservation.tla)、[故障配置](../assets/Reservation.cfg)、[修复配置](../assets/Reservation.fixed.cfg)和[中文视图](../assets/view.mjs)。案例参数只服务于该示例，不是其他系统的默认规模。
 
-项目模型需要长期维护时，保存模型、属性、代码映射与工具版本到项目已有的验证目录；临时图和反例运行结果放独立输出目录。复制模型到临时目录时保留它所引用的本地 TLA+ 模块。
+模型与可执行验证代码继续在项目真实验证目录维护。需要持久保存的属性说明、代码映射、图和反例证据统一放在 `.agents/wtadev/changes/<日期-主题>/verification/`，长期约束写入 `.agents/wtadev/notes/context/` 并引用真实模型与代码。临时运行仍使用独立输出目录；复制模型时保留它所引用的本地 TLA+ 模块。
 
 ## 编写规格
 

@@ -60,6 +60,6 @@ description: 对分支、PR、未提交改动或实现结果进行规格与项�
 
 只要求审查时交付报告；已经授权修复时，修复确认问题并复核受影响部分。每轮新的代码变更需要与原结论重新对应。
 
-项目无既有位置时，必要的审查结果可写在 `.agents/changes/<YYYY-MM-DD-slug>/review.md`，运行输出引用 `evidence.md`。小审查直接在当前任务记录即可，不生成空报告。
+需要保存的审查结果写在 `.agents/wtadev/changes/<YYYY-MM-DD-slug>/review.md`，运行输出引用 `evidence.md`。小审查直接在当前任务记录即可，不生成空报告。
 
 [完整本地方法与模板](references/method-index.md)

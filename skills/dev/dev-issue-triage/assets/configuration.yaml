@@ -41,14 +41,14 @@ tracker:
   require_compensation_action: true
 
 routing:
-  map_path: ".agents/project/issue-automation/routing.md"
+  map_path: ".agents/wtadev/project/issue-automation/routing.md"
   owner_pings_default: false
   allow_feature_owner_ping: false
   allow_confirmed_regression_author_ping: false
 
 control:
   skill_name: "control-target-app"
-  feature_map_path: ".agents/project/issue-automation/feature-map.md"
+  feature_map_path: ".agents/wtadev/project/issue-automation/feature-map.md"
   environment: "安全测试环境占位值"
   artifact_directory: "/tmp/issue-artifacts"
   artifact_retention_hours: 24

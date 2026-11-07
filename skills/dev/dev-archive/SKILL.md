@@ -11,19 +11,19 @@ description: 在交付复盘、归档需求或整理项目记忆时，核对代�
 
 从当前项目、这次需求和用户指定范围开始。读取项目 `AGENTS.md`、相关规格、实际 diff/提交，再按关键词定位有关现役笔记。涉及交付或部署时核对对应证据；只说明已经核实的状态，没有上线证据不得声称已上线，归档本身不证明开发或部署完成。
 
-沿用项目已有的文档位置和命名，记录一次对应关系即可。新项目按需使用：
+本套技能新增的项目资料统一以 `.agents/wtadev/` 为根，按需使用以下分区。已有资料先按真实位置查阅引用；明确迁移时保留内容与标识并修复链接，不为增加根目录擅自搬迁目标项目文件：
 
 | 内容 | 默认位置 |
 | --- | --- |
-| 当前需求及证据 | `.agents/changes/<YYYY-MM-DD-slug>/` |
-| 已结束的需求 | `.agents/archive/changes/<YYYY-MM-DD-slug>/` |
-| 术语和别名 | `.agents/notes/glossary.md` |
-| 模块背景与规则 | `.agents/notes/context/<topic>.md` |
-| 有持续价值的决策 | `.agents/notes/decisions/<YYYY-MM-DD-topic>.md` |
-| 可复用的错误经验 | `.agents/notes/errors/<topic>.md` |
-| 模块学习说明 | `.agents/notes/learning/<topic>.md` |
-| 有历史价值的退役笔记 | `.agents/archive/notes/`，保留原分类和文件名 |
-| 部署现状与发布历史 | `.agents/deploy/<environment>/runbook.md`、`releases/` |
+| 当前需求及证据 | `.agents/wtadev/changes/<YYYY-MM-DD-slug>/` |
+| 已结束的需求 | `.agents/wtadev/archive/changes/<YYYY-MM-DD-slug>/` |
+| 术语和别名 | `.agents/wtadev/notes/glossary.md` |
+| 模块背景与规则 | `.agents/wtadev/notes/context/<topic>.md` |
+| 有持续价值的决策 | `.agents/wtadev/notes/decisions/<YYYY-MM-DD-topic>.md` |
+| 可复用的错误经验 | `.agents/wtadev/notes/errors/<topic>.md` |
+| 模块学习说明 | `.agents/wtadev/notes/learning/<topic>.md` |
+| 有历史价值的退役笔记 | `.agents/wtadev/archive/notes/`，保留原分类和文件名 |
+| 部署现状与发布历史 | `.agents/wtadev/deploy/<environment>/runbook.md`、`releases/` |
 
 不要在 `.agents/skills/` 内写项目数据。只创建本次需要的文件；不建立 JSON 台账、全局状态机、必填空文档或知识数据库。
 
@@ -33,7 +33,7 @@ description: 在交付复盘、归档需求或整理项目记忆时，核对代�
 2. **反思少量值得保留的变化。** 什么判断有效，什么假设被事实推翻，什么错误会再次发生？只提取有证据的结论。正式 ADR 采用难逆转、缺背景难懂、真实取舍三项条件；其他长期知识进入背景、错误经验或术语，不因未达 ADR 条件而丢弃。普通改名、一次页面微调、已经消失的临时绕路不必变成永久经验。可用 [复盘提纲](assets/retrospective.md)，没有实质内容时不生成复盘文件。
 3. **先找旧的归属。** 每条新知识都搜索相同决定、概念、机制和别名。已有文件能承载就更新；同一个事实只保留一个主要说明。按 [知识写法](references/knowledge.md) 区分术语、背景、ADR、错误与学习说明。
 4. **处理当前与历史。** 对照源码核验路径、符号、调用关系和默认值。当前实现事实变了，就修改现役说明；真实决策反转就建立后继记录。按 [保留与替代](references/retention.md) 分清完整替代、部分替代和仍有用的反对理由，不把旧 ADR 改写成相反的决定。
-5. **清理引用与导航。** 更新当前文档、`AGENTS.md` 和 `.agents/notes/index.md` 的相关入口。索引只放主题、适用范围和链接，不再复制正文。修复移动/删除文件的入链；历史文件只有在明确引用过去时才作为目标。
+5. **清理引用与导航。** 更新当前文档、`AGENTS.md` 和 `.agents/wtadev/notes/index.md` 的相关入口。索引只放主题、适用范围和链接，不再复制正文。修复移动/删除文件的入链；历史文件只有在明确引用过去时才作为目标。
 6. **归档并交接。** 在用户已授权的收尾范围内移动已结束需求；有独立历史价值的退役笔记移到 archive 并标明退役时间和当前替代位置。核对相对链接、原始证据和未完成事项，返回真实路径和结果。普通归档不要求另走审批流程；授权不足仅阻塞超出范围的操作。
 
 ## 判断依据

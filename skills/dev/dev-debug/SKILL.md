@@ -47,6 +47,6 @@ description: 根据可重复的故障现象诊断错误、回归、间歇性问�
 
 删除本次临时观测与探针，或将仍有复用价值的工具明确归位。只清理自己创建的内容。运行相关现有检查，必要时补回归验证，充分证明后停止无目的重复。
 
-输出症状、证实的根因、实际修复、同路径证据和剩余限制。默认记录在 `.agents/changes/<YYYY-MM-DD-slug>/evidence.md`；已有项目位置优先。仅有跨迭代价值的陷阱才进入 `.agents/notes/errors/`，包含适用条件、最新代码指针与复核日期，避免把单次日志长期堆积。
+输出症状、证实的根因、实际修复、同路径证据和剩余限制。新增记录统一保存在 `.agents/wtadev/changes/<YYYY-MM-DD-slug>/evidence.md`；已有证据按真实位置引用。仅有跨迭代价值的陷阱才进入 `.agents/wtadev/notes/errors/`，包含适用条件、最新代码指针与复核日期，避免把单次日志长期堆积。
 
 [完整本地方法与模板](references/method-index.md)

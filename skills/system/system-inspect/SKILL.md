@@ -30,7 +30,7 @@ python3 "$SKILL_DIR/scripts/inspect.py" --path "/path/on/target/volume"
 
 ## 交付与记录
 
-给出症状、目标、基线、支持结论的证据、仍待排除的原因和下一步。需要长期记录时，在用户现有运维目录或 `.agents/system/<host>/` 写一份简短 Markdown；纯查询无需强制落盘。
+给出症状、目标、基线、支持结论的证据、仍待排除的原因和下一步。需要新增长期记录时，在 `.agents/wtadev/system/<host>/` 写一份简短 Markdown；纯查询无需强制落盘。
 
 报告不带密钥、完整环境变量、进程参数或私有日志。不要把单次快照、空闲磁盘或脚本成功退出说成“系统已优化”。
 

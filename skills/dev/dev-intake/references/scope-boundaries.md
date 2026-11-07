@@ -4,11 +4,11 @@
 
 - [目录结构](#目录结构)
 - [文件格式](#文件格式)
-- [何时检查 `.agents/notes/context/scope-decisions/`](#何时检查-agentsnotescontextscope-decisions)
-- [何时写入 `.agents/notes/context/scope-decisions/`](#何时写入-agentsnotescontextscope-decisions)
+- [何时检查 `.agents/wtadev/notes/context/scope-decisions/`](#何时检查-agentsnotescontextscope-decisions)
+- [何时写入 `.agents/wtadev/notes/context/scope-decisions/`](#何时写入-agentsnotescontextscope-decisions)
 - [更新或移除范围之外文件](#更新或移除范围之外文件)
 
-仓库的 `.agents/notes/context/scope-decisions/` 目录持久记录被拒绝的功能请求。它有两个用途：
+仓库的 `.agents/wtadev/notes/context/scope-decisions/` 目录持久记录被拒绝的功能请求。它有两个用途：
 
 1. **组织记忆**：记录功能为什么被拒绝，让事项关闭后理由不会丢失。
 2. **去重**：新事项与先前拒绝匹配时，技能可以提出已有决定，而不必重新争论。
@@ -16,7 +16,7 @@
 ## 目录结构
 
 ```text
-.agents/notes/context/scope-decisions/
+.agents/wtadev/notes/context/scope-decisions/
 ├── dark-mode.md
 ├── plugin-system.md
 └── graphql-api.md
@@ -74,13 +74,13 @@ interface ThemeConfig {
 
 理由应持久。避免引用暂时情况，例如“现在太忙”；那是延期，不是真正拒绝。
 
-## 何时检查 `.agents/notes/context/scope-decisions/`
+## 何时检查 `.agents/wtadev/notes/context/scope-decisions/`
 
-分诊第 1 步收集上下文时，阅读 `.agents/notes/context/scope-decisions/` 的全部文件。评估新事项时：
+分诊第 1 步收集上下文时，阅读 `.agents/wtadev/notes/context/scope-decisions/` 的全部文件。评估新事项时：
 
 - 检查请求是否匹配已有范围之外概念。
 - 按概念相似性匹配，而非关键词，例如“夜间主题”匹配 `dark-mode.md`。
-- 如果匹配，向维护者提出：“这与 `.agents/notes/context/scope-decisions/dark-mode.md` 相似，之前因 [理由] 拒绝过。你现在仍然持相同看法吗？”
+- 如果匹配，向维护者提出：“这与 `.agents/wtadev/notes/context/scope-decisions/dark-mode.md` 相似，之前因 [理由] 拒绝过。你现在仍然持相同看法吗？”
 
 维护者可能：
 
@@ -88,7 +88,7 @@ interface ThemeConfig {
 - **重新考虑**：删除或更新该文件，事项进入普通分诊。
 - **不同意**：两个事项相关但不同，继续普通分诊。
 
-## 何时写入 `.agents/notes/context/scope-decisions/`
+## 何时写入 `.agents/wtadev/notes/context/scope-decisions/`
 
 只有**增强**请求而非缺陷，被以 `wontfix` **拒绝**时才写入。这同样适用于增强类 PR：在这里记录被拒绝 PR，防止相同请求以新代码的形式再次出现。
 
@@ -97,7 +97,7 @@ interface ThemeConfig {
 流程：
 
 1. 维护者决定某功能请求不在范围内。
-2. 检查是否已有匹配的 `.agents/notes/context/scope-decisions/` 文件。
+2. 检查是否已有匹配的 `.agents/wtadev/notes/context/scope-decisions/` 文件。
 3. 如果有，把新事项追加到“先前请求”列表。
 4. 如果没有，新建文件，包含概念名称、决定、理由和第一条先前请求。
 5. 已授权发布评论时解释决定并提及该文件；否则在本地简报记录待发布内容。

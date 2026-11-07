@@ -124,26 +124,29 @@ py -3 C:\tools\skills-wta\install.py install --domain dev
 | [system-proxy](skills/system/system-proxy/SKILL.md) | 排查和配置代理、DNS、客户端与应用生效范围 |
 | [system-config](skills/system/system-config/SKILL.md) | 调整已指定的软件或系统配置，保留备份并验证真实生效 |
 
-系统技能不会把“清缓存”扩展为删除业务数据，也不会把“应用代理”扩展为修改整机路由。主机文档按需放在 `.agents/system/<主机标识>/`；密码与订阅秘密只记录安全引用。
+系统技能不会把“清缓存”扩展为删除业务数据，也不会把“应用代理”扩展为修改整机路由。主机文档按需放在 `.agents/wtadev/system/<主机标识>/`；密码与订阅秘密只记录安全引用。
 
 ## 项目知识怎样留下来
 
-技能安装包和项目资料分开。已有项目目录沿用；没有约定时使用下表，不强制一次性创建所有目录。
+**项目持久化统一以 `.agents/wtadev/` 为根目录。** 需求、知识、部署、归档和项目配置都按职责放在这个根目录下，有实际内容时再创建对应子目录。技能安装位置为 `.agents/skills/`；项目根目录的 `AGENTS.md` 保留简短导航，指向实际知识文件。
 
 | 位置 | 保存什么 |
 | --- | --- |
 | `AGENTS.md` | 简短导航、必要项目约定；不放完整百科 |
-| `.agents/changes/<日期-主题>/` | 活跃需求的简报、规格、切片、进展和证据 |
-| `.agents/notes/index.md` | 常用知识入口；不维护全量注册表 |
-| `.agents/notes/glossary.md` | 术语、别名、适用范围与代码映射 |
-| `.agents/notes/context/` | 代码本身解释不了的背景和约束 |
-| `.agents/notes/decisions/` | 仍有决策价值的 ADR、替代方案和后果 |
-| `.agents/notes/errors/` | 可能再次出现的错误、识别方式与恢复经验 |
-| `.agents/notes/learning/` | 经代码核验的模块导读 |
-| `.agents/deploy/<环境>/` | 当前运行手册、配置与凭据引用、历史发布记录 |
-| `.agents/archive/changes/`、`.agents/archive/notes/` | 已结束过程与历史知识 |
+| `.agents/wtadev/changes/<日期-主题>/` | 活跃需求的简报、规格、切片、进展和证据 |
+| `.agents/wtadev/notes/index.md` | 常用知识入口；不维护全量注册表 |
+| `.agents/wtadev/notes/glossary.md` | 术语、别名、适用范围与代码映射 |
+| `.agents/wtadev/notes/context/` | 代码本身解释不了的背景和约束 |
+| `.agents/wtadev/notes/decisions/` | 仍有决策价值的 ADR、替代方案和后果 |
+| `.agents/wtadev/notes/errors/` | 可能再次出现的错误、识别方式与恢复经验 |
+| `.agents/wtadev/notes/learning/` | 经代码核验的模块导读 |
+| `.agents/wtadev/deploy/<环境>/` | 当前运行手册、配置与凭据引用、历史发布记录 |
+| `.agents/wtadev/archive/changes/`、`.agents/wtadev/archive/notes/` | 已结束过程与历史知识 |
+| `.agents/wtadev/project/` | 项目专用配置与功能图，例如 `issue-automation/` |
+| `.agents/wtadev/context/model-roles.md` | 当前宿主的模型角色与推理预算配置 |
+| `.agents/wtadev/system/<主机标识>/` | 系统检查、清理、代理及配置的维护记录 |
 
-当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；归档时核对引用、修复过期事实、保留仍重要的理由。详见 [知识与记忆](docs/knowledge.md)。
+已有 `docs/` 等位置的有效文档按真实位置引用，避免重复保存正文。迁移本套技能的既有资料时，保留原有子目录与内容，更新项目导航及入链。当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；归档时核对引用、修复过期事实、保留仍重要的理由。详见 [知识与记忆](docs/knowledge.md)。
 
 ## 独立内容与本地资料
 

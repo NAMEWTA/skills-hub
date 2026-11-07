@@ -48,12 +48,12 @@
 
 ## 让工作能继续
 
-尊重项目已有的文档位置，记录一次路径映射即可。没有约定时使用：
+本套技能新增的项目资料统一以 `.agents/wtadev/` 为根，按需使用以下分区。已有资料按真实位置查阅并保留必要引用；只有明确要求迁移时才搬迁，并保留内容、标识和有效链接。用户本次明确指定其他位置时按其指令执行：
 
-- `.agents/changes/<日期-主题>/`：当前需求的 brief、spec、plan、progress、evidence，按需创建。
-- `.agents/notes/`：经过验证的术语、背景、决策、错误经验和模块理解；入口 `index.md` 只指路。
-- `.agents/deploy/<环境>/`：部署手册及 `releases/` 下的历史发布记录。
-- `.agents/archive/changes/`、`.agents/archive/notes/`：已结束工作与历史知识，明确不代表当前行为。
+- `.agents/wtadev/changes/<日期-主题>/`：当前需求的 brief、spec、plan、progress、evidence，按需创建。
+- `.agents/wtadev/notes/`：经过验证的术语、背景、决策、错误经验和模块理解；入口 `index.md` 只指路。
+- `.agents/wtadev/deploy/<环境>/`：部署手册及 `releases/` 下的历史发布记录。
+- `.agents/wtadev/archive/changes/`、`.agents/wtadev/archive/notes/`：已结束工作与历史知识，明确不代表当前行为。
 
 这些是目标项目的资料，不能写进安装包 `.agents/skills/`。需要恢复时，使用 [交接模板](assets/handoff.md)，只留下当前结果、证据、未决问题和下一步。
 

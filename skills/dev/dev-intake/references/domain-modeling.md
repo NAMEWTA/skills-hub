@@ -4,11 +4,11 @@
 
 ## 文件结构
 
-优先复用项目既有词汇表与决定目录。没有约定时使用 `.agents/notes/glossary.md` 和 `.agents/notes/decisions/`，以下树形结构说明单一上下文的职责关系，可按既有布局映射：
+先按真实位置查阅已有词汇表与决定。新增资料统一使用 `.agents/wtadev/notes/glossary.md` 和 `.agents/wtadev/notes/decisions/`，通过必要引用连接既有记录。以下树形结构说明单一上下文的职责关系：
 
 ```text
 /
-├── .agents/notes/
+├── .agents/wtadev/notes/
 │   ├── glossary.md
 │   └── decisions/
 │       ├── 0001-event-sourced-orders.md
@@ -16,11 +16,11 @@
 └── src/
 ```
 
-如果项目已有 `glossary-map.md` 或等效领域索引，说明仓库有多个上下文。映射文件指出各上下文所在位置；没有则按需要在 `.agents/notes/` 创建，不为目录格式迁移现有文件：
+如果项目已有 `glossary-map.md` 或等效领域索引，说明仓库有多个上下文。映射文件指出各上下文所在位置；没有则按需要在 `.agents/wtadev/notes/` 创建，不为目录格式迁移现有文件：
 
 ```text
 /
-├── .agents/notes/
+├── .agents/wtadev/notes/
 │   ├── glossary-map.md
 │   ├── decisions/                    ← 跨领域决定
 │   └── context/
@@ -33,7 +33,7 @@
 └── src/
 ```
 
-延迟创建文件：只有有内容可写时才创建。如果还没有 `glossary.md`，在第一个术语确定时按项目位置或 `.agents/notes/glossary.md` 创建；如果没有 `.agents/notes/decisions/`，在需要第一份 ADR 时创建。
+延迟创建文件：只有有内容可写时才创建。如果还没有 `glossary.md`，在第一个术语确定时于 `.agents/wtadev/notes/glossary.md` 创建；如果没有 `.agents/wtadev/notes/decisions/`，在需要第一份 ADR 时创建。
 
 ## 会话期间
 
@@ -71,4 +71,4 @@
 
 术语定义旁保留用户说法到规范概念的别名映射，以及适用领域。代码定位另放现状证据，用相对路径和符号定位；归档时读取最新代码复核，不把历史文件位置当作永恒事实。
 
-未同时满足正式 ADR 的三项条件，但仍有长期价值的背景和约束，保存到项目既有上下文笔记或 `.agents/notes/context/`；错误与恢复方法进 `errors/`，术语进 `glossary.md`。不因未达到 ADR 门槛删除有效知识，也不强制迁移项目已有记录。
+未同时满足正式 ADR 的三项条件，但仍有长期价值的背景和约束，统一保存到 `.agents/wtadev/notes/context/`，按真实位置引用已有背景；错误与恢复方法进 `errors/`，术语进 `glossary.md`。不因未达到 ADR 门槛删除有效知识，也不强制迁移项目已有记录。

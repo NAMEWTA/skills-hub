@@ -64,11 +64,11 @@
 - [配置模板](../assets/configuration.yaml)
 - [功能映射模板](../assets/feature-map.md)
 
-在技能安装包之外创建用户拥有的副本。它们是项目配置，不是包文件。沿用项目现有目录；没有时可用：
+在技能安装包之外创建用户拥有的副本。它们是项目配置，不是包文件。新增配置统一放在 `.agents/wtadev/project/issue-automation/`；已有配置按真实位置查阅引用，不擅自移动或覆盖。具体文件如下：
 
-- 项目配置：`.agents/project/issue-automation/configuration.yaml`
-- 项目功能图：`.agents/project/issue-automation/feature-map.md`
-- 项目分流图：`.agents/project/issue-automation/routing.md`
+- 项目配置：`.agents/wtadev/project/issue-automation/configuration.yaml`
+- 项目功能图：`.agents/wtadev/project/issue-automation/feature-map.md`
+- 项目分流图：`.agents/wtadev/project/issue-automation/routing.md`
 - 仅在实际运行环境能读取时使用的个人配置：`~/.config/issue-automation/configuration.yaml`
 - 同样条件下的个人功能图：`~/.config/issue-automation/feature-map.md`
 

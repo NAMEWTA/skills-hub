@@ -12,14 +12,14 @@
 
 | 类型 | 内容 | 默认文件 |
 | --- | --- | --- |
-| 术语映射 | 用户词汇、规范概念、代码对象、适用范围和易混对象 | `.agents/notes/glossary.md` |
-| 模块背景 | 模块职责、入口/出口、稳定约束和实际代码位置 | `.agents/notes/context/<topic>.md` |
-| 决策 | 问题、选择、真实替代方案、取舍、后果和重新考虑条件 | `.agents/notes/decisions/<date-topic>.md` |
-| 错误经验 | 症状、触发条件、已核实原因、处理方法及验证证据 | `.agents/notes/errors/<topic>.md` |
-| 学习说明 | 按业务路径解释模块如何串联，保留必要术语与证据 | `.agents/notes/learning/<topic>.md` |
-| 环境事实 | 环境/实例、部署版本、运行配置、运维命令和凭据引用 | `.agents/deploy/<environment>/runbook.md` |
+| 术语映射 | 用户词汇、规范概念、代码对象、适用范围和易混对象 | `.agents/wtadev/notes/glossary.md` |
+| 模块背景 | 模块职责、入口/出口、稳定约束和实际代码位置 | `.agents/wtadev/notes/context/<topic>.md` |
+| 决策 | 问题、选择、真实替代方案、取舍、后果和重新考虑条件 | `.agents/wtadev/notes/decisions/<date-topic>.md` |
+| 错误经验 | 症状、触发条件、已核实原因、处理方法及验证证据 | `.agents/wtadev/notes/errors/<topic>.md` |
+| 学习说明 | 按业务路径解释模块如何串联，保留必要术语与证据 | `.agents/wtadev/notes/learning/<topic>.md` |
+| 环境事实 | 环境/实例、部署版本、运行配置、运维命令和凭据引用 | `.agents/wtadev/deploy/<environment>/runbook.md` |
 
-已有对应文档就更新它，并在默认位置只提供必要导航。不要将同一 ADR 同时复制到 change、knowledge 和 deployment；保留一个主要记录，其他位置链接它。
+已有对应文档先按真实位置核对引用；新增知识统一放入 `.agents/wtadev/` 对应分区，避免复制已有正文。明确维护既有记录时直接更新它，并在统一根目录保留必要导航。不要将同一 ADR 同时复制到 change、knowledge 和 deployment；保留一个主要记录，其他位置链接它。
 
 ### 术语不是单纯的同义词列表
 
@@ -57,7 +57,7 @@
 
 根 `AGENTS.md` 保留项目专有的少量高频规则与阅读入口，链接到术语、模块和部署的主要说明；不要把它变成架构教科书。已有内容与当前工作无关时不顺便整份重写。
 
-`.agents/notes/index.md` 是轻量主题导航，表格记录主题、何时读取、文件；不再重复每个决定的状态和正文。没有内容时不创建。文件夹和关键词搜索仍可直接定位资料，不依赖中央索引才能工作。
+`.agents/wtadev/notes/index.md` 是轻量主题导航，表格记录主题、何时读取、文件；不再重复每个决定的状态和正文。没有内容时不创建。文件夹和关键词搜索仍可直接定位资料，不依赖中央索引才能工作。
 
 读取顺序：用户请求 → 相关入口/术语 → 命中的少数笔记 → 当前代码与证据。发现陈旧内容就纠正现役文件或标出待核实范围，不把整库全文塞进上下文。
 

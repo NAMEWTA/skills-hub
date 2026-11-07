@@ -15,7 +15,7 @@ description: 按已明确的规格与垂直切片持续实现功能、重构或�
 
 没有正式 spec 的小任务，先在现有记录中写清目标行为、范围和验收即可。缺失会改变产品目标或数据语义的决定时，只阻塞相关部分，不擅自猜成定案。
 
-采用项目已有记录位置。无约定时使用 `.agents/changes/<YYYY-MM-DD-slug>/`，按需维护 `spec.md`、`plan.md`、`progress.md` 与 `evidence.md`。这些是项目工作记录，不属于技能安装目录。
+新增工作记录统一使用 `.agents/wtadev/changes/<YYYY-MM-DD-slug>/`，按需维护 `spec.md`、`plan.md`、`progress.md` 与 `evidence.md`。这些是项目工作记录，不属于技能安装目录。
 
 ## 从前沿推进
 

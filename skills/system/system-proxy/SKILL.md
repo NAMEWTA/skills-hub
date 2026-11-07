@@ -27,7 +27,7 @@ description: 定位并配置真实主机上的应用代理、Clash/Mihomo、TUN�
 
 ## 记录与完成
 
-记录目标应用/主机、原状态、必要变更、真实命中链、DNS/IPv6 观察、回滚位置和未验证项。可用 [网络记录模板](assets/network.md)，保存在用户现有运维目录或 `.agents/system/<host>/`。
+记录目标应用/主机、原状态、必要变更、真实命中链、DNS/IPv6 观察、回滚位置和未验证项。可用 [网络记录模板](assets/network.md)，新增记录统一保存在 `.agents/wtadev/system/<host>/`。
 
 订阅 URL、controller secret、认证头、Cookie、节点密码及完整有效配置只留在适当的私有配置位置；公共记录保存脱敏证据和凭据引用，不保存秘密值。
 

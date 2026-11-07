@@ -40,11 +40,11 @@
 
 | 类型 | 判定特征 | 默认位置 |
 | --- | --- | --- |
-| 正式 ADR | 难逆转、缺背景难懂、真实取舍同时成立 | `.agents/notes/decisions/` |
-| 领域用语 | 本项目特有概念、用户别名与易混对象 | `.agents/notes/glossary.md` |
-| 模块背景和规则 | 当前稳定机制、责任和业务约束 | `.agents/notes/context/` |
-| 可复用错误与恢复 | 真实症状、触发条件、原因、处置和验证 | `.agents/notes/errors/` |
+| 正式 ADR | 难逆转、缺背景难懂、真实取舍同时成立 | `.agents/wtadev/notes/decisions/` |
+| 领域用语 | 本项目特有概念、用户别名与易混对象 | `.agents/wtadev/notes/glossary.md` |
+| 模块背景和规则 | 当前稳定机制、责任和业务约束 | `.agents/wtadev/notes/context/` |
+| 可复用错误与恢复 | 真实症状、触发条件、原因、处置和验证 | `.agents/wtadev/notes/errors/` |
 | 跨页面设计规则 | 有实现依据的组件与交互约束 | 现有设计说明或模块背景 |
-| 学习导读 | 能帮助接手的完整运行路径 | `.agents/notes/learning/` |
+| 学习导读 | 能帮助接手的完整运行路径 | `.agents/wtadev/notes/learning/` |
 
-已有结构优先，不批量迁移或重命名。暂时性内容留在原需求，结束后随 `.agents/archive/changes/` 或现有历史位置保存；独立复盘保留在自身位置，通过真实链接查阅。
+新增资料统一位于 `.agents/wtadev/`，既有记录先按真实位置查阅引用，不擅自批量迁移或重命名。暂时性内容留在对应需求，明确归档时保存到 `.agents/wtadev/archive/changes/`；迁移须保留内容并修复链接。已有独立复盘按真实位置引用。

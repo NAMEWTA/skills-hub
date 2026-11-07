@@ -52,7 +52,7 @@
 - 预算：`<轮询、结论等待、后续观察、复现、异议、修复>`
 - 可选机器人令牌能力：`<无、文件下载或编辑运维状态>`
 
-从 [配置模板](../assets/configuration.yaml) 和 [功能映射](../assets/feature-map.md) 开始，复制到包外再填写，例如 `.agents/project/issue-automation/`。秘密值只存密钥管理器或环境。
+从 [配置模板](../assets/configuration.yaml) 和 [功能映射](../assets/feature-map.md) 开始，复制到包外再填写，例如 `.agents/wtadev/project/issue-automation/`。秘密值只存密钥管理器或环境。
 
 ## 执行说明
 

@@ -111,26 +111,26 @@
 ## 智能体简报
 
 **类别：** enhancement
-**摘要：** 支持使用 `.agents/notes/context/scope-decisions/` 目录跟踪被拒绝的功能请求
+**摘要：** 支持使用 `.agents/wtadev/notes/context/scope-decisions/` 目录跟踪被拒绝的功能请求
 
 **当前行为：**
 功能请求被拒绝时，以 `wontfix` 标签和评论关闭事项。
 决定和理由没有持久记录。以后遇到类似请求，维护者只能回忆或搜索先前讨论。
 
 **目标行为：**
-被拒绝的功能请求应记在 `.agents/notes/context/scope-decisions/<concept>.md` 文件中，
+被拒绝的功能请求应记在 `.agents/wtadev/notes/context/scope-decisions/<concept>.md` 文件中，
 包含决定、理由，以及所有曾提出该功能的事项链接。
 分诊新事项时，应检查这些文件是否匹配。
 
 **关键接口：**
-- `.agents/notes/context/scope-decisions/` 中的 Markdown 文件格式：每个文件应有
+- `.agents/wtadev/notes/context/scope-decisions/` 中的 Markdown 文件格式：每个文件应有
   `# 概念名称` 标题、`**决定：**` 行、`**原因：**` 行，
   以及列出事项链接的 `**先前请求：**` 列表
-- 分诊流程应尽早读取所有 `.agents/notes/context/scope-decisions/*.md`，
+- 分诊流程应尽早读取所有 `.agents/wtadev/notes/context/scope-decisions/*.md`，
   按概念相似性与新事项匹配
 
 **验收条件：**
-- [ ] 已授权拒绝功能后，在 `.agents/notes/context/scope-decisions/` 中创建或更新文件
+- [ ] 已授权拒绝功能后，在 `.agents/wtadev/notes/context/scope-decisions/` 中创建或更新文件
 - [ ] 文件包含决定、理由和被关闭事项的链接
 - [ ] 已有匹配文件时，把新事项追加到“先前请求”，而不是创建重复文件
 - [ ] 分诊检查已有文件，新事项与先前拒绝匹配时，明确提出该记录
@@ -138,7 +138,7 @@
 **范围之外：**
 - 自动确认匹配，匹配由人确认
 - 重新开启先前被拒绝的功能
-- 缺陷报告，只有增强请求的拒绝才进入 `.agents/notes/context/scope-decisions/`
+- 缺陷报告，只有增强请求的拒绝才进入 `.agents/wtadev/notes/context/scope-decisions/`
 ```
 
 ### 好的智能体简报：PR

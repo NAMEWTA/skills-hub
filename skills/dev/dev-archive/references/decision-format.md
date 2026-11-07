@@ -1,6 +1,6 @@
 # ADR 格式
 
-已有 ADR 目录与命名继续沿用；新项目默认 `.agents/notes/decisions/<YYYY-MM-DD-topic>.md`，无需中央编号。
+已有 ADR 按真实位置引用并保留命名；新增 ADR 统一放在 `.agents/wtadev/notes/decisions/<YYYY-MM-DD-topic>.md`，无需中央编号。
 
 延迟创建决策目录：只有需要第一份 ADR 时才创建。
 

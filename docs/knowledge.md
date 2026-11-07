@@ -8,20 +8,27 @@
 
 ## 资料分区
 
-| 类型 | 默认位置 | 更新方式 |
-| --- | --- | --- |
-| 当前任务 | `.agents/changes/<日期-主题>/` | 随任务更新实际进展，完成后归档 |
-| 简短入口 | `AGENTS.md`、`.agents/notes/index.md` | 指向有关主题和条件，不复制全部知识 |
-| 术语 | `.agents/notes/glossary.md` | 核实同义词、边界、关系及代码映射 |
-| 背景 | `.agents/notes/context/` | 记录非显而易见的约束与由来，事实变化时更新 |
-| 决策 | `.agents/notes/decisions/` | 保留为什么、替代方案和后果；真正反转时建后继 |
-| 错误经验 | `.agents/notes/errors/` | 保留复发识别、根因证据、修复与恢复条件 |
-| 学习导读 | `.agents/notes/learning/` | 指出完整用例、入口、边界和二次开发位置 |
-| 部署现状 | `.agents/deploy/<环境>/runbook.md` | 核对当前实际环境后更新 |
-| 历史发布 | `.agents/deploy/<环境>/releases/` | 保存当时事实，不能当当前环境说明 |
-| 历史归档 | `.agents/archive/changes/`、`.agents/archive/notes/` | 明确历史用途，修复迁移造成的引用 |
+本套技能生成的项目资料统一存放在 `.agents/wtadev/` 下，以下路径均相对于目标项目根目录。技能安装与配套许可分别位于 `.agents/skills/` 和 `.agents/skills-wta-licenses/`。项目根目录的 `AGENTS.md` 继续作为宿主可发现的导航入口，完整知识放在持久化根目录中。
 
-只有出现真实内容才建对应目录。已有 `docs/adr`、`docs/architecture` 或运维手册时建立简短路径映射，继续使用原位置；不复制一套 `.agents` 版本与它竞争。
+| 类型 | 位置 | 更新方式 |
+| --- | --- | --- |
+| 当前任务 | `.agents/wtadev/changes/<日期-主题>/` | 随任务更新实际进展，完成后归档 |
+| 简短入口 | `AGENTS.md`、`.agents/wtadev/notes/index.md` | 指向有关主题和条件，不复制全部知识 |
+| 术语 | `.agents/wtadev/notes/glossary.md` | 核实同义词、边界、关系及代码映射 |
+| 背景 | `.agents/wtadev/notes/context/` | 记录非显而易见的约束与由来，事实变化时更新 |
+| 决策 | `.agents/wtadev/notes/decisions/` | 保留为什么、替代方案和后果；真正反转时建后继 |
+| 错误经验 | `.agents/wtadev/notes/errors/` | 保留复发识别、根因证据、修复与恢复条件 |
+| 学习导读 | `.agents/wtadev/notes/learning/` | 指出完整用例、入口、边界和二次开发位置 |
+| 部署现状 | `.agents/wtadev/deploy/<环境>/runbook.md` | 核对当前实际环境后更新 |
+| 历史发布 | `.agents/wtadev/deploy/<环境>/releases/` | 保存当时事实，不能当当前环境说明 |
+| 历史归档 | `.agents/wtadev/archive/changes/`、`.agents/wtadev/archive/notes/` | 明确历史用途，修复迁移造成的引用 |
+| 项目配置 | `.agents/wtadev/project/` | 保存项目专用的非秘密配置、自动化功能图和分流规则 |
+| 角色配置 | `.agents/wtadev/context/model-roles.md` | 按当前可用工具、模型和用户选择更新 |
+| 系统维护 | `.agents/wtadev/system/<主机标识>/` | 记录对应主机的实际操作与验证，秘密只留安全引用 |
+
+只有出现真实内容才建对应目录。已有 `docs/adr`、`docs/architecture` 或运维手册时，在 `.agents/wtadev/notes/` 的有关主题或入口记录其真实路径，引用有效内容；不复制一套重复正文。用户明确指定其他资料位置时遵循该要求，并在导航中记录。
+
+已有本套技能资料需要迁入新根目录时，按相同职责保留子目录和原文，逐项处理目标位置冲突，并修复 `AGENTS.md`、主题索引、文档入链及代码引用。以新根目录作为后续写入位置，不同时维护两份现行资料。技能安装器只更新技能包，不自动搬动使用者项目中的记录。
 
 ## 证据优先级不等于“代码永远正确”
 

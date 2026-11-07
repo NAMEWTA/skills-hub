@@ -24,7 +24,7 @@
 ## 参考文档
 
 - [实现简报](implementation-brief.md)：如何编写耐久的智能体简报。
-- [范围决定](scope-boundaries.md)：`.agents/notes/context/scope-decisions/` 知识库如何工作。
+- [范围决定](scope-boundaries.md)：`.agents/wtadev/notes/context/scope-decisions/` 知识库如何工作。
 
 ## 角色
 
@@ -72,7 +72,7 @@ PR 在范围内时，把外部 PR 也放进这些组，每行标注 `[PR]` 或 `
 
 ## 分诊指定事项或 PR
 
-1. **收集上下文。** 阅读完整事项或 PR，包括正文、评论、标签、作者和日期；PR 还要阅读差异。解析已有分诊笔记，避免重复询问已解决的问题。使用项目领域词汇表探索代码库，尊重相关区域的 ADR。针对代码库做两项检查：其一，**重复实现检查**，按领域概念而不只按请求措辞搜索已有实现，并报告查过哪里；如果已存在，就是已实现的 `wontfix`，转第 5 步。其二，**先前拒绝检查**，阅读 `.agents/notes/context/scope-decisions/*.md`，指出类似请求。
+1. **收集上下文。** 阅读完整事项或 PR，包括正文、评论、标签、作者和日期；PR 还要阅读差异。解析已有分诊笔记，避免重复询问已解决的问题。使用项目领域词汇表探索代码库，尊重相关区域的 ADR。针对代码库做两项检查：其一，**重复实现检查**，按领域概念而不只按请求措辞搜索已有实现，并报告查过哪里；如果已存在，就是已实现的 `wontfix`，转第 5 步。其二，**先前拒绝检查**，阅读 `.agents/wtadev/notes/context/scope-decisions/*.md`，指出类似请求。
 
 2. **提出建议。** 告诉维护者建议的类别和状态及理由，并简述相关代码库情况，包括是否已经实现。用户明确要求先审建议时等待；已要求处理时，在既有授权内继续。
 
@@ -85,9 +85,9 @@ PR 在范围内时，把外部 PR 也放进这些组，每行标注 `[PR]` 或 `
    - `ready-for-human`：结构与智能体简报相同，但说明为什么不能委派，例如判断取舍、外部权限、设计决定、人工测试。
    - `needs-info`：发布分诊笔记，模板见下文。
    - `wontfix`：关闭事项，评论内容取决于**原因**：
-     - **已经实现**：代码库中已有此变更。指出所在位置；**不要**写入 `.agents/notes/context/scope-decisions/`，该知识库用于记录被拒绝的请求，而不是已实现的功能。
+     - **已经实现**：代码库中已有此变更。指出所在位置；**不要**写入 `.agents/wtadev/notes/context/scope-decisions/`，该知识库用于记录被拒绝的请求，而不是已实现的功能。
      - **拒绝，缺陷**：礼貌解释，然后关闭。
-     - **拒绝，增强**：写入 `.agents/notes/context/scope-decisions/`，在评论中链接它，然后关闭，见 [范围决定](scope-boundaries.md)。
+     - **拒绝，增强**：写入 `.agents/wtadev/notes/context/scope-decisions/`，在评论中链接它，然后关闭，见 [范围决定](scope-boundaries.md)。
    - `needs-triage`：应用角色。如有部分进展，可选择评论。
 
 ## 快速覆盖状态

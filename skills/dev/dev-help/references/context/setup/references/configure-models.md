@@ -47,7 +47,7 @@
 
 ### 5. 写入角色配置
 
-优先沿用项目已有位置，没有时写 `.agents/context/model-roles.md`。按 [角色配置模板](../assets/model-roles.md) 保留预算、能力来源和角色表，不需要 JSON 状态机。
+本套技能新增的项目角色配置统一写入 `.agents/wtadev/context/model-roles.md`。按 [角色配置模板](../assets/model-roles.md) 保留预算、能力来源和角色表，不需要 JSON 状态机。
 
 默认角色覆盖如下，可按项目删减未使用项：
 

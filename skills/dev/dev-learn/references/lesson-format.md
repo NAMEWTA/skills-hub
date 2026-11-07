@@ -40,7 +40,7 @@ flowchart TD
 
 ## 文件与导航
 
-当前需求可写 `.agents/changes/<date-topic>/learning.md`；长期可复用导读写 `.agents/notes/learning/<topic>.md`，或项目已有模块文档。实际需要时才创建目录。可用[模块导读模板](../assets/module-map.md)。
+当前需求可写 `.agents/wtadev/changes/<date-topic>/learning.md`；长期可复用导读统一写 `.agents/wtadev/notes/learning/<topic>.md`，已有模块文档按真实位置引用。实际需要时才创建目录。可用[模块导读模板](../assets/module-map.md)。
 
 同主题优先更新现有当前说明，保留必要版本依据。日记式学习确实需要历史时，可按日期另存，但不强制全局连续编号或永久只追加。导航只写主题、何时读和文件链接，不复制正文。
 
