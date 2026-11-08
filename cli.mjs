@@ -25,7 +25,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     ui.intro(pc.cyan('skills-hub · 按需安装中文技能'));
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
     const skills = createInstaller().catalog();
-    ui.note('直接输入关键词，搜索领域、技能名或中文用途；↑/↓ 定位，Tab 勾选/取消，Enter 确认。\n勾选领域或“全部技能”会选择其全部子项（包括搜索隐藏项），之后可取消个别技能。\n[x] 全选，[-] 部分选中，[ ] 未选；更换搜索词保留选择，Ctrl+U 清空搜索。', '树形搜索多选');
+    ui.note('↑/↓ 页内移动，←/→ 整页翻页，Tab 勾选，Enter 确认。\n直接输入搜索；勾选领域包含其他页和隐藏子项，可再取消个别技能。\n■ 全选 · ◩ 部分选中 · □ 未选；Ctrl+U 清空搜索。', '树形搜索多选');
     const names = await ask(choose({ skills }));
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');

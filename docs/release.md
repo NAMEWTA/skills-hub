@@ -2,7 +2,7 @@
 
 ## 分发内容
 
-包名为 `@namewta/skills-hub`，当前包版本为 `0.1.2`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.2`（树形搜索交互）或 `npx @namewta/skills-hub@0.1.2 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
+包名为 `@namewta/skills-hub`，当前包版本为 `0.1.3`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.3`（分页树形搜索交互）或 `npx @namewta/skills-hub@0.1.3 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
 
 在目标项目根目录运行：
 

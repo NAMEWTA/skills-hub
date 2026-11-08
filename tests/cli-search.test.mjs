@@ -43,12 +43,12 @@ test('search matches domains, leaves and Chinese purposes while retaining parent
   assert.deepEqual(tree.names(), ['dev-spec', 'dev-build']);
 });
 
-async function searchKeys(t, keys) {
+async function searchKeys(t, keys, catalog = skills) {
   const input = new PassThrough(), output = new PassThrough();
   let rendered = '';
   output.on('data', chunk => { rendered += chunk; });
   t.after(() => { input.destroy(); output.destroy(); });
-  const result = treeSelect({ skills, input, output });
+  const result = treeSelect({ skills: catalog, input, output });
   for (const key of keys) {
     input.write(key);
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -60,7 +60,7 @@ const down = '\x1b[B';
 test('real tree prompt mixes a domain with a leaf, excludes a child and retains selections across searches', { timeout: 5000 }, async t => {
   const { values, rendered } = await searchKeys(t, ['dev', '\t', '\x15', 'spec', down, '\t', '\x15', '代理', down, '\t', '\r']);
   assert.deepEqual(values, ['dev-build', 'system-proxy']);
-  assert.ok(rendered.includes('[-]'));
+  assert.ok(rendered.includes('◩'));
 });
 
 test('real tree prompt handles all, deselect child, no matches and full reset', { timeout: 5000 }, async t => {
