@@ -36,5 +36,3 @@
 ## 5. 提供维护循环
 
 指向 [验证维护](verification-maintenance.md)，用于应用变化时保持功能图真实。只有用户询问时才建议频率。
-
-相关执行条件、方案比选、记录与工具回退见 [本地执行支持](execution-support.md)；按任务选择完整方法见 [资料索引](method-index.md)。

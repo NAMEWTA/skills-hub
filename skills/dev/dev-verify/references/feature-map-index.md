@@ -45,5 +45,3 @@
 
 - [创建笔记](feature-map-example.md) 覆盖浏览器与 CLI 创建、取消、持久化、清理。
 - [搜索笔记](feature-search-example.md) 覆盖工具栏、键盘、CLI 搜索，以及匹配、空、清除状态。
-
-相关执行条件、方案比选、记录与工具回退见 [本地执行支持](execution-support.md)；按任务选择完整方法见 [资料索引](method-index.md)。

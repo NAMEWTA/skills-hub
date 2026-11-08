@@ -19,6 +19,6 @@
 根因修复与真实对象证据
 ```
 
-4. 用户拥有的配置保存在安装包之外，例如 `.agents/dev/project/issue-automation/`。适配[配置模板](../assets/configuration.yaml)，选择来源、原生回复或运行输出、手工／事件／定时／webhook。选择 UI 复现时再补[功能映射](../assets/feature-map.md)。
+4. 用户拥有的配置保存在安装包之外，例如 `.agents/dev/project/issue-automation/`。适配[配置模板](../assets/configuration.yaml)，选择来源、原生回复或运行输出、手工／事件／定时／webhook。选择 UI 复现时再补`dev-issue-fix`（功能映射）。
 5. 实际平台使用独立仓库检出时，启用前确保完整包与所有非秘密配置已经存在于其检出版本；本地读取型任务则验证实际路径可读。
 6. 完成新任务的可审查配置，或按原身份更新已有任务。使用已获授权的无害报告或平台测试事件验证原报告身份、可信交接、原生回复与重复投递处理；Slack 还确认每条来源消息都留在原线程内，然后按已有启用授权接入正常流量。

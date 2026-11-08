@@ -85,6 +85,8 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
     if (['fixture', 'asset'].includes(kind) && pairedData.size === 2 && !pairedData.get(originalName).equals(pairedData.get(localizedName))) failures.push(`${identity}: machine fixture or asset must preserve the original bytes`);
     if (directoryStat?.isDirectory() && JSON.stringify(fs.readdirSync(directory).sort()) !== JSON.stringify([originalName, localizedName].sort())) failures.push(`${identity}: expected only the paired files`);
     const destinations = (row.runtime_paths ?? '').split(';').filter(Boolean);
+    const devOwners = new Set(destinations.filter(value => value.startsWith('skills/dev/')).map(value => value.split('/')[2]));
+    if (devOwners.size > 1) failures.push(`${identity}: development method must have one owning skill, not copies in ${[...devOwners].join(', ')}`);
     if (destinations.length) mapped += 1;
     for (const relative of destinations) {
       const target = path.resolve(canonicalRoot, relative);

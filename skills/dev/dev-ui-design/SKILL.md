@@ -15,7 +15,7 @@ description: 为产品页面、组件、设计系统或营销落地页确定视�
 | 建立或补齐设计系统，处理主题、组件状态和视觉一致性 | [设计系统方法](references/design-system.md) |
 | 查间距、圆角、文本样式、双层颜色与语义别名的完整表 | [设计变量参考](references/design-tokens.md) |
 | 营销、下载、活动或等待名单页面 | [完整落地页设计](references/landing-page-guide.md) |
-| 用可运行证据比较尚未确定的方案 | [原型共同约定](references/prototype.md)，再选[界面变体](references/ui-prototype.md)或[逻辑演示](references/logic-prototype.md) |
+| 用可运行证据比较尚未确定的方案 | `dev-build`（原型共同约定），再选`dev-build`（界面变体）或`dev-build`（逻辑演示） |
 | 保存本次设计决定与验收入口 | [设计记录模板](assets/design.md) |
 
 只读取当前分支及它需要的具体规则。页面改造不要求先创建完整设计系统；一般业务页面不加入营销区块。

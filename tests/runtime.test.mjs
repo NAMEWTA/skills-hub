@@ -94,7 +94,7 @@ test("有限模型报告拒绝覆盖现有证据", (t) => {
 test("决策日志追加一次表头，规范多行并转义表格公式", (t) => {
   const folder = temporary(t);
   const file = path.join(folder, "decisions.tsv");
-  const script = "skills/dev/dev-setup/scripts/append-decision-tsv.mjs";
+  const script = "skills/dev/dev-workflow/scripts/append-decision-tsv.mjs";
   for (let i = 0; i < 2; i += 1) {
     const child = run(script, [file, "=formula", "a\tb\nc", "-other", "+reason", "@evidence"]);
     assert.equal(child.status, 0, child.stderr);

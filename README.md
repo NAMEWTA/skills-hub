@@ -10,16 +10,16 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.3
+npx @namewta/skills-hub@0.1.4
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.3
+npm install -g @namewta/skills-hub@0.1.4
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.3 list
-npx @namewta/skills-hub@0.1.3 install --domain dev
-npx @namewta/skills-hub@0.1.3 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.4 list
+npx @namewta/skills-hub@0.1.4 install --domain dev
+npx @namewta/skills-hub@0.1.4 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
@@ -42,7 +42,7 @@ node /path/to/skills-hub/install.mjs install --domain dev
 # 同时安装两个领域
 node /path/to/skills-hub/install.mjs install --domain dev system
 
-# 只安装指定技能，可跨领域
+# 安装指定技能，可跨领域
 node /path/to/skills-hub/install.mjs install --skill dev-grill dev-spec system-proxy
 
 # 预览，不创建任何文件
@@ -58,7 +58,7 @@ Windows、macOS 和 Linux 使用相同的 `node` / `npx` 命令。源码安装�
 node C:\tools\skills-hub\install.mjs install --domain dev
 ```
 
-仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。技能自带所需的中文参考文件、模板与示例，单独安装也能工作。许可完整保留在仓库与 npm 包内；安装器不再向目标项目复制 `.agents/skills-hub-licenses/`，已有目录也不修改或删除。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
+仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。各技能维护自身的中文方法、模板与示例，可以相互调用；同一方法不复制进多个技能。许可完整保留在仓库与 npm 包内；安装器不再向目标项目复制 `.agents/skills-hub-licenses/`，已有目录也不修改或删除。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
 
 安装器只安装文件。Agent 是否自动发现 `.agents/skills/` 取决于所用工具；不支持自动发现的工具可以显式读取对应 `SKILL.md`。这不是后台服务，也不会自动启动开发或部署。
 
@@ -181,7 +181,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 - **全部本地引用**：技能正文、参考、模板和脚本不依赖外部文档，不出现来源项目名、来源作者名或致谢段落。内部资源引用不能越出本技能文件夹。
 - **完整中文内容**：复制并逐份翻译选定的参考文件；已是中文的文件保留原文作为对照。运行版本保留实质步骤、判断标准、例子和表格，再统一到本项目的名称、路径、工具能力与持久化约定。
 - **按需阅读**：完整资料不等于每次全部加载。入口指明何时读取哪份资源，细节留在包内，需要时再读。
-- **独立安装**：其他技能是可选交接对象；没有安装其他技能时，按当前包内方法完成已授权工作，不形成隐含依赖。
+- **协作依赖**：原子技能负责完整方法，工作流按阶段调用。执行时沿用同一任务与证据，不递归复制资源。方法归属与迁移见[开发方法归属](docs/dev-method-ownership.md)。
 - **可核对的完整底稿**：仓库内保存 648 份固定版本原件及逐份本地对照，其中 211 份文档有完整中文底稿、68 份代码与配置保留程序逻辑及技术标识、362 份机器夹具和 7 份原始图片按原字节保存，见 [本地资料索引](materials/README.md)。这些对照文件用于维护，不会安装为技能，也不作为执行指令。
 
 逐文件关系与运行适配规则见 [资源组织](docs/resources.md)。测试驱动、行为回归、真实运行证据与形式化方法都可以使用，按用户目标和风险选择。形式化结果只说明给定假设与属性下的结论，不能代替用户判断意图，也不能代替模型与实际代码的对照。来源特有的目录、外部技能调用、固定模型和复杂工作流网关，也在运行版中改为本项目可独立执行的方法。

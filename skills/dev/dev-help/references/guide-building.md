@@ -28,13 +28,13 @@ $dev-workflow 把解析移到一个模块，行为完全不变。先记录当前
 $dev-workflow 在这个夹具上启动需要 1.8 秒。追踪它，修复测得的原因，展示前后对比。
 ```
 
-每种请求路由到对应手册：[缺陷修复](workflow/references/bug-repair.md)、[功能](workflow/references/feature-delivery.md)、[重构](workflow/references/behavior-preserving-refactor.md)、[性能问题](workflow/references/perf-issue.md)。手册补充你没打出来的步骤：修复前复现，实现前明确数据形状，重组前固定行为，优化前做性能分析。
+每种请求路由到对应手册：`dev-debug`（缺陷修复）、`dev-build`（功能）、`dev-build`（重构）、`dev-benchmark`（性能问题）。手册补充你没打出来的步骤：修复前复现，实现前明确数据形状，重组前固定行为，优化前做性能分析。
 
-持续改进一个数字时，使用[爬坡优化手册](workflow/references/hillclimb.md)。给出指标、目标、资源预算和适合任务的尝试范围，它会冻结测量框架，每次检验一个假设；示例轮数不是所有任务的下限。保留有效改进，撤回其他改动。
+持续改进一个数字时，使用`dev-benchmark`（爬坡优化手册）。给出指标、目标、资源预算和适合任务的尝试范围，它会冻结测量框架，每次检验一个假设；示例轮数不是所有任务的下限。保留有效改进，撤回其他改动。
 
-两份性能手册都会对数字运行 [`$dev-benchmark`](principles/measurement-checklist.md)。性能问题手册核验基线及之后的每个数字，爬坡优化手册在冻结框架之前核验它。[验证并交付](guide-verification.md)说明何时应自己明确调用。
+两份性能手册都会对数字运行 `dev-benchmark`（`$dev-benchmark`）。性能问题手册核验基线及之后的每个数字，爬坡优化手册在冻结框架之前核验它。[验证并交付](guide-verification.md)说明何时应自己明确调用。
 
-有时你希望先知道原因，再决定是否修复。泄漏、空闲 CPU 忙转、视觉故障等现场症状，使用[运行时取证手册](workflow/references/runtime-forensics.md)检测正在运行的进程。已有捕获的性能分析文件时，[轨迹取证手册](workflow/references/trace-forensics.md)读取制品，把热点帧映射到源码。两者都返回诊断，不返回修复：
+有时你希望先知道原因，再决定是否修复。泄漏、空闲 CPU 忙转、视觉故障等现场症状，使用`dev-benchmark`（运行时取证手册）检测正在运行的进程。已有捕获的性能分析文件时，`dev-benchmark`（轨迹取证手册）读取制品，把热点帧映射到源码。两者都返回诊断，不返回修复：
 
 ```text
 $dev-workflow 这是慢启动的 cpuprofile。告诉我时间花在哪里，哪些源码行负责这些耗时。先不要修复。
@@ -52,11 +52,11 @@ $dev-tdd 实现
 
 ## 按名称加载 TypeScript 规则
 
-[`dev-guardrails`](principles/typescript-method.md) 把类型系统原则落实为具体规则：可辨识联合、边界处的 `unknown`、穷尽变体、从 Schema 推导的类型。任务触及 `.ts` 或 `.tsx` 时按需读取；当前宿主是否自动选择技能要以实际机制为准，也可以明确请求使用 `$dev-guardrails`。
+`dev-guardrails`（`dev-guardrails`） 把类型系统原则落实为具体规则：可辨识联合、边界处的 `unknown`、穷尽变体、从 Schema 推导的类型。任务触及 `.ts` 或 `.tsx` 时按需读取；当前宿主是否自动选择技能要以实际机制为准，也可以明确请求使用 `$dev-guardrails`。
 
 ## 提交之前清理
 
-[发起 PR 手册](workflow/references/pull-request-procedure.md)要求差异可审查，并用[清晰写作](workflow/references/clear-writing.md)处理描述与提交文字。检查实际 diff 和项目已有工具，识别无关编辑、确已失效的兼容路径及没有依据的防护；未知约束先调查。当前环境有合适整理工具时可使用，不要求不存在的专有命令，也不以清理为由删除必要注释。
+`dev-deploy`（发起 PR 手册）要求差异可审查，并用`dev-writing`（清晰写作）处理描述与提交文字。检查实际 diff 和项目已有工具，识别无关编辑、确已失效的兼容路径及没有依据的防护；未知约束先调查。当前环境有合适整理工具时可使用，不要求不存在的专有命令，也不以清理为由删除必要注释。
 
 对于文字，`$dev-writing` 接受目标和你额外指定的规则：
 
@@ -74,7 +74,7 @@ $dev-writing 清理 README 的改动，不要长破折号
 $dev-guardrails 检查差异
 ```
 
-[注释审查方法](principles/comment-review.md)与[完整审查提示](principles/comment-reviewer.md)逐条区分重复叙述和必要背景。许可头、公共 API 文档、代码无法表达的理由与外部约束应保留；不了解的约束先调查。自己代码中的异常约定可能提示结构问题，在已有范围内判断能否改进，不因此自动删除说明。若某项约束能由类型、测试或已有检查可靠执行，可将其结构化；在机制真正覆盖之前，以及仍需解释理由时，保留必要文字。
+`dev-guardrails`（注释审查方法）与`dev-guardrails`（完整审查提示）逐条区分重复叙述和必要背景。许可头、公共 API 文档、代码无法表达的理由与外部约束应保留；不了解的约束先调查。自己代码中的异常约定可能提示结构问题，在已有范围内判断能否改进，不因此自动删除说明。若某项约束能由类型、测试或已有检查可靠执行，可将其结构化；在机制真正覆盖之前，以及仍需解释理由时，保留必要文字。
 
 分工保持清楚：差异整理处理已经证实的代码冗余，`$dev-writing` 改善文字，`$dev-guardrails` 在适用时审查约束和注释。每种方式都依靠实际证据和当前能力，不自动扩大清理范围。
 

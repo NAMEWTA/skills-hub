@@ -22,13 +22,13 @@ description: 从用户明确提供或授权的项目记录中提炼稳定工程�
 | 目标 | 本地完整方法 |
 | --- | --- |
 | 形成个人工作风格 | [偏好提炼](references/derive-preferences.md) 与 [最小技能模板](assets/personal-mode.md) |
-| 从本次使用发现个人方式需要怎样调整 | [会话反思](references/reflection-method.md) |
-| 判断问题是否更适合由工程结构预防 | [重复纠正治理](references/recurring-corrections.md)，需要代码约束时以 `dev-guardrails` 为主 |
+| 从本次使用发现个人方式需要怎样调整 | `dev-archive`（会话反思） |
+| 判断问题是否更适合由工程结构预防 | `dev-guardrails`（重复纠正治理），需要代码约束时以 `dev-guardrails` 为主 |
 | 起草或修订这份个人模式技能 | [技能编写](references/authoring-a-skill.md) 与 [本地结构规则](references/skill-authoring.md) |
-| 判断个人模式变化是否改善行为 | [独立评测](references/eval.md) |
-| 了解这些方法如何组合 | [完整工作方式演进指南](references/evolve-workflow.md) |
+| 判断个人模式变化是否改善行为 | `dev-review`（独立评测） |
+| 了解这些方法如何组合 | `dev-help`（完整工作方式演进指南） |
 
-本地方法保留完整，单独安装时仍可完成已明确授权的相关改进。通用工作流技能编写由 `dev-workflow` 的技能维护流程负责；专用应用验证与形式化验证分别以 `dev-verify`、`dev-formal-verify` 为主。
+本地保留完整的偏好提炼与技能编写方法；专用应用验证与形式化验证分别以 `dev-verify`、`dev-formal-verify` 为主。
 
 ## 持久化与交付
 
@@ -36,4 +36,4 @@ description: 从用户明确提供或授权的项目记录中提炼稳定工程�
 
 技能正文只放稳定、非默认、会改变决定的约定。项目当前状态、临时进度与具体业务事实留在项目资料中，引用代码或真实证据。规则应能说明何时适用、做什么，以及必要例外。
 
-使用 [清晰写作规范](references/clear-writing.md) 逐句收紧。用户已要求修订或创建时完成该范围的文件工作；只要求分析时交付可审查草稿。提交、推送和 PR 沿用用户已授权方式，不额外加固定审批或强制 PR。
+使用 `dev-writing`（清晰写作规范） 逐句收紧。用户已要求修订或创建时完成该范围的文件工作；只要求分析时交付可审查草稿。提交、推送和 PR 沿用用户已授权方式，不额外加固定审批或强制 PR。

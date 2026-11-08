@@ -49,4 +49,4 @@ description: 在交付复盘、归档需求或整理项目记忆时，核对代�
 
 说明核对了哪些需求和知识，哪些保持现役、合并、修正、归档或删除，为什么；给出关键新链接、仍需处理的问题和实际做过的检查。保留有争议的取舍及证据，不用“全部整理完毕”掩盖未检查的范围。
 
-模板按需选用：[决策](assets/decision.md)、[背景](assets/context.md)、[错误经验](assets/error.md)。完整规范、复盘提示词和示例按需从[材料导航](references/index.md)读取。本技能单独安装即可使用。
+模板按需选用：[决策](assets/decision.md)、[背景](assets/context.md)、[错误经验](assets/error.md)。完整规范、复盘提示词和示例按需从[材料导航](references/index.md)读取。

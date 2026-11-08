@@ -60,7 +60,7 @@ description: 把开发规格、大需求或迁移拆成可独立验收的垂直�
 
 实施时工作前沿是“所有阻塞已满足的切片”。完成一项就更新依赖事实，继续推进可开始的下一项。不用预设状态枚举或复杂 Schema。
 
-本技能交付一张可执行的工作图。可选接 `dev-build`；单独安装时也能完成全部计划工作。
+本技能交付一张可执行的工作图。实施授权已明确时调用 `dev-build`，传递计划与验收条件。
 
 ## 本地完整方法
 
@@ -68,12 +68,12 @@ description: 把开发规格、大需求或迁移拆成可独立验收的垂直�
 | --- | --- |
 | 已有规格，需要拆成端到端切片 | [完整切片方法](references/vertical-slicing.md) |
 | 大需求尚看不清路线 | [决策地图](references/uncertainty-map.md)，区分已知问题、尚未明确和范围之外 |
-| 组织实现分工与共享写入边界 | [功能执行](references/feature-execution.md) |
+| 组织实现分工与共享写入边界 | `dev-build`（功能执行） |
 | 跨阶段或多个 PR，需要实施与证据清单 | [多阶段完整计划模板](references/multiphase-plan.md)，按规模保留适用部分 |
 | 没有外部 tracker | [本地工作记录](references/local-work-records.md) |
-| 还缺产品选择或准确术语 | [决策访谈](references/decision-interview.md)、[领域建模](references/domain-modeling.md)、[词汇表格式](references/glossary-format.md) |
-| 需要记录持久取舍 | [决定记录格式](references/decision-format.md) |
-| 未知问题能通过实际运行解决 | [原型方法](references/prototype-method.md)、[逻辑原型](references/logic-prototype.md)、[界面原型](references/ui-prototype.md) |
+| 还缺产品选择或准确术语 | `dev-grill`（决策访谈）、`dev-architecture`（领域建模）、`dev-archive`（词汇表格式） |
+| 需要记录持久取舍 | `dev-archive`（决定记录格式） |
+| 未知问题能通过实际运行解决 | `dev-build`（原型方法）、`dev-build`（逻辑原型）、`dev-build`（界面原型） |
 | 未知问题依赖技术资料或代码事实 | [研究方法](references/research-method.md) |
 
-以上资源均为本包文件。复杂模板提供完整可选覆盖面，不要求小任务机械填满全部栏目。
+本包资源使用链接，其他方法按技能名调用。复杂模板提供完整可选覆盖面，不要求小任务机械填满全部栏目。

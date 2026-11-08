@@ -2,7 +2,7 @@
 
 > 用于准备可审查的任务提示词。只有用户已经授权对应触发、持续运行和外部写入，且实际调度器或自动化连接器确认能够读取这些文件后，才创建或更新任务；已有授权继续有效。平台要求的审批由平台完成。
 
-本次运行读取并遵循 `.agents/skills/dev-issue-fix/references/source-adapter.md` 与 `.agents/skills/dev-issue-fix/references/fix-method.md`，两者都必须在实际运行环境中可读。
+本次运行读取并遵循 `.agents/skills/dev-issue-setup/references/source-adapter.md` 与 `.agents/skills/dev-issue-fix/references/fix-method.md`，两者都必须在实际运行环境中可读。
 
 配置来源。只有实际运行环境确认能够读取同一目标仓库中这个稳定路径时才包含它；隔离检出需要文件已在指定版本中。否则把非秘密配置值完整转述到任务提示，并说明原位置。绝不引用只在编写会话可见的缓存路径：
 

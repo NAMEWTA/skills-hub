@@ -5,7 +5,7 @@ description: 对指定的问题报告做缺陷分类、查重、分流与可信�
 
 # 问题报告分诊
 
-读取指定来源的整份报告、附件和已有讨论，分清缺陷、性能、功能请求、提问反馈或转交。先追踪相关代码与历史，再决定分流和工单；不在本阶段运行复现或修复。完整执行[分诊方法](references/triage-method.md)的十步，来源身份与交付方式按[来源适配](references/source-adapter.md)核对。
+读取指定来源的整份报告、附件和已有讨论，分清缺陷、性能、功能请求、提问反馈或转交。先追踪相关代码与历史，再决定分流和工单；不在本阶段运行复现或修复。完整执行[分诊方法](references/triage-method.md)的十步，来源身份与交付方式按`dev-issue-setup`（来源适配）核对。
 
 ## 确定输入和授权
 
@@ -28,18 +28,18 @@ description: 对指定的问题报告做缺陷分类、查重、分流与可信�
 
 ## 配置和资源
 
-从 [配置模板](assets/configuration.yaml) 与 [分流映射](assets/routing.md) 创建包外项目副本。只要求本次分诊实际使用的字段和能力；未启用复现流程时，不因未填写 UI 控制项阻塞只读分诊。新增配置统一保存在 `.agents/dev/project/issue-automation/`，已有配置先按真实位置读取与引用。
+从 `dev-issue-setup`（配置模板） 与 [分流映射](assets/routing.md) 创建包外项目副本。只要求本次分诊实际使用的字段和能力；未启用复现流程时，不因未填写 UI 控制项阻塞只读分诊。新增配置统一保存在 `.agents/dev/project/issue-automation/`，已有配置先按真实位置读取与引用。
 
 后台任务提示词使用 [完整分诊模板](assets/triage-prompt.md)。只有实际工具支持所需触发、读取稳定操作文件，且用户已经授权持续运行时，才能配置或启用任务；否则明确交付的是手动方法或草稿。
 
-- 追踪运行机制：[模块运行追踪](references/module-exploration.md)。
-- 查回归或防御代码的理由：[历史依据调查](references/decision-investigation.md)。
-- 保持单一发帖者与不可变坐标：[共享状态](references/shared-state.md)。
-- 写清结论：[阅读负担](references/reader-load.md) 与 [清晰写作](references/clear-writing.md)。
+- 追踪运行机制：`dev-learn`（模块运行追踪）。
+- 查回归或防御代码的理由：`dev-why`（历史依据调查）。
+- 保持单一发帖者与不可变坐标：`dev-guardrails`（共享状态）。
+- 写清结论：`dev-guardrails`（阅读负担） 与 `dev-writing`（清晰写作）。
 - 完整支持资料：[本地资料索引](references/method-index.md)。
 
 ## 交付和持久化
 
 给出分类、证据、追踪器动作或未执行原因、最终结论和真实发布结果。不把草稿说成已发送，不把相关问题说成已确认重复。重复运行先查来源链接和既有结论，避免重复工单与回复。
 
-把本次需要恢复的事实统一放 `.agents/dev/changes/<日期-报告>/evidence.md`，记录实际源引用、判断、动作和剩余缺口。配置和知识不写回技能包；秘密不进入文档。工具、授权和轻量记录约定见 [本地执行支持](references/execution-support.md)。
+把本次需要恢复的事实统一放 `.agents/dev/changes/<日期-报告>/evidence.md`，记录实际源引用、判断、动作和剩余缺口。配置和知识不写回技能包；秘密不进入文档。工具、授权和轻量记录约定见 `dev-workflow`（本地执行支持）。

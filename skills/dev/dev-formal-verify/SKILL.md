@@ -40,7 +40,7 @@ node "$SKILL_DIR/scripts/demo.mjs"
 node "$SKILL_DIR/scripts/check-model.mjs" /absolute/project/model.mjs --max-states 1000
 ```
 
-第二条命令的 `1000` 只是命令格式示例；实际预算从本次模型的规模和资源限制决定。达到预算而未穷尽时，报告未完成。图示可选使用已安装的 `dev-statechart`，本技能的执行与解释不依赖它。
+第二条命令的 `1000` 只是命令格式示例；实际预算从本次模型的规模和资源限制决定。达到预算而未穷尽时，报告未完成。图示调用 `dev-statechart`，复用已检查模型，不重新创建另一套模型。
 
 ## 交付
 

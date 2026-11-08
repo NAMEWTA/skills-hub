@@ -12,11 +12,11 @@ description: 初始化或维护项目的报告来源、触发与监控方式、�
 ## 完成配置
 
 1. 确定目标仓库和现有任务身份，把完整包无损安装到 `.agents/skills/dev-issue-setup/`。保护用户本地编辑、仅目标存在的文件和包外配置。
-2. 从 [配置模板](assets/configuration.yaml)、[功能图](assets/feature-map.md) 和 [分流图](assets/routing.md) 创建项目副本。新增配置统一使用 `.agents/dev/project/issue-automation/`；已有配置按真实位置查阅引用。
+2. 从 [配置模板](assets/configuration.yaml)、`dev-issue-fix`（功能图） 和 `dev-issue-triage`（分流图） 创建项目副本。新增配置统一使用 `.agents/dev/project/issue-automation/`；已有配置按真实位置查阅引用。
 3. 先保存用户的目标、完整处理方法与输出要求，再填写来源范围、稳定报告身份和实际触发器；按所选阶段补分诊、追踪器、仓库、控制及预算。先读现有事实，只问关键缺失决定。
 4. 核对真实读取、原报告回复或运行输出、附件、追踪器去重与补偿。来源本身已是目标追踪器问题时复用它，不另建副本。秘密只存密钥管理器或环境。
-5. 选择 UI 复现时，按 [控制契约](references/control-adapter.md) 执行九步无害检查。只配置分诊或汇总时不要求 UI、录像或 PR 能力。
-6. 按实际目标准备 [收集汇总提示词](assets/collection-prompt.md)、[分诊提示词](assets/triage-prompt.md) 或 [修复提示词](assets/fix-prompt.md)，不自动建立其余任务；已有任务按原标识更新。
+5. 选择 UI 复现时，按 `dev-issue-fix`（控制契约） 执行九步无害检查。只配置分诊或汇总时不要求 UI、录像或 PR 能力。
+6. 按实际目标准备 [收集汇总提示词](assets/collection-prompt.md)、`dev-issue-triage`（分诊提示词） 或 `dev-issue-fix`（修复提示词），不自动建立其余任务；已有任务按原标识更新。
 7. 核对运行环境能读取完整本地操作文件与非秘密配置。独立仓库检出需要它们位于实际使用的分支或版本，不能只在当前会话存在。
 8. 执行完整方法的来源交接与重复投递检查；持续任务还核对过滤、游标和停止条件。通过且启用已经获准后，才接入正常流量。
 
@@ -30,13 +30,13 @@ description: 初始化或维护项目的报告来源、触发与监控方式、�
 
 ## 运行方法
 
-- [完整分诊方法](references/triage-method.md)：冻结坐标、完整附件、原因追踪、分类、分流、追踪器、去重、新单条件、一次结论和后续窗口。
-- [完整复现修复方法](references/fix-method.md)：可信分诊、归属、真实 UI 双次复现、媒体证据、已有修复验证、根因修复、前后证明、草稿 PR 和清理。
-- [验证已有修复](references/verify-existing-fix.md)：隔离基线和修补版本，明确已确认、修复不足与无法下结论。
+- `dev-issue-triage`（完整分诊方法）：冻结坐标、完整附件、原因追踪、分类、分流、追踪器、去重、新单条件、一次结论和后续窗口。
+- `dev-issue-fix`（完整复现修复方法）：可信分诊、归属、真实 UI 双次复现、媒体证据、已有修复验证、根因修复、前后证明、草稿 PR 和清理。
+- `dev-issue-fix`（验证已有修复）：隔离基线和修补版本，明确已确认、修复不足与无法下结论。
 - [全部本地支持资料](references/method-index.md)：代码理解、历史、测试、写作和执行原则。
 
 ## 交付和维护
 
 交付配置路径、来源和触发选择、完整提示词、实际任务标识、适配器及交接验证、停止方式和仍受阻的能力。没有真实工具返回或回读证明时，不宣称任务已经运行。
 
-项目配置和功能图独立于技能包，更新包时保留。运行记录默认用 `.agents/dev/changes/<日期-任务>/evidence.md`，长期理由与术语沿用 `.agents/dev/notes/`。只记录恢复所需事实、证据和决定，不引入复杂 Schema、固定状态迁移或逐次工具调用台账。通用约定见 [本地执行支持](references/execution-support.md)。
+项目配置和功能图独立于技能包，更新包时保留。运行记录默认用 `.agents/dev/changes/<日期-任务>/evidence.md`，长期理由与术语沿用 `.agents/dev/notes/`。只记录恢复所需事实、证据和决定，不引入复杂 Schema、固定状态迁移或逐次工具调用台账。通用约定见 `dev-workflow`（本地执行支持）。

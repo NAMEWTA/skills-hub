@@ -196,6 +196,21 @@ export function unreachableMarkdown(root, graph) {
   return new Set(filesUnder(root).filter((filename) => filename.endsWith('.md')).map(canonicalPath).filter((filename) => !visited.has(filename)));
 }
 
+export function duplicateResourceIssues(skills) {
+  const seen = new Map();
+  const failures = [];
+  for (const skill of skills.filter(item => item.domain === 'dev')) {
+    for (const filename of regularFiles(skill.source)) {
+      if (!/\.(?:md|mjs|js)$/.test(filename) || path.basename(filename) === 'SKILL.md') continue;
+      const content = readUtf8(filename).replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').replace(/\s+/g, ' ').trim();
+      if (content.length < 300) continue;
+      if (seen.has(content)) failures.push(`${filename}: duplicate development resource; keep one owner and call it: ${seen.get(content)}`);
+      else seen.set(content, filename);
+    }
+  }
+  return failures;
+}
+
 export function check(root = repositoryRoot, { output = console.log } = {}) {
   const failures = [];
   let skills;
@@ -209,7 +224,7 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
   if (fs.existsSync(projectLicense) && !fs.readFileSync(projectLicense).equals(fs.readFileSync(path.join(root, 'LICENSE')))) {
     failures.push('licenses/PROJECT-LICENSE.txt must preserve the root project license');
   }
-  failures.push(...checkScriptFormats(root));
+  failures.push(...checkScriptFormats(root), ...duplicateResourceIssues(skills));
   for (const skill of skills) {
     failures.push(...checkSkillMetadata(skill, root));
     for (const filename of regularFiles(skill.source)) {
@@ -249,7 +264,7 @@ export function main(argv = process.argv.slice(2)) {
   try {
     const failures = check(root);
     for (const failure of failures) console.error(`ERROR: ${failure}`);
-    if (!failures.length) console.log('Independent packages, local resources, Chinese entry points and license bundle passed.');
+    if (!failures.length) console.log('Skill packages, unique methods, local resources and license bundle passed.');
     return Number(failures.length > 0);
   } catch (error) { console.error(`ERROR: ${error.message}`); return 1; }
 }

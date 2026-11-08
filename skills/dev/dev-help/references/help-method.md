@@ -2,7 +2,7 @@
 
 回答用户关于本项目技能的问题，给出一个可直接使用的提示词，并链接到包内完整材料。独立的“怎么做”问题只需解释；用户已经要求执行时继续已授权目标，不要求其再发一遍相同请求。既有任务中的提问也不自动暂停原任务。
 
-要求执行工作，例如“用 本项目技能 修复这个 bug”，不是帮助问题。读取 [`dev-workflow`](workflow/entry.md)，按它执行，并按实际宿主能力说明如何让约定持续生效。
+要求执行工作，例如“用 本项目技能 修复这个 bug”，不是帮助问题。读取 `dev-workflow`（`dev-workflow`），按它执行，并按实际宿主能力说明如何让约定持续生效。
 
 本文将问题映射到包含答案的技能与指南页；细节由这些文件负责。在引用前读取对应文件，与本映射冲突时以实际文件为准。向用户提供当前安装包内可打开的相对路径；所有方法与指南都保存在本包，不用外部页面代替内容。
 
@@ -59,42 +59,42 @@
 
 | 用户想做什么 | 技能 |
 |---|---|
-| 协调跨阶段目标、恢复阶段未明的任务或完成约定交付 | [`$dev-workflow`](workflow/entry.md) |
+| 协调跨阶段目标、恢复阶段未明的任务或完成约定交付 | `dev-workflow`（`$dev-workflow`） |
 | 开始前确认代理理解目标与问题 | [`$dev-intake`](capabilities.md) |
 | 发送前深化提示词而不扩大范围：专业人士会增加什么、原始材料与方法是什么、外部如何核验；只返回提示词而不执行 | [`$dev-sharpen`](capabilities.md) |
-| 理解代码现在如何工作、新代码应放在哪里 | [`$dev-learn`](workflow/references/module-exploration.md) |
-| 理解代码为何如此组织、某个数字从哪里来 | [`$dev-why`](workflow/references/decision-investigation.md) |
+| 理解代码现在如何工作、新代码应放在哪里 | `dev-learn`（`$dev-learn`） |
+| 理解代码为何如此组织、某个数字从哪里来 | `dev-why`（`$dev-why`） |
 | 用简单语言理解改动或子系统 | [`$dev-learn`](capabilities.md) |
-| 回顾自己指定时间或话题的工作进展 | [`$dev-status`](capabilities.md)，跨会话资料按[背景恢复方法](workflow/references/context-recall.md)核对 |
+| 回顾自己指定时间或话题的工作进展 | [`$dev-status`](capabilities.md)，跨会话资料按`dev-learn`（背景恢复方法）核对 |
 | 用通俗文字与小图回顾本对话自上条消息以来的变化，列全等待自己决定的事项，并让回复本身足以决策 | [`$dev-status`](capabilities.md) |
 | 将 `$dev-status` 回顾做成短字幕幻灯视频，并在下方用文字列出等待决定的事项 | [`$dev-status`](capabilities.md) |
-| 知道一个小 diff 可能在自身之外破坏什么 | [`$dev-review`](workflow/references/change-impact.md) |
-| 写跨函数边界代码前确定类型与模块形状 | [`$dev-architecture`](workflow/references/architecture-method.md) |
+| 知道一个小 diff 可能在自身之外破坏什么 | `dev-review`（`$dev-review`） |
+| 写跨函数边界代码前确定类型与模块形状 | `dev-architecture`（`$dev-architecture`） |
 | 对同一简报尝试多种方案，融合成最佳结果 | [`$dev-parallel`](capabilities.md) |
-| 通过实际可用的隔离执行者并行检查切片，或让执行者竞速 | [`$dev-parallel`](workflow/references/parallel-coverage.md) |
-| 让不同模型审查 diff 并尝试破坏它 | [`$dev-review`](workflow/references/adversarial-review.md) |
+| 通过实际可用的隔离执行者并行检查切片，或让执行者竞速 | `dev-parallel`（`$dev-parallel`） |
+| 让不同模型审查 diff 并尝试破坏它 | `dev-review`（`$dev-review`） |
 | 存在廉价本地测试时，测试先行修复 bug | [`$dev-tdd`](capabilities.md) |
-| 为 `.ts` 或 `.tsx` 工作应用 TypeScript 规则 | [`$dev-guardrails`](principles/typescript-method.md) |
-| 审查前由没写过这些注释的审查者评估并清理注释 | [`$dev-guardrails`](principles/comment-review.md) |
-| 去除文字中的 AI 痕迹 | [`$dev-writing`](workflow/references/clear-writing.md) |
+| 为 `.ts` 或 `.tsx` 工作应用 TypeScript 规则 | `dev-guardrails`（`$dev-guardrails`） |
+| 审查前由没写过这些注释的审查者评估并清理注释 | `dev-guardrails`（`$dev-guardrails`） |
+| 去除文字中的 AI 痕迹 | `dev-writing`（`$dev-writing`） |
 | 按标准写文档、RFC、README、PR 描述或提交信息 | [`$dev-writing`](capabilities.md) |
 | 用通俗语言重新听一遍上条回复 | [`$dev-learn`](capabilities.md) |
-| 给代理脚本化操作应用并证明行为的方法 | [`$dev-verify`](workflow/references/verification-authoring.md) |
-| 让验证技能及其功能图重新符合应用 | [`$dev-verify`](workflow/references/verification-maintenance.md) |
+| 给代理脚本化操作应用并证明行为的方法 | `dev-verify`（`$dev-verify`） |
+| 让验证技能及其功能图重新符合应用 | `dev-verify`（`$dev-verify`） |
 | 形式化验证竞态、不变量及测试难以触达的属性 | [`$dev-formal-verify`](capabilities.md) |
 | 覆盖代码变化后同步形式化验证，并判断失败属于漂移还是缺陷 | [`$dev-formal-verify`](capabilities.md) |
 | 向产品经理或设计师展示经 TLA+ 模型检查的用户行为图，以及到达每个违规状态的最短路径 | [`$dev-statechart`](capabilities.md) |
-| 报告或依据性能数字行动前审查它 | [`$dev-benchmark`](principles/measurement-checklist.md) |
-| 执行大型、跨领域或需要事后审计的变更 | [`$dev-workflow`](workflow/entry.md)，无合适现成流程时用[定制执行](workflow/references/custom-workflow.md) |
-| 执行中保存决定日志，随后复核 | [`$dev-workflow`](workflow/references/decision-trail.md)；性能实验记录由 `$dev-benchmark` 负责 |
+| 报告或依据性能数字行动前审查它 | `dev-benchmark`（`$dev-benchmark`） |
+| 执行大型、跨领域或需要事后审计的变更 | `dev-workflow`（`$dev-workflow`），无合适现成流程时用`dev-workflow`（定制执行） |
+| 执行中保存决定日志，随后复核 | `dev-workflow`（`$dev-workflow`）；性能实验记录由 `$dev-benchmark` 负责 |
 | 为每个角色选择模型和推理预算 | [`$dev-setup`](capabilities.md) |
 | 将自己的工作习惯变成个人模式技能 | [`$dev-personalize`](capabilities.md) |
-| 从完成任务中提炼经验 | [完整反思方法](workflow/references/reflection-method.md)；项目知识归 `$dev-archive`，个人方式归 `$dev-personalize`，结构约束归 `$dev-guardrails` |
-| 阻止代理在本仓库重复同样错误 | [`$dev-guardrails`](principles/recurring-corrections.md) |
-| 构建按钮连接已支持 webhook 的操作页面 | `$dev-build`，使用本包[操作界面方法](context/personal/references/action-ui.md) |
+| 从完成任务中提炼经验 | `dev-archive`（完整反思方法）；项目知识归 `$dev-archive`，个人方式归 `$dev-personalize`，结构约束归 `$dev-guardrails` |
+| 阻止代理在本仓库重复同样错误 | `dev-guardrails`（`$dev-guardrails`） |
+| 构建按钮连接已支持 webhook 的操作页面 | `$dev-build`，使用`dev-build`（操作界面方法） |
 | 熟悉 本项目技能 的使用方式 | `$dev-help` |
 
-其他已安装技能不在表中时，读取其 frontmatter 并按 description 选择。完整原则见本包[原则指南](principles/guide-principles.md)。
+其他已安装技能不在表中时，读取其 frontmatter 并按 description 选择。完整原则见本包[原则指南](guide-principles.md)。
 
 容易混淆的选择：
 
@@ -108,7 +108,7 @@
 技能包不自动提供宿主能力：
 
 - 差异整理使用实际 diff 与项目检查；UI 或终端操作使用当前可用驱动，不要求某个专有插件名。
-- 持续唤醒和技能创建使用环境真正提供的工具；没有时使用本地执行、恢复记录和[技能结构规则](context/personal/references/skill-authoring.md)。
+- 持续唤醒和技能创建使用环境真正提供的工具；没有时使用本地执行、恢复记录和`dev-personalize`（技能结构规则）。
 - 项目编排是开发执行中的方法，不假定存在同名斜杠命令。菜单里的其他命令应读取实际说明后再用。
 
 ## 操作流程与原则
@@ -122,11 +122,11 @@
 - “full autopilot on this queue”运行 Autopilot-full；“autopilot, don't merge”运行 Autopilot-stack。
 - “run the eval playbook”运行 Eval。
 
-相近名称可能被宿主匹配到其他技能，执行前应读取实际内容并核对目标。[`dev-workflow`](workflow/entry.md) 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](guide-verification.md) 说明开启、跟进和落地 PR。
+相近名称可能被宿主匹配到其他技能，执行前应读取实际内容并核对目标。`dev-workflow`（`dev-workflow`） 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](guide-verification.md) 说明开启、跟进和落地 PR。
 
-本项目有按任务选择的规格、计划与实施方法；宿主真实提供计划模式时可配合使用。跨阶段或堆叠 PR 的工作，要求 `$dev-workflow` 制订计划会运行[多阶段计划流程](workflow/references/multi-phase-plan.md)，只写计划而不实施。设计问题先通过 Prototype 流程或 `$dev-architecture` 用代码厘清。
+本项目有按任务选择的规格、计划与实施方法；宿主真实提供计划模式时可配合使用。跨阶段或堆叠 PR 的工作，要求 `$dev-workflow` 制订计划会运行`dev-plan`（多阶段计划流程），只写计划而不实施。设计问题先通过 Prototype 流程或 `$dev-architecture` 用代码厘清。
 
-原则以本包完整参考提供，按任务需要读取；在它改变决定时说明实际作用，不要求每轮机械引用全部原则。用户通常不直接调用，而是用名称引导，例如“apply prove it works. show me the real output.”。完整原则可以通过本包对应资料按需读取。[指南第 8 页](guide-principles.md) 列出了这些原则。
+原则全文由 `dev-guardrails` 维护，按任务需要调用；在它改变决定时说明实际作用，不要求每轮机械引用全部原则。用户通常用名称引导，例如“apply prove it works. show me the real output.”，执行者再读取该原则的完整方法。[指南第 8 页](guide-principles.md) 列出了这些原则。
 
 ## 修正偏离目标的执行
 
@@ -146,7 +146,7 @@
 ## 将 本项目技能 变成自己的工作方式
 
 - [`$dev-personalize`](capabilities.md) 从用户明确提供或授权的项目记录起草个人模式技能，与 `$dev-workflow` 一起使用。
-- 一次会话后按[反思方法](workflow/references/reflection-method.md)提炼有证据的经验，按项目知识、个人方式或结构约束选择归属；只有已授权修改的对象才实际编辑。
+- 一次会话后按`dev-archive`（反思方法）提炼有证据的经验，按项目知识、个人方式或结构约束选择归属；只有已授权修改的对象才实际编辑。
 - `$dev-workflow write a skill for <workflow>` 运行技能编写流程；eval 流程盲测技能变化。
 - 技能修正与产品功能的范围分别说明；只有项目流程或用户目标需要时开 PR，直接推送授权不强制改成 PR。
 

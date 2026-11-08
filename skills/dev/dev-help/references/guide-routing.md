@@ -24,7 +24,7 @@ flowchart TD
     J --> K
 ```
 
-图中是常见路径。还有围绕指标持续优化、诊断运行时症状和已捕获轨迹、原型、视觉一致性、编写与评估技能、自主执行、开 PR、将 PR 或堆叠推进到可合并、落地已验证堆叠、自动推进 PR 队列或堆叠、协调项目级计划、会话接续、安全暂停、多阶段计划和工作树清理等流程。完整集合在[操作流程目录](workflow/references/method-index.md)。
+图中是常见路径。还有围绕指标持续优化、诊断运行时症状和已捕获轨迹、原型、视觉一致性、编写与评估技能、自主执行、开 PR、将 PR 或堆叠推进到可合并、落地已验证堆叠、自动推进 PR 队列或堆叠、协调项目级计划、会话接续、安全暂停、多阶段计划和工作树清理等流程。完整集合在`dev-workflow`（操作流程目录）。
 
 ## 说目标，不说仪式
 
@@ -111,7 +111,7 @@ $dev-workflow new task。查清为什么退出登录后缓存条目还存在，�
 $dev-workflow new task。从 <基线> 新建分支和 worktree，再在那里移植解析器改动。
 ```
 
-每个任务拥有独立分支和 worktree 可以隔离文件修改；端口、数据库、缓存和其他共享状态仍需单独处理。工作树消耗磁盘和机器资源，所以笔记本一次只能运行少量。[开启 PR 流程](context/setup/references/pull-request-procedure.md)按实际并发和当前工作树判断是否需要隔离，保留用户现有修改；基线或位置有特殊要求时明确写出。
+每个任务拥有独立分支和 worktree 可以隔离文件修改；端口、数据库、缓存和其他共享状态仍需单独处理。工作树消耗磁盘和机器资源，所以笔记本一次只能运行少量。`dev-deploy`（开启 PR 流程）按实际并发和当前工作树判断是否需要隔离，保留用户现有修改；基线或位置有特殊要求时明确写出。
 
 工作树会积累。磁盘紧张时可以问：
 
@@ -119,7 +119,7 @@ $dev-workflow new task。从 <基线> 新建分支和 worktree，再在那里移
 $dev-workflow 什么在占用磁盘？清理那些有证据可以安全清理的 worktree。
 ```
 
-[工作树清理流程](workflow/references/worktree-cleanup.md) 按合并状态、未提交工作及仍在使用它的对话分类。只删除证据允许的对象，包含未提交工作的对象会停下来等你决定。
+`dev-deploy`（工作树清理流程） 按合并状态、未提交工作及仍在使用它的对话分类。只删除证据允许的对象，包含未提交工作的对象会停下来等你决定。
 
 ## 让工作继续运行
 
@@ -129,10 +129,10 @@ $dev-workflow 什么在占用磁盘？清理那些有证据可以安全清理的
 $dev-workflow 我要离开一会儿。一直做，直到迁移检查显示旧调用者为零。记录你的决定。
 ```
 
-这类任务由 [`$dev-workflow`](workflow/entry.md)持续负责，已有流程适用就复用；否则使用[定制执行方法](workflow/references/custom-workflow.md)，按[决策证据方法](workflow/references/decision-trail.md)保存与复核记录。[睡觉时继续工作](guide-autonomous.md) 介绍完整的夜间执行约定。
+这类任务由 `dev-workflow`（`$dev-workflow`）持续负责，已有流程适用就复用；否则使用`dev-workflow`（定制执行方法），按`dev-workflow`（决策证据方法）保存与复核记录。[睡觉时继续工作](guide-autonomous.md) 介绍完整的夜间执行约定。
 
 **常见问题：** 不要在提示词里枚举技能，例如“先 $dev-learn，再 $dev-architecture，再 $dev-parallel”。流程已经排好顺序，手工序列通常会重排或遗漏原本保留的步骤。只有想覆盖某个具体选择时才指定技能。
 
-完整分派规则见 [`dev-workflow`](workflow/entry.md) 本身。
+完整分派规则见 `dev-workflow`（`dev-workflow`） 本身。
 
 下一页：[理解代码](guide-understanding.md)。

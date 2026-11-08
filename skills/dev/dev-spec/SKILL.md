@@ -59,7 +59,7 @@ UI 需求写清主要状态、交互、布局约束及参考依据；部署需�
 ## 本地完整方法
 
 - [规格综合方法](references/specification-method.md)：完整问题、方案、用户故事、实现决定、验证决定、范围和原型例外。
-- [实现简报与示例](references/implementation-brief.md)：完整模板、缺陷示例、增强示例、已有 PR 的差距示例，以及反例。
-- [本地工作记录](references/local-work-records.md)：规格、任务、依赖和问题答案的轻量保存约定。
+- `dev-intake`（实现简报与示例）：完整模板、缺陷示例、增强示例、已有 PR 的差距示例，以及反例。
+- `dev-plan`（本地工作记录）：规格、任务、依赖和问题答案的轻量保存约定。
 
 这些资源随本技能安装。前文的[规格模板](references/spec-template.md)是日常填写入口；完整方法用于检查是否遗漏行为或边界。
