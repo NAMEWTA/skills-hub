@@ -123,11 +123,11 @@ contract('all selects every domain', (f) => {
   f.success(f.cli('install', '--all'));
   assert.deepEqual(f.names(), new Set(Object.keys(f.sources)));
 });
-contract('every resource and license is copied', (f) => {
+contract('every skill resource is copied without creating project licenses', (f) => {
   f.success(f.cli('install', '--skill', 'dev-alpha'));
   assert.deepEqual(snapshot(path.join(f.target, 'dev-alpha')), snapshot(f.sources['dev-alpha']));
   assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha/LICENSE')));
-  assert.deepEqual(snapshot(f.licenseTarget), snapshot(f.licenseRoot));
+  assert.ok(!fs.existsSync(f.licenseTarget));
   if (process.platform !== 'win32') assert.equal(fs.statSync(path.join(f.target, 'dev-alpha/scripts/check.mjs')).mode & 0o777, 0o755);
 });
 contract('replacement repairs executable permission drift and keeps a backup', (f) => {
@@ -229,7 +229,7 @@ for (const [label, resolve] of [
   f.failure('install', '--all');
 });
 for (const [label, resolve] of [
-  ['agents', (f) => path.join(f.project, '.agents')], ['skills', (f) => f.target], ['license', (f) => f.licenseTarget],
+  ['agents', (f) => path.join(f.project, '.agents')], ['skills', (f) => f.target],
 ]) contract(`destination ${label} symlink is not followed`, (f) => {
   const outside = path.join(f.root, 'outside'); fs.mkdirSync(outside);
   if (!f.link(resolve(f), outside)) return;
@@ -281,7 +281,7 @@ contract('renamed installation reuses skills and retains old notices and backups
   const oldBackups = snapshot(legacyBackups);
   assert.match(f.success(f.cli('install', '--skill', 'dev-alpha')).stdout, /unchanged/);
   assert.equal(fs.statSync(sample, { bigint: true }).mtimeNs, mtime);
-  assert.deepEqual(snapshot(f.licenseTarget), snapshot(f.licenseRoot));
+  assert.ok(!fs.existsSync(f.licenseTarget));
   assert.deepEqual(snapshot(legacyLicenses), oldLicenses);
   assert.deepEqual(snapshot(legacyBackups), oldBackups);
   f.noTemporaryArtifacts();
@@ -318,40 +318,30 @@ contract('failed rollback preserves a recoverable backup', (f) => {
   const backups = f.backups('dev-alpha'); assert.equal(backups.length, 1);
   assert.deepEqual(snapshot(backups[0]), previous); assert.ok(failure.message.includes(path.dirname(backups[0]))); f.noTemporaryArtifacts();
 });
-for (const [label, filename] of [['license bundle', 'PROJECT-LICENSE.txt'], ['third-party notice', 'humanlayer-NOTICE.txt']]) {
-  contract(`missing ${label} blocks installation without writes`, (f) => {
-    fs.unlinkSync(path.join(f.licenseRoot, filename)); assert.match(f.failure('install', '--skill', 'dev-alpha').stderr, /license bundle is incomplete/);
-  });
-}
-contract('an unchanged skill restores missing license notices', (f) => {
-  f.seed('dev-alpha'); assert.match(f.success(f.cli('install', '--skill', 'dev-alpha')).stdout, /unchanged/);
-  assert.deepEqual(snapshot(f.licenseTarget), snapshot(f.licenseRoot));
+contract('installation does not require a source license directory', (f) => {
+  fs.rmSync(f.licenseRoot, { recursive: true });
+  f.success(f.cli('install', '--all'));
+  assert.ok(!fs.existsSync(f.licenseTarget));
 });
-contract('a license conflict prevents partial installation', (f) => {
-  f.success(f.cli('install', '--skill', 'dev-alpha')); write(path.join(f.licenseTarget, 'third-party.txt'), 'Retain local notice.\n');
-  assert.match(f.failure('install', '--skill', 'dev-beta').stderr, /license notices/); assert.ok(!fs.existsSync(path.join(f.target, 'dev-beta')));
+contract('unchanged skills do not restore removed project license notices', (f) => {
+  f.seed('dev-alpha');
+  assert.match(f.success(f.cli('install', '--skill', 'dev-alpha')).stdout, /unchanged/);
+  assert.ok(!fs.existsSync(f.licenseTarget));
 });
-contract('a license-only update is backed up and replaced', (f) => {
-  f.success(f.cli('install', '--skill', 'dev-alpha')); const original = snapshot(f.licenseTarget);
-  write(path.join(f.licenseRoot, 'third-party.txt'), 'Updated copyright notice.\n');
-  f.success(f.cli('install', '--skill', 'dev-alpha', '--replace'));
-  assert.deepEqual(snapshot(f.licenseTarget), snapshot(f.licenseRoot));
-  const backups = f.backups('.licenses'); assert.equal(backups.length, 1); assert.deepEqual(snapshot(backups[0]), original);
+contract('existing project license notices are untouched across preview, install and replace', (f) => {
+  write(path.join(f.licenseTarget, 'local.txt'), 'Preserve existing notices.\n');
+  const before = snapshot(f.licenseTarget);
+  for (const flags of [['--dry-run'], [], ['--replace']]) {
+    f.success(f.cli('install', '--all', ...flags));
+    assert.deepEqual(snapshot(f.licenseTarget), before);
+  }
 });
-contract('a license source symlink is not followed', (f) => {
-  const source = path.join(f.licenseRoot, 'third-party.txt'); fs.unlinkSync(source);
-  const outside = write(path.join(f.root, 'private-source.txt'), 'Do not copy this file.\n');
-  if (!f.link(source, outside, false)) return;
-  f.failure('install', '--all');
-});
-contract('license publication failure rolls back installed skills', (f) => {
-  const installer = f.installer({ renameSync(source, destination) {
-    if (path.basename(source) === '.licenses' && path.basename(path.dirname(source)).startsWith('.skills-hub-stage-')) throw new Error('simulated license publication failure');
-    return fs.renameSync(source, destination);
-  } });
-  assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project), /rolled back/);
-  assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha'))); assert.ok(!fs.existsSync(path.join(f.target, 'dev-beta')));
-  assert.ok(!fs.existsSync(f.licenseTarget)); f.noTemporaryArtifacts();
+contract('project license symlinks are ignored without following or deleting them', (f) => {
+  const outside = path.join(f.root, 'outside-notices'); fs.mkdirSync(outside);
+  if (!f.link(f.licenseTarget, outside)) return;
+  f.success(f.cli('install', '--all'));
+  assert.deepEqual(snapshot(outside), {});
+  assert.ok(fs.lstatSync(f.licenseTarget).isSymbolicLink());
 });
 contract('help and package version do not install anything', (f) => {
   write(path.join(f.repository, 'package.json'), JSON.stringify({ version: '0.0.2' }));

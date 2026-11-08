@@ -10,16 +10,16 @@
 
 ```bash
 # 直接交互多选领域或技能
-npx @namewta/skills-hub@0.1.0
+npx @namewta/skills-hub@0.1.1
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.0
+npm install -g @namewta/skills-hub@0.1.1
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.0 list
-npx @namewta/skills-hub@0.1.0 install --domain dev
-npx @namewta/skills-hub@0.1.0 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.1 list
+npx @namewta/skills-hub@0.1.1 install --domain dev
+npx @namewta/skills-hub@0.1.1 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install` 会进入中文交互：空格多选，回车确认，Ctrl+C 取消。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
@@ -58,13 +58,13 @@ Windows、macOS 和 Linux 使用相同的 `node` / `npx` 命令。源码安装�
 node C:\tools\skills-hub\install.mjs install --domain dev
 ```
 
-仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。技能自带所需的中文参考文件、模板与示例，单独安装也能工作。安装器同时把完整许可附带到 `.agents/skills-hub-licenses/`；许可位于技能目录之外，不进入技能执行上下文。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
+仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。技能自带所需的中文参考文件、模板与示例，单独安装也能工作。许可完整保留在仓库与 npm 包内；安装器不再向目标项目复制 `.agents/skills-hub-licenses/`，已有目录也不修改或删除。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
 
 安装器只安装文件。Agent 是否自动发现 `.agents/skills/` 取决于所用工具；不支持自动发现的工具可以显式读取对应 `SKILL.md`。这不是后台服务，也不会自动启动开发或部署。
 
 ### 从 skills-wta 迁移
 
-从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时先检查再用 `--replace`；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版补齐 `.agents/skills-hub-licenses/`，新备份使用 `.agents/.skills-hub-backups/`；旧许可和备份保留。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
+从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时先检查再用 `--replace`；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版不再复制项目许可目录，新备份使用 `.agents/.skills-hub-backups/`；已有许可和备份保持原样。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
 
 ## dev：完整开发流程
 
@@ -223,4 +223,4 @@ G 组新增 [Herdr 上游技能](https://github.com/herdrdev/herdr/blob/master/s
 
 技能组织方式还参考 [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 与 [Harness engineering](https://openai.com/index/harness-engineering/)。文章的组织原则已转化为本项目的本地编写与知识管理说明；未转载文章全文。代理配置字段的理解另参考 [MetaCubeX 文档](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b)，运行说明已写在技能本地，不要求使用者访问该文档。
 
-项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 完整保存在 [许可目录](licenses/) 和 [第三方声明](THIRD_PARTY_NOTICES.md)，包括设计材料内嵌的额外 MIT 声明。安装器每次选择任意技能，都会把整个许可目录附带到 `.agents/skills-hub-licenses/`。再次分发技能时请保留这个配套目录；不要只复制技能正文而丢失许可。
+项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 完整保存在 [许可目录](licenses/) 和 [第三方声明](THIRD_PARTY_NOTICES.md)，包括设计材料内嵌的额外 MIT 声明。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。

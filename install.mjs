@@ -127,28 +127,23 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
   function plan(skills, project, replace = false) {
     const actualProject = fsOps.realpathSync(project);
     for (const source of [skillRoot, licenseRoot]) {
-      if (isWithin(actualProject, fsOps.realpathSync(source))) {
+      if (exists(source) && isWithin(actualProject, fsOps.realpathSync(source))) {
         throw new InstallError("Run from the target project, outside this repository's source skills and licenses directories.");
       }
     }
-    regularFiles(licenseRoot, fsOps);
-    if (licenseBundleFiles.some((name) => !exists(path.join(licenseRoot, name))?.isFile())) {
-      throw new InstallError('The repository license bundle is incomplete; restore licenses before installing.');
-    }
     const agents = path.join(project, '.agents');
     const target = path.join(agents, 'skills');
-    for (const filename of [agents, target, path.join(agents, '.skills-hub-backups'), path.join(agents, 'skills-hub-licenses')]) checkDirectory(filename);
+    for (const filename of [agents, target, path.join(agents, '.skills-hub-backups')]) checkDirectory(filename);
     const actions = [];
     const conflicts = [];
     const packages = skills.map((skill) => ({ source: skill.source, name: skill.name, destination: path.join(target, skill.name) }));
-    packages.push({ source: licenseRoot, name: '.licenses', destination: path.join(agents, 'skills-hub-licenses') });
     for (const item of packages) {
       checkDirectory(item.destination);
       let kind;
       if (!exists(item.destination)) kind = 'install';
       else if (treeDigest(item.source, fsOps) === treeDigest(item.destination, fsOps)) kind = 'unchanged';
       else if (replace) kind = 'replace';
-      else { conflicts.push(item.name === '.licenses' ? 'license notices' : item.name); continue; }
+      else { conflicts.push(item.name); continue; }
       actions.push({ ...item, kind });
     }
     if (conflicts.length) {
@@ -285,8 +280,7 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
       : installer.apply(selected, actualProject, args.replace);
     stdout(`Destination: ${path.join(actualProject, '.agents', 'skills')}`);
     for (const action of actions) {
-      if (action.name !== '.licenses') stdout(`${args.dryRun ? 'would ' : ''}${action.kind.padEnd(9)} ${action.name}`);
-      else if (action.kind !== 'unchanged') stdout(`${args.dryRun ? 'Would copy' : 'Copied'} license notices: ${action.destination}`);
+      stdout(`${args.dryRun ? 'would ' : ''}${action.kind.padEnd(9)} ${action.name}`);
     }
     if (backup !== null) stdout(`Backups: ${backup}`);
     return 0;
@@ -297,7 +291,9 @@ if (isMain(import.meta.url)) {
   const argv = process.argv.slice(2);
   const interactiveRequest = argv.length === 0 || (argv[0] === 'install' && argv.slice(1).every(value => ['--replace', '--dry-run'].includes(value)));
   if (interactiveRequest && process.stdin.isTTY && process.stdout.isTTY) {
-    try { process.exitCode = await (await import('./cli.mjs')).interactive({ argv }); }
-    catch (error) { console.error(`Error: ${error.message}`); process.exitCode = 1; }
+    // 不在本模块顶层 await：cli.mjs 会导入本模块，等待会形成模块求值死锁。
+    import('./cli.mjs').then(({ interactive }) => interactive({ argv }))
+      .then(code => { process.exitCode = code; })
+      .catch(error => { console.error(`Error: ${error.message}`); process.exitCode = 1; });
   } else process.exitCode = main(argv);
 }

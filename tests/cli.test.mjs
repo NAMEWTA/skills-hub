@@ -25,7 +25,7 @@ test('interactive skill install, repeat and preview preserve core behavior', asy
     assert.ok(prompts.notes.join('\n').includes(i ? 'unchanged' : 'install'));
   }
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-spec/SKILL.md')));
-  assert.ok(fs.existsSync(path.join(project, '.agents/skills-hub-licenses/herdr-Apache-2.0.txt')));
+  assert.equal(fs.existsSync(path.join(project, '.agents/skills-hub-licenses')), false);
 });
 
 test('domain selection and cancellation do not write during preview', async t => {

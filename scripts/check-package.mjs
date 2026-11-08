@@ -122,11 +122,12 @@ export function checkPackage(root = ROOT) {
       }
     }
     for (const relative of regularFiles(join(root, 'licenses'))) {
-      if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(prefix, '.agents', 'skills-hub-licenses', relative)))) {
-        throw new Error(`npm 安装后许可不一致：${relative}`);
+      if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(installed, 'licenses', relative)))) {
+        throw new Error(`npm 包内许可不一致：${relative}`);
       }
     }
     runNode(cli, ['install', '--all'], prefix);
+    if (existsSync(join(prefix, '.agents', 'skills-hub-licenses'))) throw new Error('安装器不应创建项目许可目录');
     console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);
     return { name: packed.name, version: packed.version, filename: packed.filename, skills, files: packed.files.length, integrity: packed.integrity };
   } finally {
