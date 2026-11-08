@@ -25,6 +25,7 @@ export function validatePack(info, root = ROOT) {
   if (info.name !== pkg.name || info.version !== pkg.version) throw new Error('npm 包身份与 package.json 不一致');
   const paths = new Set(info.files.map(file => file.path));
   const allowedRoot = new Set(['install.mjs', 'package.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']);
+  if (pkg.dependencies?.['@clack/prompts']) allowedRoot.add('cli.mjs');
   for (const file of info.files) {
     if (!allowedRoot.has(file.path) && !/^(skills|licenses)\//.test(file.path)) {
       throw new Error(`npm 包包含范围外文件：${file.path}`);
@@ -47,8 +48,10 @@ export function validatePack(info, root = ROOT) {
 
 export function packPackage(root, destination) {
   const result = runNpm(['pack', '--json', '--ignore-scripts', '--pack-destination', destination], { cwd: root });
-  const packed = JSON.parse(result.stdout);
-  if (!Array.isArray(packed) || packed.length !== 1) throw new Error('npm pack 没有生成唯一包');
+  const parsed = JSON.parse(result.stdout);
+  // npm 10/11 返回数组，npm 12 返回以包名为键的对象。
+  const packed = Array.isArray(parsed) ? parsed : Object.values(parsed);
+  if (packed.length !== 1) throw new Error('npm pack 没有生成唯一包');
   const info = packed[0];
   validatePack(info, root);
   if (basename(info.filename) !== info.filename) throw new Error('npm 返回了越界的包路径');
@@ -78,7 +81,9 @@ export function checkPackage(root = ROOT) {
   try {
     const packed = packPackage(root, temporary);
     const prefix = join(temporary, 'consumer');
-    runNpm(['install', '--prefix', prefix, '--ignore-scripts', '--no-package-lock', '--no-save', '--no-audit', '--no-fund', '--offline', packed.file], { cwd: temporary });
+    // 交互 UI 依赖由 npm 正常解析；无依赖的测试夹具仍验证完全离线安装。
+    const dependencies = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8')).dependencies;
+    runNpm(['install', '--prefix', prefix, '--ignore-scripts', '--no-package-lock', '--no-save', '--no-audit', '--no-fund', ...(!dependencies ? ['--offline'] : []), packed.file], { cwd: temporary });
     const installed = installedPackagePath(prefix, packed.name);
     const cli = join(installed, 'install.mjs');
     const metadata = JSON.parse(readFileSync(join(installed, 'package.json'), 'utf8'));
@@ -90,6 +95,10 @@ export function checkPackage(root = ROOT) {
     if (commandVersion !== packed.version) throw new Error('npm 生成的 skills-hub 命令入口未运行当前包');
     if (runNode(cli, ['--version'], temporary).stdout.trim() !== packed.version) throw new Error('已打包 CLI 的 --version 不正确');
     if (!/^Usage: skills-hub /m.test(runNode(cli, ['--help'], temporary).stdout)) throw new Error('已打包 CLI 的 --help 未使用 skills-hub 名称');
+    if (metadata.dependencies?.['@clack/prompts']) {
+      // 实际安装后的 UI 模块必须能解析全部依赖，显式命令仍不强制加载 UI。
+      runNode(join(installed, 'cli.mjs'), [], temporary);
+    }
     runNode(cli, ['list'], temporary);
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
@@ -118,7 +127,7 @@ export function checkPackage(root = ROOT) {
       }
     }
     runNode(cli, ['install', '--all'], prefix);
-    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；离线安装、命令入口、完整资源、许可与重复安装通过。`);
+    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);
     return { name: packed.name, version: packed.version, filename: packed.filename, skills, files: packed.files.length, integrity: packed.integrity };
   } finally {
     rmSync(temporary, { recursive: true, force: true });

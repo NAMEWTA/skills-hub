@@ -9,7 +9,7 @@ export const licenseBundleFiles = Object.freeze([
   'PROJECT-LICENSE.txt', 'THIRD_PARTY_NOTICES.txt', 'deepseek-harness-MIT.txt',
   'mattpocock-skills-MIT.txt', 'pstack-MIT.txt', 'ai-design-skills-MIT.txt',
   'Speculo-MIT.txt', 'taste-skill-MIT.txt', 'humanlayer-Apache-2.0.txt',
-  'humanlayer-NOTICE.txt',
+  'humanlayer-NOTICE.txt', 'herdr-Apache-2.0.txt',
 ]);
 const slug = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 export const frontmatterPattern = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/;
@@ -293,4 +293,11 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
   } catch (error) { stderr(`Error: ${error.message}`); return 1; }
 }
 
-if (isMain(import.meta.url)) process.exitCode = main();
+if (isMain(import.meta.url)) {
+  const argv = process.argv.slice(2);
+  const interactiveRequest = argv.length === 0 || (argv[0] === 'install' && argv.slice(1).every(value => ['--replace', '--dry-run'].includes(value)));
+  if (interactiveRequest && process.stdin.isTTY && process.stdout.isTTY) {
+    try { process.exitCode = await (await import('./cli.mjs')).interactive({ argv }); }
+    catch (error) { console.error(`Error: ${error.message}`); process.exitCode = 1; }
+  } else process.exitCode = main(argv);
+}

@@ -2,7 +2,7 @@
 
 ## 分发内容
 
-包名为 `@namewta/skills-hub`，本次包版本为 `0.0.8`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
+包名为 `@namewta/skills-hub`，当前包版本为 `0.1.0`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.0`（交互）或 `npx @namewta/skills-hub@0.1.0 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
 
 在目标项目根目录运行：
 
@@ -15,7 +15,7 @@ npx @namewta/skills-hub@0.0.8 install --domain dev --replace
 
 `npx` 负责取得 npm 包，安装器按明确选择把完整技能复制到当前项目的 `.agents/skills/`，并附带许可。包没有安装后自动执行的 lifecycle hook。源码方式仍可使用 `node /path/to/skills-hub/install.mjs`，参数一致。
 
-`package.json` 的文件白名单只分发安装器、技能、许可、README 与法律说明。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.8.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
+`package.json` 的文件白名单只分发安装器、交互 CLI、技能、许可、README 与法律说明。交互 UI 依赖由 npm 安装；实际 tarball 检查允许正常解析这些依赖，再验证包内命令、文件复制与重复安装；无依赖夹具继续验证完全离线 npm 安装。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.8.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
 
 ## 仓库与旧版迁移
 
@@ -56,7 +56,7 @@ npm version 0.0.9 --no-git-tag-version
 
 ## 检查与凭据
 
-工作流先固定提交及版本，将准备阶段的同一个 SHA 显式传给[跨平台验证](../.github/workflows/validate.yml)和发布任务，不在验证时重新解析标签。Linux 检查最低 Node.js 22.14.0，Windows 与 macOS 检查 Node.js 24；执行全部维护测试、状态图捕获轨迹回放，以及实际 npm 包的离线安装。发布任务依赖这些任务全部成功。
+工作流先固定提交及版本，将准备阶段的同一个 SHA 显式传给[跨平台验证](../.github/workflows/validate.yml)和发布任务，不在验证时重新解析标签。Linux 检查最低 Node.js 22.14.0，Windows 与 macOS 检查 Node.js 24；执行全部维护测试、状态图捕获轨迹回放，以及实际 npm 包的安装与命令验证。发布任务依赖这些任务全部成功。
 
 仓库 Secret `NPM_TOKEN` 在发布步骤映射为 `NODE_AUTH_TOKEN`；不写入源码、包、技能、版本说明或日志。它的授权范围需要覆盖 `@namewta` scope 下 `@namewta/skills-hub` 新包的创建与发布，以及需要使用的只读 stage 查询；已有其他包的权限不会自动覆盖此包。token 的能力和包侧权限决定结果是直接发布还是进入暂存审批。需要维护者批准的暂存包会保留为待审查状态，不能把 CLI 的成功输出当作已经公开。只读识别 stage 还需要该凭据有本包的读取权限；权限错误会明确停止，不按“没有 stage”继续重发。GitHub 自动提供的 `GITHUB_TOKEN` 只在发布任务拥有写 Release / 标签权限；普通验证任务保持只读。
 

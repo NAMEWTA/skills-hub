@@ -6,11 +6,13 @@
 
 开发技能产生的资料保存到 `.agents/dev/`，系统技能产生的主机资料保存到 `.agents/system/<host>/`；其他领域按 `.agents/<domain>/` 扩展。安装器不预建这些目录，也不移动、覆盖或删除其中的项目记录；更新技能包后，新任务按新持久化路径执行。
 
-安装器无网络访问、无第三方运行依赖，不安装包管理器、不修改 Agent 的全局配置，也不决定使用者的项目根目录。请先切换到目标项目根目录再运行；它有意不提供 `--target` 或安装目录交互。在本仓库的 `skills/` 或 `licenses/` 源目录及其子目录中运行安装会被拒绝，避免把技能复制进自身。
+文件安装核心无网络访问、无第三方运行依赖；npm 交互入口使用随 npm 安装的终端 UI 依赖，不安装包管理器、不修改 Agent 的全局配置，也不决定使用者的项目根目录。请先切换到目标项目根目录再运行；它有意不提供 `--target` 或安装目录交互。在本仓库的 `skills/` 或 `licenses/` 源目录及其子目录中运行安装会被拒绝，避免把技能复制进自身。
 
 ## npm 与源码入口
 
-npm 包名为 `@namewta/skills-hub`，安装后的命令名为 `skills-hub`。在目标项目根目录运行 `npx @namewta/skills-hub@0.0.8 list` 或 `npx @namewta/skills-hub@0.0.8 install --domain dev`。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
+npm 包名为 `@namewta/skills-hub`，当前版本 `0.1.0`，命令名为 `skills-hub`。运行 `npm install -g @namewta/skills-hub@0.1.0` 后，在目标项目根目录运行 `skills-hub`，或直接 `npx @namewta/skills-hub@0.1.0`，进入领域/技能多选。空格勾选、回车确认，Ctrl+C 取消；`install --dry-run` 只预览，`install --replace` 显式备份替换。非 TTY 不启动交互，需明确传参。
+
+原有 `list`、`install --domain`、`install --skill`、`--all` 等参数保持兼容。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同；源码交互模式需先 `npm ci`。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
 
 `npx` 首次获取包需要网络；已有源码的安装器完全离线。npm 包只包含安装器、运行技能及完整许可，维护底稿保留在 Git 仓库。
 
@@ -77,6 +79,6 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 ## 平台与工具
 
-Node.js 22.14+ 标准库，无第三方安装器依赖；Windows、macOS 与 Linux 使用相同的 `node` / `npx` 命令。路径含空格时按当前 shell 规则加引号。源码和安装目标中的符号链接、设备、管道会被拒绝，避免复制到技能范围之外。相等判断比较文件路径与内容，在 POSIX 平台还检查执行位以支持脚本权限更新；不把空目录作为状态，也不比较其余平台权限。
+Node.js 22.14+；显式参数安装核心仅使用标准库，交互界面依赖 `@clack/prompts`、`picocolors`、`string-width`、`wrap-ansi`；Windows、macOS 与 Linux 使用相同的 `node` / `npx` 命令。路径含空格时按当前 shell 规则加引号。源码和安装目标中的符号链接、设备、管道会被拒绝，避免复制到技能范围之外。相等判断比较文件路径与内容，在 POSIX 平台还检查执行位以支持脚本权限更新；不把空目录作为状态，也不比较其余平台权限。
 
 安装器不执行任何技能中的脚本，不自动连接服务器或外部账号，不安装兄弟技能的隐含依赖。支持 `.agents/skills/` 的 Agent 可按其发现规则读取；其他 Agent 由用户显式加载文件。技能可调用性仍受宿主实际工具能力限制。

@@ -5,6 +5,7 @@
 | 权利人 | 许可原文 | 本项目使用范围 |
 | --- | --- | --- |
 | NAMEWTA | [项目 MIT](licenses/PROJECT-LICENSE.txt) | 本项目原创说明、整合与程序 |
+| Herdr 贡献者 | [Apache 2.0](licenses/herdr-Apache-2.0.txt) | Herdr 技能完整原件、中文译文与 `system-herdr` 运行适配；已更名并保留本地追加的启动示例 |
 | Copyright (c) 2026 DeepSeek | [MIT](licenses/deepseek-harness-MIT.txt) | 知识、归档、写作方法与笔记实例的中文译文及适配 |
 | Copyright (c) 2026 Matt Pocock | [MIT](licenses/mattpocock-skills-MIT.txt) | 需求、架构、实施、诊断、审查与写作资料的中文译文及适配 |
 | Copyright (c) 2026 Lauren Tan | [MIT](licenses/pstack-MIT.txt) | 限 pstack 目录内的方法、操作规程与实例 |
@@ -14,6 +15,8 @@
 | HumanLayer；Copyright 2025-2026 QueryTale, Inc. d/b/a HumanLayer | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) | PR 资料引用的视觉说明方法；中文译文与运行流程已有修改 |
 
 来源项目、固定修订和贡献者致谢集中见 [README](README.md#致谢与许可)。所有纳入对照的文件可在 [本地资料索引](materials/README.md) 中找到，原件与中文底稿均保留，不需要访问来源仓库才能核对。
+
+Herdr 许可原文固定于提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` 的根目录 `LICENSE`，Git blob 为 `261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64`；该修订无上游 `NOTICE` 文件。本次仅收录技能文档，不收录其程序或 vendor 组件。
 
 许可原文保持原语言和原始版权声明，中文技能正文不能替代法律原文。对照资料中保留的署名和链接属于历史原件内容，不是运行时外部依赖。
 

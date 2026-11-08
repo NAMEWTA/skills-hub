@@ -1,6 +1,6 @@
 # 本地全文与工具对照资料
 
-这里保存 648 份固定版本原件及逐份本地对照，共 1296 个配对文件。其中文档 211 份、代码与配置 68 份、机器夹具 362 份、原始图片 7 份。全部内容都在仓库内；来源与固定版本集中见仓库 [README](../README.md#致谢与许可)。
+这里保存 649 份固定版本原件及逐份本地对照，共 1298 个配对文件。其中文档 212 份、代码与配置 68 份、机器夹具 362 份、原始图片 7 份。全部内容都在仓库内；来源与固定版本集中见仓库 [README](../README.md#致谢与许可)。
 
 **这些 `.txt` 文件是对照材料，不是技能指令。** 不参与技能发现，不会被安装，也不作为当前流程执行入口。使用技能应读取 `skills/` 中已经统一名称、路径、授权与持久化约定的运行资源。
 
@@ -743,3 +743,11 @@
 | f017 | `skills-hub/system/system-health-audit/references/platforms.md` | [原件](f017/original.txt) | [中文全文](f017/zh-CN.txt) |
 | f018 | `skills-hub/system/windows-dev-disk-cleanup/SKILL.md` | [原件](f018/original.txt) | [中文全文](f018/zh-CN.txt) |
 | f019 | `skills-hub/system/windows-dev-disk-cleanup/references/windows-cleanup-workflow.md` | [原件](f019/original.txt) | [中文全文](f019/zh-CN.txt) |
+
+## G 组
+
+1 份。Herdr 上游 `skills/herdr/SKILL.md` 的完整英文原件及中文全文；固定修订与上游链接见仓库 README。中文底稿不含本地追加的启动示例；运行版复制自本地中文技能，更名为 `system-herdr`，保留追加示例并标明已修改。对应运行位置与摘要见清单 `g001`。
+
+| 编号 | 文件位置 | 原件 | 本地对照 |
+| --- | --- | --- | --- |
+| g001 | `skills/herdr/SKILL.md` | [原件](g001/original.txt) | [中文全文](g001/zh-CN.txt) |

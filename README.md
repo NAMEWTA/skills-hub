@@ -9,12 +9,22 @@
 需要 Node.js 22.14+。npm 包名为 `@namewta/skills-hub`，命令名为 `skills-hub`。可直接通过 npm 使用，无需预先克隆：
 
 ```bash
-npx @namewta/skills-hub@0.0.8 list
-npx @namewta/skills-hub@0.0.8 install --domain dev
-npx @namewta/skills-hub@0.0.8 install --skill dev-grill dev-spec system-proxy
+# 直接交互多选领域或技能
+npx @namewta/skills-hub@0.1.0
+
+# 或全局安装后运行
+npm install -g @namewta/skills-hub@0.1.0
+skills-hub
+
+# 原有命令行安装方式继续保留
+npx @namewta/skills-hub@0.1.0 list
+npx @namewta/skills-hub@0.1.0 install --domain dev
+npx @namewta/skills-hub@0.1.0 install --skill dev-grill dev-spec system-proxy
 ```
 
-在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。也可以克隆源码后离线运行安装器：
+在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install` 会进入中文交互：空格多选，回车确认，Ctrl+C 取消。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
+
+交互界面使用 `@clack/prompts`、`picocolors`、`string-width` 和 `wrap-ansi`；npm 自动安装这些依赖。源码的显式参数安装器仍仅依赖 Node.js 标准库、可离线运行；源码交互模式先运行 `npm ci`。也可以克隆源码后离线运行安装器：
 
 ```bash
 git clone https://github.com/NAMEWTA/skills-hub.git
@@ -134,6 +144,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | [system-cleanup](skills/system/system-cleanup/SKILL.md) | 按实际占用选择可清理对象，执行后量测并验证 |
 | [system-proxy](skills/system/system-proxy/SKILL.md) | 排查和配置代理、DNS、客户端与应用生效范围 |
 | [system-config](skills/system/system-config/SKILL.md) | 调整已指定的软件或系统配置，保留备份并验证真实生效 |
+| [system-herdr](skills/system/system-herdr/SKILL.md) | 在 Herdr 内查看与控制窗格、标签页、工作区、命令及 agent；仅在用户明确要求使用 Herdr 时启用 |
 
 系统技能不会把“清缓存”扩展为删除业务数据，也不会把“应用代理”扩展为修改整机路由。主机文档按需放在 `.agents/system/<主机标识>/`；密码与订阅秘密只记录安全引用。
 
@@ -205,6 +216,8 @@ node scripts/install-hooks.mjs
 | C · 10 份 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/tree/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/.agents)，知识、归档、技能写作及完整架构笔记实例 | `fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159` | [C 组索引](materials/README.md#c-组) |
 | D · 3 份 | [Elaya AI Design Skills](https://github.com/elayadesign/ai-design-skills/tree/456d9e0d3e2d84c748bb143c6ca3d90c45e16213)，完整落地页、Figma 设计技能与说明 | `456d9e0d3e2d84c748bb143c6ca3d90c45e16213` | [D 组索引](materials/README.md#d-组) |
 | E · 8 份、F · 19 份 | [Speculo](https://github.com/NAMEWTA/Speculo/tree/9199c3bd0cf983c131efbc6340e44ac8b83a583d)，所参考的知识、部署及系统维护资料；仅按需融合，未移植状态引擎 | `9199c3bd0cf983c131efbc6340e44ac8b83a583d` | [E 组索引](materials/README.md#e-组)、[F 组索引](materials/README.md#f-组) |
+
+G 组新增 [Herdr 上游技能](https://github.com/herdrdev/herdr/blob/master/skills/herdr/SKILL.md)，固定提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde`，固定文件见[该修订原文](https://github.com/herdrdev/herdr/blob/ee5bfb5041bb3e4a49d591c72308aae3c81ecdde/skills/herdr/SKILL.md)，完整原件与中文译文见 [G 组索引](materials/README.md#g-组)。`system-herdr` 直接复制自本地 `/home/wta/projects/huhu/.agents/skills/herdr/SKILL.md`，仅更名并添加修改说明；保留本地追加的 Claude Code、Codex、Pi 启动示例，不将这些示例冒称上游内容。逐文件 Git blob、摘要及适配关系见清单 `g001`。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
 
 感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。B 组完整镜像所固定的 `pstack/` 目录，逐文件与该提交的目录树核对，无遗漏；其余组按表中范围收录。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
 
