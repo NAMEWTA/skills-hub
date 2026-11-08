@@ -26,6 +26,7 @@ export function validatePack(info, root = ROOT) {
   const paths = new Set(info.files.map(file => file.path));
   const allowedRoot = new Set(['install.mjs', 'package.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']);
   if (pkg.dependencies?.['@clack/prompts']) allowedRoot.add('cli.mjs');
+  if (pkg.dependencies?.['@clack/core']) allowedRoot.add('tree-select.mjs');
   for (const file of info.files) {
     if (!allowedRoot.has(file.path) && !/^(skills|licenses)\//.test(file.path)) {
       throw new Error(`npm 包包含范围外文件：${file.path}`);

@@ -3,6 +3,8 @@ import pc from 'picocolors';
 import stringWidth from 'string-width';
 import wrapAnsi from 'wrap-ansi';
 import { createInstaller, select, main } from './install.mjs';
+import { treeSelect } from './tree-select.mjs';
+export { matchesSkillSearch } from './tree-select.mjs';
 
 export function formatSummary(names, columns = process.stdout.columns ?? 80) {
   const width = Math.max(20, Math.min(columns - 8, 100));
@@ -10,7 +12,7 @@ export function formatSummary(names, columns = process.stdout.columns ?? 80) {
   return wrapAnsi(`${pc.bold(label)}${' '.repeat(Math.max(1, 8 - stringWidth(label)))}${names.join('、')}`, width, { hard: true });
 }
 
-export async function interactive({ argv = [], project = process.cwd(), ui = prompts } = {}) {
+export async function interactive({ argv = [], project = process.cwd(), ui = prompts, choose = treeSelect } = {}) {
   if (argv.some(value => !['install', '--replace', '--dry-run'].includes(value))) {
     throw new Error('交互安装只接受 install、--replace 和 --dry-run。');
   }
@@ -23,17 +25,10 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     ui.intro(pc.cyan('skills-hub · 按需安装中文技能'));
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
     const skills = createInstaller().catalog();
-    const mode = await ask(ui.select({ message: '如何选择？', options: [
-      { value: 'domain', label: '按领域安装' },
-      { value: 'skill', label: '选择特定技能' },
-      { value: 'all', label: '安装全部技能' },
-    ] }));
-    let domains = [], names = [];
-    if (mode === 'domain') domains = await ask(ui.multiselect({ message: '选择领域（空格勾选，回车继续）', required: true,
-      options: [...new Set(skills.map(skill => skill.domain))].map(domain => ({ value: domain, label: domain, hint: `${skills.filter(skill => skill.domain === domain).length} 个技能` })) }));
-    if (mode === 'skill') names = await ask(ui.multiselect({ message: '选择技能（空格勾选，回车继续）', required: true,
-      options: skills.map(skill => ({ value: skill.name, label: skill.name, hint: skill.domain })) }));
-    const selected = select(skills, domains, names, mode === 'all');
+    ui.note('直接输入关键词，搜索领域、技能名或中文用途；↑/↓ 定位，Tab 勾选/取消，Enter 确认。\n勾选领域或“全部技能”会选择其全部子项（包括搜索隐藏项），之后可取消个别技能。\n[x] 全选，[-] 部分选中，[ ] 未选；更换搜索词保留选择，Ctrl+U 清空搜索。', '树形搜索多选');
+    const names = await ask(choose({ skills }));
+    const selected = select(skills, [], names);
+    if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
     const dryRun = argv.includes('--dry-run');
     if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装以上技能？', initialValue: true }))) {

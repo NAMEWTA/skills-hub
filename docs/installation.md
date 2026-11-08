@@ -10,7 +10,9 @@
 
 ## npm 与源码入口
 
-npm 包名为 `@namewta/skills-hub`，当前版本 `0.1.1`，命令名为 `skills-hub`。运行 `npm install -g @namewta/skills-hub@0.1.0` 后，在目标项目根目录运行 `skills-hub`，或直接 `npx @namewta/skills-hub@0.1.0`，进入领域/技能多选。空格勾选、回车确认，Ctrl+C 取消；`install --dry-run` 只预览，`install --replace` 显式备份替换。非 TTY 不启动交互，需明确传参。
+npm 包名为 `@namewta/skills-hub`，当前版本 `0.1.2`，命令名为 `skills-hub`。运行 `npm install -g @namewta/skills-hub@0.1.2` 后，在目标项目根目录运行 `skills-hub`，或直接 `npx @namewta/skills-hub@0.1.2`，直接进入领域 / 技能树，不再分三种安装模式。根节点控制全部技能，领域节点控制该领域全部子项；支持领域与跨领域单项混选、全选后取消个别技能。`[x]` 全选、`[-]` 部分选中、`[ ]` 未选；部分选中的父节点再次勾选会补齐全选，全选父节点再次勾选会清空其子项。
+
+直接输入关键词实时过滤，可按领域、技能名或中文用途搜索，支持非连续缩写与空格分隔的多个关键词（各词都须匹配），不支持拼音转换或拼写纠错。匹配领域时显示其全部子项，匹配技能时保留领域节点作为上下文；父节点操作始终作用于整个领域，包括搜索隐藏项。↑/↓ 定位、Tab 勾选/取消、Enter 确认；清空或更换关键词保留已选项，无匹配时可退格修改或 Ctrl+U 清空搜索。至少选择一个技能才能继续，最终安装列表只包含叶子名称，不会因领域选择而重新加入已排除子项。Ctrl+C 取消；`install --dry-run` 只预览，`install --replace` 显式备份替换。非 TTY 不启动交互，需明确传参。
 
 原有 `list`、`install --domain`、`install --skill`、`--all` 等参数保持兼容。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同；源码交互模式需先 `npm ci`。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
 
@@ -79,6 +81,6 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 ## 平台与工具
 
-Node.js 22.14+；显式参数安装核心仅使用标准库，交互界面依赖 `@clack/prompts`、`picocolors`、`string-width`、`wrap-ansi`；Windows、macOS 与 Linux 使用相同的 `node` / `npx` 命令。路径含空格时按当前 shell 规则加引号。源码和安装目标中的符号链接、设备、管道会被拒绝，避免复制到技能范围之外。相等判断比较文件路径与内容，在 POSIX 平台还检查执行位以支持脚本权限更新；不把空目录作为状态，也不比较其余平台权限。
+Node.js 22.14+；显式参数安装核心仅使用标准库，交互界面依赖 `@clack/prompts`、`@clack/core`、`picocolors`、`string-width`、`wrap-ansi`；Windows、macOS 与 Linux 使用相同的 `node` / `npx` 命令。路径含空格时按当前 shell 规则加引号。源码和安装目标中的符号链接、设备、管道会被拒绝，避免复制到技能范围之外。相等判断比较文件路径与内容，在 POSIX 平台还检查执行位以支持脚本权限更新；不把空目录作为状态，也不比较其余平台权限。
 
 安装器不执行任何技能中的脚本，不自动连接服务器或外部账号，不安装兄弟技能的隐含依赖。支持 `.agents/skills/` 的 Agent 可按其发现规则读取；其他 Agent 由用户显式加载文件。技能可调用性仍受宿主实际工具能力限制。

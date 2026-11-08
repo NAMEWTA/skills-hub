@@ -110,7 +110,8 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         if (declared !== name) throw new InstallError(`Frontmatter name must equal directory name: ${manifest}`);
         if (seen.has(name)) throw new InstallError(`Duplicate install name: ${name}`);
         seen.add(name);
-        skills.push({ domain, name, source });
+        const description = header[1].match(/^description:\s*([^\r\n]+)/m)?.[1].trim().replace(/^["']|["']$/g, '') ?? '';
+        skills.push({ domain, name, source, description });
       }
     }
     if (!skills.length) throw new InstallError(`No skills found in ${skillRoot}`);

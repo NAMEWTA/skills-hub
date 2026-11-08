@@ -9,22 +9,22 @@
 需要 Node.js 22.14+。npm 包名为 `@namewta/skills-hub`，命令名为 `skills-hub`。可直接通过 npm 使用，无需预先克隆：
 
 ```bash
-# 直接交互多选领域或技能
-npx @namewta/skills-hub@0.1.1
+# 直接进入可搜索的领域 / 技能树
+npx @namewta/skills-hub@0.1.2
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.1
+npm install -g @namewta/skills-hub@0.1.2
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.1 list
-npx @namewta/skills-hub@0.1.1 install --domain dev
-npx @namewta/skills-hub@0.1.1 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.2 list
+npx @namewta/skills-hub@0.1.2 install --domain dev
+npx @namewta/skills-hub@0.1.2 install --skill dev-grill dev-spec system-proxy
 ```
 
-在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install` 会进入中文交互：空格多选，回车确认，Ctrl+C 取消。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
+在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。`[x]` 表示全选，`[-]` 表示部分选中，`[ ]` 表示未选。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 定位、Tab 勾选/取消、Enter 确认。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
 
-交互界面使用 `@clack/prompts`、`picocolors`、`string-width` 和 `wrap-ansi`；npm 自动安装这些依赖。源码的显式参数安装器仍仅依赖 Node.js 标准库、可离线运行；源码交互模式先运行 `npm ci`。也可以克隆源码后离线运行安装器：
+交互界面使用 `@clack/prompts`、`@clack/core`、`picocolors`、`string-width` 和 `wrap-ansi`；npm 自动安装这些依赖。源码的显式参数安装器仍仅依赖 Node.js 标准库、可离线运行；源码交互模式先运行 `npm ci`。也可以克隆源码后离线运行安装器：
 
 ```bash
 git clone https://github.com/NAMEWTA/skills-hub.git

@@ -1,6 +1,6 @@
 {
   "name": "@namewta/skills-hub",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "独立中文 Agent Skills：按领域安装，覆盖开发交付、项目知识与系统维护。",
   "type": "module",
   "bin": {
@@ -9,6 +9,7 @@
   "files": [
     "install.mjs",
     "cli.mjs",
+    "tree-select.mjs",
     "skills/",
     "licenses/",
     "LICENSE",
@@ -49,6 +50,7 @@
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "@clack/core": "1.5.1",
     "@clack/prompts": "1.8.1",
     "picocolors": "1.1.1",
     "string-width": "8.3.0",
