@@ -20,9 +20,10 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
   assert.equal(await interactive({ project, argv: ['install', '--dry-run'], ...context(['dev-spec']) }), 0);
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
   for (let i = 0; i < 2; i++) {
+    if (i === 1) fs.appendFileSync(path.join(project, '.agents/skills/dev-spec/SKILL.md'), '\n旧版本内容\n');
     const ctx = context(['dev-spec']);
     assert.equal(await interactive({ project, ...ctx }), 0);
-    assert.ok(ctx.ui.notes.join('\n').includes(i ? 'unchanged' : 'install'));
+    assert.ok(ctx.ui.notes.join('\n').includes(i ? 'replace' : 'install'));
   }
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-spec/SKILL.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));

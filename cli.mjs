@@ -47,7 +47,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     try { code = main(command, { project, stdout: line => output.push(line), stderr: line => output.push(pc.red(line)) }); }
     finally { spinner.stop('检查与文件操作结束'); }
     ui.note(output.join('\n'), '结果');
-    ui.outro(code === 0 ? pc.green(dryRun ? '预览完成，未写入文件。' : '安装完成。') : pc.red('安装失败；请检查以上错误，内容冲突需核对后显式使用 --replace。'));
+    ui.outro(code === 0 ? pc.green(dryRun ? '预览完成，未写入文件。' : '安装完成。') : pc.red('安装失败；请检查以上路径、权限或运行错误。'));
     return code;
   } catch (error) { if (error instanceof Cancelled) return 0; throw error; }
 }

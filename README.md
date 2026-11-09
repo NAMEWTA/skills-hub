@@ -10,19 +10,19 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.6
+npx @namewta/skills-hub@0.1.7
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.6
+npm install -g @namewta/skills-hub@0.1.7
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.6 list
-npx @namewta/skills-hub@0.1.6 install --domain dev
-npx @namewta/skills-hub@0.1.6 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.7 list
+npx @namewta/skills-hub@0.1.7 install --domain dev
+npx @namewta/skills-hub@0.1.7 install --skill dev-grill dev-spec system-proxy
 ```
 
-在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
+在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；同名技能存在差异时自动备份替换，无需额外参数。非交互环境继续要求明确参数，不会等待输入。
 
 交互界面使用 `@clack/prompts`、`@clack/core`、`picocolors`、`string-width` 和 `wrap-ansi`；npm 自动安装这些依赖。源码的显式参数安装器仍仅依赖 Node.js 标准库、可离线运行；源码交互模式先运行 `npm ci`。也可以克隆源码后离线运行安装器：
 
@@ -58,13 +58,13 @@ Windows、macOS 和 Linux 使用相同的 `node` / `npx` 命令。源码安装�
 node C:\tools\skills-hub\install.mjs install --domain dev
 ```
 
-仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。各技能维护自身的中文方法、模板与示例，可以相互调用；同一方法不复制进多个技能。许可完整保留在仓库与 npm 包内；安装器不再向目标项目复制 `.agents/skills-hub-licenses/`，已有目录也不修改或删除。相同内容再次安装无变化；有差异默认停止整次安装，`--replace` 会先保留备份。更多行为见 [安装说明](docs/installation.md)。
+仓库保存 `skills/dev/dev-spec/`，安装后是 `.agents/skills/dev-spec/`，不会多一层 `dev/`。各技能维护自身的中文方法、模板与示例，可以相互调用；同一方法不复制进多个技能。许可完整保留在仓库与 npm 包内；安装器不再向目标项目复制 `.agents/skills-hub-licenses/`，已有目录也不修改或删除。相同内容再次安装无变化；有差异自动备份并替换，`--replace` 仅保留兼容。更多行为见 [安装说明](docs/installation.md)。
 
 安装器只安装文件。Agent 是否自动发现 `.agents/skills/` 取决于所用工具；不支持自动发现的工具可以显式读取对应 `SKILL.md`。这不是后台服务，也不会自动启动开发或部署。
 
 ### 从 skills-wta 迁移
 
-从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时先检查再用 `--replace`；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版不再复制项目许可目录，新备份使用 `.agents/.skills-hub-backups/`；已有许可和备份保持原样。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
+从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时自动备份替换；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版不再复制项目许可目录，新备份使用 `.agents/.skills-hub-backups/`；已有许可和备份保持原样。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
 
 ## dev：完整开发流程
 

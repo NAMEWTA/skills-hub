@@ -137,9 +137,7 @@ contract('replacement repairs executable permission drift and keeps a backup', (
   f.success(f.cli('install', '--skill', 'dev-alpha'));
   const installed = path.join(f.target, 'dev-alpha/scripts/check.mjs');
   fs.chmodSync(installed, 0o644);
-  assert.match(f.failure('install', '--skill', 'dev-alpha').stderr, /Existing packages differ/);
-  assert.equal(fs.statSync(installed).mode & 0o777, 0o644);
-  const result = f.success(f.cli('install', '--skill', 'dev-alpha', '--replace'));
+  const result = f.success(f.cli('install', '--skill', 'dev-alpha'));
   assert.match(result.stdout, /replace/); assert.doesNotMatch(result.stdout, /unchanged/);
   assert.equal(fs.statSync(installed).mode & 0o777, 0o755);
   const backups = f.backups('dev-alpha/scripts/check.mjs');
@@ -190,10 +188,12 @@ contract('installation requires a selection', (f) => { assert.match(f.failure('i
 contract('unknown options and destination overrides are rejected', (f) => {
   for (const option of ['--unknown', '--target', '--destination']) assert.equal(f.failure('install', '--all', option, 'elsewhere').status, 2);
 });
-contract('conflict preflight prevents partial installation', (f) => {
+contract('differing skills are automatically replaced alongside new selections', (f) => {
   f.seed('dev-beta', true);
-  assert.match(f.failure('install', '--domain', 'dev').stderr, /Existing packages differ/);
-  assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha'))); f.noTemporaryArtifacts();
+  assert.match(f.success(f.cli('install', '--domain', 'dev')).stdout, /replace/);
+  assert.ok(fs.existsSync(path.join(f.target, 'dev-alpha')));
+  assert.deepEqual(snapshot(path.join(f.target, 'dev-beta')), snapshot(f.sources['dev-beta']));
+  assert.equal(f.backups('dev-beta').length, 1); f.noTemporaryArtifacts();
 });
 contract('replacement backs up only differing selected skills', (f) => {
   const old = f.seed('dev-alpha', true); const previous = snapshot(old);

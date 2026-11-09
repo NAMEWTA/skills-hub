@@ -126,7 +126,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     }
   }
 
-  function plan(skills, project, replace = false) {
+  function plan(skills, project, replace = true) {
     const actualProject = fsOps.realpathSync(project);
     for (const source of [skillRoot, licenseRoot]) {
       if (exists(source) && isWithin(actualProject, fsOps.realpathSync(source))) {
@@ -157,7 +157,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
 
   function persistencePlan(skills, project) { return planPersistence(skills, project, fsOps); }
 
-  function apply(skills, project, replace = false) {
+  function apply(skills, project, replace = true) {
     let actions = plan(skills, project, replace);
     let persistence = persistencePlan(skills, project);
     if (actions.every((action) => action.kind === 'unchanged') && persistence.every(item => item.action === 'preserve')) {
@@ -241,7 +241,8 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
 Install complete skills into the current project's .agents/skills/. No destination option.
 Selected dev/system domains also initialize missing domain AGENTS.md navigation; managed templates are updated; business records are preserved.
 --dry-run  Preview without writing files.
---replace  Back up differing packages before replacing them.
+Differing selected skills are backed up and replaced automatically.
+--replace  Accepted for compatibility; replacement is already the default.
 `;
 
 function parseArguments(argv) {
@@ -249,7 +250,7 @@ function parseArguments(argv) {
   if (argv.includes('--help') || argv.includes('-h')) return { help: true };
   const [command, ...tokens] = argv;
   if (!['list', 'install'].includes(command)) throw new Error('Choose the list or install command.');
-  const result = { command, domains: [], names: [], all: false, dryRun: false, replace: false };
+  const result = { command, domains: [], names: [], all: false, dryRun: false, replace: true };
   for (let index = 0; index < tokens.length; index += 1) {
     const token = tokens[index];
     if (token === '--all') result.all = true;
