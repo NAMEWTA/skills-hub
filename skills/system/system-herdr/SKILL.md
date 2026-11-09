@@ -215,10 +215,10 @@ herdr pane read <returned-pane-id> --source recent-unwrapped --lines 120
 
 ## Claude Code & Codex & Pi 的默认启动方式命令
 
-在已有可用 shell 窗格中启动，`<name>` 使用唯一名称，`<returned-pane-id>` 使用实际返回的窗格 ID：
+在已有可用 shell 窗格中启动；`<name>` 为唯一名称，`<returned-pane-id>` 为实际返回的窗格 ID，`<models_name>`/`<effort>` 为模型/推理强度，未指定则删除对应参数：
 
-```bash
-herdr agent start <name> --kind claude --pane <returned-pane-id> -- --dangerously-skip-permissions
-herdr agent start <name> --kind codex --pane <returned-pane-id> -- --no-daemon --dangerously-bypass-approvals-and-sandbox
-herdr agent start <name> --kind pi --pane <returned-pane-id>
+```
+herdr agent start <name> --kind claude --pane <returned-pane-id> -- --dangerously-skip-permissions --model <models_name> --effort <effort>
+herdr agent start <name> --kind codex --pane <returned-pane-id> -- --no-daemon --dangerously-bypass-approvals-and-sandbox -m <models_name> --config model_reasoning_effort="<effort>"
+herdr agent start <name> --kind pi --pane <returned-pane-id> -- --model <models_name> --thinking <effort>
 ```
