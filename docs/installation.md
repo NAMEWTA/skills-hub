@@ -4,7 +4,7 @@
 
 源码由 `skills/<domain>/<domain>-xxx/SKILL.md` 自动发现，不另建人工维护的技能注册表。安装后完整复制到当前工作目录的 `.agents/skills/<domain>-xxx/`，保留 references、assets、scripts 和 agents 等全部运行资源。完整许可保存在仓库与 npm 包的 `licenses/` 中；安装器不创建、复制、补齐、更新或删除目标项目的 `.agents/skills-hub-licenses/`，也不把许可放进技能目录。
 
-开发技能产生的资料保存到 `.agents/dev/`，系统技能产生的主机资料保存到 `.agents/system/<host>/`；其他领域按 `.agents/<domain>/` 扩展。安装选择中包含任意 dev 技能时，安装器一次性补齐 `.agents/dev/` 根、changes、notes、deploy、archive、project、context 及 archive/changes 下 implemented、rejected 的九份短 AGENTS.md；包含 system 技能时另补 `.agents/system/AGENTS.md`。固定结构由 `scripts/init-persistence.mjs` 与 `scripts/persistence/` 维护，不属于技能包，也不执行技能脚本。命令行、领域和交互选择使用同一安装入口。已有文件保持原内容与修改时间，重复安装或升级只补缺失文件，不迁移、覆盖或删除业务记录；list、help、取消和 dry-run 均不初始化。
+开发技能产生的资料保存到 `.agents/dev/`，系统技能产生的主机资料保存到 `.agents/system/<host>/`；其他领域按 `.agents/<domain>/` 扩展。安装选择中包含任意 dev 技能时，安装器一次性补齐 `.agents/dev/` 根、changes、notes、deploy、archive、project、context 及 archive/changes 下 implemented、rejected 的九份短 AGENTS.md；包含 system 技能时另补 `.agents/system/AGENTS.md`。固定结构由 `scripts/init-persistence.mjs` 与 `scripts/persistence/` 维护，不属于技能包，也不执行技能脚本。命令行、领域和交互选择使用同一安装入口。固定位置的模板 AGENTS.md 在重复安装或升级时自动覆盖更新，内容相同则保持修改时间；根 AGENTS.md 不自动编辑，不迁移、覆盖或删除业务记录；list、help、取消和 dry-run 均不初始化。
 
 文件安装核心无网络访问、无第三方运行依赖；npm 交互入口使用随 npm 安装的终端 UI 依赖，不安装包管理器、不修改 Agent 的全局配置，也不决定使用者的项目根目录。请先切换到目标项目根目录再运行；它有意不提供 `--target` 或安装目录交互。在本仓库的 `skills/` 或 `licenses/` 源目录及其子目录中运行安装会被拒绝，避免把技能复制进自身。
 
@@ -57,7 +57,7 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 更新源码后，先查看改动，再运行 `--replace`。旧目录保留在 `.agents/.skills-hub-backups/<UTC时间-随机后缀>/<技能名>/`。备份在技能扫描目录之外，不会作为重复技能加载。未选中的技能不改动。暂存、切换、备份与失败恢复只处理所选技能，不处理项目许可目录。
 
-安装在写入前统一检查技能冲突和领域导航路径，再把技能复制到同文件系统的临时目录并逐个切换，最后排他创建缺失导航；补齐导航与技能切换持有同一组安装锁，即使技能全部 unchanged 但仍需补文件也会取得锁。普通复制、切换或导航写入异常会尝试撤销本次已切换技能及本次新建导航，并清理本次建立的空领域目录；不会回删安装前已有资料。撤销失败时明确报告需要人工恢复的位置。它不承诺断电、强制终止或外部程序同时修改下的完整事务。
+安装在写入前统一检查技能冲突和领域导航路径，再把技能复制到同文件系统的临时目录并逐个切换，最后创建缺失导航或更新旧模板；补齐导航与技能切换持有同一组安装锁，即使技能全部 unchanged 但仍需补文件也会取得锁。普通复制、切换或导航写入异常会尝试撤销本次已切换技能及本次新建导航、恢复更新前的模板原字节，并清理本次建立的空领域目录；不会回删安装前已有资料。撤销失败时明确报告需要人工恢复的位置。它不承诺断电、强制终止或外部程序同时修改下的完整事务。
 
 安装事务依次取得 `.agents/.skills-wta-install.lock/` 和 `.agents/.skills-hub-install.lock/`，同时持有两把锁，防止新旧安装器并发写入同一批技能。旧锁名有意保留以兼容 `skills-wta`；安装结束仅释放本次自己取得的锁。若异常终止留下锁，先确认没有新旧安装进程，再移除遗留锁并检查备份。不要在进程运行时删除锁。
 

@@ -239,7 +239,7 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
        skills-hub install <selection> [--dry-run] [--replace]
 
 Install complete skills into the current project's .agents/skills/. No destination option.
-Selected dev/system domains also initialize missing domain AGENTS.md navigation; existing files are preserved.
+Selected dev/system domains also initialize missing domain AGENTS.md navigation; managed templates are updated; business records are preserved.
 --dry-run  Preview without writing files.
 --replace  Back up differing packages before replacing them.
 `;

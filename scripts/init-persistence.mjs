@@ -38,20 +38,27 @@ export function planPersistence(skills, project, fsOps = fs) {
   return targets.filter(([domain]) => domains.has(domain)).map(([, template, directory]) => {
     const relative = directory + '/AGENTS.md';
     const exists = inspect(project, relative, fsOps);
+    const content = fsOps.readFileSync(path.join(templates, template + '.md'), 'utf8');
+    const previous = exists ? fsOps.readFileSync(path.join(project, relative)) : null;
     return {
       path: relative,
       destination: path.join(project, relative),
-      action: exists ? 'preserve' : 'create',
-      content: exists ? null : fsOps.readFileSync(path.join(templates, template + '.md'), 'utf8'),
+      action: !exists ? 'create' : previous.equals(Buffer.from(content)) ? 'preserve' : 'update',
+      content,
+      previous,
     };
   });
 }
 
-// journal 只记录本次排他创建的文件和目录，失败时由安装事务撤销。
+// journal 保存本次创建项及被更新模板的原字节，失败时恢复；不处理业务记录。
 export function applyPersistence(plan, project, fsOps = fs, journal = []) {
   for (const item of plan) {
     if (item.action === 'preserve') continue;
-    if (inspect(project, item.path, fsOps)) throw new Error('说明文件在安装期间出现，请重新检查：' + item.destination);
+    const exists = inspect(project, item.path, fsOps);
+    if ((item.action === 'create' && exists) || (item.action === 'update' &&
+        (!exists || !fsOps.readFileSync(item.destination).equals(item.previous)))) {
+      throw new Error('说明文件在安装期间变化，请重新检查：' + item.destination);
+    }
     const parts = item.path.split('/').slice(0, -1);
     for (let index = 0; index < parts.length; index += 1) {
       const directory = path.join(project, ...parts.slice(0, index + 1));
@@ -60,9 +67,12 @@ export function applyPersistence(plan, project, fsOps = fs, journal = []) {
         journal.push({ path: directory, directory: true });
       }
     }
-    const descriptor = fsOps.openSync(item.destination, 'wx');
-    journal.push({ path: item.destination, directory: false });
-    try { fsOps.writeFileSync(descriptor, item.content, 'utf8'); }
+    const descriptor = fsOps.openSync(item.destination, item.action === 'update' ? 'r+' : 'wx');
+    journal.push({ path: item.destination, directory: false, previous: item.previous });
+    try {
+      fsOps.writeFileSync(descriptor, item.content, 'utf8');
+      fsOps.ftruncateSync(descriptor, Buffer.byteLength(item.content));
+    }
     finally { fsOps.closeSync(descriptor); }
   }
 }
@@ -71,7 +81,8 @@ export function rollbackPersistence(journal, fsOps = fs) {
   const errors = [];
   for (const item of [...journal].reverse()) {
     try {
-      if (item.directory) fsOps.rmdirSync(item.path);
+      if (item.previous) fsOps.writeFileSync(item.path, item.previous);
+      else if (item.directory) fsOps.rmdirSync(item.path);
       else fsOps.unlinkSync(item.path);
     } catch (error) {
       if (error.code === 'ENOENT' || (item.directory && error.code === 'ENOTEMPTY')) continue;

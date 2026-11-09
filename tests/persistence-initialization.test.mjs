@@ -52,13 +52,13 @@ test('list, help, cancellation-equivalent empty selection and invalid selection 
   assert.deepEqual(files(root), []);
 });
 
-test('reinstall preserves custom instructions and root file; missing instructions are filled even for unchanged skills', t => {
+test('reinstall updates managed instructions and fills missing files while preserving root and unchanged templates', t => {
   const root = project(t);
   success(run(root, 'install', '--skill', 'dev-intake'));
   const custom = path.join(root, '.agents/dev/AGENTS.md');
   fs.writeFileSync(custom, '# 我的规则\r\n不得覆盖\r\n');
   fs.writeFileSync(path.join(root, 'AGENTS.md'), '# 根规则\n');
-  const mtime = fs.statSync(custom, { bigint: true }).mtimeNs;
+  const template = fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/dev.md'), 'utf8');
   const skillFile = path.join(root, '.agents/skills/dev-intake/SKILL.md');
   const skillMtime = fs.statSync(skillFile, { bigint: true }).mtimeNs;
   fs.unlinkSync(path.join(root, dev[1]));
@@ -66,9 +66,10 @@ test('reinstall preserves custom instructions and root file; missing instruction
   assert.match(preview.stdout, /would create/);
   assert.equal(fs.existsSync(path.join(root, dev[1])), false);
   success(run(root, 'install', '--skill', 'dev-intake'));
+  const mtime = fs.statSync(custom, { bigint: true }).mtimeNs;
   success(run(root, 'install', '--skill', 'dev-intake', '--replace'));
   assert.deepEqual(records(root), [...dev, 'AGENTS.md'].sort());
-  assert.equal(fs.readFileSync(custom, 'utf8'), '# 我的规则\r\n不得覆盖\r\n');
+  assert.equal(fs.readFileSync(custom, 'utf8'), template);
   assert.equal(fs.statSync(custom, { bigint: true }).mtimeNs, mtime);
   assert.equal(fs.statSync(skillFile, { bigint: true }).mtimeNs, skillMtime);
   assert.equal(fs.readFileSync(path.join(root, 'AGENTS.md'), 'utf8'), '# 根规则\n');
@@ -125,6 +126,9 @@ test('persistence write failure rolls back new files and restores replaced skill
   fs.mkdirSync(path.join(root, '.agents/dev/notes'), { recursive: true });
   const user = path.join(root, '.agents/dev/notes/user.md');
   fs.writeFileSync(user, 'keep project knowledge');
+  const managed = path.join(root, '.agents/dev/AGENTS.md');
+  fs.writeFileSync(managed, '# 旧模板\n' + '旧内容'.repeat(200));
+  const originalManaged = fs.readFileSync(managed);
   const installer = createInstaller({ fsOps: { ...fs, openSync(filename, ...args) {
     if (filename === path.join(root, '.agents/dev/notes/AGENTS.md')) throw new Error('fixture permission denied');
     return fs.openSync(filename, ...args);
@@ -132,7 +136,7 @@ test('persistence write failure rolls back new files and restores replaced skill
   assert.throws(() => installer.apply(selected, root, true), /rolled back.*permission denied/);
   assert.equal(fs.readFileSync(path.join(installed, 'local.txt'), 'utf8'), 'keep previous skill');
   assert.equal(fs.readFileSync(user, 'utf8'), 'keep project knowledge');
-  assert.equal(fs.existsSync(path.join(root, '.agents/dev/AGENTS.md')), false);
+  assert.deepEqual(fs.readFileSync(managed), originalManaged);
   assert.equal(fs.existsSync(path.join(root, '.agents/dev/changes')), false);
   assert.equal(fs.existsSync(path.join(root, '.agents/.skills-hub-install.lock')), false);
   assert.equal(fs.existsSync(path.join(root, '.agents/.skills-wta-install.lock')), false);
@@ -161,6 +165,32 @@ test('filling missing records for unchanged skills holds both installer locks', 
   assert.ok(installer.apply(selected, root).actions.every(action => action.kind === 'unchanged'));
   assert.ok(observed);
   assert.ok(fs.existsSync(missing));
+});
+
+test('generated navigation paths resolve relative to each AGENTS.md, including deep archives', t => {
+  const root = project(t);
+  success(run(root, 'install', '--skill', 'dev-intake', 'system-inspect'));
+  for (const [directory, relative, target] of [
+    ['dev', './changes/', 'dev/changes'],
+    ['dev', '../system/', 'system'],
+    ['dev/context', '../notes/context/', 'dev/notes/context'],
+    ['dev/notes', '../archive/', 'dev/archive'],
+    ['dev/archive', './changes/implemented/', 'dev/archive/changes/implemented'],
+    ['dev/archive', './changes/rejected/', 'dev/archive/changes/rejected'],
+    ['dev/archive', '../notes/', 'dev/notes'],
+    ['dev/changes', '../notes/', 'dev/notes'],
+    ['dev/changes', '../archive/changes/', 'dev/archive/changes'],
+    ['dev/project', '../changes/', 'dev/changes'],
+    ['dev/archive/changes/implemented', '../../../notes/', 'dev/notes'],
+    ['dev/archive/changes/rejected', '../../../notes/', 'dev/notes'],
+    ['system', '../dev/', 'dev'],
+  ]) {
+    const parent = path.join(root, '.agents', directory);
+    assert.ok(fs.readFileSync(path.join(parent, 'AGENTS.md'), 'utf8').includes('`' + relative + '`'), directory + ': ' + relative);
+    assert.equal(path.resolve(parent, relative), path.join(root, '.agents', target));
+  }
+  // A navigation entry for on-demand knowledge must not create empty business directories.
+  assert.equal(fs.existsSync(path.join(root, '.agents/dev/notes/context')), false);
 });
 
 test('initialization ownership is the installer, not an installed skill', t => {

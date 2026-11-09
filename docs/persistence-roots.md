@@ -29,7 +29,7 @@
 
 安装选择中有任意 dev 技能，就由仓库安装代码一次性补齐 `.agents/dev/`、其 changes、notes、deploy、archive、project、context 六类目录及两个归档结果目录中的九份简短 AGENTS.md。有 system 技能时另补 `.agents/system/AGENTS.md`；不因选 dev 就创建另一个领域。结构写死在 [初始化模块](../scripts/init-persistence.mjs)，模板归 [scripts/persistence](../scripts/persistence/dev.md)，不放进或随技能复制。
 
-已有说明保留，重复安装仅补缺失文件；需要更新用户规则时按语义合并，不自动覆盖。其余子目录与业务记录按真实内容创建。安装器不编辑根 AGENTS.md；按实际任务需要补导航，不制造用户项目指令。dry-run 统一预览技能与目录计划且零写入。
+上述固定位置的 AGENTS.md 属于安装器管理模板，重复安装时自动更新，内容相同不重写；自定义规则应放在根 AGENTS.md 或其他非模板文件中，避免被覆盖。其余子目录与业务记录按真实内容创建。安装器不编辑根 AGENTS.md；按实际任务需要补导航，不制造用户项目指令。dry-run 统一预览技能与目录计划且零写入。
 
 活跃 change 保持 `<YYYY-MM-DD-slug>/`，收尾时由 `dev-archive` 判定结果并增加 architecture、feature、bug-fix、refactor、process 主类型前缀，日期沿用创建日期。暂缓、阻塞、未决定或必要交付未完成的任务不归档；旧历史不自动迁移。implemented 不自动表示上线，rejected 必须有明确不实施依据。完整操作见 [change 收尾](../skills/dev/dev-archive/references/change-closure.md)及[安装契约](installation.md)。
 
