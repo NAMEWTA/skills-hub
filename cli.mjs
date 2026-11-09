@@ -30,6 +30,9 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
+    if (selected.some(skill => ['dev', 'system'].includes(skill.domain))) {
+      ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；已有文件保留，预览不写入。', '领域初始化');
+    }
     const dryRun = argv.includes('--dry-run');
     if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装以上技能？', initialValue: true }))) {
       ui.cancel('已取消，未修改文件。'); return 0;

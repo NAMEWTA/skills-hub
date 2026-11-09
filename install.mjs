@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash, randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import { planPersistence, applyPersistence, rollbackPersistence } from './scripts/init-persistence.mjs';
 
 export const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
 export const licenseBundleFiles = Object.freeze([
@@ -150,12 +151,18 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     if (conflicts.length) {
       throw new InstallError(`Existing packages differ: ${conflicts.join(', ')}. No skills were changed. Inspect them first; --replace saves backups before replacement.`);
     }
+    planPersistence(skills, project, fsOps);
     return actions;
   }
 
+  function persistencePlan(skills, project) { return planPersistence(skills, project, fsOps); }
+
   function apply(skills, project, replace = false) {
     let actions = plan(skills, project, replace);
-    if (actions.every((action) => action.kind === 'unchanged')) return { actions, backup: null };
+    let persistence = persistencePlan(skills, project);
+    if (actions.every((action) => action.kind === 'unchanged') && persistence.every(item => item.action === 'preserve')) {
+      return { actions, backup: null, persistence };
+    }
     const agents = path.join(project, '.agents');
     fsOps.mkdirSync(agents, { recursive: true });
     const locks = [];
@@ -177,8 +184,10 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     let staging = null;
     let backup = null;
     const completed = [];
+    const persistenceJournal = [];
     try {
       actions = plan(skills, project, replace);
+      persistence = persistencePlan(skills, project);
       staging = fsOps.mkdtempSync(path.join(agents, '.skills-hub-stage-'));
       for (const action of actions) {
         if (action.kind !== 'unchanged') {
@@ -202,9 +211,10 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         fsOps.renameSync(path.join(staging, action.name), action.destination);
         if (previous === null) completed.push({ destination: action.destination, previous });
       }
-      return { actions, backup };
+      applyPersistence(persistence, project, fsOps, persistenceJournal);
+      return { actions, backup, persistence };
     } catch (error) {
-      const recoveryErrors = [];
+      const recoveryErrors = rollbackPersistence(persistenceJournal, fsOps);
       for (const item of completed.reverse()) {
         try {
           if (exists(item.destination)) fsOps.rmSync(item.destination, { recursive: true });
@@ -212,15 +222,15 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         } catch (recoveryError) { recoveryErrors.push(`${item.destination}: ${recoveryError.message}`); }
       }
       if (recoveryErrors.length) {
-        throw new InstallError(`Installation failed: ${error.message}. Some files need manual recovery; keep ${backup}. ${recoveryErrors.join('; ')}`);
+        throw new InstallError(`Installation failed: ${error.message}. Some files need manual recovery.${backup ? ` Keep ${backup}.` : ''} ${recoveryErrors.join('; ')}`);
       }
-      throw new InstallError(`Installation failed; changed skill directories were rolled back: ${error.message}`);
+      throw new InstallError(`Installation failed; changed skill directories and newly created domain navigation were rolled back: ${error.message}`);
     } finally {
       if (staging !== null) fsOps.rmSync(staging, { recursive: true, force: true });
       for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
     }
   }
-  return { catalog, plan, apply };
+  return { catalog, plan, apply, persistencePlan };
 }
 
 export function catalog(repository = repositoryRoot) { return createInstaller({ repository }).catalog(); }
@@ -229,6 +239,7 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
        skills-hub install <selection> [--dry-run] [--replace]
 
 Install complete skills into the current project's .agents/skills/. No destination option.
+Selected dev/system domains also initialize missing domain AGENTS.md navigation; existing files are preserved.
 --dry-run  Preview without writing files.
 --replace  Back up differing packages before replacing them.
 `;
@@ -276,13 +287,14 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
       return 0;
     }
     const actualProject = fs.realpathSync(project);
-    const { actions, backup } = args.dryRun
-      ? { actions: installer.plan(selected, actualProject, args.replace), backup: null }
+    const { actions, backup, persistence } = args.dryRun
+      ? { actions: installer.plan(selected, actualProject, args.replace), backup: null, persistence: installer.persistencePlan(selected, actualProject) }
       : installer.apply(selected, actualProject, args.replace);
     stdout(`Destination: ${path.join(actualProject, '.agents', 'skills')}`);
     for (const action of actions) {
       stdout(`${args.dryRun ? 'would ' : ''}${action.kind.padEnd(9)} ${action.name}`);
     }
+    for (const item of persistence) stdout(`${args.dryRun ? 'would ' : ''}${item.action.padEnd(9)} ${item.path}`);
     if (backup !== null) stdout(`Backups: ${backup}`);
     return 0;
   } catch (error) { stderr(`Error: ${error.message}`); return 1; }

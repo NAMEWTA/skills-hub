@@ -2,7 +2,7 @@
 
 ## 分发内容
 
-包名为 `@namewta/skills-hub`，当前包版本为 `0.1.4`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.4`（分页树形搜索交互）或 `npx @namewta/skills-hub@0.1.4 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
+包名为 `@namewta/skills-hub`，当前包版本为 `0.1.5`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.5`（分页树形搜索交互）或 `npx @namewta/skills-hub@0.1.5 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
 
 在目标项目根目录运行：
 
@@ -15,7 +15,7 @@ npx @namewta/skills-hub@0.0.8 install --domain dev --replace
 
 `npx` 负责取得 npm 包，安装器按明确选择把完整技能复制到当前项目的 `.agents/skills/`；许可只保留在仓库和 npm 包内，不复制到项目。包没有安装后自动执行的 lifecycle hook。源码方式仍可使用 `node /path/to/skills-hub/install.mjs`，参数一致。
 
-`package.json` 的文件白名单只分发安装器、交互 CLI、技能、许可、README 与法律说明。交互 UI 依赖由 npm 安装；实际 tarball 检查允许正常解析这些依赖，再验证包内命令、文件复制与重复安装；无依赖夹具继续验证完全离线 npm 安装。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.8.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
+`package.json` 的文件白名单只分发安装器、交互 CLI、`scripts/init-persistence.mjs` 及 `scripts/persistence/` 固定模板、技能、许可、README 与法律说明。选择 dev/system 技能时由安装代码按领域补齐缺失导航，不依赖技能执行；这些安装资源不复制进目标技能目录。交互 UI 依赖由 npm 安装；实际 tarball 检查允许正常解析这些依赖，再验证包内命令、文件复制与重复安装；无依赖夹具继续验证完全离线 npm 安装。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.0.8.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
 
 ## 仓库与旧版迁移
 

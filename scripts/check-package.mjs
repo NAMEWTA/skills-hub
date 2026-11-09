@@ -20,6 +20,10 @@ export function regularFiles(directory, prefix = '') {
   });
 }
 
+function persistenceResources(root) {
+  return ['scripts/init-persistence.mjs', ...regularFiles(join(root, 'scripts/persistence')).map(file => 'scripts/persistence/' + file)];
+}
+
 export function validatePack(info, root = ROOT) {
   const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
   if (info.name !== pkg.name || info.version !== pkg.version) throw new Error('npm 包身份与 package.json 不一致');
@@ -27,6 +31,8 @@ export function validatePack(info, root = ROOT) {
   const allowedRoot = new Set(['install.mjs', 'package.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']);
   if (pkg.dependencies?.['@clack/prompts']) allowedRoot.add('cli.mjs');
   if (pkg.dependencies?.['@clack/core']) allowedRoot.add('tree-select.mjs');
+  const installerResources = persistenceResources(root);
+  for (const resource of installerResources) allowedRoot.add(resource);
   for (const file of info.files) {
     if (!allowedRoot.has(file.path) && !/^(skills|licenses)\//.test(file.path)) {
       throw new Error(`npm 包包含范围外文件：${file.path}`);
@@ -101,8 +107,11 @@ export function checkPackage(root = ROOT) {
       runNode(join(installed, 'cli.mjs'), [], temporary);
     }
     runNode(cli, ['list'], temporary);
+    runNode(cli, ['install', '--all', '--dry-run'], prefix);
+    if (existsSync(join(prefix, '.agents'))) throw new Error('安装预览不应创建项目目录');
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
+    const domains = new Set();
     for (const domain of readdirSync(join(root, 'skills'))) {
       for (const name of readdirSync(join(root, 'skills', domain))) {
         const source = join(root, 'skills', domain, name);
@@ -119,6 +128,7 @@ export function checkPackage(root = ROOT) {
             }
           }
         }
+        domains.add(domain);
         skills += 1;
       }
     }
@@ -126,6 +136,14 @@ export function checkPackage(root = ROOT) {
       if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(installed, 'licenses', relative)))) {
         throw new Error(`npm 包内许可不一致：${relative}`);
       }
+    }
+    for (const domain of domains) {
+      if (['dev', 'system'].includes(domain) && !existsSync(join(prefix, '.agents', domain, 'AGENTS.md'))) {
+        throw new Error(`安装所选领域后缺少持久化导航：${domain}`);
+      }
+    }
+    for (const resource of persistenceResources(root)) {
+      if (!readFileSync(join(root, resource)).equals(readFileSync(join(installed, resource)))) throw new Error(`安装初始化资源不同：${resource}`);
     }
     runNode(cli, ['install', '--all'], prefix);
     if (existsSync(join(prefix, '.agents', 'skills-hub-licenses'))) throw new Error('安装器不应创建项目许可目录');

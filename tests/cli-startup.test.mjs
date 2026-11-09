@@ -12,6 +12,8 @@ for (const argv of [[], ['install'], ['install', '--dry-run']]) {
     const root = temporary(t, 'skills-hub startup ');
     const entry = path.join(root, 'install.mjs');
     fs.copyFileSync(path.join(repositoryRoot, 'install.mjs'), entry);
+    fs.mkdirSync(path.join(root, 'scripts'));
+    fs.copyFileSync(path.join(repositoryRoot, 'scripts/init-persistence.mjs'), path.join(root, 'scripts/init-persistence.mjs'));
     // 保留真实模块依赖环，仅用确定性 UI 替代终端输入。
     write(path.join(root, 'cli.mjs'), `import { main } from './install.mjs';
 export async function interactive({argv}) {

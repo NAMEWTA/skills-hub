@@ -2,7 +2,7 @@
 
 ## 约定
 
-每个技能在源码中的领域目录为 `skills/<domain>/`；安装后仍统一为 `.agents/skills/<domain>-xxx/`，但其长期项目记录落在目标项目的 `.agents/<domain>/`。安装器只安装技能，不自动建立、转移、清空或覆盖用户的知识、配置与部署记录。
+每个技能在源码中的领域目录为 `skills/<domain>/`；安装后仍统一为 `.agents/skills/<domain>-xxx/`，但其长期项目记录落在目标项目的 `.agents/<domain>/`。安装器复制所选技能，并按所选领域补齐最小目录说明；不自动生成、转移、清空或覆盖用户的业务知识、配置与部署记录。
 
 ```text
 .agents/
@@ -12,6 +12,10 @@
     notes/                   # 术语、ADR、背景、错误经验、学习导读
     deploy/                  # 环境与发布
     archive/                 # 历史记录
+      changes/
+        implemented/         # 已交付任务：<type>_<YYYY-MM-DD>-<slug>/
+        rejected/            # 明确不实施任务：同上命名
+      notes/                 # 退役知识，保留原分类；按需建立
     project/                 # 项目非秘密配置
     context/                 # 模型角色与背景
   system/
@@ -20,6 +24,16 @@
 ```
 
 开发技能不把系统主机记录写到 `.agents/dev/system/`，系统技能也不把运维结果写到 `.agents/dev/`。跨领域任务只读取或引用另一领域的现有记录，不复制维护一份竞争事实；归档仍由相关领域承担。用户明确要求其他位置时遵循本次授权，并在导航中保留真实路径。
+
+## 安装时初始化
+
+安装选择中有任意 dev 技能，就由仓库安装代码一次性补齐 `.agents/dev/`、其 changes、notes、deploy、archive、project、context 六类目录及两个归档结果目录中的九份简短 AGENTS.md。有 system 技能时另补 `.agents/system/AGENTS.md`；不因选 dev 就创建另一个领域。结构写死在 [初始化模块](../scripts/init-persistence.mjs)，模板归 [scripts/persistence](../scripts/persistence/dev.md)，不放进或随技能复制。
+
+已有说明保留，重复安装仅补缺失文件；需要更新用户规则时按语义合并，不自动覆盖。其余子目录与业务记录按真实内容创建。安装器不编辑根 AGENTS.md；按实际任务需要补导航，不制造用户项目指令。dry-run 统一预览技能与目录计划且零写入。
+
+活跃 change 保持 `<YYYY-MM-DD-slug>/`，收尾时由 `dev-archive` 判定结果并增加 architecture、feature、bug-fix、refactor、process 主类型前缀，日期沿用创建日期。暂缓、阻塞、未决定或必要交付未完成的任务不归档；旧历史不自动迁移。implemented 不自动表示上线，rejected 必须有明确不实施依据。完整操作见 [change 收尾](../skills/dev/dev-archive/references/change-closure.md)及[安装契约](installation.md)。
+
+目录说明只记录职责、边界与导航，不是项目事实数据库，也不保证被宿主递归自动加载。使用技能时按需显式读取开发根及相关目录说明。选中 system 的安装只补齐系统根导航，不建立虚构主机或配置系统。
 
 根目录的 `AGENTS.md` 保持简短导航，指向代码与各领域的现行知识。既有 `docs/`、部署手册、ADR 等仍可直接引用，避免平行复制。密码、token 与密钥不写入这些 Markdown，只保存真实安全存储的引用。
 
@@ -37,4 +51,4 @@
 
 ## 执行与验证
 
-技能入口和完整参考应引用当前领域的目标路径。按需建立目录，不为每次小任务创建空模板。源码 CI 的持久化路径校验检查运行技能是否重新写入弃用的 `wtadev` 路径，并检查域内系统路径没有误挂到开发根目录。上游原始材料和历史 Git 发布版本保持原状。
+技能入口和完整参考应引用当前领域的目标路径。除安装时按所选领域补齐的最小目录说明骨架外，按需建立目录，不为每次小任务创建空模板。源码 CI 的持久化路径校验检查运行技能是否重新写入弃用的 `wtadev` 路径，并检查域内系统路径没有误挂到开发根目录。上游原始材料和历史 Git 发布版本保持原状。

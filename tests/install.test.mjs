@@ -14,6 +14,9 @@ class InstallFixture {
     fs.mkdirSync(this.project);
     fs.mkdirSync(this.repository);
     fs.copyFileSync(path.join(repositoryRoot, 'install.mjs'), path.join(this.repository, 'install.mjs'));
+    fs.mkdirSync(path.join(this.repository, 'scripts'));
+    fs.copyFileSync(path.join(repositoryRoot, 'scripts/init-persistence.mjs'), path.join(this.repository, 'scripts/init-persistence.mjs'));
+    fs.cpSync(path.join(repositoryRoot, 'scripts/persistence'), path.join(this.repository, 'scripts/persistence'), { recursive: true });
     this.skillRoot = path.join(this.repository, 'skills');
     this.licenseRoot = path.join(this.repository, 'licenses');
     for (const name of [...licenseBundleFiles, 'third-party.txt']) write(path.join(this.licenseRoot, name), `Fixture legal notice: ${name}\n`);

@@ -10,16 +10,16 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.4
+npx @namewta/skills-hub@0.1.5
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.4
+npm install -g @namewta/skills-hub@0.1.5
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.4 list
-npx @namewta/skills-hub@0.1.4 install --domain dev
-npx @namewta/skills-hub@0.1.4 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.5 list
+npx @namewta/skills-hub@0.1.5 install --domain dev
+npx @namewta/skills-hub@0.1.5 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；内容冲突需检查后显式运行 `skills-hub install --replace`，不会自动覆盖。非交互环境继续要求明确参数，不会等待输入。
@@ -150,7 +150,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 
 ## 项目知识怎样留下来
 
-**项目持久化按领域区分：开发使用 `.agents/dev/`，系统维护使用 `.agents/system/`。** 需求、知识、部署、归档和项目配置都按职责放在这个根目录下，只有实际需要时才创建对应领域子目录。新增领域 `skills/<domain>/` 对应 `.agents/<domain>/`，不在领域根下重复嵌套同名目录。技能安装位置仍为 `.agents/skills/`；项目根目录的 `AGENTS.md` 保留简短导航，指向实际知识文件。
+**项目持久化按领域区分：开发使用 `.agents/dev/`，系统维护使用 `.agents/system/`。** 需求、知识、部署、归档和项目配置都按职责放在这个根目录下，安装器在选择任意 dev 技能时补齐九份简短目录说明，包含 `.agents/dev/AGENTS.md`、开发六类分区及两个归档结果入口；选择 system 技能另补系统根说明。目录与模板固定维护在 `scripts/`，不依赖执行技能。已有说明不覆盖，重复安装只补缺失文件，预览不写入；其余子目录与业务记录按实际需要创建。新增领域 `skills/<domain>/` 对应 `.agents/<domain>/`，不在领域根下重复嵌套同名目录。技能安装位置仍为 `.agents/skills/`；项目根目录的 `AGENTS.md` 保留简短导航，指向实际知识文件。
 
 | 位置 | 保存什么 |
 | --- | --- |
@@ -163,12 +163,13 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | `.agents/dev/notes/errors/` | 可能再次出现的错误、识别方式与恢复经验 |
 | `.agents/dev/notes/learning/` | 经代码核验的模块导读 |
 | `.agents/dev/deploy/<环境>/` | 当前运行手册、配置与凭据引用、历史发布记录 |
-| `.agents/dev/archive/changes/`、`.agents/dev/archive/notes/` | 已结束过程与历史知识 |
+| `.agents/dev/archive/changes/implemented/`、`rejected/` | 已交付或明确不实施的 change；归档时命名为 `<type>_<YYYY-MM-DD>-<slug>/` |
+| `.agents/dev/archive/notes/` | 退役知识，保留原分类 |
 | `.agents/dev/project/` | 项目专用配置与功能图，例如 `issue-automation/` |
 | `.agents/dev/context/model-roles.md` | 当前宿主的模型角色与推理预算配置 |
 | `.agents/system/<主机标识>/` | 系统检查、清理、代理及配置的维护记录 |
 
-已有 `docs/` 等位置的有效文档按真实位置引用，避免重复保存正文。迁移本套技能的既有资料时，保留原有子目录与内容，更新项目导航及入链。当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；归档时核对引用、修复过期事实、保留仍重要的理由。详见 [领域持久化与迁移](docs/persistence-roots.md)及[知识与记忆](docs/knowledge.md)。
+已有 `docs/` 等位置的有效文档按真实位置引用，避免重复保存正文。迁移本套技能的既有资料时，保留原有子目录与内容，更新项目导航及入链。当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；活跃 change 不提前分类或改名；归档时由 `dev-archive` 核实结果、提炼知识，再按 architecture、feature、bug-fix、refactor、process 主类型移动重命名，沿用原创建日期并修复引用。暂缓或必要交付未完成不归档，旧历史不自动迁移；implemented 不自动表示上线。详见 [领域持久化与迁移](docs/persistence-roots.md)及[知识与记忆](docs/knowledge.md)。
 
 ## UI 入口合并
 

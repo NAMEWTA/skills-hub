@@ -47,4 +47,4 @@
 | 跨页面设计规则 | 有实现依据的组件与交互约束 | 现有设计说明或模块背景 |
 | 学习导读 | 能帮助接手的完整运行路径 | `.agents/dev/notes/learning/` |
 
-新增资料统一位于 `.agents/dev/`，既有记录先按真实位置查阅引用，不擅自批量迁移或重命名。暂时性内容留在对应需求，明确归档时保存到 `.agents/dev/archive/changes/`；迁移须保留内容并修复链接。已有独立复盘按真实位置引用。
+新增资料统一位于 `.agents/dev/`，既有记录先按真实位置查阅引用，不擅自批量迁移或重命名。暂时性内容留在对应需求，明确归档时按[收尾方法](change-closure.md)保存到 `.agents/dev/archive/changes/<result>/<type>_<YYYY-MM-DD>-<slug>/`，result 为 implemented 或 rejected；保留原创建日期、内容与历史身份并修复链接，旧历史不自动迁移。已有独立复盘按真实位置引用。

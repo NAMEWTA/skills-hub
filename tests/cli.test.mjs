@@ -25,6 +25,9 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
     assert.ok(ctx.ui.notes.join('\n').includes(i ? 'unchanged' : 'install'));
   }
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-spec/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));
+  assert.ok(fs.existsSync(path.join(project, '.agents/dev/archive/changes/rejected/AGENTS.md')));
+  assert.equal(fs.existsSync(path.join(project, '.agents/system')), false);
   assert.equal(fs.existsSync(path.join(project, '.agents/skills-hub-licenses')), false);
 });
 
@@ -39,6 +42,8 @@ test('one tree mixes a domain, a child exclusion and another domain leaf', async
   assert.equal(await interactive({ project, ...ctx }), 0);
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-build/SKILL.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/system-proxy/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));
+  assert.ok(fs.existsSync(path.join(project, '.agents/system/AGENTS.md')));
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/dev-spec')), false);
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/system-clean')), false);
 });

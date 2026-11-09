@@ -68,7 +68,7 @@ class GitFixture {
     this.environment = isolatedGitEnvironment(path.join(this.base, 'git-config'));
     this.entry = write(path.join(this.root, entry), valid);
     for (const filename of [
-      'install.mjs', 'scripts/check.mjs', 'scripts/check-skill-quality.mjs',
+      'install.mjs', 'scripts/init-persistence.mjs', 'scripts/check.mjs', 'scripts/check-skill-quality.mjs',
       'scripts/validate.mjs', 'scripts/validate-materials.mjs', 'scripts/check-persistence-roots.mjs', 'scripts/install-hooks.mjs',
       '.githooks/pre-commit', '.githooks/pre-push', '.githooks/run-check.mjs',
     ]) {
