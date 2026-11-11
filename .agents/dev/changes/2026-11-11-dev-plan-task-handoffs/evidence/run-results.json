@@ -1,0 +1,32 @@
+{
+  "baseline-shared": {
+    "code": 0,
+    "timedOut": false,
+    "started": "2026-11-11T09:41:50.560Z",
+    "ended": "2026-11-11T09:44:02.118Z"
+  },
+  "candidate-shared-initial": {
+    "code": 0,
+    "timedOut": false,
+    "started": "2026-11-11T09:41:50.572Z",
+    "ended": "2026-11-11T09:43:36.635Z"
+  },
+  "candidate-shared": {
+    "code": 0,
+    "timedOut": false,
+    "started": "2026-11-11T09:51:34.474Z",
+    "ended": "2026-11-11T09:53:02.190Z"
+  },
+  "candidate-small": {
+    "code": 0,
+    "timedOut": false,
+    "started": "2026-11-11T09:51:34.450Z",
+    "ended": "2026-11-11T09:51:54.173Z"
+  },
+  "candidate-review": {
+    "code": 0,
+    "timedOut": false,
+    "started": "2026-11-11T09:51:34.490Z",
+    "ended": "2026-11-11T09:52:36.415Z"
+  }
+}

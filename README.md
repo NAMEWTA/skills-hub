@@ -10,16 +10,16 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.7
+npx @namewta/skills-hub@0.1.8
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.7
+npm install -g @namewta/skills-hub@0.1.8
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.7 list
-npx @namewta/skills-hub@0.1.7 install --domain dev
-npx @namewta/skills-hub@0.1.7 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.8 list
+npx @namewta/skills-hub@0.1.8 install --domain dev
+npx @namewta/skills-hub@0.1.8 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；同名技能存在差异时自动备份替换，无需额外参数。非交互环境继续要求明确参数，不会等待输入。
@@ -84,7 +84,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | [dev-grill](skills/dev/dev-grill/SKILL.md) | 按设计决策树澄清问题，先查事实，再问真正的产品选择 |
 | [dev-spec](skills/dev/dev-spec/SKILL.md) | 把意图转成行为规格、验收、边界与非目标 |
 | [dev-architecture](skills/dev/dev-architecture/SKILL.md) | 对比结构方案，明确领域、接口、状态所有权及取舍 |
-| [dev-plan](skills/dev/dev-plan/SKILL.md) | 拆分可交付的垂直切片与真正的依赖 |
+| [dev-plan](skills/dev/dev-plan/SKILL.md) | 拆分可接手与验收的垂直切片，核对规格覆盖与真正依赖 |
 | [dev-sharpen](skills/dev/dev-sharpen/SKILL.md) | 用四问深化待执行请求、原始材料、方法与独立证据 |
 | [dev-parallel](skills/dev/dev-parallel/SKILL.md) | 分工覆盖、多个候选比选、交叉评审与统一集成 |
 | [dev-ui-design](skills/dev/dev-ui-design/SKILL.md) | 产品界面、设计系统与落地页，完整 token、组件状态与视觉规范 |
@@ -223,5 +223,7 @@ G 组新增 [Herdr 上游技能](https://github.com/herdrdev/herdr/blob/master/s
 感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。B 组完整镜像所固定的 `pstack/` 目录，逐文件与该提交的目录树核对，无遗漏；其余组按表中范围收录。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
 
 技能组织方式还参考 [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 与 [Harness engineering](https://openai.com/index/harness-engineering/)。文章的组织原则已转化为本项目的本地编写与知识管理说明；未转载文章全文。代理配置字段的理解另参考 [MetaCubeX 文档](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b)，运行说明已写在技能本地，不要求使用者访问该文档。
+
+任务与计划交接还对照 [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices)、[Claude 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)及 [OpenAI 技能评测](https://developers.openai.com/blog/eval-skills)：在既有切片与多阶段方法中补足可接手上下文、可观察验收和风险适配，不移植整套官方示例模板。逐项原文、保留内容与必要适配见[维护记录](.agents/dev/changes/2026-11-11-dev-plan-task-handoffs/source-adaptations.md)，未升级表中固定来源。
 
 项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 完整保存在 [许可目录](licenses/) 和 [第三方声明](THIRD_PARTY_NOTICES.md)，包括设计材料内嵌的额外 MIT 声明。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。
