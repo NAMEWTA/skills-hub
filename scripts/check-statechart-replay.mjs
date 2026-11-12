@@ -7,29 +7,25 @@ import path from "node:path";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { pathToFileURL } from "node:url";
+import { readMaterials, queryMaterials, resolveMaterialPath } from "./materials-manifest.mjs";
 
 const ROOT = path.dirname(import.meta.dirname);
-const PREFIX = "pstack/skills/statechart/scripts/test/corpus/";
+const PREFIX = "claude-code/skills/statechart/scripts/test/corpus/";
 const run = promisify(execFile);
 
-function materialRows() {
-  const rows = []; let row = []; let cell = ""; let quoted = false;
-  const text = fs.readFileSync(path.join(ROOT, "materials/manifest.tsv"), "utf8");
-  for (let i = 0; i < text.length; i += 1) {
-    const character = text[i];
-    if (quoted) {
-      if (character === '"' && text[i + 1] === '"') { cell += '"'; i += 1; }
-      else if (character === '"') quoted = false;
-      else cell += character;
-    } else if (character === '"' && !cell) quoted = true;
-    else if (character === "\t") { row.push(cell); cell = ""; }
-    else if (character === "\n") { row.push(cell.replace(/\r$/, "")); rows.push(row); row = []; cell = ""; }
-    else cell += character;
+// Explicit repository root injection keeps tests independent of an in-progress materials migration.
+export function copyCorpus(materialsRoot, corpus) {
+  const rows = queryMaterials(readMaterials(materialsRoot), { project: "pstack" })
+    .filter(row => row.path.startsWith(PREFIX));
+  if (!rows.length) throw new Error("没有找到完整捕获夹具");
+  for (const row of rows) {
+    const relative = row.path.slice(PREFIX.length);
+    const source = resolveMaterialPath(materialsRoot, `materials/pstack/upstream/${row.path}`);
+    const target = path.join(corpus, ...relative.split("/"));
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(source, target);
   }
-  if (quoted) throw new Error("资料清单含未关闭的引号");
-  if (cell || row.length) rows.push([...row, cell]);
-  const header = rows.shift();
-  return rows.map((values) => Object.fromEntries(header.map((key, index) => [key, values[index]])));
+  return rows.length;
 }
 
 // 只保留原适配器的捕获输出回放行为；明确不提供真实 Java 或模型证明。
@@ -50,26 +46,19 @@ const status = path.join(replay, name + ".exit");
 process.exit(fs.existsSync(status) ? Number(fs.readFileSync(status, "utf8")) : 0);
 `;
 
-export async function main() {
+export async function main({ materialsRoot = ROOT, runtimeRoot = ROOT } = {}) {
   console.log("回放已捕获的 TLC 输出，检查解析、图与报告；不是新的 TLC 模型求解。");
   const base = fs.mkdtempSync(path.join(os.tmpdir(), "skills-hub-statechart-replay-"));
   try {
     const corpus = path.join(base, "corpus");
-    for (const row of materialRows()) {
-      if (!row.source_path.startsWith(PREFIX)) continue;
-      const relative = row.source_path.slice(PREFIX.length);
-      if (path.posix.isAbsolute(relative) || relative.split("/").includes("..") || relative.includes("\\")) throw new Error("资料路径不能越出临时目录");
-      const target = path.join(corpus, ...relative.split("/"));
-      fs.mkdirSync(path.dirname(target), { recursive: true });
-      fs.copyFileSync(path.join(ROOT, "materials", row.id, "original.txt"), target);
-    }
+    copyCorpus(materialsRoot, corpus);
     const replay = path.join(base, "replay-java.mjs");
     fs.writeFileSync(replay, REPLAY_JAVA);
     const adapter = path.join(base, "adapter.mjs");
     fs.writeFileSync(adapter, `import childProcess from "node:child_process";\nimport { syncBuiltinESMExports } from "node:module";\nconst file = ${JSON.stringify(replay)};\nfor (const method of ["spawn", "execFile"]) {\n  const original = childProcess[method];\n  childProcess[method] = (command, args, ...rest) => command === "captured-output-replay" ? original(process.execPath, [file, ...args], ...rest) : original(command, args, ...rest);\n}\nsyncBuiltinESMExports();\n`);
     const placeholder = path.join(base, "not-a-real-tlc.jar");
     fs.writeFileSync(placeholder, "");
-    const entry = path.join(ROOT, "skills/dev/dev-statechart/scripts/statechart.mjs");
+    const entry = path.join(runtimeRoot, "skills/dev/dev-statechart/scripts/statechart.mjs");
     const cases = fs.readdirSync(corpus, { withFileTypes: true }).filter((item) => item.isDirectory()).map((item) => item.name).sort();
     if (cases.length === 0) throw new Error("没有找到完整捕获夹具");
     const results = [];

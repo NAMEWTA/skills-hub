@@ -3,109 +3,157 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { check, parseTsv } from '../scripts/validate-materials.mjs';
-import { temporary, write, saveTsv } from './helpers.mjs';
+import { execFileSync } from 'node:child_process';
+import { copyCorpus } from '../scripts/check-statechart-replay.mjs';
+import { check } from '../scripts/validate-materials.mjs';
+import { parseTsv, stringifyTsv, readMaterials, queryMaterials, PARENT_COLUMNS, CHILD_COLUMNS } from '../scripts/materials-manifest.mjs';
+import { temporary, write } from './helpers.mjs';
 
-const hash = (algorithm, value) => createHash(algorithm).update(value).digest('hex');
-
-class MaterialFixture {
-  constructor(t) {
-    this.root = temporary(t, 'skills-hub-materials-');
-    this.materials = path.join(this.root, 'materials');
-    this.pair = path.join(this.materials, 'a001');
-    fs.mkdirSync(this.pair, { recursive: true });
-    this.runtime = write(path.join(this.root, 'skills/dev/dev-sample/references/method.md'), '# 本地方法\n');
-  }
-  writePair(kind = 'document', original = Buffer.from('# Original\n'), localized = Buffer.from('# 完整译文\n')) {
-    for (const name of fs.readdirSync(this.pair)) fs.unlinkSync(path.join(this.pair, name));
-    const originalName = kind === 'asset' ? 'original.png' : 'original.txt';
-    const localizedName = kind === 'asset' ? 'localized.png' : kind === 'document' ? 'zh-CN.txt' : 'localized.txt';
-    write(path.join(this.pair, originalName), original); write(path.join(this.pair, localizedName), localized);
-    this.row = {
-      id: 'a001', kind, source_group: 'sample', source_path: kind === 'asset' ? 'source/example.png' : 'source/example.md',
-      source_git_blob: hash('sha1', Buffer.concat([Buffer.from(`blob ${original.length}\0`), original])),
-      original_sha256: hash('sha256', original), translation_sha256: hash('sha256', localized),
-      runtime_paths: path.relative(this.root, this.runtime).split(path.sep).join('/'), adaptation: '完整内容在本地运行。',
-    };
-    this.save();
-  }
-  save() { saveTsv(path.join(this.materials, 'manifest.tsv'), this.row); }
-  failures() { return check(this.root, { output() {} }); }
+const hash = (a, b) => createHash(a).update(b).digest('hex');
+function fixture(t) {
+  const root = temporary(t, 'materials-isolated-');
+  const project = { project: 'sample', repository: 'https://example.invalid/repo', ref: 'main', revision: 'a'.repeat(40), source_root: 'skills', manifest_path: 'sample/manifest.tsv' };
+  const data = Buffer.from('# Source\r\n');
+  const zh = Buffer.from('# 完整中文对照\n');
+  const row = { path: 'nested/SKILL.md', kind: 'document', language: 'en', source_git_mode: '100644', source_git_blob: hash('sha1', Buffer.concat([Buffer.from(`blob ${data.length}\0`), data])), upstream_sha256: hash('sha256', data), zh_path: 'zh/nested/SKILL.md', zh_sha256: hash('sha256', zh), runtime_paths: 'skills/dev/dev-sample/method.md', runtime_reviewed_blob: '', adaptation: '保留完整方法。' };
+  const upstream = path.join(root, 'materials/sample/upstream', row.path);
+  const localized = path.join(root, 'materials/sample', row.zh_path);
+  write(upstream, data); fs.chmodSync(upstream, 0o644); write(localized, zh);
+  write(path.join(root, row.runtime_paths), '本地方法');
+  const save = (parents = [project], children = [row]) => {
+    write(path.join(root, 'materials/manifest.tsv'), stringifyTsv(parents, PARENT_COLUMNS));
+    write(path.join(root, 'materials/sample/manifest.tsv'), stringifyTsv(children, CHILD_COLUMNS));
+  };
+  save();
+  return { root, project, row, upstream, localized, save, failures: () => check(root, { output() {} }) };
 }
-
-function fidelity(name, run) { test(name, (t) => run(new MaterialFixture(t))); }
-
-fidelity('a complete Chinese document is valid', (f) => { f.writePair(); assert.deepEqual(f.failures(), []); });
-fidelity('source blob detects a changed original even after its SHA-256 was replaced', (f) => {
-  f.writePair(); const changed = Buffer.from('# Modified source\n'); write(path.join(f.pair, 'original.txt'), changed);
-  f.row.original_sha256 = hash('sha256', changed); f.save();
-  assert.ok(f.failures().some((error) => error.includes('source Git blob')));
-});
-fidelity('a changed translation is detected', (f) => {
-  f.writePair(); write(path.join(f.pair, 'zh-CN.txt'), '被截短的译文');
-  assert.ok(f.failures().some((error) => error.includes('SHA-256')));
-});
-fidelity('code preserves identifiers without fabricated Chinese', (f) => {
-  const code = Buffer.from('export const enabled = true;\n'); f.writePair('code', code, code); assert.deepEqual(f.failures(), []);
-});
-fidelity('an empty machine fixture is valid and preserved', (f) => {
-  f.writePair('fixture', Buffer.alloc(0), Buffer.alloc(0)); assert.deepEqual(f.failures(), []);
-});
-fidelity('a machine fixture must not be translated', (f) => {
-  f.writePair('fixture', Buffer.from('{"state":"READY"}\n'), Buffer.from('{"state":"START"}\n'));
-  assert.ok(f.failures().some((error) => error.includes('original bytes')));
-});
-fidelity('a runtime mapping cannot escape skills', (f) => {
-  f.writePair(); f.row.runtime_paths = 'materials/a001/original.txt'; f.save();
-  assert.ok(f.failures().some((error) => error.includes('outside skills')));
-});
-fidelity('an untranslated document is not a Chinese translation', (f) => {
-  f.writePair('document', Buffer.from('# Original\n'), Buffer.from('# Original copied without translation\n'));
-  assert.ok(f.failures().some((error) => error.includes('Chinese translation is absent')));
-});
-fidelity('a binary asset is preserved without text decoding', (f) => {
-  const data = Buffer.from([0x89, 0x50, 0x4e, 0x47, 13, 10, 26, 10, 255, 254]);
-  f.writePair('asset', data, data); assert.deepEqual(f.failures(), []);
-});
-fidelity('a changed asset cannot claim to be an original copy', (f) => {
-  f.writePair('asset', Buffer.from('\x89PNG\r\n\x1a\noriginal'), Buffer.from('\x89PNG\r\n\x1a\nmodified'));
-  assert.ok(f.failures().some((error) => error.includes('original bytes')));
-});
-test('TSV parsing preserves quoted tabs, newlines and quotes', () => {
-  assert.deepEqual(parseTsv('id\tadaptation\r\na001\t"中文\t字段\n保留""引号"\r\n'), [{ id: 'a001', adaptation: '中文\t字段\n保留"引号' }]);
-});
-
-function directoryAlias(t, target, alias) {
-  try { fs.symlinkSync(fs.realpathSync(target), alias, process.platform === 'win32' ? 'junction' : 'dir'); }
-  catch (error) {
-    if (['EPERM', 'EACCES', 'ENOSYS'].includes(error.code)) { t.skip('This environment cannot create directory aliases'); return false; }
-    throw error;
-  }
-  return true;
+const scenario = (name, fn) => test(name, t => fn(fixture(t), t));
+function symlink(t, target, alias) {
+  try { fs.symlinkSync(target, alias, fs.statSync(target).isDirectory() ? (process.platform === 'win32' ? 'junction' : 'dir') : 'file'); return true; }
+  catch (error) { if (['EPERM', 'EACCES', 'ENOSYS'].includes(error.code)) { t.skip('symlink creation unavailable'); return false; } throw error; }
 }
-
-test('project root aliases preserve valid mappings for every material kind', (t) => {
-  const fixture = new MaterialFixture(t);
-  const alias = path.join(temporary(t), 'project-alias');
-  if (!directoryAlias(t, fixture.root, alias)) return;
-  for (const [kind, original, localized] of [
-    ['document', Buffer.from('# Original\n'), Buffer.from('# 完整中文译文\n')],
-    ['code', Buffer.from('export const ready = true;\n'), Buffer.from('export const ready = true;\n')],
-    ['fixture', Buffer.alloc(0), Buffer.alloc(0)],
-    ['asset', Buffer.from([0x89, 0x50, 0x4e, 0x47]), Buffer.from([0x89, 0x50, 0x4e, 0x47])],
-  ]) {
-    fixture.writePair(kind, original, localized);
-    assert.deepEqual(check(alias, { output() {} }), [], kind);
-  }
+scenario('two-level reader, queries and root alias work without real materials', (f, t) => {
+  assert.deepEqual(f.failures(), []);
+  const model = readMaterials(f.root);
+  assert.equal(model.projects[0].rows.length, 1);
+  for (const filter of [{ project: 'sample' }, { project: 'sample', path: f.row.path }, { source_path: 'skills/nested/SKILL.md' }, { runtime_path: f.row.runtime_paths }]) assert.equal(queryMaterials(model, filter).length, 1);
+  const alias = path.join(temporary(t), 'alias'); if (!symlink(t, f.root, alias)) return;
+  assert.deepEqual(check(alias, { output() {} }), []);
 });
-
-test('canonicalizing a root alias does not permit the skills directory to escape it', (t) => {
-  const fixture = new MaterialFixture(t);
-  fixture.writePair();
-  const alias = path.join(temporary(t), 'project-alias');
-  if (!directoryAlias(t, fixture.root, alias)) return;
-  const outside = temporary(t);
-  fs.renameSync(path.join(fixture.root, 'skills'), path.join(outside, 'skills'));
-  if (!directoryAlias(t, path.join(outside, 'skills'), path.join(fixture.root, 'skills'))) return;
-  assert.ok(check(alias, { output() {} }).some(error => error.includes('outside skills')));
+scenario('offline commit-tree authentication catches forged metadata and omitted files', (f, t) => {
+  const repo = temporary(t, 'materials-local-git-');
+  const git = args => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8' }).trim();
+  git(['init', '--quiet']);
+  write(path.join(repo, 'skills/nested/SKILL.md'), fs.readFileSync(f.upstream));
+  git(['add', '.']); git(['-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '--quiet', '-m', 'fixture']);
+  f.project.revision = git(['rev-parse', 'HEAD']); f.save();
+  const options = { output() {}, gitRepositories: { sample: repo } };
+  assert.deepEqual(check(f.root, options), []);
+  write(f.upstream, 'forged'); f.row.upstream_sha256 = hash('sha256', 'forged'); f.row.source_git_blob = hash('sha1', Buffer.from('blob 6\0forged')); f.save();
+  assert.deepEqual(f.failures(), []);
+  assert.match(check(f.root, options).join('\n'), /source commit/);
+  write(path.join(repo, 'skills/omitted.txt'), 'must be included'); git(['add', '.']);
+  git(['-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '--quiet', '-m', 'extra']);
+  f.project.revision = git(['rev-parse', 'HEAD']); f.save();
+  assert.match(check(f.root, options).join('\n'), /unregistered file omitted/);
+  f.project.source_root = 'missing'; f.save(); assert.match(check(f.root, options).join('\n'), /unavailable/);
 });
+scenario('document byte copy cannot claim to be translated', f => {
+  fs.copyFileSync(f.upstream, f.localized); f.row.zh_sha256 = f.row.upstream_sha256; f.save(); assert.match(f.failures().join('\n'), /untranslated/);
+});
+scenario('blob detects changed bytes even with refreshed SHA-256', f => {
+  write(f.upstream, 'changed'); f.row.upstream_sha256 = hash('sha256', 'changed'); f.save();
+  assert.match(f.failures().join('\n'), /Git blob/);
+});
+scenario('translation hash and executable mode are real checks', f => {
+  write(f.localized, 'changed'); fs.chmodSync(f.upstream, 0o755);
+  assert.match(f.failures().join('\n'), /SHA-256/); if (process.platform !== 'win32') assert.match(f.failures().join('\n'), /mode/);
+});
+scenario('Chinese sources use sparse zh', f => {
+  f.row.language = 'zh'; f.row.zh_path = ''; f.row.zh_sha256 = ''; fs.unlinkSync(f.localized); f.save();
+  assert.deepEqual(f.failures(), []);
+  write(f.localized, '孤立副本'); assert.match(f.failures().join('\n'), /unregistered/);
+});
+for (const [kind, language] of [['legal', 'en'], ['code', 'none'], ['fixture', 'none'], ['asset', 'none']]) {
+  scenario(`${kind}/${language} requires byte-identical counterpart`, f => {
+    f.row.kind = kind; f.row.language = language; f.save();
+    assert.match(f.failures().join('\n'), /original bytes/);
+    fs.copyFileSync(f.upstream, f.localized); f.row.zh_sha256 = f.row.upstream_sha256; f.save(); assert.deepEqual(f.failures(), []);
+  });
+}
+scenario('empty binary machine data is valid', f => {
+  write(f.upstream, Buffer.alloc(0)); write(f.localized, Buffer.alloc(0)); f.row.kind = 'fixture'; f.row.language = 'none';
+  f.row.source_git_blob = hash('sha1', Buffer.from('blob 0\0')); f.row.upstream_sha256 = f.row.zh_sha256 = hash('sha256', ''); f.save(); assert.deepEqual(f.failures(), []);
+});
+scenario('non-Chinese sources require same-path counterpart', f => {
+  f.row.zh_path = ''; f.row.zh_sha256 = ''; f.save(); assert.match(f.failures().join('\n'), /zh_path/);
+});
+scenario('upstream and zh sets are exact', f => {
+  write(path.join(f.root, 'materials/sample/upstream/extra'), 'x'); write(path.join(f.root, 'materials/sample/zh/extra'), 'x');
+  assert.equal(f.failures().filter(x => /unregistered/.test(x)).length, 2);
+  fs.unlinkSync(f.upstream); assert.match(f.failures().join('\n'), /missing/);
+});
+for (const field of ['path', 'zh_path', 'runtime_paths']) for (const value of ['../escape', '/absolute', 'a/../escape', 'a\\escape', 'C:/escape']) scenario(`${field} rejects ${value}`, f => {
+  f.row[field] = value; f.save(); assert.ok(f.failures().length);
+});
+for (const field of ['manifest_path', 'source_root']) scenario(`parent ${field} rejects traversal`, f => {
+  f.project[field] = '../outside'; f.save(); assert.ok(f.failures().length);
+});
+scenario('duplicate parents and source identities fail', f => {
+  f.save([f.project, f.project]); assert.match(f.failures().join('\n'), /duplicate/);
+  f.save([{ ...f.project }, { ...f.project, project: 'other', manifest_path: 'other/manifest.tsv' }]); assert.match(f.failures().join('\n'), /duplicate source/);
+});
+scenario('duplicate child paths fail', f => { f.save([f.project], [f.row, f.row]); assert.match(f.failures().join('\n'), /duplicate/); });
+for (const target of ['materials', 'materials/sample', 'materials/sample/upstream', 'materials/sample/upstream/nested', 'materials/sample/manifest.tsv', 'materials/sample/upstream/nested/SKILL.md', 'materials/sample/zh/nested/SKILL.md', 'skills']) scenario(`symlink boundary rejected: ${target}`, (f, t) => {
+  const original = path.join(f.root, target); const outside = path.join(temporary(t), 'moved'); fs.renameSync(original, outside); if (!symlink(t, outside, original)) return;
+  assert.match(f.failures().join('\n'), /symlink/);
+});
+scenario('runtime method has one dev owner and no duplicate paths', f => {
+  write(path.join(f.root, 'skills/dev/dev-other/method.md'), '方法');
+  f.row.runtime_paths += ';skills/dev/dev-other/method.md'; f.save(); assert.match(f.failures().join('\n'), /one owning skill/);
+  f.row.runtime_paths = 'skills/dev/dev-sample/method.md;skills/dev/dev-sample/method.md'; f.save(); assert.match(f.failures().join('\n'), /duplicate runtime/);
+});
+scenario('reviewed blob cannot exist without runtime relationship', f => {
+  f.row.runtime_paths = ''; f.row.runtime_reviewed_blob = 'b'.repeat(40); f.save(); assert.match(f.failures().join('\n'), /reviewed/);
+});
+scenario('stale reviewed blob is allowed and not advanced', f => {
+  f.row.runtime_reviewed_blob = 'b'.repeat(40); f.save(); assert.deepEqual(f.failures(), []); assert.equal(readMaterials(f.root).rows[0].runtime_reviewed_blob, 'b'.repeat(40));
+});
+for (const [field, value, message] of [['kind', 'unknown', 'invalid kind'], ['language', 'xx', 'invalid language'], ['source_git_mode', '120000', 'unsupported Git mode'], ['source_git_blob', 'bad', 'Git blob'], ['upstream_sha256', 'bad', 'SHA-256'], ['runtime_reviewed_blob', 'bad', 'reviewed'], ['adaptation', '', 'adaptation']]) scenario(`invalid metadata ${field}`, f => {
+  f.row[field] = value; f.save(); assert.match(f.failures().join('\n'), new RegExp(message));
+});
+scenario('changed English and malformed UTF-8 do not qualify as document translation', f => {
+  write(f.localized, 'Untranslated but different'); f.row.zh_sha256 = hash('sha256', 'Untranslated but different'); f.save(); assert.match(f.failures().join('\n'), /Chinese translation is absent/);
+  const bytes = Buffer.from([0xff]); write(f.localized, bytes); f.row.zh_sha256 = hash('sha256', bytes); f.save(); assert.match(f.failures().join('\n'), /UTF-8/);
+});
+scenario('parent manifest symlink is rejected', (f, t) => {
+  const original = path.join(f.root, 'materials/manifest.tsv'); const outside = path.join(temporary(t), 'manifest.tsv'); fs.renameSync(original, outside); if (!symlink(t, outside, original)) return;
+  assert.match(f.failures().join('\n'), /symlink/);
+});
+scenario('replay copies only pstack corpus upstream bytes through the shared reader', (f, t) => {
+  const prefix = 'claude-code/skills/statechart/scripts/test/corpus/';
+  f.project.project = 'pstack'; f.project.manifest_path = 'pstack/manifest.tsv';
+  f.row.path = prefix + 'example/example.tla'; f.row.zh_path = 'zh/' + f.row.path;
+  const children = [f.row, { ...f.row, path: 'outside.py', zh_path: 'zh/outside.py' }];
+  fs.renameSync(path.join(f.root, 'materials/sample'), path.join(f.root, 'materials/pstack'));
+  write(path.join(f.root, 'materials/manifest.tsv'), stringifyTsv([f.project], PARENT_COLUMNS));
+  write(path.join(f.root, 'materials/pstack/manifest.tsv'), stringifyTsv(children, CHILD_COLUMNS));
+  const source = write(path.join(f.root, 'materials/pstack/upstream', f.row.path), Buffer.from([0, 13, 10, 255]));
+  const corpus = path.join(temporary(t), 'corpus');
+  assert.equal(copyCorpus(f.root, corpus), 1);
+  assert.deepEqual(fs.readFileSync(path.join(corpus, 'example/example.tla')), fs.readFileSync(source));
+  assert.equal(fs.existsSync(path.join(corpus, 'outside.py')), false);
+  const moved = path.join(temporary(t), 'outside'); fs.renameSync(source, moved); if (!symlink(t, moved, source)) return;
+  assert.throws(() => copyCorpus(f.root, path.join(temporary(t), 'corpus')), /symlink/);
+});
+scenario('replay rejects absent corpus instead of silently running no cases', f => {
+  assert.throws(() => copyCorpus(f.root, path.join(f.root, 'corpus')), /没有找到完整捕获夹具/);
+});
+scenario('unregistered project directory fails', f => { fs.mkdirSync(path.join(f.root, 'materials/old')); assert.match(f.failures().join('\n'), /unregistered/); });
+scenario('legacy or wrong schema is rejected instead of interpreted', f => {
+  write(path.join(f.root, 'materials/manifest.tsv'), 'id\tkind\na001\tdocument\n'); assert.match(f.failures().join('\n'), /columns/);
+});
+test('TSV round trips quoted tabs, CRLF, newlines, empty fields and quotes', () => {
+  const rows = [{ a: 'one\t"two"\nthree\r\nfour', b: '' }]; assert.deepEqual(parseTsv(stringifyTsv(rows, ['a', 'b'])), rows);
+});
+for (const text of ['a\ta\n1\t2\n', 'a\tb\n1\n', 'a\n"unclosed', 'a\n"closed"junk\n', 'a\nraw"quote\n']) test(`malformed TSV rejected: ${JSON.stringify(text)}`, () => assert.throws(() => parseTsv(text)));

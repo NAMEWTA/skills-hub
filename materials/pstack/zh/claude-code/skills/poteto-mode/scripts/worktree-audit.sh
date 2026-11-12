@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+# 工作树清理的只读审计。按大小、合并状态、未提交工作、远程与 PR 状态，
+# 以及最近在其中操作的聊天记录，对每个 Git 工作树分类。
+# 输出按大小排序的表格与建议分组。绝不删除任何内容；
+# 删除仍是手册中由人确认的独立步骤。
+#
+# 用法：worktree-audit.sh [-b|--base <ref>] [repo-path]
+#   repo-path 默认为当前仓库。
+#   -b 指定 MERGED 列对照的引用，例如 origin/integration。
+#   未指定时依次尝试 origin/HEAD、origin/main、origin/master。
+#   origin/HEAD 是远程默认分支，不一定是 PR 合入的分支；
+#   两者不同时传入 -b。
+set -u
+
+base=""
+while [ $# -gt 0 ]; do
+	case "$1" in
+	-b|--base) [ $# -ge 2 ] || { echo "error: $1 needs a ref" >&2; exit 2; }; base="$2"; shift 2 ;;
+	-h|--help) sed -n '2,/^set -u/p' "$0" | sed '$d; s/^# \{0,1\}//'; exit 0 ;;
+	-*) echo "error: unknown option: $1" >&2; exit 2 ;;
+	*) break ;;
+	esac
+done
+
+repo="${1:-$(git rev-parse --show-toplevel 2>/dev/null)}"
+[ -z "$repo" ] && { echo "not in a git repo; pass a repo path" >&2; exit 1; }
+cd "$repo" || exit 1
+git rev-parse --git-dir >/dev/null 2>&1 || { echo "error: not a git repo: $repo" >&2; exit 1; }
+
+# 第一项是主工作树；其他工作树都是候选项。
+main_wt=$(git worktree list --porcelain | awk '/^worktree /{print $2; exit}')
+
+if [ -z "$base" ]; then
+	for cand in "$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null)" origin/main origin/master; do
+		[ -n "$cand" ] && git rev-parse --verify --quiet "$cand^{commit}" >/dev/null && { base="$cand"; break; }
+	done
+	[ -z "$base" ] && { echo "error: no base ref (origin/HEAD, origin/main, origin/master all missing); pass -b <ref>" >&2; exit 1; }
+	echo "warn: no -b given; MERGED checks against $base" >&2
+fi
+
+# 基础引用决定合并检查。尽力抓取发生在检查之前，因为 -b 可能指向
+# 尚未抓取的分支；首次审计可以接受旧数据。
+# 显式 refspec 会在单分支克隆中也创建该引用。
+case "$base" in
+origin/*) git fetch origin "+refs/heads/${base#origin/}:refs/remotes/$base" --quiet 2>/dev/null \
+	|| echo "warn: could not fetch $base; merged column may be stale" >&2 ;;
+esac
+git rev-parse --verify --quiet "$base^{commit}" >/dev/null 2>&1 || { echo "error: base ref not found: $base" >&2; exit 1; }
+
+# GNU coreutils（Linux、Homebrew gnubin）将 stat -f 解释为文件系统状态，
+# 将 date -r 解释为文件参数，因此先统一选择 stat 与 date 的标志。
+if stat -c %Y / >/dev/null 2>&1; then
+	stat_fmt=(-c '%Y %n'); fmt_day() { date -d "@$1" '+%Y-%m-%d'; }
+else
+	stat_fmt=(-f '%m %N'); fmt_day() { date -r "$1" '+%Y-%m-%d'; }
+fi
+
+# 按分支一次读取 PR 状态，结构为 [{number, state, head}]，state 使用小写。
+# Origin CLI 能读取本仓库 PR 时优先使用，否则使用 gh。
+# 两者都不能读取时为空。
+prs=$(mktemp)
+if command -v origin >/dev/null 2>&1 \
+	&& raw=$(origin pr list --author "@me" --state all --limit 1000 \
+		--json number,status,headRef 2>/dev/null); then
+	printf '%s' "$raw" | jq '[.[] | {number, state: .status, head: .headRef}]' > "$prs" 2>/dev/null
+elif raw=$(gh pr list --author "@me" --state all --limit 1000 \
+	--json number,state,headRefName 2>/dev/null); then
+	printf '%s' "$raw" | jq '[.[] | {number, state: (.state | ascii_downcase), head: .headRefName}]' > "$prs" 2>/dev/null
+fi
+[ -s "$prs" ] || echo "[]" > "$prs"
+
+# 对话记录目录：~/.cursor/projects/<slugified-repo-path>/agent-transcripts。
+slug=$(printf '%s' "$main_wt" | sed 's#^/##; s#/#-#g')
+transcripts="$HOME/.cursor/projects/$slug/agent-transcripts"
+now=$(date +%s)
+
+echo "# base: $base"
+printf "SIZE\tAGE\tMERGED\tDIRTY\tREMOTE\tPR\tLAST_CHAT\tBUCKET\tWORKTREE\n"
+
+git worktree list --porcelain | awk '/^worktree /{print $2}' | while read -r wt; do
+	[ "$wt" = "$main_wt" ] && continue
+
+	size=$(du -sh "$wt" 2>/dev/null | awk '{print $1}')
+	head=$(git -C "$wt" rev-parse HEAD 2>/dev/null)
+	head_ts=$(git -C "$wt" log -1 --format='%ct' HEAD 2>/dev/null || echo 0)
+	age=$([ "$head_ts" -gt 0 ] 2>/dev/null && echo "$(( (now - head_ts) / 86400 ))d" || echo "?")
+
+	# Squash 合并的分支不是基础引用的祖先，因此 PR 状态才是真正的信号；
+	# merge-base 只能识别快进或变基合并。
+	git merge-base --is-ancestor "$head" "$base" 2>/dev/null && merged=YES || merged=no
+
+	# 区分真实进行中的工作（已跟踪修改）与未跟踪的临时文件。
+	porcelain=$(git -C "$wt" status --porcelain 2>/dev/null)
+	if [ -z "$porcelain" ]; then dirty=clean
+	elif printf '%s\n' "$porcelain" | grep -qv '^??'; then
+		dirty="wip:$(printf '%s\n' "$porcelain" | grep -cv '^??')"
+	else dirty="scratch:$(printf '%s\n' "$porcelain" | grep -c '^??')"; fi
+
+	branch=$(git -C "$wt" symbolic-ref --quiet --short HEAD 2>/dev/null || echo "")
+	if [ -z "$branch" ]; then remote=detached
+	elif git -C "$wt" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+		[ "$(git -C "$wt" rev-parse "origin/$branch" 2>/dev/null)" = "$head" ] \
+			&& remote=pushed \
+			|| remote="ahead$(git -C "$wt" rev-list --count "origin/$branch..HEAD" 2>/dev/null)"
+	else remote=no-remote; fi
+
+	pr=$([ -n "$branch" ] && jq -r --arg b "$branch" \
+		'.[] | select(.head==$b) | "#\(.number)/\(.state)"' "$prs" 2>/dev/null | head -1)
+	[ -z "$pr" ] && pr="-"
+
+	# 查找最近在此工作树中操作的聊天。路径后必须接 / 或引号，
+	# 避免 glint-482 匹配到 glint-482-r37。
+	last="-"; last_ts=0
+	if [ -d "$transcripts" ]; then
+		f=$(rg -l -e "${wt}/" -e "${wt}\"" "$transcripts" 2>/dev/null \
+			| xargs stat "${stat_fmt[@]}" 2>/dev/null | sort -rn | head -1)
+		if [ -n "$f" ]; then last_ts=$(echo "$f" | awk '{print $1}')
+			last=$(fmt_day "$last_ts" 2>/dev/null); fi
+	fi
+	recent=$([ "$last_ts" -gt 0 ] 2>/dev/null && [ $(( (now - last_ts) / 86400 )) -le 4 ] && echo yes || echo no)
+
+	case "$dirty" in wip:*) bucket=hold-wip ;; *)
+		case "$pr" in */open|*/draft) bucket=hold-open-pr ;; *)
+			if [ "$recent" = yes ]; then bucket=verify-recent-chat
+			elif [ "$merged" = YES ] || [ "$pr" != "-" ]; then bucket=safe
+			else bucket=review; fi ;;
+		esac ;;
+	esac
+
+	printf "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n" \
+		"$size" "$age" "$merged" "$dirty" "$remote" "$pr" "$last" "$bucket" "$wt"
+done | sort -t$'\t' -k1,1 -rh
+
+rm -f "$prs"

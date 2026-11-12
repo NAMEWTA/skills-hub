@@ -2,6 +2,29 @@
 
 本页按变更批次保存实测证据。当前代码统一使用 Node.js；历史章节中的 Python、Bun 和 TypeScript 记录只说明当时执行过什么，不再作为安装前提。当前可复现命令见文末。
 
+## 2026-11-12：六来源资料重构、同步与正式树验收
+
+本轮把旧649行资料清单迁为六来源当前快照、同路径稀疏对照和当前运行映射，正式目录切换已成功；不是运行技能升级，也没有提交、发布或递增0.1.8版本。旧历史章节继续描述各批当时结果，不以本轮数量覆盖旧事实。
+
+正式树包含六个来源目录、1346份原件、911份中文或字节对照；435份中文原文只读upstream，不创建重复zh。911份对照中405份含自然语言翻译／说明、506份保持原字节。227行具有运行采用关系，所有runtime_reviewed_blob为空；旧246条运行关系已逐条追溯继承、部分承接或退出，来源退出不自动删除本地方法。准确来源根和SHA见[当前资料清单](../materials/manifest.tsv)，六个远端最终SHA均未漂移，Speculo以HEAD跟踪默认分支，本次仍为main。
+
+环境：Linux、Node.js v24.22.1。以下为lead实际在正式树执行并提供日志的结果；没有把候选检查、脚本存在或授权执行当作成功。
+
+| 检查 | 本轮实际结果 |
+| --- | --- |
+| 完整六源切换 | 实际切换成功，正式materials无旧编号目录；1346份来源，911份稀疏对照。证据：`temp/other-six-switch-result.json` |
+| 正式根固定Git对象验证 | 使用六个本地Git对象库逐份核对1346来源对象及完整集合、模式、摘要和真实运行路径，failures=[]；证据：`temp/materials-lead-final-source-validation.json`。最终远端核对见`temp/materials-lead-final-remote-heads.json` |
+| `node scripts/check-statechart-replay.mjs` | 33/33捕获输出回放通过，new_tlc_run=false；日志：`temp/materials-final-replay.log`。不是新的TLC求解 |
+| `node scripts/check.mjs --full` | 最终319项测试通过、0失败、0跳过；有限状态真实故障注入通过：原实现通过、隔离副本移除保护捕获4步反例、恢复后通过。日志：`temp/materials-final-full-check.log` |
+| `npm run check:package` | 实际`@namewta/skills-hub@0.1.8` tarball通过：35个技能、459个分发文件；包安装、命令入口、完整资源、许可文件及重复安装通过。日志：`temp/materials-final-package-check.log`；不是npm发布 |
+| `git diff --check`及工作区保护 | lead实际检查通过。skills、install.mjs、包版本和锁文件无diff；原.gitignore差异与开始一致，用户既有plan字节未变，.agents/system未触碰 |
+
+本轮保留并修复了真实失败：首次六源共用门禁拒绝Speculo交互断言TypeScript测试程序被误登记fixture；按实际改为code/en，仅翻译英文注释，逻辑、机器字符串及内容摘要未变，其余三份fixture核实为原字节锁文件。独立抽审另发现DeepSeek模板／交付示例的相对占位路径被固定来源URL改写，影响复制语义；owner扩大审查四项目564个链接目标，恢复21处、涉及11份文档，更新真实摘要并重建候选；原独立审查者复核后F1/F2闭合。初次full还因审查报告的行内Markdown样例被识别为实际链接而失败；lead仅将报告样例改为围栏保留证据，再次full通过，没有改来源原件。
+
+上述对象、摘要、结构、抽样和独立修复复核不等于全部译文逐句独立语言认证，也不代表运行方法已适配新版。状态图检查只覆盖捕获输出解析与有限模型，不证明任意规模业务系统；本轮没有新TLC求解、远端CI或真实业务部署验证。临时Git对象库、完整准备树和回滚备份已移出仓库；本次报告及小型证据保留在temp，恢复位置由`temp/materials-cleanup-recovery.json`记录，不依赖旧临时脚本作为当前复现入口。
+
+法律边界以[第三方声明](../THIRD_PARTY_NOTICES.md)为准：Lucide 1.37.0精确版本完整LICENSE已补齐，含ISC及Feather衍生图标MIT；Unsplash现行官方许可／条款及归属原件已保存，但三张照片历史适用条款、照片特定额外权利和历史文本权利仍未完全确认。包检查证明法律文件分发契约，不是全部第三方权利清理完成或以MIT重新授权历史语料。
+
 ## 2026-11-11：0.1.8 发布前验证
 
 用户随后授权 commit、push 与补丁版本发布，版本由 0.1.7 递增至 0.1.8。版本文件、锁文件、更新记录及当前安装命令一致。最终版本的 `node scripts/check.mjs --full` 再次通过：251 项测试通过、0 失败、0 跳过；状态图捕获回放通过。`node scripts/check-package.mjs` 验证实际 `@namewta/skills-hub@0.1.8` tarball：35 个技能、447 个分发文件，安装、命令入口、完整资源、许可与重复安装均通过。此处记录本地发布前验证，不把它冒称 npm 或 GitHub 已发布；实际发布结果以本次提交的工作流、公开版本及 Release 为准。

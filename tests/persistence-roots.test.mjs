@@ -24,9 +24,15 @@ test('scan all runtime reference documents but not immutable source archives', (
   const runtime = path.join(root, 'skills', 'system', 'system-inspect', 'references');
   fs.mkdirSync(runtime, { recursive: true });
   fs.writeFileSync(path.join(runtime, 'memory.md'), '保存在 .agents/wtadev/system/host/ 中\n');
-  fs.mkdirSync(path.join(root, 'materials', 'b001'), { recursive: true });
-  fs.writeFileSync(path.join(root, 'materials', 'b001', 'original.txt'), 'Source mentions .agents/wtadev/ and must remain immutable');
+  const originals = new Map();
+  for (const tree of ['upstream', 'zh']) for (const relative of ['source.py', 'run.sh', 'types.ts', '.agents/skills/source/SKILL.md', 'AGENTS.md']) {
+    const filename = path.join(root, 'materials/sample', tree, relative);
+    fs.mkdirSync(path.dirname(filename), { recursive: true });
+    const bytes = Buffer.from('Source mentions .agents/wtadev/ and must remain immutable\r\n');
+    fs.writeFileSync(filename, bytes); originals.set(filename, bytes);
+  }
   assert.equal(check(root).length, 1);
   fs.writeFileSync(path.join(runtime, 'memory.md'), '保存在 .agents/system/host/ 中\n');
   assert.deepEqual(check(root), []);
+  for (const [filename, bytes] of originals) assert.deepEqual(fs.readFileSync(filename), bytes);
 });

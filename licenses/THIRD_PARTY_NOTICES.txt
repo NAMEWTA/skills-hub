@@ -1,23 +1,95 @@
-skills-wta license bundle
+skills-hub third-party notices
+==============================
 
-This directory accompanies all installed skills-wta skill packages.
-Retain this entire directory when redistributing any of those packages.
+This legal bundle accompanies the skills-hub repository and npm package.
+The installer does NOT copy legal files into a user's project, and must not
+create, update, complete, or delete .agents/skills-hub-licenses/ there.
+Redistributors must separately preserve all applicable licenses and notices;
+they must not assume the installer has provided a legal bundle.
 
-Original skills-wta material: PROJECT-LICENSE.txt
-Licensed source material and Chinese adaptations:
-- DeepSeek: deepseek-harness-MIT.txt
-- Matt Pocock: mattpocock-skills-MIT.txt
-- Lauren Tan: pstack-MIT.txt
-- Elaya: ai-design-skills-MIT.txt
-- wta: Speculo-MIT.txt
-- Leonxlnx: taste-skill-MIT.txt
+PROJECT-LICENSE.txt is the license for new skills-hub contributions. It does
+not replace licenses, notices, or third-party rights associated with copied,
+translated, adapted, or passively retained source material. Original legal
+files also remain in their original locations within source snapshots.
 
-Individual copyright and permission notices remain unchanged in these files.
+Concentrated source licenses and notices:
 
-PR visual-explanation material credited to Dex Horthy / HumanLayer:
-- Apache License 2.0: humanlayer-Apache-2.0.txt
-- Original notice: humanlayer-NOTICE.txt
-The PR material has been translated into Chinese and adapted to skills-wta.
-The original attribution is preserved in the repository material collection.
-The other component names in the reproduced HumanLayer NOTICE do not imply
-that those software components are included in skills-wta.
+- pstack-MIT.txt: Copyright (c) 2026 Lauren Tan. Applies to the selected
+  harness/pstack material and retained earlier pstack adaptations, including
+  earlier automations. The byte source is claude-code/LICENSE in that tree.
+- mattpocock-skills-MIT.txt: Copyright (c) 2026 Matt Pocock.
+- deepseek-harness-MIT.txt: Copyright (c) 2026 DeepSeek. Only .agents/skills
+  is selected; this does not bundle the upstream Host, npm/Python dependencies,
+  or vendor implementation described in that repository's root notices.
+- ai-design-skills-MIT.txt: Copyright (c) 2026 Elaya.
+- taste-skill-MIT.txt: Copyright (c) 2026 Leon (leonxlnx). The additional
+  full MIT grant is preserved for existing taste-skill adaptations; it is
+  not a grant to redistribute proprietary fonts or third-party trademarks.
+- herdr-Apache-2.0.txt: Apache License 2.0 for the selected skills/herdr
+  documentation only; no Herdr program or vendor tree is bundled. No upstream
+  NOTICE was present at the pinned revision.
+- humanlayer-Apache-2.0.txt and humanlayer-NOTICE.txt: preserved for earlier
+  HumanLayer/show-me adaptations; they are not removed by refreshing sources.
+
+Speculo has multiple license and rights layers, not just its root MIT:
+
+- Speculo-MIT.txt: Copyright (c) 2026 wta; also the identical align-intent
+  package license.
+- Speculo-THIRD-PARTY-NOTICES.txt: complete, unmodified upstream notices,
+  including Matt Pocock's historical MIT grant and earlier HumanLayer credit,
+  design references, historical corpus, bundled hub, and dependency boundaries.
+- Speculo-skills-hub-MIT.txt: Copyright (c) 2026 Ting'an Wang, shared by
+  twelve retained hub packages. Each original package license remains intact.
+- Speculo-ste-zh-MIT.txt and Speculo-ste-zh-NOTICE.txt: the MIT grant with
+  Ting'an Wang and dualface attribution and complete writing-reference notice.
+- Speculo-eli5-THIRD-PARTY-NOTICES.txt: full retained MIT and teaching-reference
+  boundary notice.
+- awesome-design-md-MIT.txt: Copyright (c) 2026 VoltAgent, for the ten
+  retained design analyses and their Chinese counterparts.
+- Speculo-vendor-parsers-NOTICES.txt: full original notices and licenses for
+  toml-eslint-parser 1.0.3 (Yosuke Ota, MIT), eslint-visitor-keys 5.0.0
+  (contributors, Apache 2.0), and jsonc-parser 3.3.1 (Microsoft, MIT).
+- Speculo-gallery-ATTRIBUTION.txt: complete original photo/icon attribution.
+  Three Unsplash photos have IDs 1497366754035-f200968a6e72 (Proxyclick Visitor
+  Management), 1470770841072-f978cf4d019e, and 1500530855697-b586d89ba3ee.
+- lucide-1.37.0-LICENSE.txt: original exact-version LICENSE, including Lucide
+  ISC (Lucide Icons and Contributors) AND the complete embedded Feather-derived
+  icon list and MIT grant (Cole Bemis). The exact-version CDN, official source
+  tag 1.37.0, and source commit 796dad298f8d78c5da204c3e62a5ed93c2bfcd1e LICENSE
+  responses are byte-identical: 3208 bytes, SHA-256
+  b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57.
+  Package identity is corroborated by official npm registry and exact-version
+  CDN metadata. The registry SLSA payload identifies that source commit; its
+  signature/transparency log was not independently cryptographically verified.
+  No program archive was downloaded to rehash the mirrored JS; its declared
+  version header is the basis for associating this exact-version license.
+- Unsplash-LICENSE-page.html.txt and Unsplash-TERMS-page.html.txt: complete
+  original official HTML response bodies from https://unsplash.com/license
+  and https://unsplash.com/terms, retrieved 2026-11-12 UTC. No embedded script
+  was executed. These are current-at-retrieval terms, NOT confirmed historical
+  terms for each photo's upload/download or the Speculo fixed snapshot date.
+  Section 5 of the terms excludes additional trademark, recognizable-person,
+  and artwork rights; retaining these terms obtains no such additional rights.
+  All other restrictions in the full terms remain relevant. Photo-specific
+  clearance and historical-version applicability remain unresolved.
+- Speculo-ASSET-LEGAL-PROVENANCE.txt: exact retrieval URLs, UTC timestamps,
+  response-body byte counts and SHA-256 values, identity checks, and limits.
+  This supplements only legal obligations for already mirrored assets. It
+  adds no seventh materials project, expands no source root, upgrades no
+  source version, and integrates no new skill. Materials, skills, and installer
+  are unchanged by this supplemental legal retrieval.
+
+Speculo's retained Mao Zedong historical corpus is source material, not a
+new authorship or license grant by Speculo or skills-hub. Its redistribution
+rights require separate review. Project/code licenses also do not grant
+additional rights to third-party brand fonts, photographs, or trademarks.
+Do not interpret source-snapshot retention as completed rights clearance.
+
+Copied source-tree legal originals are unmodified bytes from the applicable
+fixed Git objects. Supplemental Lucide and Unsplash legal originals retain
+HTTP response-body bytes from the exact URLs recorded in the asset legal
+provenance file; they are not files present in the pinned Speculo Git tree.
+The retained additional taste-skill authorization and historical notices keep
+their earlier provenance in the root notice.
+See THIRD_PARTY_NOTICES.md in the repository/npm package for exact fixed
+revisions, scope, retained history, and unresolved rights-review boundaries.

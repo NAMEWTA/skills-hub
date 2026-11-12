@@ -1,0 +1,2 @@
+path	kind	language	source_git_mode	source_git_blob	upstream_sha256	zh_path	zh_sha256	runtime_paths	runtime_reviewed_blob	adaptation
+SKILL.md	document	en	100644	4943e5575e941a7820ea01ca9416e79749c3ddc3	fbd9d502767f7dff29c211505a0bd9ba34e980ed4cc456247e2adc1642883984	zh/SKILL.md	15c2f0c690b985352031d9b1f0b51c8a4044668eb93901ea138bf58c02040814	skills/system/system-herdr/SKILL.md		同 blob 中文对照核对后复用；保留当前运行采用关系，未重新审查运行适配。来源对照不包含运行版的本地扩展示例。

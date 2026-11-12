@@ -1,0 +1,1261 @@
+# Changelog
+
+All notable changes to Speculo are documented in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [3.0.0] - Unreleased
+
+### Breaking changes
+
+- Merge SpecDev and Ops into one requirements-to-deployment domain. Rewrite all 39 Work capabilities behind four concise domain routers, with independently selectable standard Skill entries.
+- Remove workflow manifests, business schemas/validators, dispatch orchestration, generated Canonical documents and fixed handoff forms. Retain goal planning, decomposition and all other task methods without mandatory execution protocols.
+- Use one optional release record, current knowledge (ADR/context/error/design), reusable environment notes and historical archives. Design may remain code; a change-local DESIGN document is no longer required.
+- Retain approved UI structure and explicitly required user acceptance as real delivery obligations. Technical checks do not certify either decision (#105, #106).
+- Rewrite eight explicit commands, all 15 retained utility skills and maintainer guidance. Preserve specialized references, original source corpora, design examples and useful tools; remove bundled orchestration adapters.
+
+### Installation
+
+- Discover domains and Work methods directly from files and standard frontmatter; preserve original short Work IDs. Keep atomic installation, ownership, path safety, projections and recovery.
+- Preserve all user runtime data as opaque bytes, including older workflow data. A normal refresh maps the old Ops domain and all five Work selections to their SpecDev successors, preserves other Work selections and removes retired orchestration projections; explicit old Ops IDs receive replacement guidance.
+- Remove generated workflow/runtime bundles and their AJV/esbuild build dependencies. Verify real package installation, refresh, removal and complete Hub resources.
+
+See [upgrade notes](docs/upgrade-v3.md) and [research decisions](docs/research.md). This entry does not announce an npm publication.
+
+## [Unreleased]
+
+## [2.1.17] - 2026-11-04
+
+### Added
+
+- Add the writing/align-intent Skill to restate user intent for review, distinguish explicit requirements from AI inferences, and incorporate corrections before dependent work. Include research sources and clarification examples.
+
+### Changed
+
+- Update Hub inventory and package verification for 17 complete Skill packages.
+
+## [2.1.16] - 2026-10-29
+
+### Fixed
+
+- Preserve month-grouped historical SpecDev archives during refresh without treating the month as a Change identity. Reserve recognizable historical identities for conflict detection and keep legacy records read-only.
+- Protect archive index files as opaque runtime data and report conflicting paths in the existing installation. Regenerate the shared runtime and portable SpecDev documents.
+
+## [2.1.15] - 2026-10-29
+
+### Changed
+
+- Apply ASD-STE100 Issue 9 expression principles to Learning explanations and SpecDev learning guides, preserving the user's language and the distinction between clarity and verified compliance.
+- Consolidate Learning lesson, questioning and Goal-Plan guidance and SpecDev artifact, review, error-handling and prototype guidance while retaining their ownership, limits and validation requirements.
+- Regenerate the Learning and SpecDev canonical documents from their sources.
+
+### Fixed
+
+- Preserve concrete blind-spot analysis and scaffolding requirements, and load the teaching policy when compiling or assessing lesson contracts.
+- Make design-tree round advancement explicit and retain complete prototype resource and browser verification guidance in the shared composition protocol.
+
+## [2.1.14] - 2026-10-29
+
+### Changed
+
+- Make coordination Agent-led: choose direct execution, parallel ordinary tools or delegation by actual task needs, then select an authorized channel. Treat saved coordination choices as preferences within required constraints, and add optional `allowed_modes` project limits.
+- Separate Ticket decomposition, scheduling, Agent assignment, execution channels and workspaces. Allow the same Lead or delegated Agent to complete multiple Tickets while preserving per-Ticket readiness, evidence and acceptance; reuse one selected workspace per change.
+- Apply risk-adapted standards and specification review across implementation, completion and recovery. Allow low-risk self review while retaining independent reviewers for high-risk work or explicit requirements, and invalidate evidence when its actual delivery inputs change.
+- Discover optional Skills progressively without mandatory catalogue scans or replanning; retain pinned inputs and actual execution evidence for required safety, user and acceptance methods.
+- Allow ready parent-plan producers to proceed while future consumers remain draft. Report eligible candidates, conflicts and suggested batches separately; alternative legal batches remain available within dependency, ownership and Gate constraints.
+- Use correlated inline returns for short synchronous read-only delegation, and durable TASK/REPORT handoffs for asynchronous, writing, cross-session, recoverable or formal delivery tasks. Align Herdr and Orca entry points, rebuild portable SpecDev Canonical documents and the shared runtime, and add regression and host-observation evaluation fixtures.
+
+### Fixed
+
+- Restrict durable task directories to `TASK.md` and `REPORT.md`, with an optional verified `Session log:` header in REPORT instead of a separate locator file. Reject unexpected handoff entries and preserve Lead acceptance of actual results.
+- Keep Herdr Claude and Codex launches scoped to managed panes, use default launches without permission-bypass flags, and retain historical flag examples only with explicit authorization and confirmation from the installed CLI help.
+
+### Upgrade Notes
+
+- Durable dispatch validation rejects extra task-directory files, including the former `session-locator.json`. Preserve historical records; use the current two-file format for new dispatches without automatically rewriting old handoffs.
+- Existing user runtime artifacts are not automatically migrated. Deterministic regression fixtures and the new host-observation contracts do not certify actual host execution or model quality; the host-observation cases remain unevaluated until real evidence is supplied.
+
+## [2.1.13] - 2026-10-27
+
+### Changed
+
+- Default agent coordination to the current host, including its native subagent and team capabilities; retain direct AI CLI, Herdr and Orca as separately selected modes.
+- Allow project CLI preferences to record the selected tool and headless or interactive invocation. External dispatch continues to preserve TASK, REPORT and optional verified session locators, with Lead acceptance and independent review unchanged.
+- Update CI to actions/setup-python v6 and actions/upload-artifact v7. Merge the read-cmd-shim update branch while retaining 5.x to preserve the declared Node.js compatibility range.
+- Rebuild portable SpecDev Canonical documents and the shared runtime from the updated coordination contracts.
+
+### Upgrade Notes
+
+- Project coordination preferences now use schema v2 and `host` replaces the previous `lead` mode. Existing v1 coordination files are preserved but rejected, not automatically migrated; review and back up the old choices before establishing a v2 configuration.
+
+## [2.1.12] - 2026-10-26
+
+### Fixed
+
+- Refresh managed Workflow, Command, Work, Hub and discovery files from the running package even when local content, ordinary permissions or file presence differ. Repair the mode-only projection conflict that repeatedly retained unchanged entries.
+- Remove edited owned files when deselecting capabilities while preserving runtime data and user additions. Keep third-party collisions, unsafe nodes and concurrent transaction drift protected, and restore actual pre-refresh contents on rollback.
+- Discover installed workflows from installation records so damaged method entrypoints can be repaired; clarify refresh and doctor guidance.
+
+## [2.1.11] - 2026-10-25
+
+### Changed
+
+- Add a shared change impact and scope contract to the installed project handbook, requiring caller and dependency checks, affected-file identification and minimal sufficient changes before modifying existing functionality.
+- Apply the contract across SpecDev planning, tickets, implementation and review while preserving existing artifact ownership and authorization boundaries and excluding unrelated refactoring.
+- Regenerate portable SpecDev Canonical documents and verify core-only installation, handbook refresh, direct Work references and isolated compilation dependencies.
+
+## [2.1.10] - 2026-10-25
+
+### Changed
+
+- Add a shared research and reuse contract to the installed project handbook, making existing implementation discovery, targeted external research and original source citations available across planning, design, documentation and implementation.
+- Connect every direct SpecDev Work and the reusable research skill to the shared contract. Preserve source links and reuse decisions through interviews, prototypes, Specs, tickets, implementation and review in their existing owned artifacts.
+- Regenerate portable SpecDev Canonical documents with the complete shared contract, and verify core-only installation, handbook refresh, direct Work references and isolated compilation dependencies.
+
+## [2.1.9] - 2026-10-24
+
+### Changed
+
+- Consolidate documentation, knowledge and archive maintenance into `project-maintenance`; replace upstream synchronization with `upstream-assess` and route framework feedback through `speculo-feedback`.
+- Separate SpecDev request assessment from a dedicated Delivery Work owning authorized Issue, PR and release operations, with shared GitHub transport and durable delivery records.
+- Strengthen retrospective session evidence, provenance and knowledge graduation; update workflow routing, canonical exports, installation checks and documentation for nine Commands and 39 Works.
+- Broaden the Clash client profile AI rules template.
+
+### Removed
+
+- Remove the standalone engineering standards builder. Retire superseded Command entry points and document the owners of maintenance, assessment and feedback operations.
+
+## [2.1.8] - 2026-10-20
+
+### Changed
+
+- Unify current workflow manifest and capability-profile validation across discovery, installation, doctor and portable assets. Keep domain lifecycles with their original owners, and regenerate the shared runtime, validators and complete Canonical documents from source.
+- Route ready Direct Specs and approved prototype follow-through to Implement, preserve actual uncommitted delivery snapshots, and centralize shared SpecDev coordination. Add correctly typed parent Map, Plan and aggregate Evidence templates with structured, scope-aware scheduling diagnostics.
+- Isolate Person consultation state and stage evidence by Change. Publish validated candidates against exact digests, merge only the current consultation's active entry, and preserve the original five-stage method, question requirements and original-text sources.
+- Share dependency-free OPS resource semantics between installation and standalone tools. Separate package, installed-method and explicit state-root checks; retain unknown probe outcomes with controlled diagnostic categories and project-owned business verification recipes.
+- Connect deterministic installed-CLI artifact scenarios to CI, retaining actual process logs, file inventories and failures. Distinguish fixture readiness, artifact checks, authenticated observed gates and publication authority.
+- Make Command root discovery and domain delegation self-contained. Keep upstream dry-runs byte-preserving even for first-use stdin configuration and Git merge analysis; ship the source packaging entry as CommonJS in both module environments.
+- Upgrade terminal dependencies to `@clack/prompts` 1.8.1, `string-width` 8.3.0 and `wrap-ansi` 10.0.2.
+
+### Fixed
+
+- Preserve distinct installation completion, cancellation and failure outcomes with the current Clack APIs; retain the existing Chinese keyboard instructions without duplicate prompts and remove the obsolete color-library patch.
+- Make Learning consolidation journaled and recoverable with exact input digests, owned locks, complete descendant locators, idempotent resume/rollback and concurrent-drift protection. Recheck terminal transaction direction instead of accepting the opposite complete image.
+- Validate Learning time budgets, actual source/objective references, exact submission markers, frozen original answers and delayed retention evidence. Require an explicit supported immediate result; reviewed, incorrect or blocked Homework cannot silently certify mastery.
+- Correct the Media Python renderer's shared-tool path in installed packages. Bind reports to actual input and execution identity, and require final delivery to consume complete review gates, preview/still bytes, media signatures and declared artifact dependencies.
+- Reject dangling Person state, candidate and lock symlinks without replacing them; load the package-owned consultation validator through the asynchronous module boundary.
+
+### Removed
+
+- Remove inactive kernel/checkpoint contracts, legacy SpecDev JSON authority readers and converters, TASK v1 adapters, and obsolete execution branches after updating their live consumers. Current unknown or mixed protocols are rejected without rewriting user records.
+
+### Upgrade Notes
+
+- This is an intentional contract cleanup without legacy protocol conversion. Current workflow manifests use schema 2, SpecDev Goal Plan uses schema 8 and Implementation Plan uses schema 3; current Media render/review reports use schema 2. Consultations store runtime facts per Change rather than global scalars. Preserve historical or unknown business files and reconcile them through their owner before continuing affected writes.
+- Complete Canonical exports and all 16 Skills Hub packages remain available. Mechanical fixtures and offline rendering do not certify live model behavior, semantic review quality, human approval or external publication.
+
+## [2.1.7] - 2026-10-19
+
+### Fixed
+
+- Resume Volta self-updates from the package's declared JavaScript entry instead of passing the Windows npm command shim to Node.js.
+
+## [2.1.6] - 2026-10-19
+
+### Fixed
+
+- Always offer **Update now** or **Update later** when an interactive check finds a newer release, explicitly labeling the current and latest versions before checking installation ownership. Updating later continues the original interaction and reminds again next time; old ignored-version preferences no longer suppress prompts.
+- Recognize verified Volta-managed npm installations for self-updates, retain their current Node.js runtime, verify the updated package and resume the original command. Pin the verified prefix explicitly for ordinary npm global updates.
+
+## [2.1.5] - 2026-10-19
+
+### Added
+
+- Bundle the streamlined ELI5 teaching Skill with lesson, explain, explore and tutor modes, reusable templates, synthetic examples and optional read-only validation. Preserve its teaching, submission, original-answer protection and persistence rules while omitting redundant documentation and historical build/evaluation files.
+
+### Changed
+
+- Update Hub installation and package verification for 16 complete Skill packages, including ELI5 in both supported targets.
+
+## [2.1.4] - 2026-10-18
+
+### Fixed
+
+- Pass `--no-daemon` in the bundled Herdr Skill's Codex launch examples, bypassing the shared daemon when switching accounts.
+
+## [2.1.3] - 2026-10-18
+
+### Added
+
+- Add a public coordination-init command for one project-wide default orchestration method, shared by all workflows.
+- Add workflow-independent TASK v2 validation and session storage for arbitrary planning, ticket, explanation, review and handoff tasks, retaining the legacy SpecDev TASK v1 adapter.
+- Add a shared, explicitly requested handoff method that updates each writable change's handoff.md and preserves whole-session summaries across multiple or absent changes.
+
+### Changed
+
+- Move orchestration initialization out of SpecDev engineering setup; choose tools, models, task order and Skills at runtime while preserving domain ownership and acceptance gates.
+- Allow workers to write assigned artifacts directly, with Lead verification and original domain gateways maintaining formal state and Evidence.
+- Update workflow routing, documentation, canonical exports and isolated installation/package checks for the shared coordination capabilities.
+
+## [2.1.2] - 2026-10-17
+
+### 发布
+
+- CI 改用 npm 暂存发布并核对暂存记录；维护者在官网以 2FA 确认后公开上架，GitHub Release 标注待确认状态。
+
+### Added
+
+- Check for stable CLI updates before interactive installation and text diagnostics, with a two-second total network deadline and update/skip/ignore choices.
+- Upgrade verified npm global installations to the displayed version and resume the original command with its arguments and working directory after verification.
+
+### Changed
+
+- Store ignored versions outside projects, preserve explicit `version` checks, and skip automatic checks for scripts, CI, JSON, help, resolve and recovery.
+- Use SemVer comparison and bounded registry responses; share terminal color and keyboard conventions with fastcli and avoid duplicate version notices in the install wizard.
+
+## [2.1.1] - 2026-10-16
+
+### Changed
+
+- Unify CLI prompts, help, version information, installation summaries and diagnostics with Clack components, consistent colors and clearer Chinese guidance.
+- Show Skills Hub categories alongside Workflows; open a category to select individual Skills, preserve selections between visits and toggle Workflows directly from the overview.
+- Size selection lists to the terminal height, wrap Chinese and colored text by display width, and simplify installation previews while retaining removal and conflict details.
+
+### Fixed
+
+- Skip interactive prompts and animations when standard input or output is redirected, keeping piped output and machine-readable JSON/path results free of decorations.
+
+## [2.1.0] - 2026-10-16
+
+### Added
+
+- Bundle 15 complete Skills Hub packages from the root `skills-hub/` directory, with separate SKILLS-HUB and WORKFLOWS sections in the installer and category/skill labels.
+- Add `--hub-skills` selection and installation into `.agents/skills/`, `.claude/skills/`, or both, including package resources, ownership records, and doctor checks.
+
+### Changed
+
+- Treat explicit workflow and Hub selections as the desired installation: safely uninstall deselected managed packages while preserving workflow runtime data and retaining conflicting packages intact.
+- Support `--workflows none`; `--core-only` removes workflow and Hub selections while retaining core commands. Omitted noninteractive selections preserve installed choices.
+- Let SpecDev initialization choose Herdr, Orca, CLI, or no coordination mode, reusing locally installed Hub skills and guiding users back to the installer when a required skill is missing.
+
+### Fixed
+
+- Preserve complete Hub resources through npm packaging, including dotfiles, empty directories, and file modes.
+- Extend atomic installation and recovery to nested skill resources with transaction journal v4, while retaining recovery support for v3 journals and rejecting concurrent filesystem drift.
+- Preserve inactive workflow registrations so existing coordination rules remain readable after workflow removal.
+
+## [2.0.6] - 2026-10-16
+
+### Added
+- Read-only handoff validation for frozen TASK inputs, worker REPORTs and optional `session-locator.json` records, including TASK/REPORT identity, task directory boundaries and absolute log path format.
+
+### Changed
+- Keep task identity in YAML frontmatter and freeze TASK after dispatch. Lead records only the confirmed absolute transcript path in a separate task-local locator file; reports and Evidence reference it without duplicating addresses.
+- Treat original conversation logs as optional, tool-owned references: omit unverifiable paths, avoid log copying, and preserve existing handoffs and archived snapshots under their original contracts.
+
+### Fixed
+- Reject inherited object-property names as unknown fields during delivery artifact schema validation.
+
+## [2.0.5] - 2026-10-15
+
+### Added
+- Independent, dated SpecDev retrospective reports with original quotations, source change references and severity-ranked environment improvements. Review covers navigation, automated checks, coding standards, steering instructions, tool economy and information access.
+- A project Skill maintenance cycle that consolidates unarchived reports into a concrete plan, records confirmation, updates existing Skills or creates missing ones under `.agents/skills/`, verifies the result and archives completed inputs through the existing archive owner. Deferred findings stay active.
+- Read-only retrospective validation for source snapshots, complete finding decisions, candidate digests, ownership, approval, execution evidence, drift, interrupted upgrades and sealed archive inventories.
+
+### Changed
+- Keep one selected workspace per change, with its branch, baseline and owner recorded once in the change README. Ticket and Direct Spec evidence reference that context; retries, reviewers and collaborators reuse it.
+- Separate automatic/serial/parallel Ticket scheduling, actual Agent concurrency and workspace selection. Coordinate shared writes and Git operations explicitly, and accept verified frozen working-tree delivery without requiring a commit or extra integration checkout.
+- Extend the shared agent-writing guidance with project Skill ownership and maintenance rules. Prefer deterministic checks for mechanical violations, reserve review standards for judgement calls, and refresh portable canonical documents with their required references.
+
+### Fixed
+- Compare native filesystem paths in workspace recovery fixtures so Windows temporary-directory aliases do not cause false failures.
+
+### Upgrade Notes
+- Goal Plan schema 8, Implementation Plan schema 3 and execution context/record schema 1 replace the previous execution contracts; `ticket-control` now emits schema 2. Existing active records require explicit reconciliation by their owner; unknown or mixed versions are rejected without rewriting the originals.
+- New retrospective reports and upgrade plans live under `specdev/retro/`, with completed records under `specdev/retro/archive/`. The former change-local retrospective artifact and `validate-specdev --stage retro` are replaced by `validate-retro.mjs`.
+- Automated fixtures do not certify live AI host invocation, actual Agent concurrency or human approval.
+
+## [2.0.4] - 2026-10-15
+
+### Fixed
+- Resolve Windows short-path and drive-case aliases before enforcing Git repository boundaries in independent review and history squash.
+- Keep source checkouts in LF for deterministic generated assets and provenance hashes.
+- Make isolated test locators, file names and worktree identity checks portable across Windows, macOS and Linux.
+
+## [2.0.3] - 2026-10-15
+
+### Added
+- Lightweight Markdown handoffs for external CLI, Herdr and Orca tasks: neutral timestamp session directories with topic-based tasks, separate inputs and worker reports, and focused summaries. Agents must attempt to locate and verify transcript identity, host and readability before delivery, recording task boundaries or why history is unavailable; snapshots remain optional. Lead acceptance stays in the original Evidence; native collaborators opt in as needed.
+- Read-only working-tree review scopes for uncommitted Direct Spec delivery, including untracked additions, deletions, file modes and links. Completion checks bind independent reports to the frozen code and source inputs; archived records remain historical.
+
+### Changed
+- Align Orca and Herdr onboarding around the upstream project Skill: reuse verified existing files or install the complete Skill from a fixed revision without overwriting user assets, then read the actual CLI/runtime guides. Preserve tool-specific dispatch, settlement and history lookup contracts.
+- Persist the Implement entry in Goal/Ticket handoffs. Dual-axis review now defaults to one independently dispatched Agent, inherits the selected orchestration mode, records actual identities and tool evidence, and covers the final integrated delivery.
+- Simplify Spec and Ticket prose around behavior, vertical slices and acceptance. Keep structured ownership and Skill invocation contracts; remove mandatory implementation step counts and irrelevant risk boilerplate. Existing long templates remain readable.
+
+### Fixed
+- Normalize projected file modes before comparing planned changes, so Windows does not count unchanged Skill entries as updates.
+
+## [2.0.2] - 2026-10-15
+
+### Changed
+- Redesign the installation wizard with clearer Chinese guidance, workflow groups, a final change preview and consistent cancellation. Select exposure locations first, then configure one shared capability list for `.agents/skills/` and `.claude/skills/`.
+- Support all installed capabilities, whole workflow/Command groups, custom entries, the saved selection and no exposure. Replace `--agent-skills` / `--claude-skills` with `--skill-targets` and `--skills`.
+- Expand `specdev/learn` into an independent learning and diagramming Work for requirements references, project code, existing changes and external material. Preserve prior lessons and existing development Outcomes while allowing lightweight learning-only changes.
+- Reorganize the Chinese user manual around installation, concepts, all five workflows, ten Commands, portable Canonical documents and troubleshooting. Move asset-disposition audit data into `scripts/data/` and remove superseded implementation reports.
+
+### Fixed
+- Clean up an empty `.agents/.speculo-transactions` directory after installation, cancellation and successful recovery, while preserving nonempty recovery evidence.
+- Remove unchanged managed entries from deselected exposure locations, preserve edited and third-party files, and restore both locations and their shared selection on rollback or explicit recovery.
+- Validate learning diagram numbering and indexes without rewriting historical lesson titles or reopening completed changes.
+
+### Upgrade Notes
+- Exposure metadata now uses `projections.json` schema 3 with `targets` and one `asset_ids` list. Previous per-location schemas are rejected without automatic migration; existing files are preserved. The old exposure flags and the `domains` shortcut are removed; select domain entries explicitly, for example `--skill-targets agents --skills domain/specdev`.
+- The `specdev/learn` business ID is unchanged, but its source entry is now `specdev-l-learn/SKILL.md` and its validator stage is `learn`. Update direct references to the previous `specdev-l-learn-change` path or `learn-change` stage.
+- Automated fixtures and terminal checks do not certify live AI host invocation or model behavior.
+
+AI assistance was used for implementation, review, and release preparation.
+
+## [2.0.1] - 2026-10-14
+
+### Changed
+- Use explicit project/method/data roots and Markdown Outcome for new SpecDev changes; retain full Ticket, Goal, Git integration and DESIGN evidence gates without duplicate business status files.
+- Separate local completion, whole-change cancellation and archive readiness; close related docs and knowledge work before moving a change to `changes/archive/`.
+- Share current-fact documentation methods across Init, Implement, Archive and manual docs-sync while retaining command-only Git/state ownership.
+- Make the SpecDev installation seed optional. Existing active v5/v6 status data requires an explicitly reviewed conversion; historical archives and the other four workflows retain their own persistence contracts.
+
+### Added
+- Project and change DESIGN artifacts, standalone validators, and a design catalog with 12 templates and 10 reference designs.
+- Explicit source-file review scopes for changes that have not yet been committed.
+- Read-only Markdown identity, Outcome, owner and closure readers, plus an explicit conversion maintenance tool with fixed input digests, before-images, pending protection and recovery.
+- Stable change-relative DESIGN approval locators and updated portable handoff bundles; existing immutable approval/revision bytes remain unchanged.
+
+### Fixed
+- Run release verification with both JavaScript and native pnpm entry points, including PATH-resolved executables used by CI.
+- Protect active Markdown SpecDev evidence during history squash planning and recheck the frozen evidence root before local or remote writes; unsealed archives remain blocked and old plans without that root require a new plan.
+- Read SpecDev README and actual owning artifacts in handoff and retrospective Commands; verify canonical files at their packaged location and normalize temporary fixture roots on macOS.
+- Reject malformed UTF-8 before planning a Markdown conversion; preserve valid Unicode, BOM, line endings and file modes through interruption and recovery.
+- Keep Ticket progress in Ticket/Evidence, resolve optional execution policy sources consistently, and count an implementing Lead against concurrency. A blocked Ticket stops only its dependency branch; cancellation does not satisfy a successful prerequisite.
+- Resolve cleanup conflicts by the authority and valid scope of each artifact, preserving active ADR obligations; resume design interviews without creating empty optional knowledge files.
+
+### Upgrade Notes
+- Do not run an old SpecDev writer against converted active data. Read `scripts/references/migrate-specdev-markdown.md` before preparing a conversion; ordinary Work use does not require this maintenance tool.
+- Fixture checks, live host observations and real human design approvals are distinct evidence levels; conversion does not grant publication, remote-write or archive authority.
+
+## [2.0.0] - 2026-10-13
+
+- Install standard domain and Work Skills under `.agents/speculo`; retain 38 business Work identities and organize ten Command packages.
+- Preserve source YAML in independent Agents/Claude projections with per-file ownership and local conflict reporting.
+- Share Lead/Orca/Herdr/headless CLI coordination methods and optional project choices; keep business progress in existing artifacts.
+- Require current layout and schemas, reject old installations without migration, and version installation recovery as transaction v3.
+- Rebuild portable validators, canonical distributions, documentation, authoring skills and regression fixtures together.
+
+## [1.0.24] - 2026-10-11
+
+### Added
+- Add performance investigation to SpecDev architecture review, documentation execution to Implement, and incident-evidence triage to Diagnosis while keeping all 15 Work entry paths, IDs, and recovery keys (#86).
+- Add shared error/recovery, test-reliability, Agent-experience, documentation, and engineering-evidence rules, plus read-only Git review-scope and specialist-evidence validators with 51 focused regression tests.
+
+### Changed
+- Connect evidence-led discovery, decisions, specifications, Tickets, Goals, implementation, review, delivery, learning, retrospectives, and archival through the existing SpecDev owners and artifacts.
+- Allow the existing Release workflow to be explicitly dispatched for a version tag; branch dispatches cannot publish. Tag/version validation, tests, npm authentication, and publication remain in the original workflow.
+
+### Fixed
+- Replace unconditional test deletion, adapter-count requirements, terminology bans, and blanket side-effect advice with context-dependent design rules and explicit regression-coverage obligations.
+- Distinguish exact Git review scopes, valid empty diffs, unconfirmed incident explanations, incomparable performance claims, stale evidence, and partial remote outcomes.
+
+### Upgrade Notes
+- No runtime schema migration: existing configuration, persistence roots, ownership, authorization, archive gateways, and historical records remain unchanged. Other workflow sources, top-level Skills, commands, and CLI behavior are unchanged by #86.
+- This package also includes the Media and Learning changes documented under 1.0.23 below; the latest GitHub Release verified during preparation was v1.0.22.
+- Real model/host multi-turn Work evaluation was not performed; passing structural and executable tests does not certify model compliance or token savings.
+
+AI assistance was used for implementation, review, and release preparation.
+
+## [1.0.23] - 2026-10-10
+
+### Added
+- Add the Media workflow with seven Works for evidence-led content briefs, reference deconstruction, deterministic code-video rendering, reviewed hand-drawn prompt extraction, local distribution drafts, and manual feedback retrospectives (issue #81, PR #85).
+- Add four portable Media canonical prompts, skill provenance and licensing registry, and a reproducible 18-second local video demonstration.
+- Add Learning proactive inquiry, production blind-spot exploration, evidence maps, and portable Lesson/Question canonical prompts.
+
+### Fixed
+- Fix Media's installed-state validation so excluded `_state` template seeds are not required at runtime; reject invalid state without mutating existing runtime data.
+- Preserve Learning and Media generation/validation in the combined repository checks; cover installation, repeated refresh, and cross-platform compatibility.
+
+### Upgrade Notes
+- Media's publishing capability is deliberately local-draft-only: it does not log in, upload, publish, call paid model APIs, or automate platform accounts.
+- Third-party hand-drawn recipes are not bundled. Exact style extraction requires a separately reviewed full upstream package and its applicable dependencies and rights.
+- The associated PR passed Linux Node 22.22.3 / 24 and Windows Node 22.22.3 CI before merge. Release publication requires the tagged release workflow to pass independently.
+
+AI assistance was used for implementation, review, and release preparation.
+
+## [1.0.22] - 2026-10-08
+
+### Removed
+- Move `optimize-codex-config` out of the template skills. The maintained copy is `wta-skills-hub` `skills/system/optimize-codex-config`. Eight top-level Skills remain.
+
+### Upgrade Notes
+- A refresh that keeps an existing Agent Skills projection stops when `optimize-codex-config` is still recorded, because that template skill is no longer in the package. Remove the managed name before refreshing, and install the skill from `@namewta/skills-hub` when it is still needed.
+
+AI assistance was used for this implementation, review, and release preparation.
+
+## [1.0.21] - 2026-10-08
+
+### Added
+- Add OPS server discovery without requiring Node on Linux, explicit persistent-root confirmation receipts, and minimal host initialization with controller and host documentation.
+- Show connection accounts, root-confirmation evidence, and separate registration, directory, documentation, and runtime readiness in fleet views.
+
+### Fixed
+- Reject duplicate machine registration, unsafe or unowned roots, and stale identity, trust, or confirmation evidence; preserve existing host roots when changing connection accounts.
+- Use the confirmed login account for new host root locks and bootstrap, and retain Node bootstrap recovery evidence to prevent unintended replay.
+
+### Upgrade Notes
+- OPS is now 2.3.0; existing host roots, status schema v3, runtime records, and recovery boundaries remain in place. Changed executor/schema digests require regenerating unexecuted plans.
+- Real SSH hosts, sudo, Docker, and production deployments were not exercised locally. Windows skips Linux shell/tar tests; the Linux release workflow runs the full test suite before publishing.
+
+AI assistance was used for this implementation, review, and release preparation.
+
+## [1.0.20] - 2026-10-08
+
+### Added
+- **Optional Agent Skills projection**: interactive init can expose each selected workflow Work as a pointer skill, and link chosen template skills, under the target project's `.agents/skills/` for Agents `/skills`. Fresh unattended installs still write nothing there. `--agent-skills` accepts `none`, `keep`, `template`, `template:<id>+<id>`, and workflow ids. Managed names roll back with the init transaction; unmanaged skill directories stay in place.
+- Add SpecDev R-retro, offline logic prototypes, and explicitly enabled project UI previews. SpecDev now has 15 Works; all workflows expose 31 Work entries.
+- Add PR delivery and standalone CI/release records with schema validation, fixed source snapshots, authorization evidence, and recovery receipts.
+- Track all 38 upstream Skill dispositions and 110 fixed-revision source hashes, retaining third-party license and attribution evidence.
+
+### Changed
+- Merge all GitHub/npm operations into T-triage, including Issue/PR intake, delivery, CI/security, release preflight, publishing, and recovery. Ticket-to-Issue `publish` remains separate from package `release`.
+- Rename `speculo-retro` to `retrospective` and `writing-great-skills` to `writing-for-agents`; consolidate duplicated guidance. Nine top-level Skills remain.
+- Align Skill metadata and authoring rules with host-specific invocation controls, and generate owned CLAUDE bridges using `@AGENTS.md`.
+
+### Fixed
+- Preserve ownership, user edits, runtime data, and transactional rollback when migrating SpecDev config v5 to v6 and retiring old static Skill assets.
+- Normalize Linux SSH target paths independently of Windows controller paths; reject invalid scp destinations before execution.
+- Correct cross-platform OPS fixtures, require meaningful shell failure evidence, and exercise Windows junction rejection without silently passing unexecuted checks.
+- Include the runtime Skill validator in the npm package for optional Agent Skills projection.
+
+### Upgrade Notes
+- Remove the standalone `github-npm-ops` entry; use SpecDev T-triage. Rebind active Tickets that reference renamed or removed Skills and check Ready again. Historical evidence remains read-only.
+- Existing owned static assets are replaced only after staging and ownership checks. Modified or unowned retired assets block the affected refresh; use the existing doctor/resolve/recover transaction flow.
+- Real GitHub/npm operations still require their own explicit authorization. Standalone CI/release operations do not reopen implementation state or implicitly become change completion gates.
+
+AI assistance was used for this implementation, review, and release preparation.
+
+## [1.0.19] - 2026-10-06
+
+### Changed
+- Refactor all 30 Work entries across SpecDev (14), OPS (5), Learning (9), and Person (2) into discovery, activation, active-Work, and conditional-reference layers (#78).
+- Keep T-triage modes, implementation branches, OPS scopes, handoff checkpoints, review reuse, and SpecDev-to-OPS delivery aligned with their existing owners and evidence gateways.
+- Prioritize deterministic checks for mechanical retro findings; preserve domain-specific teaching, review, and archive contracts.
+
+### Added
+- Separate fixture, artifact, and observed evaluation tiers; require signed external observer evidence and digest bindings for observed release eligibility rather than model self-reports.
+- Add conditional-reference and reverse-caller audits, bounded read-trace accounting, and native/nested refresh and rollback regression coverage.
+- Record the original upgrade plan, all-Work change matrix, protected-file inventory, compatibility results, and explicit validation boundaries under docs/work-upgrade/.
+
+### Fixed
+- Distinguish architecture report-only requests from selected-design execution.
+- Generate Learning Q/A pairs from the requested count and preserve frozen question/answer snapshots.
+- Handle Windows path normalization without treating ordinary short-name or case aliases as links; continue rejecting symlinks, junctions, and traversal.
+
+### Upgrade Notes
+- No runtime schema migration. Preserve existing state, history, roots, legacy restore keys, writer ownership, locks, permissions, and permanent-knowledge gateways.
+- OPS unknown actions must not be replayed; documentation repair must not rerun business actions. Inspect pending runs before refresh and never reuse invalid approvals.
+- Real Agent/model A/B and production deployments were not performed. The proposed diagnosis relaxation remains disabled; text-size changes are not measured token, cost, or success-rate gains.
+
+## [1.0.18] - 2026-09-30
+
+### Added
+- **OPS server onboarding**: add `S-server-connect` and a timestamped 16-item Linux checklist with base, compose, and native profiles. Strict host-key and public-key checks keep unknown or stale evidence distinct from readiness.
+- **OPS inventory view**: add `V-inventory-view` and offline Markdown/JSON/HTML fleet snapshots with server-to-project and project-to-server navigation, deployment instances, host services, dependencies, and task/run references.
+- **Task-scoped execution**: add `task-plan`, `task-authorize`, and `task-run` to freeze scope, inputs, credentials, executor identity, and validity, then run authorized steps without repeated conversational confirmation.
+
+### Changed
+- **Explicit OPS ownership**: separate controller initialization, server access, server administration, project deployment, and inventory viewing. Server and project tasks reject cross-scope or indirect dependency escalation.
+- **Centralized records**: put new task, server-check, and view records under `records/`; retain `status.json` v3 as the resource authority and preserve existing runs, releases, configuration mirrors, and recovery receipts.
+- **Safe offline rendering**: export only allowlisted fields, escape rendered content, use a hash-based content security policy, and publish complete immutable view generations before updating the root `FLEET.md` entry.
+
+### Fixed
+- Complete required reasons in mkdir examples and fixtures; preserve the framework Work activation heading and progressive-read memory pointers.
+
+### Tests
+- Cover task authorization, expiry and drift, H/D scope isolation, failed/unknown execution stops, replay prevention, SSH-check failures, offline rendering, and immutable snapshot consistency.
+- Integrate the workspace with the existing planner/approval/apply gateway and verify installation/refresh preservation of record bytes and permissions.
+
+### Upgrade Notes
+- New modules and schemas change `engine_digest`; regenerate unexecuted approvals and inspect unknown runs before any retry. Do not delete existing runtime records or business data.
+- First public-key installation still requires an existing trusted channel. Live SSH, sudo, systemd, Docker, database recovery, and application deployments require environment-specific acceptance; repository CI does not certify those targets.
+
+## [1.0.17] - 2026-09-23
+
+### Fixed
+- **Agent entry safety**: atomic, idempotent managed handbook blocks; reject linked/shared external files and detect concurrent edits before replacement.
+- **Installation integrity**: doctor validates configuration, roots, managed hashes and installed workflows; structured scenario checks no longer award a behavior score for non-empty traces.
+- **Interrupted refresh**: persist before/after images and phases; explicit transaction-ID recovery refuses live owners, unknown evidence and drift.
+- **OPS permissions**: env and credential-bearing configuration use private permissions; new controllers default to credential references in documentation, with plan-bound plaintext opt-in and legacy-state preservation.
+
+### Changed
+- **Passive discovery**: install the runtime guide and generated catalog; retain knowledge references for unselected installed workflows. Unattended first init is core-only; explicit `--workflows` controls additions.
+- **Portable Skills**: standardize emitted metadata and retain legacy IDs as descriptive compatibility data, without rewriting active Ticket bindings or completed Evidence.
+- **Documentation contracts**: separate docs-sync audit/update/commit, move Learning branch-specific contracts behind direct conditional references, and document non-slash Goal execution.
+- **Validation**: full PR gates on supported Node 22/24, Windows installation smoke, emitted Skill validation, artifact-bound scenario assertions, and explicit historical source-inventory limitations.
+
+## [1.0.16] - 2026-09-21
+
+### Fixed
+- **SpecDev Goal routing**: `P-goal-plan` now classifies parent orchestration from Implementation Map, Implementation Plan, or a `goal-tickets-map` entry. A legal single-change Goal no longer requires parent artifacts; a truncated parent still reports the missing parent files. Single-change Goal stage requires a Goal Plan, boolean ready fields, and legal status combinations; Tickets stage may still lack a Goal (#70).
+- **SpecDev progressive ticket readiness**: a single-change Ready Goal no longer demands that every future Ticket is Ready. Legal draft tickets block only themselves and their dependents; independent Ready tickets can enter the frontier. Executable `ready` / `in_progress` / `review` tickets still require `ready: true`. Authorization, dependency, writer, resource, and parent all-Ready creation gates are unchanged (#71).
+- **Builder Gradle caches**: `.gradle/` is ignored by Git, omitted from the npm package and CLI skill copy, and skipped by Builder manifest, validation, and fixture discovery. The `fallback/kotlin-gradle` scan fixtures stay tracked and distributed.
+
+### Tests
+- Added Goal routing, Goal schema, and progressive-readiness coverage in `specdev-local-first`.
+- Added Builder cache-exclusion and routed-entry contract coverage.
+
+## [1.0.15] - 2026-09-17
+
+### Added
+- **SpecDev T-triage capture inbox**: park not-yet-Change notes as still-open GitHub Issues with `specdev:captured` + `origin:local`. Workspace ledger `capture.md` (missing is legal). Default 1 record = 1 future Change. New `capture-protocol.md`, `capture-template.md`, `issue-record-template.md`, `capture.schema.json`, and `capture-status.mjs`.
+
+### Changed
+- T-triage now has four modes: intake, reconcile, publish, and capture. Capture neither creates nor selects a Change, does not set `current_work`, and does not close Issues. Intake marks a matching capture row `intaken`. GitHub stays projection / counter / inbox, not the development source of truth.
+
+### Tests
+- Added `specdev-t-triage-capture` coverage for missing ledger, open local-origin rows, forbidden labels, mixed kind, change-level copies, `mode=capture` on change triage, and inbox counts that stay separate from `published_issues`.
+
+## [1.0.14] - 2026-09-16
+
+### Added
+- **SpecDev T-triage publish projection**: completed Changes can publish each planned Ticket as a classified GitHub Issue and close it with a sanitized Evidence comment. Local-origin work is counted. New ledger `publish.md`, classification map, public-projection rules, `publish.schema.json`, and `publish-status.mjs`.
+
+### Changed
+- T-triage now has three modes: intake, reconcile, and publish. `external_action` still owns the source Issue; `publish_action` owns the ticket projection. Archive blocks `pending` / `publish-failed` publish actions the same way it blocks unreconciliation.
+- Ticket frontmatter accepts optional `kind`. Intake may surface similar ADR/archive items but still does not write labels back to the source Issue.
+
+### Tests
+- Added `specdev-t-triage-publish` coverage for backward-compatible intake, local-origin ledgers, mixed-without-kind, forbidden `needs-triage` labels, archive gates, and published-issue counts including skipped cancelled tickets.
+
+## [1.0.13] - 2026-09-16
+
+### Added
+- **OPS H node-less Linux SSH bootstrap**: `ops.mjs bootstrap-node` installs a pinned Volta 2.0.2 + Node 24.21.0 via controller SHA256 + scp + POSIX (no `curl|sh`, no profile edits, no `latest`). `ops.mjs enroll` then writes `status.json` and `hosts/{host_id}/inventory/snapshot-*.json` so identity/inventory cannot stay only in the Agent transcript (#66).
+
+### Changed
+- H-host-manage activation: missing Node blocks apply only; it cannot skip host registration. Discover probe returns structured `node-missing` with a `bootstrap-node` next step. `environment-spec` falls back to the managed `{host.root}/_host/toolchains/{account}/volta` path.
+- SSH transport exposes POSIX `/bin/sh -s` and `scp` using the same host-key contract as the Node agent. Pin metadata lives in `common/toolchains/volta-linux.json`.
+
+### Tests
+- Added `test_ops_bootstrap.mjs` coverage for node-missing discover, ack/SHA/`latest` rejection, skip-existing-node, profile-unchanged install, enroll persistence, and managed Volta fallback.
+
+## [1.0.12] - 2026-09-16
+
+
+### Added
+- **Learning G-goal teach-then-mine**: `/goal` now teaches a project-sized mine unit (hard cap 15 lessons, not a quota) then fans out one miner per lesson. Lead-directed write-set isolation; `split-lesson` after 10 questions; new references `lead-orchestration.md`, `mine-unit.md`, `split-rules.md`.
+
+### Changed
+- G-goal runtime is no longer interleave-one-lesson-then-mine. Iteration policy, stop-rules, chain Units table, probe `b01`/`b02` budget, and questioning policy cap mine at 10 questions per `lesson_id`. `wave_cap` is no longer a mining gate.
+- `validate-learning` enforces teach-then-mine, `mine_unit_cap=15`, max 10 questions, no `b03`, Lead-exclusive matrix markers, and rejects learner-protocol fields in mine probes.
+
+### Tests
+- Added `learning-g-goal-mine-pass` coverage for mine_unit_cap, 10Q/b03, split-proposal, interleave, budget reset, split depth=2, and learner-protocol fields in probes.
+
+## [1.0.11] - 2026-09-16
+
+### Added
+- **Learning `G-goal`**: plan-compiler Work (`learning/goal`) that writes a complete Change-owned Goal-Plan and stops. The user later runs that plan with an external AI CLI `/goal`, which may dispatch L-lesson then socratic-questioning `audience=mine` into `goal/probes/`. Never auto-activates H/R/C/A-archive, never writes mastered, never uses the Q-question `inquiry/` Response protocol, and does not revive Q-quiz.
+- Learning metadata now lists 9 works: the original seven plus already-shipped `Q-question` and new `G-goal`. `validate-assets` runs `validate-learning --workflow-root`.
+
+### Changed
+- Learning AUTO-INDEX, Change layout, artifact ownership, questioning/teaching policy, and the socratic-questioning skill distinguish `audience=tutor` (`inquiry/`) from `audience=mine` (`goal/probes/`).
+
+## [1.0.10] - 2026-09-16
+
+### Fixed
+- **SpecDev nested-install state root**: `validate-specdev` binds change paths to `workspace.json` `roots.state`. A project-root `.speculo/specdev` tree fails closed when a self-consistent workspace contract exists; fixtures without `workspace.json` keep the previous ancestor lookup (#62).
+
+### Changed
+- SpecDev init, activation, README, and path-reference docs require opening `workspace.json` before creating state directories, and document that a project-root `.speculo/specdev` tree is illegal under nested install.
+
+### Tests
+- Added `specdev-nested-state-root` coverage for legal nested changes, illegal project-root shadow trees, archive paths, conflicting workspace contracts, and legacy fixtures without `workspace.json`.
+
+## [1.0.8] - 2026-09-15
+
+### Fixed
+- **OPS compose-up JSON**: `command()` keeps raw stdout/stderr for Docker inspect parsing and only redacts `log_*` fields, so short numeric passwords no longer corrupt JSON (#51).
+- **OPS SSH on Node 24**: SSH and agent `spawnSync` pass stdin as a `Buffer` while `encoding` remains `"buffer"`, avoiding `ERR_UNKNOWN_ENCODING` (#52).
+- **OPS concurrent apply**: plans bind `registry_slice_digest` for touched hosts/projects/deployments; disjoint approved H plans can apply sequentially. `commitObservations` merges only the plan slice so a later apply cannot revert another host (#53).
+- **OPS host README overlap**: `write-file` cannot target generator-owned host docs (`README.md`, `DEPLOYMENTS.md`, knowledge ledgers); delivery no longer stalls at `docs_pending` after a colliding host action (#54).
+
+### Changed
+- **OPS Compose persistence**: default remains read-only root and mapped VOLUME/tmpfs; `read_only: false` requires `writable_root_justification`. `config/` and `*.conf`/`*.acl` default to `0644`. compose-up fails closed unless containers are running and, when present, `Health=healthy` (#55).
+- **OPS host/fleet handbooks**: Markdown (no HTML `<code>`), a service overview table, a 说明 section, and optional plaintext credentials only on the controller ledger (#56).
+- **OPS write-control**: declared nginx, wireguard, and non-`ops-` systemd unit paths are allowed with reason, rollback, and verification; core units stay forbidden (#57).
+- **OPS host-level ingress**: `host_services` and `public_ingress` are first-class catalog fields delivered as `knowledge/host-services.json` and `knowledge/public-ingress.json`, including a 公网访问内网 chapter (#58).
+
+### Tests
+- OPS contracts cover compose JSON secrets, Node 24 stdin Buffer, disjoint host apply, generated-doc write-file rejection, nginx/wireguard write-control, Markdown fleet tables, and host_services/public_ingress delivery.
+
+## [1.0.7] - 2026-09-15
+
+### Changed
+- **OPS runtime is Node ESM**: controller and target agents run as `ops.mjs` / `opslib/*.mjs` with Node builtins only. Remote SSH uses `connection.node` and `node --input-type=module`. Python OPS scripts are removed; APP toolchains may still install Python via uv.
+
+### Tests
+- SpecDev plan-contract symlink cases skip on Windows without Developer Mode, matching the other symlink tests.
+
+## [1.0.6] - 2026-09-15
+
+### Added
+- **OPS 2.2**: replaces the five change-lifecycle works with `I-initialize`, `H-host-manage`, and `D-project-deploy`. APP and shared services share one host/project persistence layout; dual-side documentation is a completion gate.
+
+### Changed
+- Status and archive-and-consolidate commands, plus CLI structured validation, read Ops schema v3 resource tables. Leftover non-empty v2 state remains read-only evidence and is not translated into new approvals.
+
+## [1.0.5] - 2026-09-14
+
+### Added
+- **Ops `H-computer-hygiene`**: adds a host-hygiene Work for default-read-only Windows/macOS/Linux environment audits, optional confirmed cache quarantine, and reports under `{roots.state}/ops/changes/{change}/hygiene/`. Hygiene-only global changes can complete without a deployment attempt.
+
+## [1.0.4] - 2026-09-14
+
+### Added
+- **`git-history-squash` command**: adds a user-invoked confirmation and audit-report entry over the existing first-parent squash skill. Command reports live under `{roots.state}/commands/git-history-squash/`; transactional state remains `{roots.state}/skills/git-history-squash/`.
+
+### Changed
+- **`@inquirer/prompts`**: 8.5.2 → 8.7.2, including prompt settlement cleanup and confirm whitespace trimming.
+
+### Fixed
+- **`archive-and-consolidate` report root**: command reports must resolve to `{roots.state}/commands/archive-and-consolidate/`. `{roots.commands}` is definition-only. A `commands_root` that equals `{roots.commands}` now blocks without writing files.
+
+### Tests
+- Added command report-root coverage for every `template/commands/*.md` entry, plus archive-and-consolidate and git-history-squash confirmation/path contracts.
+
+## [1.0.3] - 2026-09-10
+
+### Added
+- **SpecDev plan contracts**: adds Ticket/Map `plan_contract_version: 1`, Skill invocation bindings, quantified deliverable checks, and read-only `ticket-control` / `plan-contract` tools.
+- **SpecDev Initiative maps**: Wayfinder now records candidate change graphs with independently owned child changes.
+
+### Changed
+- **Unified Goal orchestration**: `P-goal-plan` now owns plan/run/resume/replan/verify for one or more Ready changes; ordinary local requests no longer require Triage.
+- **Architecture review**: records high-confidence findings in Markdown using a review rubric instead of the HTML report template.
+- **Maintainer authoring skills**: the source of truth moves to `skills/`; `.agents/skills/` keeps compatibility pointers.
+
+### Removed
+- **SpecDev `O-orchestrate-implementation`**: the standalone parent-orchestration Work is deleted. Cross-change implementation uses `P-goal-plan` with Implementation Map/Plan and an optional `goal-tickets-map` pointer.
+
+### Fixed
+- **Parent Goal validation**: parent implementations no longer require their own Tickets Map or Ticket directory; child changes remain the Ticket authority.
+
+### Tests
+- Added `specdev-plan-contract` coverage for invocation bindings, deliverable counts, legacy upgrades, and initiative identity; updated parent Goal and maintainer-script path fixtures.
+
+## [1.0.2] - 2026-09-08
+
+### Added
+- **Workflow disclosure validation**: adds `scripts/validate-workflow-disclosure.mjs` to the asset pipeline and checks workflow entry points for activation, read-scope, and memory pointers.
+
+### Changed
+- **Maintainer guidance refresh**: rewrites the Speculo handbook, shared skill references, and workflow docs around explicit entry procedures and updated project facts.
+- **Workflow asset refresh**: updates the SpecDev, Learning, Ops, and Person packages, plus their canonical outputs, to match the new disclosure model and Ops package split.
+
+## [1.0.1] - 2026-09-05
+
+### Changed
+- **Persistent knowledge references**: selected workflows now manage only manifest-declared permanent knowledge paths in the controlled `AGENTS.md` block; workflow activation and Work execution remain lazy.
+- **Agent handbook preservation**: legacy `<SPECULO>` blocks are removed, existing user content is preserved, and missing `CLAUDE.md` is created as a fixed redirect to `AGENTS.md`.
+- **Manifest validation**: workflow manifests now declare and validate safe persistent knowledge roots.
+
+## [1.0.0] - 2026-09-05
+
+### Added
+- **Speculo Runtime Kernel**: adds provider-neutral lifecycle, risk classes, capability profiles, workflow manifests, checkpoints, and trace-event contracts shared by every workflow.
+- **Read-only diagnostics and scenario gate**: adds `speculo doctor` and a 24-fixture structural evaluation command for resumability and recovery scenarios.
+
+### Changed
+- **Breaking 1.0 namespace**: refreshes require install manifest schema v3 and package major version 1; 0.x installations are blocked without migration or export.
+- **Transactional refresh**: stages and rolls back `speculo/`, `.gitignore`, `AGENTS.md`, and `CLAUDE.md` together.
+- **Workflow contracts**: SpecDev, Learning, Ops, and Person now publish machine-readable stage manifests validated by the asset pipeline.
+- **Runtime policy**: existing structured state and configuration use strict 1.0 schemas; incompatible versions fail closed instead of being rewritten.
+- **Node support**: requires `>=22.22.3 <25`.
+
+### Tests
+- Added kernel transition/capability tests, strict legacy-installation coverage, doctor health checks, workflow manifest validation, and cross-domain scenario fixtures.
+
+## [0.8.13] - 2026-09-02
+
+### Added
+- **`git-history-squash` Skill**: adds user-invoked, digest-confirmed first-parent history convergence with merge-safe commit construction, transactional backup refs, exact remote leases, resumable reports, and child-before-parent submodule publication.
+
+### Changed
+- **Engineering Standards skill-set generation**: compiles project evidence, templates, tests, and user decisions into a minimal owned Skill Set with one routing Skill, optional domain Skills, source maps, deterministic validation, and refresh-safe ownership boundaries.
+- **SpecDev project Skill routing**: records shared implementation context and a validated per-Ticket project Skill matrix in Tickets Map, then enforces the required read order before implementation or subagent delivery.
+
+### Fixed
+- Made Git history remote and submodule fixtures independent of machine-level default branch and author identity configuration.
+
+### Tests
+- Added temporary Git repository coverage for inclusive/exclusive and root ranges, merge starts, dirty and invalid inputs, active workflow evidence, persisted-state tampering, interrupted recovery, confirmation digests, remote lease drift, and aggregate gitlink ordering; expanded Engineering Standards ownership/source-map self-tests and SpecDev project Skill routing validation.
+
+## [0.8.12] - 2026-09-02
+
+### Release Status
+- Tagged but not published: the release workflow stopped in its test step before npm publication or GitHub Release creation because two Git fixtures depended on machine-level configuration.
+
+## [0.8.11] - 2026-09-02
+
+### Changed
+- **SpecDev Ticket recovery loop**: returns repeated implementation, review, direct-parent, and candidate failures to the effective Lead with preserved checkpoints and a minimal Evidence-backed recovery decision before redispatch.
+- **Integration attempt semantics**: treats the existing attempt limit as a Lead review trigger rather than a permanent Ticket terminal state, while allowing parent orchestration to continue unaffected ready frontier work.
+
+### Tests
+- Added regression coverage for candidate creation limits, Lead recovery evidence, materially changed redispatch packets, and continued parent orchestration.
+
+## [0.8.10] - 2026-09-01
+
+### Added
+- **Project-scoped Ops workflow**: adds four focused stages for intake/assessment, plan/approval, iterative execution/stabilization, and retrospective/archive, with project-local changes, archives, context, ADRs, SOPs, and global knowledge separation.
+- **Ops execution learning loop**: preserves immutable failed/remediation/rollback attempts, requires a complete retrospective, and promotes only verified project or global knowledge through a digest-bound transactional manifest.
+- **Ops safety contracts**: separates deployment-root file writes from external control-plane mutations, requires explicit global-environment review, and invalidates approvals on source, target, permission, or plan drift.
+- **Ops target and release contracts**: adds non-secret target profiles, complete control-plane identity assertions, takeover-first mode selection, immutable candidate and hard-Gate planning, production backup enforcement, strict local-only waivers, typed attempt journals, structured verification state, and redacted handoff projections.
+- **Ops evidence compatibility**: keeps plan v2 and attempt v1 artifacts read-only; active legacy changes require a current target profile and a verification-only attempt v2 before close, archive, or knowledge promotion.
+
+### Tests
+- Added Ops project isolation, duplicate cross-project change names, plan revision lineage, target/profile drift, Gate ordering, data-protection policy, typed journal and verification-state checks, legacy read-only recovery, attempt recovery, project/global knowledge promotion, transactional archive, runtime preservation, and refresh blocking coverage.
+
+## [0.8.9] - 2026-09-01
+
+### Added
+- **SpecDev `L-learn-change` Work**: adds a post-implementation question and explanation stage that appends beginner-friendly Markdown and ASCII diagrams under the owning SpecDev change, independently from the Learning workflow.
+
+### Changed
+- **SpecDev learning ownership**: keeps learning artifacts under each SpecDev change, preserves completed development state during follow-up questions, and registers the new Work in routing, artifact ownership, generated indexes, and canonical contracts.
+
+### Tests
+- Added staged validation for missing indexes, valid indexed diagrams, unindexed files, Markdown-only output, continuous numbering, and SpecDev/Learning namespace separation.
+
+## [0.8.8] - 2026-09-01
+
+### Added
+- **Parent implementation orchestration**: adds unified `P-goal-plan` multi-change orchestration that compiles multiple changes into a persistent composite Ticket super-DAG and continuously drives `I-implement` from one recoverable Lead session.
+- **Cross-change execution contracts**: adds versioned Implementation Map and Implementation Plan schemas, dependency and serialization ownership, global workspace/agent limits, repository integration queues, aggregate Evidence, and an isolated canonical distribution with the full implementation dependency closure.
+
+### Changed
+- **Implementation integration**: parent plans can provide the workspace and integration strategy when a child Goal Plan is absent; child plans retain their internal Gates but cannot conflict with the parent strategy.
+- **Validation and archive gates**: validates Ready child inputs, exact composite task projection, internal and cross-change dependencies, writable-path conflicts, unique unfinished parent ownership, execution limits, completion Evidence, and non-cascading archive behavior.
+
+### Fixed
+- Normalized legacy fields out of the strict SpecDev global status v5 index while preserving their values in change-owned status, and corrected Wayfinder claim ownership to the change status artifact.
+
+### Tests
+- Added regression coverage for resumable parent implementation graphs, cross-change serialization, invalid or stale inputs, duplicate ownership, aggregate completion, and legacy global-status normalization.
+
+## [0.8.7] - 2026-08-30
+
+### Added
+- **Evidence-backed UI design packages**: adds existing-style detection, guided design selection, eight reference styles, six layout patterns, and a pinned open-source research snapshot with offline visual examples.
+- **Deterministic prototype tooling**: adds schema validation and source materialization for persistent `design-system.md` packages, comparison variants, and final HTML/CSS/JS output.
+
+### Changed
+- **SpecDev prototype workflow**: replaces disposable logic/UI prototype records with resumable `UI-NNN` design packages that preserve decisions, research provenance, responsive behavior, accessibility contracts, and implementation-ready source.
+- Renamed prototype planning bounds to `ui_design_default_candidates` and `ui_design_max_candidates`, with supported candidate counts constrained to two through four.
+
+### Tests
+- Added coverage for ready and resumable design packages, materialized-source drift, malformed source markers, missing comparisons, obsolete prototype records, and updated configuration contracts.
+
+## [0.8.6] - 2026-08-30
+
+### Added
+- **Learning workflow**: adds seven Works for initialization, evidence-based assessment, plain-language ASCII teaching with explicit learner-facing baselines, active practice, immediate quizzes, delayed review, and knowledge-gated archival.
+- **Book-style Markdown knowledge**: adds hierarchical context/domain indexes, exact-file navigation, review scheduling, and domain support for projects, products, subjects, languages, and skills without RAG, embeddings, or vector storage.
+- **Learning persistence validation**: registers Learning schema v1 with refresh preflight and adds deterministic checks for mastery gates, state projections, evidence paths, duplicate Knowledge IDs, and broken Markdown links.
+
+### Changed
+- Added a `mechanical-only` policy to the shared archive skill so workflow-owned knowledge graduation can remain independent from safe archive movement.
+
+## [0.8.5] - 2026-08-24
+
+### Changed
+- **Passive SpecDev discovery**: reduced `specdev/INDEX.md` to permanent knowledge discovery and an activation pointer, so installed-but-inactive SpecDev no longer loads runtime state, creates a change, or applies Work execution contracts.
+- **Progressive workflow activation**: moved the full SpecDev runtime contract and generated Work catalog into the workflow root `README.md`; all 15 Work entries load it only after activation.
+- **README-owned Work catalog**: marker-mode workflow generation now maintains the AUTO-INDEX block in `README.md`, while generator-owned `workflow-index` packages continue to rebuild `INDEX.md` as a whole file.
+
+### Fixed
+- Corrected the documented SpecDev global status schema version from v4 to the implemented v5 contract.
+
+### Tests
+- Added regression coverage for passive INDEX behavior, activated README loading, installed workflow packaging, README marker generation, deterministic rebuilds, and validator enforcement.
+
+## [0.8.4] - 2026-08-24
+
+### Added
+- **`upstream-fork-sync` skill**: adds generic, repository-map-driven fork/upstream assessment with proven integration checkpoints, non-overwriting skill changes, reproducible diff/conflict reports, and exact merge-parent checkpoint recording under the standard Skill state namespace.
+
+### Changed
+- **Runtime path ownership**: commands and skills now use `<Path>{roots.*}/...</Path>` for persistent and cross-package references; independently persistent skills own only `{roots.state}/skills/<skill>/`.
+
+### Tests
+- Added fork-sync graph checkpoint, dry-run, non-overwrite, exact merge-parent, path escape, missing-ref, and refresh preservation coverage.
+
+## [0.8.3] - 2026-08-24
+
+### Changed
+- **SpecDev `E-eli5` Work**: retargeted explanations from five-year-olds to first-year university students with no professional background. ELI5 now produces Markdown with ASCII structure, data-flow, call-flow, and state diagrams instead of an HTML visual.
+- **ELI5 artifact continuity**: each change now appends `01_<topic>.md`, `02_<topic>.md`, and later diagrams without renumbering existing files. `eli_index.md` is the authoritative index of each file, topic, and short description; validation checks continuous numbering, index/file agreement, Markdown sections, and ASCII diagrams.
+
+## [0.8.2] - 2026-08-24
+
+### Fixed
+- **SpecDev reference closure**: replaced ambiguous bare filenames in initialization and external subagent delivery contracts with complete static or project-relative paths, restoring package self-check and canonical generation.
+
+## [0.8.1] - 2026-08-24
+
+### Added
+- **SpecDev `E-eli5` Work**：完整中文转写并保留原作者“像对五岁的我解释、HTML、大图、少字”的核心，将图解持久化到当前 change 的 `eli5.html`，支持状态恢复和阶段校验。
+
+## [0.8.0] - 2026-08-23
+
+### Changed
+- **Ownership-driven init refresh**: `speculo init` now replaces managed static assets, preserves opaque runtime files byte-for-byte, reconciles persistent configuration with three-way baselines, and runs explicit structured-state migrators before atomic replacement.
+- **Transactional conflict handling**: refresh uses an exclusive project lock, active-install fingerprints, staging validation, post-swap validation, and rollback. Invalid structured data, unsafe symlinks, concurrent drift, and schema conflicts exit with code `2` without changing the active installation.
+- **Manifest v2**: `.speculo/install.json` points to a per-file SHA-256 ownership manifest, while `.speculo/baselines/` stores the last template defaults used for config reconciliation. Normal refresh no longer duplicates complete runtime state; only destructively changed config or structured files receive targeted backups.
+
+### Removed
+- Removed the `migrate-runtime-state` command and skill from new installations. Existing legacy installations with a pending marker remain unchanged and must complete their already-installed repair command before refreshing.
+
+### Tests
+- Added config reconciliation, v0.7 baseline bootstrap, opaque byte preservation, structured migration, targeted backup, legacy pending, symlink, lock, concurrent drift, staging rollback, workflow selection, and two-command CLI coverage.
+
+---
+
+## [0.7.6] - 2026-08-19
+
+### Changed
+- **`source-code-zip` rewritten from Python to Node.js**: the skill's `zip_source_code.js` now depends only on Node.js built-in modules with ZIP64, CRC32, and streaming compression support; the `uv`/Python dependency is removed.
+- **`subagent-delivery` external-web channel hardened to ZIP-only delivery**: delivery is locked to a `native | external-web` channel before dispatch; external packages follow a staging → `source-code-zip` → SHA-256 manifest verification → isolated unpack lifecycle, persisted under `temp/subagent-delivery/` without ever overwriting the same locator. The `github-checkpoints` reference is removed and remote commits/branches are no longer a delivery medium; untrusted self-reported results stay `unverified`.
+
+---
+
+## [0.7.5] - 2026-08-18
+
+### Added
+- **`source-code-zip` skill**: packs a source directory into a code-only ZIP with editable regex IGNORE rules that exclude node_modules, virtualenvs, build artifacts, archives, `.env`, YAML, secrets, media, and office files. Prefers `uv`, falls back to `python3`/`py -3`/`python`.
+- **Bidirectional Steelman Deliberation work**: added an independent `person/steelman-deliberation` workflow entry that freezes a pre-answer dossier, strengthens the strongest credible cases on both sides, identifies the decisive variable, asks at most one user-specific question, and then produces a validated explicit decision with actions and reversal conditions.
+- **Steelman change validator**: added a dependency-free validator with staged-file support and self-check fixtures for awaiting-answer and completed lifecycles.
+
+### Changed
+- **`engineering-standards-builder` skill replaces `typescript-standards-builder`**: stable Skill ID preserved for existing callers while the generator is generalized into a cross-language Engineering Standards compiler covering TypeScript/JavaScript, React, Vue, Java/Spring Boot, Go, Rust, and polyglot monorepos, with per-language references, adapters, compatibility templates, and self-test fixtures.
+
+### Fixed
+- **Whole-file workflow index generation**: `generate-index.mjs` now honors both marker-owned `type: workflow` indexes and generator-owned `type: workflow-index` / `auto_generated: true` indexes, matching the existing person package and maintainer validator contracts.
+
+### Tests
+- Added regression coverage for person work structure, validator failure modes, whole-file index idempotence and stale detection, and preservation of handwritten marker-mode INDEX content.
+
+---
+
+## [0.7.4] - 2026-08-12
+
+### Added
+- **Configurable SpecDev execution limits**: added configuration for implementation agents, integration attempts, and UI prototype default/maximum variants; Goal Plans snapshot the applicable execution limits without a fixed upper bound of three.
+- **Git-backed completion validation**: `validate-specdev.mjs --repo` now verifies recorded commits, ancestry, branch results, and clean completion state against the actual repository.
+
+### Changed
+- **Goal Plan workspace choice**: Goal Plan creation now asks whether to use worktrees and defaults to serial implementation in the current workspace; choosing worktrees retains per-Ticket source worktrees and candidate integration.
+- **Strategy-neutral execution artifacts**: unified Ticket, subagent, Implement, and Evidence contracts so current/direct-parent and required/candidate-merge use one clean document structure.
+- **Runtime contracts and migration**: upgraded SpecDev config to v5 and Goal Plan/change status to v6, preserving positive legacy concurrency values while adding deterministic defaults for new fields.
+- **Canonical distributions**: regenerated the affected SpecDev canonical documents from the updated workflow dependency closure.
+
+### Tests
+- Added coverage for configurable limits above three, limit violations, integration attempt bounds, runtime migration, current-workspace serialization, and real Git evidence validation.
+
+---
+
+## [0.7.3] - 2026-08-12
+
+### Changed
+- **Lead-directed SpecDev execution**: implementation now runs under a single Lead with bounded Ticket worktrees and a required candidate merge/integration step.
+- **Execution and migration contracts**: updated Goal Plan, Implement, Init, Ticket, migration, and validation assets to record delegated evidence and recoverable integration state.
+- **Canonical distributions**: regenerated the affected SpecDev canonical documents from the updated workflow dependency closure.
+
+### Tests
+- Added and updated coverage for Lead orchestration, Ticket worktree integration, migration state, and the refreshed workflow contracts.
+
+---
+
+## [0.7.2] - 2026-08-09
+
+### Added
+- **Codex configuration audit skill**: added `optimize-codex-config` with a redacting, read-only auditor for local configuration, custom Responses providers, authentication metadata, permissions, Agents, model catalogs, rollout incidents, compaction failures, and configuration drift. It requires an explicit confirmation package before any local configuration mutation.
+- **Independent workspace execution contract**: Goal Plans now model `coordination_mode` and `workspace_strategy` as orthogonal axes, with a separate isolated-workspace addendum, role-neutral implementation/integration ownership, portable workspace locators, and persistent local integration authorization.
+
+### Changed
+- **Agent Team no longer implies worktree use**: `single-session | lead-team` controls collaboration, while `current | worktree | mixed` is selected only from concrete isolation triggers such as parallel writes, protected local state, disposable experiments, background resume, provider requirements, or an explicit user request. The default remains one writing session in the current workspace; read-only subagents do not change that mode.
+- **Automatic local worktree integration**: `terminal_action=integrate` authorizes the integration owner to complete fast-forward or mechanically determined merge-conflict integration without repeated confirmation. Successful integration does not automatically push, open or merge a PR, deploy, migrate, or remove branches/worktrees.
+- **Canonical distributions**: regenerated all six SpecDev canonical documents from the updated workflow dependency closure.
+
+### Fixed
+- **Recoverable worktree integration state**: fast-forward now records its result checkpoint, verification evidence, passed integration result, and `integrated` terminal state. The new `integrating` lock requires a complete contract and can resume from the recorded parent/source checkpoint or matching `MERGE_HEAD`.
+- **Integration evidence invariants**: validation now requires positive attempts, complete parent/source checkpoints, source equality, distinct merge-commit results, and exact fast-forward result equality while preserving legacy v3 worktree records.
+- **Codex writer detection**: replaced broad process-name matching with exact writable-handle evidence for the target `config.toml`, so the invoking Codex CLI and non-writing application helpers no longer block the skill.
+- **Model catalog and 413 attribution**: read reasoning levels from the current `supported_reasoning_levels[].effort` field and keep JSON/provider 413 responses unattributed unless an explicit proxy signature supports external-proxy ownership.
+
+### Tests
+- Added regression coverage for all four coordination/workspace combinations, legacy and new integration records, fast-forward checkpoint invariants, real Codex catalog structure, writable-handle detection, secret redaction, and proxy-evidence thresholds.
+
+## [0.7.1] - 2026-08-09
+
+### Added
+- **State-safe refresh migration**: `speculo init` now snapshots the previous project configuration and complete runtime state, keeps the latest backup at `speculo/.speculo/back/`, records file hashes in `back/manifest.json`, and writes `.speculo/install.json` with the installed version and workflows.
+- **Pending migration gate**: incompatible versions, malformed JSON, state symlinks, unknown command state, unsupported workflow schema, or index conflicts install a clean active skeleton plus `.speculo/migration.json`; CLI exits `2`, workflows are blocked, and repeated `init` makes no changes.
+- **Agent-assisted runtime migration**: added the `migrate-runtime-state` command and skill. The deterministic script inspects immutable backup content, fingerprints active targets, requires complete source decisions and explicit confirmation, stages all changes, validates the result, atomically replaces the installation, and rolls back on failure.
+
+### Changed
+- **Compatible v0.7+ refresh**: `speculo init` still refreshes managed static commands, skills, workspace metadata, and selected workflow packages, while recursively merging project configuration defaults and preserving complete compatible workflow/command runtime state, including initialized configuration, state indexes, `.config/`, permanent knowledge, `changes/`, `archive/`, sidecars, reports, and owned command `state.json` files.
+- **Static/runtime ownership split**: stale managed static commands, skills, and selected workflow files are removed by template refresh. Runtime data is migrated when compatible or retained in the immutable backup for explicit reconciliation when pending. Current supported workflows not selected in the prompt remain untouched.
+- **Runtime ignores**: project-root `.gitignore` now idempotently includes `speculo/.speculo/back/` in addition to `specdev-worktree/` when SpecDev is installed.
+
+### Tests
+- Added coverage for fresh install manifests, complete compatible state preservation, backup hashes, pending zero-modification retries, CLI exit code `2`, CRLF/idempotent ignores, backup tampering, confirmation gates, target drift, path escape, invalid-state rollback, unselected workflow preservation, staging failure rollback, and the reduced CLI surface.
+
+## [0.7.0] - 2026-08-09
+
+### Changed
+- **Direct refresh is the only upgrade path**: `speculo init` now stages a complete replacement installation and refreshes managed template assets without inspecting or migrating old state. It replaces `config.json`, workspace metadata, commands, skills, and selected workflow packages; selected workflow state is reset to the current skeleton while `changes/`, `archive/`, and command Markdown reports are retained.
+- **State cleanup contract**: selected workflow sidecars, workflow configuration, unknown state files, and command `state.json` files are removed during refresh. Current supported workflows not selected in the prompt remain untouched.
+- **Build output hygiene**: `pnpm build` clears `dist/` before compiling so deleted source modules cannot be packaged accidentally.
+
+### Removed
+- **Migration and skill-mirror CLI surface**: removed `speculo migrate`, `speculo mirror-skills`, `speculo update`, and `--all` / `--apply` / `--dry-run`. Calling a removed command or option exits nonzero and directs users to `speculo init`.
+- Removed the migration and skills-mirror source modules, their legacy compatibility tests, and workflow instructions that directed users to migrate state.
+
+### Tests
+- Added direct-refresh coverage for malformed schema v2 state, unknown legacy files, state cleanup, retained audit history, unselected workflow preservation, staging failure rollback, and the reduced CLI surface.
+
+## [0.6.1] - 2026-08-08
+
+### Added
+- **SpecDev 本地优先 Triage**：`T-triage` 增加 intake / reconcile 双模式，将远程 Issue、PR、URL、文件或对话冻结为本地 `source.md`，以本地 `triage.md` 记录路由和待处理外部动作；change 完成本地开发后可再次进入 Triage，经明确确认回写并关闭支持的远程 Issue。
+- **GitHub Issue transport**：`github-npm-ops` 新增可复用的 `issue-read`、`pr-read`、`issue-search`、`issue-create` 与 `issue-comment-close` 操作；外部写默认 dry-run，close 重试使用稳定 comment marker 保持幂等。该能力仅作摄入与完成投影，不成为 SpecDev tracker。
+- **C-code-review 与共享双轴审查能力**：固定 commit、branch、tag、merge-base 或 PR 后，分别执行工程标准轴和规范符合轴审查，并把可恢复报告持久化到 change；I-implement 复用同一能力。
+- **P-prototype**：新增 Logic / UI 原型分支、原型记录与 schema；原型只回答一个设计问题，通过可迁移 branch/worktree locator 与 Wayfinder、后续实现和清理状态互相定位。
+- **诊断、问卷与冲突协议**：D-diagnose-bugs 增加 red-loop 硬门、最小化、可证伪假设、单变量探针和 HITL 捕获脚本；G 增加 stakeholder questionnaire 阻塞/恢复分支；I 增加 merge/rebase 冲突处理协议。
+- **上游来源一致性检查**：新增覆盖全部 26 个 `temp/skills` 来源的 source map 与 hash 检查，并接入 `pnpm validate-assets`。
+
+### Changed
+- **SpecDev 全局状态 v4（#37）**：`status.json` 收敛为 `active` / `archived` change 索引，删除全局 `work_history`、active `result` 与 `completed` 元数据投影；`speculo migrate` 新增 v3→v4 dry-run、阻塞检查、分阶段替换和回滚安全迁移。
+- **Ticket worktree 固定路径（#36）**：Git provider 固定使用 `<project-root>/specdev-worktree/<ticket-id>`；`speculo init` 在安装 SpecDev 时幂等治理项目根 `.gitignore`，native/external provider 继续使用可迁移 locator。
+- **TDD 与完成门收敛**：I-implement 使用严格 red→green 垂直切片、独立真相来源和系统边界 mock；重构移到双轴审查后的独立修正阶段。change 完成与归档分离，未 reconcile 的远程 close 不回滚本地完成，但会阻塞归档，除非显式 waive。
+- **领域工件语义与毕业边界收窄**：change CONTEXT 只保留本 change 已确认的项目规范术语；change ADR 仅在“难以逆转、缺少上下文会令人惊讶、存在真实权衡”三个条件同时成立时创建，并只作为当前 change 合同。永久 `context/` / `adr/` 只能由 Archive 在实现证据、毕业评估和用户确认后写入；Research 不再创建共享 namespace，由调用方声明输出 owner 和目标路径。
+- **归档职责去重**：SpecDev A work 改为全局 `archive-and-consolidate` skill 的 workflow wrapper；Status、Handoff、Archive 与 Retro command 同步理解本地权威与远程 reconcile 状态。
+- **Goal Plan 角色编排改为显式可选**：每次运行 P-goal-plan 由用户选择普通或委派计划；普通计划只保留 DAG/Wave/Gate/owner、证据和恢复，不生成 Lead、Provider、Delivery Contract 或 Dispatch Packet。只有委派分支加载 subagent-delivery；普通计划由最后一个 Implement 完成 change，委派计划仍由 Lead 验收完成。共享路径、E2E、偏差与 worktree 公共契约改用角色中立 owner，只有委派分支才映射为 Lead/Worker。
+
+### Removed
+- 删除 `source-issue.md` 兼容入口、外部 status-label 初始化，以及重复或已过期的 `archive-checklist.md`、`knowledge-promotion-rules.md`、`code-review-process.md` 和 `tdd-examples.md`。旧 `source-issue.md` 会被 validator 明确拒绝，不执行迁移或兼容回退。
+
+### Tests
+- 新增 status v3→v4、迁移阻塞、`.gitignore` 换行/幂等、provider 引用校验及真实 Git linked worktree 集成覆盖。
+- 新增 Triage 前置摄入、旧来源拒绝、诊断 red-loop、双轴审查 fixed point、原型 locator、远程 close 归档门，以及 GitHub transport dry-run / 幂等重试覆盖。
+
+## [0.6.0] - 2026-08-07
+
+### Added
+- **参考内容复用规则（作者技能）**：`authoring-quality.md` 共享规则新增"参考内容复用"——用户提供参考内容时视为待复用实现而非灵感来源，默认尽可能直接复制原文，只对 Speculo 集成所必需的路径解析、持久化、状态、缓存/临时目录、输出位置及直接相关脚本配置做最小修改；方法、步骤顺序、问题、判断条件、模板语义与完成标准不得顺带改变。
+- **写技能接入质量模型**：`speculo-write-canonical` / `speculo-write-command` / `speculo-write-skill` / `speculo-write-work` / `speculo-write-workflows` 五个技能全部接入 `_shared/authoring-quality.md` 读取，并在用户提供参考内容时先应用复用规则再继续设计。
+- **验证门证据要求**：`validation-gates.md` Gate 5 新增参考内容修改核对——列出相对原文的实质修改及 Speculo 集成理由，无法说明必要性的改写恢复原文。
+
+---
+
+## [0.5.0] - 2026-08-07
+
+### Added
+- **`subagent-delivery` Skill（specdev 工作流）**：为 Goal Plan 生成可恢复的 direct、原生或外部网页 Agent 派单，并在 Implement 阶段按同一交付合同核对基线、候选交付、修正与 Lead 验收；随 specdev 工作流作为 common skill 自动安装。
+- **`design-tree.schema.json` 与 `wayfinder-ticket.schema.json`**：为设计树与 Wayfinder Ticket 新增正式 JSON Schema，`validate-specdev.mjs` 与 canonical 生成脚本同步接入。
+- **specdev 契约扩展**：artifact-contract 新增设计树、Wayfinder 地图/Ticket/solution comment、架构审查等工件；新增 `architecture-report-contract.md`、`local-tracker-contract.md`、`solution-comment-template.md` 契约文档与 `design-tree-template.json` 模板。
+- **`codebase-design` 规则**：新增深层模块设计语言（小接口承载大行为、缝合点、可测试性），并入 specdev common rules。
+
+### Changed
+- **`docs-sync` Skill 重构为手册树构建器，取代 `agents-md-builder`**：基于可复现 Git 区间、确认范围和 workflow 规则审计项目文档，在增量维护或重建分支中生成可预测的 AGENTS.md / CLAUDE.md 手册树；`agents-md-builder` skill 及其模板与引用全部移除。
+- **specdev 各 work 更新**：G-grill-with-docs（设计树模板与 grilling 协议）、I-implement（design-it-twice、evidence-template、execution-preflight）、P-goal-plan（规划模式与编排协议）、R-review-architecture（架构审查报告契约）、W-wayfinder（地图与 investigation 契约）同步演进至新工件契约。
+- **canonical 单文件分发物重新生成**：全部 canonical-specdev-* 文件与源码同步（新增 subagent-delivery、设计树与 Wayfinder ticket schema 内联）。
+- **测试扩展**：cli.test.ts 新增 specdev 契约相关用例。
+
+---
+
+## [0.4.0] - 2026-08-02
+
+### Changed
+- **`engineering-standards-builder` Skill 取代 `typescript-engineering-standards`**：由静态工程规范合集重构为规范生成器——先扫描仓库事实，再通过自适应问答确认分歧点，为当前项目生成专属 TypeScript Standards Skill。输出正式规范到 `.agents/skills/typescript-standards/`，并为 `.claude/skills/` 创建强制引用入口；主 Skill 精简、详细规则拆分进项目内 `references/`，随 `skills` 核心资产自动安装。
+
+---
+
+## [0.3.4] - 2026-08-02
+
+### Added
+- **`typescript-engineering-standards` Skill**：为 TypeScript、JavaScript、React、Node.js、Electron、CLI、npm 库与 Monorepo 项目提供渐进披露的工程规范。轻量主入口按任务最小化读取 `references/` 主题文档（规则优先级、架构与目录、命名、模块、类型系统、异步/错误、注释、测试、React、Node CLI、格式化/Lint、配置/CI、安全/性能/i18n、Git/评审、迁移治理、Orca 工程习惯），并附带 `templates/`（tsconfig/prettier/editorconfig/AGENTS/PR/评审清单）与 `examples/`。随 `skills` 核心资产自动安装。
+
+---
+
+## [0.3.3] - 2026-07-31
+
+### Added
+- **A-archive-and-consolidate 新增 consolidate-from-code 模式**：归档 Work 从单一 archive 路径扩展为双模式。没有可归档 change（或用户显式要求“基于当前代码沉淀知识”）时，进入 consolidate-from-code 模式——以当前代码库为基本事实、一次一问深度访谈用户，把经验证的架构决策与领域术语提升为永久知识。访谈运行本身建立一个承载 change，轨迹/LOG/CONTEXT/ADR 先落在该 change 内，经代码验证后再提升、最后归档；两模式收束到同一条“评估 → 提升 → 归档”尾部。§0 判定模式，多候选或既有可归档 change 又收到沉淀请求时停止请用户消歧。
+- **consolidation-interview.md 访谈协议**：新增代码库沉淀访谈协议子文件（基本事实优先、决策树、每轮只关闭一个关键结论、复用 grill 的 LOG/CONTEXT/ADR 格式、停止条件），供 consolidate-from-code 模式加载。
+
+### Changed
+- **W-wayfinder 工作流增强**：明确“规划而非执行”与“以名称指代”两条核心纪律；拆分“绘制地图 / 走完地图”两种调用模式；目标命名作为第一动作独立成节；调查 Ticket 引入 Type（research/decision/validation/mapping）与模式（AFK/HITL）分类，research/AFK 型可并行领取、decision 等 HITL 型单会话一次只解决一个。
+- **wayfinder-map-template 重构**：地图定位为“索引而非仓库”，新增目标、笔记（含执行授权）、已定决策、尚未指定（战争迷雾）、范围之外等分节；前沿由调查清单投影；停止条件补齐目标命名与迷雾收敛项。
+- **investigation-ticket-template**：随 Wayfinder 分类模型同步更新。
+- **specdev INDEX**：A-archive-and-consolidate 描述更新为双模式沉淀 Work。
+
+---
+
+## [0.3.2] - 2026-07-31
+
+### Added
+- **`speculo mirror-skills` 命令**（#34）：将 `.agents/skills/*` 完整正本镜像为 `.claude/skills/*` 薄指针。指针保留正本 frontmatter（`name`/`description`/触发短语），正文仅含哨兵 `<!-- speculo:pointer -->` 与指向正本的相对路径 `../../../.agents/skills/<name>/SKILL.md`，不复制判定逻辑（单一事实来源）。支持反向归位（`.claude` 完整 skill 且 `.agents` 缺失时，先 copy 到 `.agents` 作正本再指针化）、幂等（二次运行仅 `skip`）、`--dry-run` 预览。`.agents` 缺失对应正本或两侧均为完整 skill 时明确报错而非静默。仅处理含 `SKILL.md` 的目录，`_shared/` 等自动跳过。
+
+### Fixed
+- **init 输出显式标注保留的 config.json**（#33）：更新（update）模式下若 `speculo/config.json` 已存在，不覆盖用户修改，并在输出中报告 `config.json (preserved)`，补齐验收标准的"创建/跳过提示"一项。全新 init 生成 config.json 的行为自 v0.2.1（commit 042e8a4）起已在 main 中，本次仅补 update 侧提示。
+
+---
+
+## [0.3.1] - 2026-07-31
+
+### Added
+- **E-engineering-cognitive-mentor workflow**：specdev 新增“工程认知导师”非执行型 work，面向 Bug、源码、需求方案、架构与陌生技术领域提供证据驱动、可复述、可恢复的认知指导；含 mode-routing、interaction-protocol、evidence-and-options、五类场景指南、comprehension-and-closure、persistence-and-resume 与 mentor-report-template 等渐进披露子文件。
+- **E canonical 纳入生成流水线**：`generate-specdev-canonical.mjs` 注册 E 入口与引用闭包，`canonical-specdev-engineering-cognitive-mentor.md` 改为从源自动生成（取代早期手工版），纳入 `--check` 幂等校验。
+
+### Changed
+- **内部创作契约自包含化**：废弃集中式 `docs/`（skill/command/canonical/persistence-authoring），契约迁入各 speculo-write-* skill 的 `references/<type>-contract.md` 与 `.agents/skills/_shared/`（project-model、path-and-reference-rules、authoring-quality、validation-gates）；新增 `.agents/skills/README.md`。
+- **AGENTS.md 刷新**：更新版本号至 v0.3.1、目录图（移除 `docs/`）、workflows 盘点（specdev 12 works 含 E）、Validation Pipeline（补 `generate-specdev-canonical --check`、`validate-speculo-assets.mjs`、`generate-index.mjs` 双 INDEX 模式）与 Internal Authoring Skills 引用说明。
+- **specdev INDEX**：AUTO-INDEX 重建至 12 works（新增 E-engineering-cognitive-mentor）。
+- **README / README-ZH**：文档索引移除已废弃的 `docs/` 链接，指向自包含的 `.agents/skills/`。
+
+### Fixed
+- **maintainer 校验器 `validate-speculo-assets.mjs`**：修正项目相对路径（`<Path>src/example.ts</Path>` 等，符合 path-reference-contract §3）被误判为“必须以 root alias 开头”；识别 `type: workflow-index` 整文件自动生成模式（person），不再对其强制 AUTO-INDEX 标记；豁免散文文档（README、`.speculo/`）与讲解性占位（省略号、`{roots.X}`/`{roots.xxx}`）。
+- **E work 引用契约合规**：修正 E 文档中裸 `workspace.json` / `.status.json` code span 与 `<Path>...</Path>`、`<Url>...</Url>` 占位，改用完整 `<Path>` 或散文描述；`common/tools/validate-specdev.mjs` 的 `EXPECTED_WORKS` 白名单登记 E。
+
+---
+
+## [0.3.0] - 2026-07-28
+
+### Added
+- **R-review-architecture workflow**：新增架构评审工作流，含探索指南（exploration-guide.md）和 HTML 报告模板（html-report-template.md），支持系统性代码架构评审
+- **handoff 独立 skill**：handoff 从 workflow 迁移为 `template/skills/common/handoff/SKILL.md` 和 `template/commands/handoff.md` 的一等公民 command+skill
+- **Mao consultation output template**：person workflow 新增 `mao-consultation-output-template.md` 输出模板
+- **git-repository-audit command**：新增 `template/commands/git-repository-audit.md` 命令定义
+- `writing-great-skills` SKILL.md 新增内容补充
+- `canonical-specdev-*` 文档内容更新
+- `G-grill-with-docs` 新增 `adr-format.md` 引用
+
+### Changed
+- **AGENTS.md 刷新至 v0.3.0**：更新资产盘点（commands 4→5、skills 6→6、workflows 10→11+）、移除 canonicalize.mjs 引用
+- **specdev workflow 重组**：INDEX.md 新增 R-review-architecture、A-archive-and-consolidate、P-goal-plan 条目；移除 improve-codebase-architecture
+- **canonical 格式纯 Markdown 化**：`canonical-authoring.md` 移除 `scripts/canonicalize.mjs` 引用，确认纯 Markdown 分发格式
+- **dev-worktree SKILL.md 大幅精简**：从 122 行压缩，移除冗余内容
+- **triage SKILL.md 与 OUT-OF-SCOPE.md 更新**
+- `validate-framework-assets.mjs` 与 `check-template-links.mjs` 适配新 workflow 结构
+- 多个 specdev work entries 内容同步更新：D-diagnose-bugs, G-grill-with-docs, I-implement, I-init-setup, P-goal-plan, T-tickets, W-wayfinder
+- GitHub npm ops 参考文档更新（failure-recovery, preflight-checklist, release-notes-injection, troubleshooting-playbook, version-bump-flow, workflow-yaml-reference）
+- CLI 测试更新以匹配 handoff command 新路径
+
+### Removed
+- **`scripts/canonicalize.mjs`**：已废弃的旧 XML 容器格式生成脚本，与现行纯 Markdown 契约不符
+- **`template/workflows/specdev/common/improve-codebase-architecture/`**：功能合并到 R-review-architecture
+- **`.agents/skills/speculo-write-workflows/references/authoring-quality.md` 与 `persistence-contract.md`**：移除冗余参考文档
+
+---
+
+## [0.2.16] - 2026-07-24
+
+### Fixed
+- 修复 `speculo init` 未生成 `speculo/config.json` 的回归问题（#33）
+
+### Added
+- handoff 命令新增「路径引用规范」小节，要求文件引用统一使用项目根目录相对路径（#32）
+
+---
+
+## [0.2.15] - 2026-07-23
+
+### Fixed
+- 修复 handoff command 迁移后 CI 测试断言：`commands/handoff.md` 现为 first-class command，init 后应存在
+
+---
+
+## [0.2.14] - 2026-07-23
+
+### Changed
+- **handoff command 重构**：从 workflow SKILL 迁移为独立 command，归档路径规范化为 `speculo/.speculo/commands/handoff/<YYYY-MM-DD>-<scope>-<topic>[-NN].md`，禁止写入 temp/ 或非规范位置
+
+### Added
+- `AGENTS.md` 新增 Speculo 运行时配置段：初始化状态检查与工作流入门强制读取规则
+
+---
+
+## [0.2.13] - 2026-07-23
+
+### Added
+- `speculo version` 命令：查看当前安装版本，自动检查 npm registry 最新版本并提示升级
+- `speculo` / `speculo init` 启动时自动版本检查：显示本地版本与远程最新版本比对，交互模式下确认后继续
+
+---
+
+## [0.2.12] - 2026-07-22
+
+### Added
+- T-triage workflow：外部 issue 摄入分诊——深度理解上下文后写入 source-issue.md 与 triage.md，推荐下一 work（#31）
+
+### Changed
+- **status.json schema 升级到 v2**：`active` 从 `string[]` 升级为 `object[]`，支持 per-change 维度的 `current_work`/`works_run`/`result` 独立追踪（#31）
+- 移除全局 `current_work` 字段，语义移至 per-change active 条目
+- `work_history` 条目增加 `change` 外键，移除 `artifacts` 字段
+- 新增 `completed` 数组记录已归档 change 的路径与时间
+- 新增 per-change `.status.json` 约定，追踪 change 生命周期状态
+- A-archive-and-consolidate 全链路联动：从 status.json `active` 筛选 `result: "completed"`，归档后追加到 `completed` 数组
+- W-wayfinder ticket 领取机制从全局 `active` 数组迁移到 per-change `claimed_tickets`
+
+---
+
+## [0.2.11] - 2026-07-22
+
+### Fixed
+- T-tickets 编号契约去掉 `#` 前缀：文件名/编号列/阻塞路径/DAG 与派单协议统一为两位零填充纯数字（`01`），避免 tickets-map 链接被编码为 `%23`（#30）
+- P-goal-plan §5 执行协议强制引用 I-implement：开头声明本协议是 I-implement 的实例化，Lead 与简化模型步骤 1 清单均以 I-implement 为第一项（#29）
+
+### Changed
+- `IMPLEMENTER_DISPATCH` / `TICKET_DONE` 协议标签改为纯数字编号（`IMPLEMENTER_DISPATCH 01` / `TICKET_DONE 01`），不再使用 `#n`
+- `canonical-specdev-tickets.md` 与 T-tickets 编号契约锁步同步
+
+---
+
+## [0.2.7] - 2026-07-21
+
+### Fixed
+- specdev INDEX.md 持久化约定表格补充 `.config/` 配置目录文档说明（#25）
+
+---
+
+## [0.2.6] - 2026-07-21
+
+### Added
+- `archive-and-consolidate` command 与配套 skill：知识生命周期治理——归档过期内容、合并分散知识、清理过时资产。含完整参考规则（archive-rules.md、cleanup-rules.md、consolidation-rules.md、knowledge-graduation.md）和资产模板。
+- `specdev` workflow package：全周期规范驱动开发，含 7 个 work 条目——D-diagnose-bugs（诊断 bug）、G-grill-with-docs（带文档质询）、I-implement（实现）、I-init-setup（初始化设置）、S-spec（规范编写）、T-tickets（任务拆解）、W-wayfinder（路径导航）。替代原有的 matt-pocock workflow。
+- `speculo-write-canonical` 内部创作 skill：为 AI 平台生成/审计单文件 canonical 分发格式。
+- `speculo-write-work` 内部创作 skill：编写 workflow 内的独立 work 条目文件及渐进式展示子文件。
+- vendor `khazix-skills/neat-freak`：知识治理与清理的原始 skill 集合。
+- Workflow `INDEX.md` 自动生成脚本（`generate-index.mjs`），替代手动维护的 PERSISTENCE.md/WORKFLOW.md。
+- `template/AGENTS.md` 与 `template/CLAUDE.md` 作为模板级代理入口，遵循 AGENTS.md 权威手册 + CLAUDE.md 轻量重定向的铁律。
+- `authoring-quality.md`、`workflow-authoring.md`、`work-entry-authoring.md`、`index-template.md` 参考文档，提取到对应 skill 的 references/ 中。
+
+### Changed
+- `template/commands/` 从 5 个精简为 4 个：移除 `finalize` 和 `knowledge-prune`（功能合并到 `archive-and-consolidate`）。
+- `template/skills/` 从 10 个精简为 6 个：移除 `change-lifecycle`、`config-prune`、`knowledge-prune`、`runtime-context`、`scaffold-exercises`；新增 `archive-and-consolidate`。
+- `template/workflows/`：matt-pocock workflow 替换为 specdev workflow（7 work entries + INDEX.md）。
+- `template/workflows/person/`：适配新 INDEX.md 格式，移除 PERSISTENCE.md/WORKFLOW.md。
+- `.agents/skills/` 从 4 个扩展为 5 个：新增 `speculo-write-canonical` 和 `speculo-write-work`。
+- `speculo-write-workflows` skill 重构：新增 INDEX.md 生成、vendor reconciliation 重构。
+- `docs/` 目录更新：移除 `workflow-authoring.md`；`canonical-authoring.md`、`persistence-contract.md`、`skill-authoring.md` 内容同步。
+- `template/vendor/`：新增 `khazix-skills/`。
+- `scripts/validate-framework-assets.mjs` 适配新的 INDEX.md 格式。
+- `src/` CLI 模块适配 workflow 包结构变更。
+- `check-template-links.mjs` 跳过 canonical 自包含文档。
+
+### Removed
+- `template/commands/finalize.md` 与 `template/commands/knowledge-prune.md`（功能合并到 archive-and-consolidate）。
+- `template/skills/change-lifecycle/`、`config-prune/`、`knowledge-prune/`、`runtime-context/`、`scaffold-exercises/`。
+- `template/workflows/matt-pocock/` 整个 workflow package（替换为 specdev）。
+- `template/workflows/person/PERSISTENCE.md`、`WORKFLOW.md`、`_state/.config/`、`_templates/`。
+- `.agents/skills/speculo-write-workflows/scripts/vendor-workflow-impact.mjs`。
+- `docs/workflow-authoring.md`。
+- `test/vendor-workflow-impact.test.ts`。
+
+## [0.2.5] - 2026-07-20
+
+### Fixed
+- PERSISTENCE.md state root 路径解析多了一级 `state/` 子目录：`<root base="X" path="Y"/>` 现在明确解析为 `workspace.roots[X] + "/" + Y`，root ID 不重复作为子目录拼接（#23）。
+- setup-matt-pocock-skills 产物 `docs/agents/*` 现通过 `adapt-paths` 中间件映射到 `{state_root}/integrations/` 与 `{state_root}/knowledge/` 持久化命名空间，不再污染项目根（#24）。
+- PERSISTENCE.md 新增 `<vendor-path-mapping>` 规范表作为 vendor 路径适配的单一事实源。
+
+### Changed
+- to-tickets 本地文件模式现通过 wrapper 层 `adapt-local-template` 覆盖为 `tickets/` 目录结构（`README.md` 索引 + `NN-<kebab-title>.md` 独立文件），支持按编号引用与独立归档；issue tracker 模式行为不变（#22）。
+- idea-to-delivery route artifact 路径从 `tracker/tickets.md` 更新为 `tracker/tickets/README.md`。
+
+## [0.2.4] - 2026-07-20
+
+### Added
+- Canonical 格式支持与 `speculo-write-canonical` 内部创作 skill。
+- `template/canonical/` 含格式规范、示例与教学指南。
+- `scripts/canonicalize.mjs` 用于自动生成 canonical 自包含文档。
+
+## [0.2.3] - 2026-07-17
+
+### Fixed
+- retro 命令目标仓库写死为 `NAMEWTA/Speculo`，移除 AI 可覆盖目标仓库的歧义空间，防止 issue 误提到其他仓库。
+
+### Added
+- README 九段式通用写作指南（`readme-writing-guide.md`），供 `docs-sync` 等命令在生成/审计 README 时引用。
+
+### Changed
+- `docs-sync` skill 步骤 4 同步引用新写作指南；`readme-contract.md` 增加交叉引用。
+
+## [0.2.2] - 2026-07-15
+
+### Added
+- Per-workflow `PERSISTENCE.md` runtime contracts and independently callable `atomic-skills/` entries.
+- Complete one-to-one wrapper catalog for the current Matt Pocock vendor inventory, including explicit gating for every `in-progress` skill.
+- Read-only Git impact analysis for reconciling vendor additions, removals, moves, renames, and supporting-file changes with workflow wrappers, routes, and callers.
+
+### Changed
+- Matt Pocock routes now resolve every raw skill through workflow-owned atomic wrappers so route and direct invocation share one change and persistence boundary.
+- Framework validation now enforces persistence loading, wrapper/catalog completeness, unique raw targets, and the absence of direct raw skill references in routes.
+- The internal workflow authoring skill now treats vendor synchronization as a dependency-closed reconciliation branch and blocks referenced removals or renames for an explicit decision.
+
+## [0.2.0] - 2026-07-11
+
+### Added
+- Package-based workflow system with XML route declarations (`<runtime-context>`, `<persistence>`, `<routes>`, `<sequence>`, `<dependencies>`, `<state-schema>`, `<transitions>`).
+- Two installable workflow packages: **matt-pocock** (10 routes: idea-to-delivery, wayfinder, triage, diagnose, architecture, review, merge-conflicts, research-prototype, productivity, experimental) and **person** (1 route: Mao Zedong Cognitive OS consulting workflow).
+- Five command definitions: docs-sync, finalize, knowledge-prune, retro, status.
+- Ten skills: agents-md-builder, change-lifecycle, config-prune, docs-sync, github-npm-ops, knowledge-prune, runtime-context, scaffold-exercises, speculo-retro, worktree-isolation.
+- `speculo migrate [--apply] [target]` for v2 and transitional v3 state to current v3 contract migration, with staged rollback safety.
+- `speculo init [--all] [target]` with interactive workflow selection via `@inquirer/prompts`.
+- Vendor skill collection support: matt-pocock (engineering + productivity) and officecli.
+- `docs-sync` skill with six reference contracts: git-state, workflow-scope, document-lifecycle, readme, changelog, agents.
+- CI pipeline: build, test, validate-assets, verify-bin.
+- npm release workflow with package provenance and tag-version verification.
+- `--all` flag for `speculo init` to select every workflow and fully refresh vendor assets on update.
+- Workflow status state extensions: `current_route`, `route_history`, `skill_history`, `external_refs`, `legacy_source`.
+
+### Changed
+- `speculo update` deprecated; delegates to `speculo init --all`.
+- Vendor directory restructured: `vendor/` as native skill collection directory.
+- `speculo/` directory renamed to `template/` for clearer shipped asset semantics.
+- init/update merged into unified `speculo init` command with smarter state preservation.
+- docs-sync state schema upgraded to v4 with per-workflow `docs-sync.json` sidecars.
+- Workflow assets migrated from flat vendor directory to structured package-based layout.
+
+### Removed
+- Legacy v2 workflow categories (dev, doc, person as top-level state trees).
+- Legacy config files: RULES.md, LESSONS.md under `.speculo/.config/`.
+- Legacy skills: handoff, write-a-skill, caveman (superseded by standalone skill assets in `template/skills/`).
+
+[Unreleased]: https://github.com/NAMEWTA/Speculo/compare/v2.1.13...HEAD
+[2.1.13]: https://github.com/NAMEWTA/Speculo/compare/v2.1.12...v2.1.13
+[2.1.12]: https://github.com/NAMEWTA/Speculo/compare/v2.1.11...v2.1.12
+[2.1.11]: https://github.com/NAMEWTA/Speculo/compare/v2.1.10...v2.1.11
+[2.1.10]: https://github.com/NAMEWTA/Speculo/compare/v2.1.9...v2.1.10
+[2.1.9]: https://github.com/NAMEWTA/Speculo/compare/v2.1.8...v2.1.9
+[2.1.8]: https://github.com/NAMEWTA/Speculo/compare/v2.1.7...v2.1.8
+[2.1.1]: https://github.com/NAMEWTA/Speculo/compare/v2.1.0...v2.1.1
+[2.1.0]: https://github.com/NAMEWTA/Speculo/compare/v2.0.6...v2.1.0
+[2.0.6]: https://github.com/NAMEWTA/Speculo/compare/v2.0.5...v2.0.6
+[2.0.5]: https://github.com/NAMEWTA/Speculo/compare/v2.0.4...v2.0.5
+[2.0.4]: https://github.com/NAMEWTA/Speculo/compare/v2.0.3...v2.0.4
+[2.0.3]: https://github.com/NAMEWTA/Speculo/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/NAMEWTA/Speculo/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/NAMEWTA/Speculo/compare/209f927...v2.0.1
+[1.0.19]: https://github.com/NAMEWTA/Speculo/compare/v1.0.18...v1.0.19

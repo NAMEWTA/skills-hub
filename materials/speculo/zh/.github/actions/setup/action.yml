@@ -1,0 +1,33 @@
+name: Setup
+description: 安装固定版本 pnpm + Node，并按冻结锁文件安装依赖。
+
+inputs:
+  node-version:
+    description: 此验证作业使用的受支持 Node 运行时。
+    required: false
+    default: '22.22.3'
+  registry-url:
+    description: npm 注册表 URL。在发布作业中设置，使 NODE_AUTH_TOKEN 生效。
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Install pnpm
+      uses: pnpm/setup@v2
+      with:
+        install: false
+
+    - name: Setup Node
+      uses: actions/setup-node@v7
+      with:
+        node-version: ${{ inputs.node-version }}
+        registry-url: ${{ inputs.registry-url }}
+        cache: pnpm
+
+    - name: Install dependencies
+      run: pnpm install --frozen-lockfile
+      shell: bash
+      env:
+        PNPM_CONFIG_MINIMUM_RELEASE_AGE: '0'

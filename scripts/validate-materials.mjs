@@ -2,107 +2,145 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
-import { repositoryRoot, readUtf8, isWithin, isMain } from '../install.mjs';
+import { spawnSync } from 'node:child_process';
+import { repositoryRoot, isMain } from '../install.mjs';
+import { readMaterials, resolveMaterialPath } from './materials-manifest.mjs';
+export { parseTsv } from './materials-manifest.mjs';
+const hash = (algorithm, bytes) => createHash(algorithm).update(bytes).digest('hex');
+const oid = value => /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(value);
 
-export function parseTsv(text) {
-  const rows = [];
-  let row = [];
-  let cell = '';
-  let quoted = false;
-  for (let index = 0; index < text.length; index += 1) {
-    const value = text[index];
-    if (quoted) {
-      if (value === '"' && text[index + 1] === '"') { cell += '"'; index += 1; }
-      else if (value === '"') quoted = false;
-      else cell += value;
-    } else if (value === '"' && cell === '') quoted = true;
-    else if (value === '\t') { row.push(cell); cell = ''; }
-    else if (value === '\n' || value === '\r') {
-      if (value === '\r' && text[index + 1] === '\n') index += 1;
-      row.push(cell);
-      if (row.some((field) => field.length)) rows.push(row);
-      row = []; cell = '';
-    } else cell += value;
+// Never follows symlinks, including directory links; reports special files instead.
+function inventory(root, relative, failures, { optional = false } = {}) {
+  const result = new Set();
+  if (optional && !fs.lstatSync(path.join(root, relative), { throwIfNoEntry: false })) return result;
+  let directory;
+  try { directory = resolveMaterialPath(root, relative, 'directory'); }
+  catch (error) { failures.push(error.message); return result; }
+  function visit(dir, prefix) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const name = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isSymbolicLink()) failures.push(`${relative}/${name}: symlink forbidden`);
+      else if (entry.isDirectory()) visit(path.join(dir, entry.name), name);
+      else if (entry.isFile()) result.add(name);
+      else failures.push(`${relative}/${name}: not a regular file`);
+    }
   }
-  if (quoted) throw new Error('Unclosed quoted field in materials/manifest.tsv');
-  if (cell.length || row.length) { row.push(cell); rows.push(row); }
-  if (!rows.length) return [];
-  const header = rows.shift();
-  return rows.map((fields) => Object.fromEntries(header.map((field, index) => [field, fields[index] ?? ''])));
+  visit(directory, ''); return result;
+}
+function compare(actual, expected, label, failures) {
+  for (const file of actual) if (!expected.has(file)) failures.push(`${label}: unregistered file ${file}`);
+  for (const file of expected) if (!actual.has(file)) failures.push(`${label}: missing file ${file}`);
 }
 
-const hash = (algorithm, bytes) => createHash(algorithm).update(bytes).digest('hex');
-
-export function check(root = repositoryRoot, { output = console.log } = {}) {
+// Optional offline authentication against an explicitly supplied local Git object store.
+// No fetch, checkout, hooks, filters or source programs are executed.
+export function checkSourceTree(root, project, gitDirectory) {
   const failures = [];
-  const materials = path.join(root, 'materials');
-  const manifest = path.join(materials, 'manifest.tsv');
-  if (!fs.statSync(manifest, { throwIfNoEntry: false })?.isFile()) return ['materials/manifest.tsv is missing'];
-  const canonicalRoot = fs.realpathSync(root);
-  const skillsBoundary = path.join(canonicalRoot, 'skills');
-  const rows = parseTsv(readUtf8(manifest));
-  if (!rows.length) return ['The material manifest must not be empty'];
-  const identities = new Set();
-  const sources = new Set();
-  const kinds = { document: 0, code: 0, fixture: 0, asset: 0 };
-  let mapped = 0;
-  for (const row of rows) {
-    const identity = row.id ?? '';
-    if (!/^[a-z][0-9]{3}$/.test(identity) || identities.has(identity)) { failures.push(`Invalid or duplicate material identity: ${identity}`); continue; }
-    identities.add(identity);
-    const kind = row.kind ?? '';
-    if (!Object.hasOwn(kinds, kind)) { failures.push(`${identity}: kind must be document, code, fixture or asset`); continue; }
-    kinds[kind] += 1;
-    const source = JSON.stringify([row.source_group ?? '', row.source_path ?? '']);
-    if (!row.source_group || !row.source_path || sources.has(source)) failures.push(`${identity}: missing or duplicate source identity`);
-    sources.add(source);
-    const directory = path.join(materials, identity);
-    const suffix = path.extname(row.source_path ?? '').toLowerCase();
-    if (kind === 'asset' && !['.png', '.jpg', '.jpeg', '.svg'].includes(suffix)) { failures.push(`${identity}: unsupported asset extension: ${suffix}`); continue; }
-    const originalName = kind === 'asset' ? `original${suffix}` : 'original.txt';
-    const localizedName = kind === 'asset' ? `localized${suffix}` : kind === 'document' ? 'zh-CN.txt' : 'localized.txt';
-    const pairedData = new Map();
-    const directoryStat = fs.lstatSync(directory, { throwIfNoEntry: false });
-    if (directoryStat?.isSymbolicLink()) { failures.push(`${identity}: material directory must not be a symlink`); continue; }
-    for (const [filename, field] of [[originalName, 'original_sha256'], [localizedName, 'translation_sha256']]) {
-      const target = path.join(directory, filename);
-      const stat = fs.lstatSync(target, { throwIfNoEntry: false });
-      if (!stat?.isFile() || stat.isSymbolicLink()) { failures.push(`${identity}: missing regular file ${filename}`); continue; }
-      const data = fs.readFileSync(target);
-      pairedData.set(filename, data);
-      if (hash('sha256', data) !== row[field]) failures.push(`${identity}: ${filename} differs from its recorded SHA-256`);
-      if (filename === originalName) {
-        const blob = hash('sha1', Buffer.concat([Buffer.from(`blob ${data.length}\0`), data]));
-        if (blob !== row.source_git_blob) failures.push(`${identity}: original differs from the recorded source Git blob`);
-      }
-      if (kind === 'asset') { if (!data.length) failures.push(`${identity}: empty asset`); continue; }
-      let content;
-      try { content = new TextDecoder('utf-8', { fatal: true, ignoreBOM: true }).decode(data); }
-      catch { failures.push(`${identity}: ${filename} must be UTF-8`); continue; }
-      if (kind !== 'fixture' && !content.trim()) failures.push(`${identity}: ${filename} must not be empty`);
-      if (kind === 'document' && filename === localizedName && !/[\u3400-\u9fff]/u.test(content)) failures.push(`${identity}: Chinese translation is absent`);
+  const git = args => {
+    const result = spawnSync('git', ['--no-replace-objects', '-C', gitDirectory, ...args], { encoding: 'buffer', maxBuffer: 128 * 1024 * 1024, env: { ...Object.fromEntries(Object.entries(process.env).filter(([key]) => !key.startsWith('GIT_'))), GIT_NO_LAZY_FETCH: '1', GIT_TERMINAL_PROMPT: '0' } });
+    if (result.error || result.status !== 0) throw new Error(`Local Git objects unavailable: ${result.error?.message ?? result.stderr.toString().trim()}`);
+    return result.stdout;
+  };
+  try {
+    if (!oid(project.revision)) throw new Error('invalid revision');
+    if (git(['cat-file', '-t', project.revision]).toString().trim() !== 'commit') throw new Error('revision must identify a commit');
+    const tree = project.source_root === '.' ? `${project.revision}^{tree}` : `${project.revision}:${project.source_root}`;
+    if (git(['cat-file', '-t', tree]).toString().trim() !== 'tree') throw new Error('source_root must identify a tree');
+    const entries = new Map();
+    for (const record of new TextDecoder('utf-8', { fatal: true }).decode(git(['ls-tree', '-rz', tree])).split('\0').filter(Boolean)) {
+      const match = /^(\d+) (\w+) ([a-f0-9]+)\t([\s\S]+)$/.exec(record);
+      if (!match) throw new Error('unreadable Git tree entry');
+      const [, mode, type, blob, name] = match;
+      if (type !== 'blob' || !['100644', '100755'].includes(mode)) throw new Error(`unsupported source Git mode: ${mode} ${name}`);
+      entries.set(name, { mode, blob });
     }
-    if (['fixture', 'asset'].includes(kind) && pairedData.size === 2 && !pairedData.get(originalName).equals(pairedData.get(localizedName))) failures.push(`${identity}: machine fixture or asset must preserve the original bytes`);
-    if (directoryStat?.isDirectory() && JSON.stringify(fs.readdirSync(directory).sort()) !== JSON.stringify([originalName, localizedName].sort())) failures.push(`${identity}: expected only the paired files`);
-    const destinations = (row.runtime_paths ?? '').split(';').filter(Boolean);
-    const devOwners = new Set(destinations.filter(value => value.startsWith('skills/dev/')).map(value => value.split('/')[2]));
-    if (devOwners.size > 1) failures.push(`${identity}: development method must have one owning skill, not copies in ${[...devOwners].join(', ')}`);
-    if (destinations.length) mapped += 1;
-    for (const relative of destinations) {
-      const target = path.resolve(canonicalRoot, relative);
-      let actual = target;
-      try { actual = fs.realpathSync(target); } catch {}
-      if (!isWithin(actual, skillsBoundary) || !fs.statSync(target, { throwIfNoEntry: false })?.isFile()) failures.push(`${identity}: runtime destination missing or outside skills: ${relative}`);
+    const rows = new Map(project.rows.map(row => [row.path, row]));
+    compare(new Set(entries.keys()), new Set(rows.keys()), `${project.project}: Git tree versus manifest`, failures);
+    for (const [name, entry] of entries) {
+      const row = rows.get(name); if (!row) continue;
+      if (row.source_git_blob !== entry.blob || row.source_git_mode !== entry.mode) failures.push(`${project.project}/${name}: manifest blob/mode differs from source commit tree`);
+      // Reading each object catches incomplete/promisor stores without fetching.
+      const bytes = git(['cat-file', 'blob', entry.blob]);
+      const local = fs.readFileSync(resolveMaterialPath(root, `materials/${project.project}/upstream/${name}`));
+      if (!bytes.equals(local)) failures.push(`${project.project}/${name}: bytes differ from source commit blob`);
     }
-    if (!row.source_path || !row.adaptation) failures.push(`${identity}: preserve the source path and adaptation explanation`);
-  }
-  const actual = new Set(fs.readdirSync(materials, { withFileTypes: true }).filter((entry) => entry.isDirectory() || entry.isSymbolicLink()).map((entry) => entry.name));
-  const disagreement = [...actual].filter((name) => !identities.has(name)).concat([...identities].filter((name) => !actual.has(name))).sort();
-  if (disagreement.length) failures.push(`Material directories and manifest disagree: ${JSON.stringify(disagreement)}`);
-  output(`Checked ${rows.length} local pairs (${kinds.document} documents, ${kinds.code} code files, ${kinds.fixture} fixtures, ${kinds.asset} assets); ${mapped} have recorded runtime destinations.`);
+  } catch (error) { failures.push(`${project.project}: ${error.message}`); }
   return failures;
 }
 
+export function check(root = repositoryRoot, { output = console.log, gitRepositories = {} } = {}) {
+  const failures = []; let model;
+  try { root = fs.realpathSync(root); model = readMaterials(root); }
+  catch (error) { return [error.message]; }
+  const materials = resolveMaterialPath(root, 'materials', 'directory');
+  const expectedProjects = new Set(model.projects.map(p => p.project));
+  for (const entry of fs.readdirSync(materials, { withFileTypes: true })) {
+    if (!expectedProjects.has(entry.name) && !['README.md', 'manifest.tsv'].includes(entry.name)) failures.push(`materials: unregistered entry ${entry.name}`);
+    if (entry.isSymbolicLink()) failures.push(`materials/${entry.name}: symlink forbidden`);
+  }
+  for (const project of model.projects) {
+    const base = `materials/${project.project}`;
+    const upstream = inventory(root, `${base}/upstream`, failures);
+    const zh = inventory(root, `${base}/zh`, failures, { optional: true });
+    const expectedUpstream = new Set(project.rows.map(r => r.path));
+    const expectedZh = new Set(project.rows.filter(r => r.zh_path).map(r => r.zh_path.replace(/^zh\//, '')));
+    compare(upstream, expectedUpstream, `${base}/upstream`, failures); compare(zh, expectedZh, `${base}/zh`, failures);
+    for (const entry of fs.readdirSync(path.join(root, base))) if (!['manifest.tsv', 'upstream', 'zh'].includes(entry)) failures.push(`${base}: unregistered entry ${entry}`);
+    for (const row of project.rows) {
+      const label = `${project.project}/${row.path}`;
+      const fail = message => failures.push(`${label}: ${message}`);
+      if (!['document', 'code', 'fixture', 'asset', 'legal'].includes(row.kind)) fail('invalid kind');
+      if (!['zh', 'en', 'mixed', 'none'].includes(row.language)) fail('invalid language');
+      if (!['100644', '100755'].includes(row.source_git_mode)) fail('unsupported Git mode (symlink/gitlink require explicit handling)');
+      if (!oid(row.source_git_blob)) fail('invalid source Git blob');
+      if (!/^[a-f0-9]{64}$/.test(row.upstream_sha256)) fail('invalid upstream SHA-256');
+      if (row.language === 'zh') {
+        if (row.zh_path || row.zh_sha256) fail('Chinese source must have empty zh_path and zh_sha256');
+      } else if (row.zh_path !== `zh/${row.path}` || !/^[a-f0-9]{64}$/.test(row.zh_sha256)) fail('zh_path must be the same source path under zh, with SHA-256');
+      if (!row.adaptation.trim()) fail('missing adaptation explanation');
+      let source; let localized;
+      try {
+        const filename = resolveMaterialPath(root, `${base}/upstream/${row.path}`);
+        source = fs.readFileSync(filename);
+        if (hash('sha256', source) !== row.upstream_sha256) fail('upstream differs from recorded SHA-256');
+        const algorithm = row.source_git_blob.length === 64 ? 'sha256' : 'sha1';
+        if (hash(algorithm, Buffer.concat([Buffer.from(`blob ${source.length}\0`), source])) !== row.source_git_blob) fail('upstream differs from recorded source Git blob');
+        const executable = (fs.statSync(filename).mode & 0o111) !== 0;
+        // Windows stat does not expose Git's executable bit; the optional object-tree check still verifies it.
+        if (process.platform !== 'win32' && executable !== (row.source_git_mode === '100755')) fail('upstream executable mode differs from Git mode');
+      } catch (error) { fail(error.message); }
+      if (row.zh_path) try {
+        localized = fs.readFileSync(resolveMaterialPath(root, `${base}/${row.zh_path}`));
+        if (hash('sha256', localized) !== row.zh_sha256) fail('zh differs from recorded SHA-256');
+      } catch (error) { fail(error.message); }
+      if (source && localized && (row.kind === 'legal' || row.language === 'none' || ['asset', 'fixture'].includes(row.kind)) && !source.equals(localized)) fail('legal, machine or language-none counterpart must preserve original bytes');
+      if (localized && row.kind === 'document' && ['en', 'mixed'].includes(row.language)) {
+        try {
+          const text = new TextDecoder('utf-8', { fatal: true }).decode(localized);
+          if (!/[\u3400-\u9fff]/u.test(text)) fail('Chinese translation is absent');
+        } catch { fail('document counterpart must be UTF-8'); }
+        if (source?.equals(localized)) fail('document counterpart is an untranslated byte copy');
+      }
+      // Structural/hash checks cannot certify translation fidelity or language classification.
+      const destinations = row.runtime_paths ? row.runtime_paths.split(';') : [];
+      if (new Set(destinations).size !== destinations.length) fail('duplicate runtime paths');
+      const owners = new Set(destinations.filter(p => p.startsWith('skills/dev/')).map(p => p.split('/')[2]));
+      if (owners.size > 1) fail('development method must have one owning skill');
+      for (const destination of destinations) {
+        if (!/^skills\/[^/]+\/[^/]+\/.+/.test(destination)) { fail(`runtime destination outside skills or not a skill file: ${destination}`); continue; }
+        try { resolveMaterialPath(root, destination); } catch (error) { fail(`runtime destination: ${error.message}`); }
+      }
+      if (row.runtime_reviewed_blob && (!destinations.length || !oid(row.runtime_reviewed_blob))) fail('runtime_reviewed_blob requires runtime mapping and valid reviewed blob');
+    }
+  }
+  for (const [name, directory] of Object.entries(gitRepositories)) {
+    const project = model.projects.find(p => p.project === name);
+    if (!project) failures.push(`Unknown Git verification project: ${name}`);
+    else failures.push(...checkSourceTree(root, project, directory));
+  }
+  output(`Checked ${model.projects.length} projects, ${model.rows.length} source files; local sets, hashes, blobs, modes and runtime paths; ${Object.keys(gitRepositories).length} explicit local Git trees (translation fidelity requires review).`);
+  return failures;
+}
 export function main(argv = process.argv.slice(2)) {
   let root = repositoryRoot;
   if (argv.length === 2 && argv[0] === '--root') root = path.resolve(argv[1]);
@@ -110,9 +148,8 @@ export function main(argv = process.argv.slice(2)) {
   try {
     const failures = check(root);
     for (const failure of failures) console.error(`ERROR: ${failure}`);
-    if (!failures.length) console.log('Local material pairs, recorded hashes and runtime destinations passed.');
+    if (!failures.length) console.log('Local material snapshot validation passed.');
     return Number(failures.length > 0);
   } catch (error) { console.error(`ERROR: ${error.message}`); return 1; }
 }
-
 if (isMain(import.meta.url)) process.exitCode = main();

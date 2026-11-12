@@ -1,0 +1,71 @@
+{
+  "name": "@namewta/speculo",
+  "version": "3.0.0",
+  "description": "Reusable AI workflows, task skills and durable project knowledge, from requirements to deployment.",
+  "type": "module",
+  "bin": {
+    "speculo": "./dist/src/cli.js"
+  },
+  "scripts": {
+    "clean": "node -e \"require('node:fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "pnpm clean && tsc -p tsconfig.json && node scripts/generate-hub-bundle.mjs",
+    "pretest": "pnpm build",
+    "test": "node --test dist/test/*.test.js",
+    "validate-assets": "node scripts/validate-assets.mjs",
+    "check": "pnpm test && pnpm validate-assets",
+    "verify-bin": "node scripts/verify-bin.mjs",
+    "verify-package": "node scripts/verify-package.mjs",
+    "prepack": "pnpm build",
+    "prepublishOnly": "pnpm check && pnpm verify-bin"
+  },
+  "files": [
+    "dist/src",
+    "template",
+    "skills-hub",
+    "THIRD-PARTY-NOTICES.md"
+  ],
+  "keywords": [
+    "speculo",
+    "sdd",
+    "spec-driven-development",
+    "ai-coding",
+    "workflows",
+    "skills",
+    "cli",
+    "scaffolding"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NAMEWTA/Speculo.git"
+  },
+  "homepage": "https://github.com/NAMEWTA/Speculo#readme",
+  "bugs": {
+    "url": "https://github.com/NAMEWTA/Speculo/issues"
+  },
+  "license": "MIT",
+  "author": "wta",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "node": ">=22.22.3 <25"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^22.0.0",
+    "@types/semver": "^7.8.0",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@clack/prompts": "1.8.1",
+    "cross-spawn": "^7.0.6",
+    "picocolors": "1.1.1",
+    "read-cmd-shim": "^7.0.1",
+    "semver": "^7.8.5",
+    "string-width": "8.3.0",
+    "wrap-ansi": "10.0.2",
+    "yaml": "^2.9.1"
+  }
+}

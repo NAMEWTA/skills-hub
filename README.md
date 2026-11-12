@@ -180,10 +180,10 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 每个技能是一个完整安装包：`SKILL.md` 说明何时使用、如何判断、做到什么程度；`references/` 放按需读取的完整中文方法；`assets/` 放可以复制到目标项目的模板；需要确定性操作时才提供 `scripts/`。`agents/openai.yaml` 提供界面元数据。
 
 - **全部本地引用**：技能正文、参考、模板和脚本不依赖外部文档，不出现来源项目名、来源作者名或致谢段落。内部资源引用不能越出本技能文件夹。
-- **完整中文内容**：复制并逐份翻译选定的参考文件；已是中文的文件保留原文作为对照。运行版本保留实质步骤、判断标准、例子和表格，再统一到本项目的名称、路径、工具能力与持久化约定。
+- **完整中文内容**：完整取得指定来源根，并逐份翻译适用的非中文/混合参考；已是中文的文件直接读取 upstream，不重复生成 zh。运行版本保留实质步骤、判断标准、例子和表格，再统一到本项目的名称、路径、工具能力与持久化约定。
 - **按需阅读**：完整资料不等于每次全部加载。入口指明何时读取哪份资源，细节留在包内，需要时再读。
 - **协作依赖**：原子技能负责完整方法，工作流按阶段调用。执行时沿用同一任务与证据，不递归复制资源。方法归属与迁移见[开发方法归属](docs/dev-method-ownership.md)。
-- **可核对的完整底稿**：仓库内保存 648 份固定版本原件及逐份本地对照，其中 211 份文档有完整中文底稿、68 份代码与配置保留程序逻辑及技术标识、362 份机器夹具和 7 份原始图片按原字节保存，见 [本地资料索引](materials/README.md)。这些对照文件用于维护，不会安装为技能，也不作为执行指令。
+- **可核对的来源双树**：资料按六个指定来源项目组织，`upstream/` 保留完整选定 Git 树的原目录、隐藏文件、原扩展名、字节与执行位，`zh/` 保留同路径适用中文或字节对照。法律、机器夹具、无自然语言文件和图片对照保持原字节；程序只翻译适用说明/注释，不改逻辑、业务字符串或机器标识。版本以[父清单](materials/manifest.tsv)为机器依据，逐文件摘要和运行映射位于项目子清单，见[资料导航](materials/README.md)。材料不执行、不发现、不安装，不触发来源 CI/hook 或安装依赖，npm 白名单排除整个 materials；即使原件是 `.py`/`.sh`/`.ts` 或包含嵌套 `.agents/skills`，安全契约不变。
 
 逐文件关系与运行适配规则见 [资源组织](docs/resources.md)。测试驱动、行为回归、真实运行证据与形式化方法都可以使用，按用户目标和风险选择。形式化结果只说明给定假设与属性下的结论，不能代替用户判断意图，也不能代替模型与实际代码的对照。来源特有的目录、外部技能调用、固定模型和复杂工作流网关，也在运行版中改为本项目可独立执行的方法。
 
@@ -204,26 +204,29 @@ node scripts/check-skill-quality.mjs --report
 node scripts/install-hooks.mjs
 ```
 
-校验同时拒绝非 JavaScript 运行脚本；执行 `npm run check:package` 验证实际分发包。校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。
+校验同时拒绝运行目录中的非 JavaScript 脚本，materials 被动来源不受此扩展名约束；执行 `npm run check:package` 验证实际分发包及材料排除。校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。
 
 ## 致谢与许可
 
-本项目对以下成熟内容进行了完整收录、中文翻译与适配。这里集中记录来源，技能运行目录中不放来源说明或外部参考链接。固定修订用于说明本次实际收录的内容，后续更新先比较对应文件，再修改本地版本。
+本项目参考以下成熟内容，材料库按六个准确范围维护原样来源、适用中文对照和当前运行映射。这里集中记录来源，技能运行目录中不放来源说明或外部参考链接。每次显式同步解析指定分支最新提交，并固定同一 SHA 完成全部读取；当前来源身份以[父清单](materials/manifest.tsv)为机器依据，下表只提供范围和导航，不重复维护 SHA 或固定数量。来源更新、翻译核对和运行版适配分别记实，不由本表推定已完成验收。
 
-| 资料组 | 参考项目与范围 | 固定提交 | 本地原件与中文对照 |
+| 项目 | 准确来源范围 | 跟踪分支 | 当前文件与映射 |
 | --- | --- | --- | --- |
-| A · 35 份 | [Matt Pocock Skills](https://github.com/mattpocock/skills/tree/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills)，需求、访谈、规格、架构、实施、TDD 与写作 | `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d` | [A 组索引](materials/README.md#a-组) |
-| B · 573 份 | [Cursor pstack](https://github.com/cursor/plugins/tree/8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b/pstack)，0.15.36 版本整个目录：61 个技能入口、23 个流程、24 条原则、2 个代理定义、全部指南、自动化、工具、夹具、配置与图片 | `8ecfb19f844b67a4bc7af7f66c366d57bc7b6d2b` | [B 组索引](materials/README.md#b-组) |
-| C · 10 份 | [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/tree/fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159/.agents)，知识、归档、技能写作及完整架构笔记实例 | `fcc0ad462172522aaf5c93a7b2e01f6b9f0b0159` | [C 组索引](materials/README.md#c-组) |
-| D · 3 份 | [Elaya AI Design Skills](https://github.com/elayadesign/ai-design-skills/tree/456d9e0d3e2d84c748bb143c6ca3d90c45e16213)，完整落地页、Figma 设计技能与说明 | `456d9e0d3e2d84c748bb143c6ca3d90c45e16213` | [D 组索引](materials/README.md#d-组) |
-| E · 8 份、F · 19 份 | [Speculo](https://github.com/NAMEWTA/Speculo/tree/9199c3bd0cf983c131efbc6340e44ac8b83a583d)，所参考的知识、部署及系统维护资料；仅按需融合，未移植状态引擎 | `9199c3bd0cf983c131efbc6340e44ac8b83a583d` | [E 组索引](materials/README.md#e-组)、[F 组索引](materials/README.md#f-组) |
+| pstack | [cursor/plugins 的 harness/pstack](https://github.com/cursor/plugins/tree/main/harness/pstack)，保留其 `claude-code/` 层 | `main` | [项目清单](materials/pstack/manifest.tsv) |
+| mattpocock-skills | [mattpocock/skills 的 skills](https://github.com/mattpocock/skills/tree/main/skills) | `main` | [项目清单](materials/mattpocock-skills/manifest.tsv) |
+| deepseek-harness | [deepseek-ai/deepseek-harness 的 .agents/skills](https://github.com/deepseek-ai/deepseek-harness/tree/master/.agents/skills)，不扩为整个 .agents | `master` | [项目清单](materials/deepseek-harness/manifest.tsv) |
+| ai-design-skills | [elayadesign/ai-design-skills 的 skills](https://github.com/elayadesign/ai-design-skills/tree/main/skills) | `main` | [项目清单](materials/ai-design-skills/manifest.tsv) |
+| speculo | [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo)，整仓原样资料；运行版按需融合，不移植状态引擎 | 父清单 `ref=HEAD`，当前默认解析 `main`，每次重解析 | [项目清单](materials/speculo/manifest.tsv) |
+| herdr | [herdrdev/herdr 的 skills/herdr](https://github.com/herdrdev/herdr/tree/master/skills/herdr) | `master` | [项目清单](materials/herdr/manifest.tsv) |
 
-G 组新增 [Herdr 上游技能](https://github.com/herdrdev/herdr/blob/master/skills/herdr/SKILL.md)，固定提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde`，固定文件见[该修订原文](https://github.com/herdrdev/herdr/blob/ee5bfb5041bb3e4a49d591c72308aae3c81ecdde/skills/herdr/SKILL.md)，完整原件与中文译文见 [G 组索引](materials/README.md#g-组)。`system-herdr` 直接复制自本地 `/home/wta/projects/huhu/.agents/skills/herdr/SKILL.md`，仅更名并添加修改说明；保留本地追加的 Claude Code、Codex、Pi 启动示例，不将这些示例冒称上游内容。逐文件 Git blob、摘要及适配关系见清单 `g001`。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
+[资料导航与同步用法](materials/README.md)解释双树、稀疏 zh、父子字段、查询和预览/准备/应用命令。Speculo 必须在父清单使用 `ref=HEAD`，同步脚本才会动态解析默认分支，不长期固定 `main`；其余五项目跟踪表中指定的 main/master 分支。普通校验与 CI 不自动联网刷新。`runtime_paths` 是实际采用关系，`runtime_reviewed_blob` 是最后真实核对依据，不能随材料更新自动前移；删除或退出当前来源的文件在差异报告中保留运行影响，不自动删除已适配技能。
 
-感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。B 组完整镜像所固定的 `pstack/` 目录，逐文件与该提交的目录树核对，无遗漏；其余组按表中范围收录。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
+`system-herdr` 保留本地追加的 Claude Code、Codex、Pi 启动示例；这些属于运行适配，不写进 zh 冒称上游原文。逐文件 Git blob、摘要及适配关系从父索引进入 herdr 子清单查询。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
+
+感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。材料完整性以所选根的 Git 树、两级清单与实际文件逐份核对，不用旧编号或历史计数替代；当前快照及适配是否验收应以真实验证记录为准。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
 
 技能组织方式还参考 [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 与 [Harness engineering](https://openai.com/index/harness-engineering/)。文章的组织原则已转化为本项目的本地编写与知识管理说明；未转载文章全文。代理配置字段的理解另参考 [MetaCubeX 文档](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b)，运行说明已写在技能本地，不要求使用者访问该文档。
 
-任务与计划交接还对照 [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices)、[Claude 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)及 [OpenAI 技能评测](https://developers.openai.com/blog/eval-skills)：在既有切片与多阶段方法中补足可接手上下文、可观察验收和风险适配，不移植整套官方示例模板。逐项原文、保留内容与必要适配见[维护记录](.agents/dev/changes/2026-11-11-dev-plan-task-handoffs/source-adaptations.md)，未升级表中固定来源。
+任务与计划交接还对照 [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices)、[Claude 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)及 [OpenAI 技能评测](https://developers.openai.com/blog/eval-skills)：在既有切片与多阶段方法中补足可接手上下文、可观察验收和风险适配，不移植整套官方示例模板。逐项原文、保留内容与必要适配见[维护记录](.agents/dev/changes/2026-11-11-dev-plan-task-handoffs/source-adaptations.md)，该记录说明当时的对照范围，不代表当前材料或运行版的升级验收。
 
-项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 完整保存在 [许可目录](licenses/) 和 [第三方声明](THIRD_PARTY_NOTICES.md)，包括设计材料内嵌的额外 MIT 声明。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。
+项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。

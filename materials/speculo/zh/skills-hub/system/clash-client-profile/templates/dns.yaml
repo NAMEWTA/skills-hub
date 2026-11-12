@@ -1,0 +1,8 @@
+# 后向兼容的发现片段，不是隐私或部署配置。
+# 不要单独应用：应以真实生效配置和用户定制的
+# templates/dns-request.example.json 运行 scripts/dns_guard.py plan。
+# 生成计划将 nameserver/default/direct DNS 固定至已批准组，
+# 显式建模节点 bootstrap，并要求替换过期策略映射。
+# 此处不推断 resolver、53 端口监听、系统 DNS 或 IPv6 阻断。
+dns:
+  enable: true

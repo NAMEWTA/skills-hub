@@ -69,7 +69,7 @@ class GitFixture {
     this.entry = write(path.join(this.root, entry), valid);
     for (const filename of [
       'install.mjs', 'scripts/init-persistence.mjs', 'scripts/check.mjs', 'scripts/check-skill-quality.mjs',
-      'scripts/validate.mjs', 'scripts/validate-materials.mjs', 'scripts/check-persistence-roots.mjs', 'scripts/install-hooks.mjs',
+      'scripts/validate.mjs', 'scripts/validate-materials.mjs', 'scripts/materials-manifest.mjs', 'scripts/check-persistence-roots.mjs', 'scripts/install-hooks.mjs',
       '.githooks/pre-commit', '.githooks/pre-push', '.githooks/run-check.mjs',
     ]) {
       const target = path.join(this.root, filename); fs.mkdirSync(path.dirname(target), { recursive: true });
@@ -78,14 +78,17 @@ class GitFixture {
     write(path.join(this.root, 'LICENSE'), '测试许可\n');
     for (const name of licenseBundleFiles) write(path.join(this.root, 'licenses', name), '测试许可\n');
     const original = Buffer.from('# Source\n'); const translation = Buffer.from('# 完整中文资料\n');
-    write(path.join(this.root, 'materials/a001/original.txt'), original);
-    write(path.join(this.root, 'materials/a001/zh-CN.txt'), translation);
+    write(path.join(this.root, 'materials/example/upstream/example.md'), original);
+    write(path.join(this.root, 'materials/example/zh/example.md'), translation);
     const hash = (algorithm, value) => createHash(algorithm).update(value).digest('hex');
     saveTsv(path.join(this.root, 'materials/manifest.tsv'), {
-      id: 'a001', kind: 'document', source_group: 'example', source_path: 'example.md',
+      project: 'example', repository: 'https://example.invalid/repository', ref: 'main', revision: 'a'.repeat(40), source_root: '.', manifest_path: 'example/manifest.tsv',
+    });
+    saveTsv(path.join(this.root, 'materials/example/manifest.tsv'), {
+      path: 'example.md', kind: 'document', language: 'en', source_git_mode: '100644',
       source_git_blob: hash('sha1', Buffer.concat([Buffer.from(`blob ${original.length}\0`), original])),
-      original_sha256: hash('sha256', original), translation_sha256: hash('sha256', translation),
-      runtime_paths: entry, adaptation: '完整本地示例。',
+      upstream_sha256: hash('sha256', original), zh_path: 'zh/example.md', zh_sha256: hash('sha256', translation),
+      runtime_paths: entry, runtime_reviewed_blob: '', adaptation: '完整本地示例。',
     });
     this.git(['init', '--quiet']); this.git(['symbolic-ref', 'HEAD', 'refs/heads/main']);
     this.git(['config', 'user.name', 'Quality Check']); this.git(['config', 'user.email', 'quality@example.invalid']);

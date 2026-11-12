@@ -1,0 +1,4 @@
+interface:
+  display_name: "求职申请"
+  short_description: "从知识库生成经历原件，再按岗位派生简历、自我介绍、面试题和提升计划"
+  default_prompt: "使用 $job-application 扫描我的知识库，形成职业资料库，再为特定岗位定制简历、3-4 分钟自我介绍、面试问题及提升计划。不要编造指标。"

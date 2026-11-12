@@ -1,0 +1,100 @@
+Supplemental legal retrieval evidence for already mirrored Speculo assets
+========================================================================
+
+Scope: legal documents only. No new materials project, source-root expansion,
+source-version upgrade, executable download/execution, or dependency installation.
+The mirrored asset header and ATTRIBUTION identify lucide 1.37.0 and three Unsplash
+photos. Existing provenance and source snapshots were not modified.
+
+Lucide identity: lucide@1.37.0, repository https://github.com/lucide-icons/lucide.git,
+repository directory packages/lucide, package license field ISC.
+The npm registry metadata and exact-version CDN package.json agree on identity.
+Official-registry SLSA payload identifies source commit:
+796dad298f8d78c5da204c3e62a5ed93c2bfcd1e. The payload was inspected, not subjected
+to independent cryptographic signature / transparency-log verification.
+The LICENSE responses from the exact-version CDN, repository tag 1.37.0, and
+that immutable source commit are byte-for-byte identical.
+Saved original: lucide-1.37.0-LICENSE.txt (includes ISC AND the embedded Feather MIT).
+Registry archive SHA-1 (metadata only; archive not downloaded): a95c0faae302a479727f8b8692d2395ab5b60683
+Registry archive integrity (metadata only; archive not downloaded): sha512-e6/YmVKk0dwJf1CVDlYfSZTLax/+a7tVPPo867aUC+VmWsGNMimWrFI/pGoDc9qkjiJqkVHar14rMwgOHMrTcw==
+No program distribution was fetched to rehash the mirrored JS. Identity is based
+on its declared 1.37.0 header and agreement of exact-version legal/metadata sources.
+
+Unsplash originals: Unsplash-LICENSE-page.html.txt and Unsplash-TERMS-page.html.txt.
+These are complete original HTTP response bodies (HTML, not extracted/translated
+prose). Embedded scripts have NOT been executed. Hashes cover body bytes after
+HTTP content-encoding decoding, not compressed wire framing.
+The license page links to the general terms; terms section 5 incorporates the
+Unsplash License and excludes additional trademark, recognizable-person, and
+artwork rights. Saving these terms does not obtain any such additional rights.
+These are the live official pages at retrieval, NOT authenticated historical
+terms at each photograph upload/download or the Speculo snapshot date. No fixed
+historical photo-terms version or photo-specific rights clearance was confirmed.
+Original attribution and all three photo IDs remain preserved separately.
+Historical text copyright remains unresolved; no invented license is added.
+
+HTTP retrieval evidence (all successful 200, redirects disallowed):
+
+URL: https://unpkg.com/lucide@1.37.0/LICENSE
+Retrieved UTC: 2026-11-12T04:16:04.833Z
+Content-Type: text/plain; charset=utf-8
+Bytes: 3208
+SHA-256: b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57
+ETag: null
+Last-Modified: Thu, 12 Nov 2026 04:14:59 GMT
+
+URL: https://raw.githubusercontent.com/lucide-icons/lucide/1.37.0/LICENSE
+Retrieved UTC: 2026-11-12T04:16:05.320Z
+Content-Type: text/plain; charset=utf-8
+Bytes: 3208
+SHA-256: b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57
+ETag: W/"ef3a3337555c7dea3ac77e8a4dfed008f117fa28ca42d07924dfa18af78e6e57"
+Last-Modified: null
+
+URL: https://raw.githubusercontent.com/lucide-icons/lucide/796dad298f8d78c5da204c3e62a5ed93c2bfcd1e/LICENSE
+Retrieved UTC: 2026-11-12T04:16:05.724Z
+Content-Type: text/plain; charset=utf-8
+Bytes: 3208
+SHA-256: b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57
+ETag: W/"ef3a3337555c7dea3ac77e8a4dfed008f117fa28ca42d07924dfa18af78e6e57"
+Last-Modified: null
+
+URL: https://unpkg.com/lucide@1.37.0/package.json
+Retrieved UTC: 2026-11-12T04:16:06.207Z
+Content-Type: application/json
+Bytes: 1740
+SHA-256: 8836b4377af6a246c5fe4ea097baeb120146a3bd3fe1218b35c5ae2754bd469a
+ETag: null
+Last-Modified: Thu, 12 Nov 2026 04:14:59 GMT
+
+URL: https://registry.npmjs.org/lucide/1.37.0
+Retrieved UTC: 2026-11-12T04:16:08.471Z
+Content-Type: application/json
+Bytes: 2539
+SHA-256: 696ebc4a9372e254876b66930f45c0b98abe38c1e559341f27a1a8827e22da64
+ETag: null
+Last-Modified: null
+
+URL: https://registry.npmjs.org/-/npm/v1/attestations/lucide@1.37.0
+Retrieved UTC: 2026-11-12T04:16:08.655Z
+Content-Type: application/json
+Bytes: 14657
+SHA-256: 3a2ae5c8e6666cf177c2acda98f6f7d693d311df2b21fa85033094a3baca5ce2
+ETag: null
+Last-Modified: Thu, 12 Nov 2026 04:15:21 GMT
+
+URL: https://unsplash.com/license
+Retrieved UTC: 2026-11-12T04:16:11.299Z
+Content-Type: text/html; charset=utf-8
+Bytes: 158646
+SHA-256: 1f4bf87213f02c7c403f94a539622980cf7a073baed80e32ef1fce7f8c597b81
+ETag: null
+Last-Modified: null
+
+URL: https://unsplash.com/terms
+Retrieved UTC: 2026-11-12T04:16:11.891Z
+Content-Type: text/html; charset=utf-8
+Bytes: 190721
+SHA-256: f431f04116c3ff6c9d268c5f2fd3922ef9fcc97911848301d43070d88b161a1b
+ETag: null
+Last-Modified: null

@@ -1,0 +1,12 @@
+{
+  "name": "open-source-ui-style-gallery",
+  "version": "1.0.0",
+  "private": true,
+  "description": "源自开源 UI 研究的静态 HTML 风格图库",
+  "scripts": {
+    "test": "playwright test tests/gallery.spec.js --workers=4"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.62.1"
+  }
+}

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Code Review"
+  short_description: "对照标准与规格审查差异"

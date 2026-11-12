@@ -238,7 +238,10 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
   }
   let checkedLinks = 0;
   const graph = new Map();
-  const markdown = filesUnder(root).filter((filename) => filename.endsWith('.md'));
+  // Only root materials/<project>/{upstream,zh}/ trees are passive source data.
+  // Keep materials/README.md navigation, incoming links, and skill-local names.
+  const markdown = filesUnder(root).filter((filename) => filename.endsWith('.md')
+    && !/^materials\/[^/]+\/(?:upstream|zh)\//.test(path.relative(root, filename).split(path.sep).join('/')));
   for (const document of markdown) {
     const content = readUtf8(document);
     const skillRoot = skills.find((skill) => isWithin(document, skill.source))?.source;

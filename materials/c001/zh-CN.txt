@@ -1,8 +1,0 @@
-# AGENTS.md — Agent Notes
-
-Agent Notes 实质上是由 Agent 撰写的 RFC：长期有效的提案与决策记录，保留理由、备选方案、后果和必要验证。遵循[文档标准](../../docs/AGENTS.md)和 [Agent Note 规则](README.md)。
-
-**每篇新 Agent Note 都触发替代关系检查。** 搜索活动目录中覆盖同一决策或机制的旧笔记，通过 [`dsh-archive-agent-notes`](../skills/dsh-archive-agent-notes/SKILL.md) 分类完全替代或部分替代，并在同一个 PR 中归档每个符合条件的已实施三文件组。部分替代保持活动，并相互链接。
-
-[`archived/`](archived/AGENTS.md) 中的文件是冻结历史快照：不编辑，也不将其当作当前权威依据。
-
