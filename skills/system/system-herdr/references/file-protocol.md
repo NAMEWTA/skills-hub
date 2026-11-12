@@ -1,6 +1,6 @@
 # 文件协作协议
 
-Herdr 只投递文件位置、观察终端；任务、结果与恢复依据保存在同一共享目录。Lead 负责派发、验收和整合，worker 按明确边界执行。通用格式见 [topic](../assets/topic.md)、[manifest](../assets/manifest.tsv)、[task](../assets/task.md) 和 [report](../assets/report.md)。
+团队任务中，Herdr 投递文件位置并观察终端；任务、结果与恢复依据保存在同一共享目录。Lead 负责派发、验收和整合，worker 按明确边界执行。通用格式见 [topic](../assets/topic.md)、[manifest](../assets/manifest.tsv)、[task](../assets/task.md) 和 [report](../assets/report.md)。
 
 ## 目录与身份
 
