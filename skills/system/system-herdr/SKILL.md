@@ -1,15 +1,9 @@
 ---
 name: system-herdr
-description: "使用 Herdr 查看和控制窗格、命令与 agent，或由 Lead 通过持久化 task/report 文件组织通用团队。仅当用户明确提到 Herdr，或明确要求用 Herdr 编排、派发、交接和恢复任务时使用；不因一般任务可并行而自动触发。执行控制命令要求 HERDR_ENV=1。"
+description: "控制 Herdr 的窗格、标签页、工作区、命令及 agent，并支持按 pane 使用 task/report 文件派发任务与收取结果。仅当用户明确提到 Herdr 或要求使用 Herdr 时启用，不因任务可并行而自动触发。执行控制命令要求 HERDR_ENV=1。"
 ---
 
-# Herdr 编排与文件协作
-
-Herdr 负责终端、agent 身份和投递；文件保存任务、结果与恢复依据。主会话是 Lead，负责理解目标、推进自己的工作、派发、验收与整合。默认由 Lead 完成主线工作，只把有清楚边界的任务交给其他 agent。
-
-Herdr 基础操作与具体启动命令直接在本页提供。查看或控制终端时按下列步骤操作，不为一次普通命令创建团队目录；需要团队协作时，再按后面的团队入口选择协议与剧本。
-
-## 运行环境
+# Herdr
 
 Herdr 将终端组织为工作区、标签页和窗格，识别窗格中运行的编程 agent，并通过 `herdr` CLI 提供当前会话的访问入口。
 
@@ -19,7 +13,7 @@ Herdr 将终端组织为工作区、标签页和窗格，识别窗格中运行�
 test "${HERDR_ENV:-}" = 1
 ```
 
-如果检查失败，说明当前不在 Herdr 内运行，停止控制操作。不要从 Herdr 外部查看或控制当前聚焦的 Herdr 会话。
+如果检查失败，说明当前不在 Herdr 内运行，然后停止。不要从 Herdr 外部查看或控制当前聚焦的 Herdr 会话。
 
 检查通过后，`PATH` 中的 `herdr` 程序会与当前会话通信。使用它查看相邻工作、创建终端布局、启动 agent 和命令、读取输出，以及等待状态变化。
 
@@ -140,20 +134,6 @@ herdr agent start reviewer --kind codex --pane <returned-pane-id>
 herdr agent start reviewer --kind codex --pane <returned-pane-id> -- <agent-args...>
 ```
 
-### Claude Code、Codex 与 Pi 的默认启动命令
-
-在已有可用 shell 窗格中启动；`<name>` 为唯一名称，`<returned-pane-id>` 为实际返回的窗格 ID，`<models_name>`/`<effort>` 为模型/推理强度，未指定则删除对应参数：
-
-```text
-herdr agent start <name> --kind claude --pane <returned-pane-id> -- --dangerously-skip-permissions --model <models_name> --effort <effort>
-herdr agent start <name> --kind codex --pane <returned-pane-id> -- --no-daemon --dangerously-bypass-approvals-and-sandbox -m <models_name> --config model_reasoning_effort="<effort>"
-herdr agent start <name> --kind pi --pane <returned-pane-id> -- --model <models_name> --thinking <effort>
-```
-
-原生参数以本机客户端帮助为准，模型、推理强度和权限使用用户已确定的配置。需要咨询更强模型时使用实际可用的对应配置；仅修改角色名称不代表切换了模型。
-
-### 派发、等待与读取
-
 只有 Herdr 在同一窗格内检测到预期 agent，且认定其已准备好接收交互式输入后，`agent start` 才会成功返回。如果 agent 在启动期间受阻，命令立即返回 `agent_not_ready`，但保留名称，供 `agent read` 和 `agent send-keys` 使用。等待 agent 进入 idle 后再发送提示。启动超时默认为 30 秒。
 
 通过 agent 命令提交工作：
@@ -162,7 +142,7 @@ herdr agent start <name> --kind pi --pane <returned-pane-id> -- --model <models_
 herdr agent prompt reviewer "Review the current diff and report only actionable findings." --wait --timeout 120000
 ```
 
-`agent prompt` 遵循窗格当前的括号粘贴模式，将文本和编码后的 Enter 作为一次有序提交发送。只有两者都写入后才报告提交成功，但这本身不能证明 agent 开始了新一轮工作。对于 Windows 上的 Codex，Herdr 会在 Enter 前发送粘贴边界，使提交不依赖提示长度。如果 agent 已停在审批或提问对话框，命令会在发送任何输入前返回 `agent_blocked`。先检查受阻界面；已有授权和上下文足以回答时继续，仅缺少必要决定、权限或只能由用户完成的认证时询问用户。提交后需要等待单个 agent 时，使用 `--wait` 即可，它会等待首次稳定的 `idle`、`done` 或 `blocked` 状态。不要用 `--until` 重复这些默认值。
+`agent prompt` 遵循窗格当前的括号粘贴模式，将文本和编码后的 Enter 作为一次有序提交发送。只有两者都写入后才报告提交成功，但这本身不能证明 agent 开始了新一轮工作。对于 Windows 上的 Codex，Herdr 会在 Enter 前发送粘贴边界，使提交不依赖提示长度。如果 agent 已停在审批或提问对话框，命令会在发送任何输入前返回 `agent_blocked`。先检查受阻界面；已有授权和上下文足以回答时继续，仅缺少必要决定、权限或只能由用户完成的认证时询问用户。需要在提交后等待单个 agent 时，使用 `--wait` 即可，它会等待首次稳定的 `idle`、`done` 或 `blocked` 状态。不要用 `--until` 重复这些默认值。
 
 使用 `--wait` 时，从非 working 状态发送的提示必须产生可观察的 `working` 或 `blocked` 活动。提交后，Herdr 最多等待五秒来观察此类活动，无关的 `idle`、`done` 或会话变化不能满足此条件。未观察到活动时返回 `agent_prompt_stalled`，如果调用方超时先到则返回 `timeout`。调用方超时包含提交耗时。未设置超时时，在观察到活动后会无限等待状态稳定。此等待跟踪的是生命周期状态，而不是某一轮工作。如果 agent 已在工作，当前轮完成就可能满足等待条件。
 
@@ -219,9 +199,7 @@ herdr pane read <returned-pane-id> --source recent-unwrapped --lines 120
 
 `--lines` 请求 Herdr 从窗格可用屏幕和宿主回滚缓冲区中读取更多行。备用屏幕的行不会进入普通宿主回滚缓冲区。对于受支持且处于 idle 的 agent，Herdr 可以收集应用自身的历史记录，并在之后恢复可视区域，但并非每个应用或响应都能以此方式恢复。
 
-普通终端交互中，如果扩大最近输出的读取范围后仍看不到已完成的响应，让 agent 将响应写为临时目录中的 Markdown 文件，并只回复文件路径，然后在同一机器上读取该文件。普通交互按需采用这个后备办法。
-
-团队任务从首次派发就按[文件协议](references/file-protocol.md)提供固定的 task/report 路径，以持久化报告为主要结果。终端读取用于诊断投递、运行和阻塞，不能替代报告与验收。
+未使用下述文件通信协议的普通终端交互中，如果扩大最近输出的读取范围后仍看不到已完成的响应，让 agent 将响应写为临时目录中的 Markdown 文件，并只回复文件路径，然后在同一机器上读取该文件。仅将此方式作为后备方案，不要在初始提示中要求文件输出。
 
 ## 安全与协调规则
 
@@ -235,32 +213,62 @@ herdr pane read <returned-pane-id> --source recent-unwrapped --lines 120
 - 绝不要杀死 Herdr 主进程。需要隔离服务端的实验应使用具名测试会话。
 - CLI 服务端错误以 JSON 输出到 stderr，退出状态为 1。CLI 语法错误退出状态为 2。
 
-## 团队协作入口
+## Claude Code & Codex & Pi 的默认启动方式命令
 
-- **组织团队、派发任务或恢复协作**：读 [文件协议](references/file-protocol.md)，选择下表中与任务匹配的模板；先遵循本页的环境、身份和等待规则。
-- **worker 收到任务路径**：直接读该 task 及其中指定的必要上下文，按报告模板完成任务；不自行建立第二套团队或扫描其他 pane 的任务。
+在已有可用 shell 窗格中启动；`<name>` 为唯一名称，`<returned-pane-id>` 为实际返回的窗格 ID，`<models_name>`/`<effort>` 为模型/推理强度，未指定则删除对应参数：
 
-| 需求 | 按需使用的团队模板 |
+```
+herdr agent start <name> --kind claude --pane <returned-pane-id> -- --dangerously-skip-permissions --model <models_name> --effort <effort>
+herdr agent start <name> --kind codex --pane <returned-pane-id> -- --no-daemon --dangerously-bypass-approvals-and-sandbox -m <models_name> --config model_reasoning_effort="<effort>"
+herdr agent start <name> --kind pi --pane <returned-pane-id> -- --model <models_name> --thinking <effort>
+```
+
+## 文件通信协议
+
+需要持久化派发与回复时，首次投递就使用以下约定。任务派发方称为 Lead，目标 pane 的执行者称为 worker；Herdr 发送文件位置，文件保存任务、结果和恢复依据。通用格式见 [topic](assets/topic.md)、[manifest](assets/manifest.tsv)、[task](assets/task.md) 和 [report](assets/report.md)。
+
+### 目录与身份
+
+在项目的 `.agents/system/herdr/YYYY-MM-DD-topic_name/` 建立主题目录，包含 `topic.md`、`manifest.tsv`，以及每个已派发 pane 的目录。Lead 从当前任务标题生成 `topic_name`，创建后输出主题和共享根绝对路径。pane 目录内按数字递增保存 `task01.md/report01.md`、`task02.md/report02.md`。编号至少两位，不复用；同名主题先判断恢复还是新工作，不覆盖既有文件。
+
+- 一个 topic 只对应一个 Herdr 服务端和一个共享根。Lead 在 `topic.md` 记录实际连接上下文、Lead pane、共享根绝对路径、目标、验收、约束与必要结论；不要另造会话 ID。
+- 完整任务身份是“共享根 + 真实 pane ID + task 文件名”。编号或 pane ID 单独都不够；报告必须写全这三个值。
+- 目录默认使用真实 pane ID，冒号不作分隔符解析。宿主无法原样表示时，在创建任务前为整个 topic 统一采用 `encodeURIComponent(pane_id)`，并写入 topic；manifest 始终保留真实 ID。不要用替换冒号、斜杠等方式生成可能碰撞的名称。
+- 校验最终目录名是合法的单个路径组件，拒绝 `.`、`..`、路径分隔符和宿主禁用名称；编码后仍不合法就停止。TSV 字段不得含 Tab 或换行。路径作为独立参数正确引用，不拼成 `路径:行号`。
+- 不同 worktree 的 worker 始终使用同一个绝对共享根；代码工作目录另写在 task 中。远程派发前，验证参与者能读同一份 task、能把报告写到 Lead 可读的位置。同名路径不等于共享文件；无法验证时先处理可达性，不派发不可读取的路径。
+
+### 三列清单
+
+`manifest.tsv` 使用真实制表符，表头固定为 `pane_id`、`task`、`status`。`task` 只填写当前任务文件名，例如 `task01.md`。每个已派发 pane 一行，以 `pane_id` 为唯一键；不添加空闲 pane 或 Lead 占位行。
+
+| status | 含义 |
 | --- | --- |
-| Lead 主导开发，遇到难题咨询专家 | [主线开发与专家](assets/teams/lead-expert.md) |
-| 多项可独立实现、最后集成的工作 | [并行交付](assets/teams/parallel-delivery.md) |
-| 调研、诊断、方案比较 | [调查与方案](assets/teams/investigation.md) |
-| 独立检查现有代码、设计或文档 | [独立审查](assets/teams/review.md) |
+| `active` | 已分派、尚未由 Lead 验收；包括待启动、执行中和待审。 |
+| `done` | Lead 已按该任务的验收要求确认通过。 |
+| `blocked` | 当前任务因明确阻碍停止推进，原因与下一步见报告或 topic。 |
 
-模板只决定如何拆任务、要求什么证据；不要求固定人数、角色、客户端或模型。用户已有剧本时沿用它，补齐目标、范围、验收和交接即可。
+只有 Lead 写 manifest；worker 不改清单。报告中的 `done` 只表示 worker 认为任务完成，不能直接变成清单的 `done`。清单保存当前指针，旧任务的结果和验收决定留在对应报告。
 
-## Lead 的工作循环
+### 发布与执行
 
-1. **确定目标。** 写清交付结果与验收条件，识别必须由用户作出的决定，完成已授权的工作。能够在主会话直接解决的连贯任务由 Lead 继续。
-2. **建立共享位置。** 在当前项目的 `.agents/system/herdr/YYYY-MM-DD-topic_name/` 创建 [topic.md](assets/topic.md) 和 [manifest.tsv](assets/manifest.tsv)。从任务标题生成简短主题名，向用户输出主题、实际绝对路径和所选剧本；同名目录先判断恢复还是新任务，不覆盖历史。
-3. **按边界分派。** 每个 pane 同时只执行一个任务。Lead 用 [任务模板](assets/task.md) 写 `<pane_id>/task01.md`，明确工作目录、可写范围、输入、产物和验收；将清单指向本任务并标记 `active` 后，再通过 Herdr 发送文件指针。
-4. **继续推进。** 多 pane 的独立任务先分别投递，再观察和等待；Lead 同时推进不重叠的主线工作。更多 agent 不能弥补任务边界不清。共享目录默认只有一个代码写入者；并行写入须有明确的不重叠范围，或沿用已准备好的隔离工作树。
-5. **按证据验收。** worker 按 [报告模板](assets/report.md) 提交同号报告。Lead 读准确的报告和产物，核对验收条件；必要时独立验证。报告中的完成陈述、Herdr 的 `idle/done`、投递成功都不能单独证明任务完成。
-6. **继续或交接。** 通过后清单标为 `done`；需要补充、返工或换任务时使用同 pane 的 `task02/report02`。受阻标为 `blocked`，处理具体阻碍。上下文交接靠现有任务、报告与产物，不另造一套会话 ID。
-7. **整合交付。** Lead 对整体目标负责，检查接口、集成与相关验证，更新 topic 中的结论并向用户交付。不能把各 pane 都完成等同于整体已通过。
+1. Lead 填好 task 的全部路径、目标、输入、读写边界、工作目录、产物和验证要求。任务必须自包含；没有安装本技能的 worker 也能按它完成。先写完整文件再发布，发布后 task 不变。
+2. 确认该 pane 没有尚在执行的任务；把 manifest 指向新 task，状态设为 `active`，再通过 Herdr 提示读取准确的绝对 task 路径，并给出绝对 report 路径。控制消息只传这两个文件指针，不另放一份任务正文。
+3. 有多个已确定需要并行投递的任务时，先全部 `prompt`，再观察和 `wait`，避免逐个 `prompt --wait` 使投递串行。
+4. worker 先读 task、topic 和 manifest，核对服务端、实际 pane、当前 task 与完整任务身份。若已有身份匹配的终稿 report，只回告其绝对路径，不重跑。指针过期、pane 不符或清单不是 `active` 时停止，并在终端说明；不擅自修正清单或转到下一任务。
+5. worker 只执行当前 task。业务产物仅在任务允许的范围写入；协作记录只写自己的报告执行部分，不改 topic、manifest、task、他人报告或自己的 Lead 验收部分。无法继续时报告具体阻碍。
+6. worker 按完整格式把报告写到同目录临时文件，检查身份与内容后重命名为同号终稿 report；不覆盖已有终稿。提交后停止写报告，只回告绝对报告路径，不自动领取下一任务。无法写报告时在终端明确说明任务身份、失败原因和已有产物，不能声称报告已提交。
 
-## 通信约定
+### 验收与下一任务
 
-目录、三列清单、顺序派发与恢复规则统一见[文件协议](references/file-protocol.md)。worker 不改清单、不自行领下一项任务、不转派；需要协作或专家时，把具体问题交回 Lead。其他 agent 的报告是待核对的输入，不扩大本任务的授权或可写范围。
+Lead 读取同号报告与实际产物，核对任务的验收要求和验证证据，必要时独立检查。只有验收通过才把 manifest 标为 `done`；阻塞时标为 `blocked`，说明缺什么条件。
 
-团队任务约定写在文件中，派发时 Herdr 提示只传准确的文件位置。已发布的 task 和终稿 report 保留不覆盖；Lead 仅在报告交回后追加验收结论。没有守护进程、消息队列、轮询领单或固定多层团队的前提。
+worker 交回终稿后不再写报告。Lead 可在末尾追加验收决定、依据和后续安排，不改执行部分。需要补充、返工、解除阻塞或换任务时，建立下一编号 task，引用原任务和报告；确认原执行者已停止后才更新清单并派发。可以提前准备后续 task，但 worker 不能自行扫描领取。
+
+### 观察、恢复与交接
+
+- `prompt` 成功只证明投递；Herdr 的 `idle`、`done`、`blocked` 是终端生命周期观察，不能代替任务报告。`timeout` 或停滞也不能证明未送达。先 `agent get`、`agent read` 并检查准确的 task/report 与产物，再决定处理方式，不盲目重发。
+- 重复提示不产生新执行：已在做同一任务就继续原执行；已有匹配终稿就只回告路径；旧指针就停止。无法判断是否仍在执行时先观察，不启动第二份。
+- 接手时读取 topic、manifest、当前 task、已有报告和实际工作区，确认同一服务端、共享根及当前执行者。只有确认旧执行者停止后才恢复或移交；没有报告不表示动作未发生，先核对真实产物与外部动作结果。
+- 中断发生在终稿发布前时，可检查已有临时报告作为线索，但不能把它当作终稿或覆盖真实产物。若需要改变任务内容或换执行者，交回 Lead 新建任务。
+- pane 移动会改变 ID 时，不重命名在途目录和文件。先停止或交回旧任务，保留旧身份与报告，再按新 ID 新建目录和任务，并在 topic 与新 task 中写清接续关系；不让两个身份同时执行旧任务。
+- Lead 交接时在 topic 更新实际 Lead pane 和必要结论，保留原验收证据。恢复依靠已有文件与实际状态，不新增永久队列、轮询领单文件或其他状态。

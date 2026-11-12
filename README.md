@@ -144,7 +144,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | [system-cleanup](skills/system/system-cleanup/SKILL.md) | 按实际占用选择可清理对象，执行后量测并验证 |
 | [system-proxy](skills/system/system-proxy/SKILL.md) | 排查和配置代理、DNS、客户端与应用生效范围 |
 | [system-config](skills/system/system-config/SKILL.md) | 调整已指定的软件或系统配置，保留备份并验证真实生效 |
-| [system-herdr](skills/system/system-herdr/SKILL.md) | Herdr 终端控制与 Lead 编排；按 pane 复用 task/report 文件派发、验收和恢复任务，按需选择团队剧本；仅在用户明确要求使用 Herdr 时启用 |
+| [system-herdr](skills/system/system-herdr/SKILL.md) | Herdr 终端控制、客户端默认启动与按 pane 的 task/report 文件通信；仅在用户明确要求使用 Herdr 时启用 |
 
 系统技能不会把“清缓存”扩展为删除业务数据，也不会把“应用代理”扩展为修改整机路由。主机文档按需放在 `.agents/system/<主机标识>/`；密码与订阅秘密只记录安全引用。
 
@@ -221,7 +221,7 @@ node scripts/install-hooks.mjs
 
 [资料导航与同步用法](materials/README.md)解释双树、稀疏 zh、父子字段、查询和预览/准备/应用命令。Speculo 必须在父清单使用 `ref=HEAD`，同步脚本才会动态解析默认分支，不长期固定 `main`；其余五项目跟踪表中指定的 main/master 分支。普通校验与 CI 不自动联网刷新。`runtime_paths` 是实际采用关系，`runtime_reviewed_blob` 是最后真实核对依据，不能随材料更新自动前移；删除或退出当前来源的文件在差异报告中保留运行影响，不自动删除已适配技能。
 
-`system-herdr` 的完整 Herdr 基础操作和 Claude Code、Codex、Pi 具体启动命令直接保留在 SKILL.md；团队协作按用户指定采用持久化 task/report 与 pane 清单，配套协议与剧本按需读取。文件协议、四种团队剧本及与原文冲突处的必要处理见[Herdr 采用与适配](docs/herdr-coordination.md)。逐文件 Git blob、摘要及运行核对依据从 herdr 子清单查询；本地协议与既有客户端启动扩展不写进 zh 冒称原文。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
+`system-herdr` 直接复用完整中文 CLI 底稿，在 SKILL.md 保留 Herdr 基础操作与既有 Claude Code、Codex、Pi 默认启动命令，并增加按 pane 的 task/report 文件通信。正文只有一份，配套文件仅提供通信格式；必要差异见[Herdr 采用与适配](docs/herdr-coordination.md)。逐文件 Git blob、摘要及运行核对依据从 herdr 子清单查询；本地启动扩展与通信协议不写进 zh 冒称原文。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
 
 感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。材料完整性以所选根的 Git 树、两级清单与实际文件逐份核对，不用旧编号或历史计数替代；当前快照及适配是否验收应以真实验证记录为准。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
 
