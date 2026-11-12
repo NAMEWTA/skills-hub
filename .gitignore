@@ -13,3 +13,4 @@ node_modules/
 dist/
 .npmrc
 npm-debug.log*
+temp/
