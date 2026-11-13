@@ -43,7 +43,7 @@ scenario('two-level reader, queries and root alias work without real materials',
 scenario('offline commit-tree authentication catches forged metadata and omitted files', (f, t) => {
   const repo = temporary(t, 'materials-local-git-');
   const git = args => execFileSync('git', ['-C', repo, ...args], { encoding: 'utf8' }).trim();
-  git(['init', '--quiet']);
+  git(['init', '--quiet']); git(['config', 'core.autocrlf', 'false']);
   write(path.join(repo, 'skills/nested/SKILL.md'), fs.readFileSync(f.upstream));
   git(['add', '.']); git(['-c', 'user.name=Test', '-c', 'user.email=test@example.invalid', '-c', 'commit.gpgsign=false', 'commit', '--quiet', '-m', 'fixture']);
   f.project.revision = git(['rev-parse', 'HEAD']); f.save();

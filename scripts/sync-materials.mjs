@@ -27,7 +27,7 @@ async function noSymlinkAncestors(filename) {
 async function temporaryRoot(directory, repoRoot, materialsRoot) {
   const source=path.resolve(directory); const repo=path.resolve(repoRoot);
   if (source===repo || repo.startsWith(source+path.sep) || source===materialsRoot || source.startsWith(materialsRoot+path.sep)) throw Error('Invalid preparation location');
-  if (![path.resolve(os.tmpdir()),path.resolve(repo,'temp')].some(base=>source.startsWith(base+path.sep))) throw Error('Preparation must be in temp/ or the system temporary directory');
+  if (![path.resolve(os.tmpdir()),await fs.realpath(os.tmpdir()),path.resolve(repo,'temp')].some(base=>source.startsWith(base+path.sep))) throw Error('Preparation must be in temp/ or the system temporary directory');
   await noSymlinkAncestors(source);
   return source;
 }
@@ -205,7 +205,7 @@ export async function syncMaterials({ materialsRoot = path.resolve('materials'),
   const selected = current.projects.filter(p=>all || projects?.includes(p.project));
   if (!selected.length || (!all && projects.some(n=>!selected.some(p=>p.project===n)))) throw Error('Unknown/empty project selection');
   if (mode !== 'apply') {
-    const temp = directory ? path.resolve(directory) : await fs.mkdtemp(path.join(os.tmpdir(),'materials-preview-'));
+    const temp = directory ? path.resolve(directory) : await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()),'materials-preview-'));
     await temporaryRoot(temp,repoRoot,materialsRoot);
     if (directory) await fs.mkdir(temp); // never overwrite an existing preparation
     try { return await prepare(materialsRoot,selected,temp); }

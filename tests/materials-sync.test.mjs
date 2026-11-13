@@ -11,10 +11,10 @@ import { check } from '../scripts/validate-materials.mjs';
 const hash=b=>crypto.createHash('sha256').update(b).digest('hex');
 const git=(cwd,...args)=>execFileSync('git',args,{cwd,stdio:['ignore','pipe','pipe']}).toString().trim();
 async function fixture(t) {
- const tmp=await fs.mkdtemp(path.join(os.tmpdir(),'sync-test-')); t.after(()=>fs.rm(tmp,{recursive:true,force:true}));
+ const tmp=await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()),'sync-test-')); t.after(()=>fs.rm(tmp,{recursive:true,force:true}));
  const repo=path.join(tmp,'remote'); const root=path.join(tmp,'local'); const materialsRoot=path.join(root,'materials');
  await fs.mkdir(repo); await fs.mkdir(path.join(materialsRoot,'speculo','upstream'),{recursive:true});
- git(repo,'init','-b','main'); git(repo,'config','user.email','test@example.invalid'); git(repo,'config','user.name','Test');
+ git(repo,'init','-b','main'); git(repo,'config','core.autocrlf','false'); git(repo,'config','user.email','test@example.invalid'); git(repo,'config','user.name','Test');
  await fs.writeFile(path.join(repo,'a.md'),'English original\r\n'); git(repo,'add','.'); git(repo,'commit','-m','initial');
  const revision=git(repo,'rev-parse','HEAD'); const blob=git(repo,'rev-parse','HEAD:a.md');
  const p={project:'speculo',repository:repo,ref:'HEAD',revision,source_root:'.',manifest_path:'speculo/manifest.tsv'};
@@ -73,7 +73,7 @@ test('failure during switching rolls back project and parent',async t=>{
  await review(a,async rows=>{rows[0].language='zh';});
  const originalParent=await fs.readFile(path.join(f.materialsRoot,'manifest.tsv'),'utf8');
  const rename=fs.rename;let injected=false;
- fs.rename=async function(from,to){if(!injected && from.endsWith('/parent.tsv')){injected=true;throw Error('injected disk failure');}return rename.call(this,from,to);};
+ fs.rename=async function(from,to){if(!injected && path.basename(from)==='parent.tsv'){injected=true;throw Error('injected disk failure');}return rename.call(this,from,to);};
  try {await assert.rejects(f.run('apply',a),/injected disk failure/);}finally{fs.rename=rename;}
  assert.equal(await fs.readFile(path.join(f.materialsRoot,'manifest.tsv'),'utf8'),originalParent);
  assert.equal(await fs.readFile(path.join(f.materialsRoot,'speculo','upstream','a.md'),'utf8'),'English original\r\n');
@@ -131,8 +131,8 @@ test('strict shared TSV parsing validates zero-row headers and sync reuses share
 });
 
 test('raw Git objects ignore export attributes and preserve binary/empty/executable; symlink refused',async t=>{
- const f=await fixture(t); await fs.writeFile(path.join(f.repo,'.gitattributes'),'secret.bin export-ignore\na.md export-subst\n');await fs.writeFile(path.join(f.repo,'secret.bin'),Buffer.from([0,255,13,10]));await fs.writeFile(path.join(f.repo,'empty'),'');await fs.writeFile(path.join(f.repo,'program.js'),'throw Error("DO NOT EXECUTE")');await fs.chmod(path.join(f.repo,'program.js'),0o755);f.commit();
- const a=path.join(f.tmp,'raw');await f.run('prepare',a);assert.deepEqual(await fs.readFile(path.join(a,'speculo','upstream','secret.bin')),Buffer.from([0,255,13,10]));assert.equal((await fs.stat(path.join(a,'speculo','upstream','program.js'))).mode&0o111,0o111);
+ const f=await fixture(t); await fs.writeFile(path.join(f.repo,'.gitattributes'),'secret.bin export-ignore\na.md export-subst\n');await fs.writeFile(path.join(f.repo,'secret.bin'),Buffer.from([0,255,13,10]));await fs.writeFile(path.join(f.repo,'empty'),'');await fs.writeFile(path.join(f.repo,'program.js'),'throw Error("DO NOT EXECUTE")');await fs.chmod(path.join(f.repo,'program.js'),0o755);git(f.repo,'add','.');git(f.repo,'update-index','--chmod=+x','program.js');f.commit();
+ const a=path.join(f.tmp,'raw');await f.run('prepare',a);assert.deepEqual(await fs.readFile(path.join(a,'speculo','upstream','secret.bin')),Buffer.from([0,255,13,10]));assert.equal(parseTsv(await fs.readFile(path.join(a,'speculo','manifest.tsv'),'utf8')).find(r=>r.path==='program.js').source_git_mode,'100755');if(process.platform!=='win32')assert.equal((await fs.stat(path.join(a,'speculo','upstream','program.js'))).mode&0o111,0o111);
  await fs.symlink('a.md',path.join(f.repo,'link'));f.commit();await assert.rejects(f.run('dry-run'),/Unsupported Git entry/);
 });
 
@@ -141,7 +141,7 @@ test('apply rejects the same metadata, bytes and runtime defects as unified vali
  const mp=path.join(a,'speculo','manifest.tsv');const original=await fs.readFile(mp,'utf8');
  const zp=path.join(a,'speculo','zh','a.md');const originalZh=await fs.readFile(zp);
  for (const owner of ['dev-one','dev-two']) {await fs.mkdir(path.join(f.root,'skills','dev',owner),{recursive:true});await fs.writeFile(path.join(f.root,'skills','dev',owner,'method.md'),'local');}
- await fs.symlink('dev-one',path.join(f.root,'skills','dev','alias'));
+ await fs.symlink(path.join(f.root,'skills','dev','dev-one'),path.join(f.root,'skills','dev','alias'),process.platform==='win32'?'junction':'dir');
  const cases=[
   [r=>{r.adaptation=' ';},/adaptation/],
   [r=>{r.runtime_paths='skills/dev/dev-one/method.md';r.runtime_reviewed_blob='bad';},/reviewed blob/],
@@ -168,10 +168,10 @@ test('inherited Git object, config and worktree variables cannot redirect synchr
 
 test('temporary roots and all ancestors must be link-free and inside temporary scope',async t=>{
  const f=await fixture(t);const a=path.join(f.tmp,'actual');await f.run('prepare',a);
- const link=path.join(f.tmp,'link');await fs.symlink(a,link);
+ const link=path.join(f.tmp,'link');await fs.symlink(a,link,process.platform==='win32'?'junction':'dir');
  await assert.rejects(f.run('apply',link),/Symlink forbidden/);
  await assert.rejects(f.run('prepare',path.join(link,'nested')),/Symlink forbidden/);
- const ancestor=path.join(f.tmp,'alias');await fs.symlink(f.tmp,ancestor);
+ const ancestor=path.join(f.tmp,'alias');await fs.symlink(f.tmp,ancestor,process.platform==='win32'?'junction':'dir');
  await assert.rejects(f.run('apply',path.join(ancestor,'actual')),/Symlink forbidden/);
  await assert.rejects(f.run('apply',f.tmp),/Invalid preparation location/);
  await assert.rejects(f.run('apply',os.homedir()),/preparation location|system temporary directory/i);
