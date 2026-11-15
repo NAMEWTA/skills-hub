@@ -24,7 +24,15 @@
 
 首次包装检查发现新增文档引用的本记录尚未创建，补齐记录后重新检查通过。真实 tarball 的 SHA-256 为 `3bf88cc84df0258b3d717c9b9869969d26d8bd827348973f5318153940dd55ad`，仅对应当次被检查的包内容，不代表发布版本。
 
-远端完整验证使用仓库原有 CI：Linux Node 22.14、Windows Node 24、macOS Node 24，包含 `npm ci`、完整门禁、状态图回放与实际 npm 包安装。提交后以相应运行的真实状态为准。
+远端已完成仓库原有 CI，实施提交为 [`dd85dc342c602a02f6728e06fd7e641ef9f5b607`](https://github.com/NAMEWTA/skills-hub/commit/dd85dc342c602a02f6728e06fd7e641ef9f5b607)。[PR 验证运行](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940)和[分支推送运行](https://github.com/NAMEWTA/skills-hub/actions/runs/43727281446)均通过，六个 job 全部为 success。
+
+| PR 平台 | 运行结果 |
+| --- | --- |
+| [Linux / Node 22.14](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070280) | 依赖安装、完整门禁、状态图回放、真实 npm tarball 安装均通过 |
+| [Windows / Node 24](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070001) | 同上，全部通过 |
+| [macOS / Node 24](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070242) | 同上，全部通过 |
+
+因此本地下载限制未留下完整依赖测试与三平台分发验证缺口。此处只记录已经观察到的指定运行；后续提交仍以 [PR #1 的当前 Checks](https://github.com/NAMEWTA/skills-hub/pull/1/checks)为准。
 
 ## 独立任务观察
 
