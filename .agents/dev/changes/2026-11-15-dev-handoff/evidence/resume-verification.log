@@ -1,0 +1,18 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> test
+> node --test
+
+✔ empty (1.123972ms)
+✔ negative (0.297172ms)
+✔ finite values (0.165155ms)
+✔ reject non-numbers (0.792277ms)
+✔ reject non-finite numbers (0.300165ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 176.264502

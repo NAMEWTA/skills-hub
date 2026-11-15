@@ -68,13 +68,14 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 
 ## dev：完整开发流程
 
-共 30 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，跨阶段任务用 `dev-workflow`，明确阶段直接使用对应技能；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
+共 31 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，跨阶段任务用 `dev-workflow`，明确阶段直接使用对应技能；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
 
 | 技能 | 用途 |
 | --- | --- |
 | [dev-help](skills/dev/dev-help/SKILL.md) | 完整本地使用指南、场景配方、能力选择与常见问题 |
 | [dev-setup](skills/dev/dev-setup/SKILL.md) | 核对宿主工具、模型角色、推理预算及长任务配置 |
-| [dev-workflow](skills/dev/dev-workflow/SKILL.md) | 协调跨阶段交付、恢复未明阶段任务、记录与复核任务决定 |
+| [dev-workflow](skills/dev/dev-workflow/SKILL.md) | 协调跨阶段交付、接续后未明阶段任务、记录与复核任务决定 |
+| [dev-handoff](skills/dev/dev-handoff/SKILL.md) | 保存开发上下文、准备交接、核对旧任务恢复点，或执行明确暂停 |
 | [dev-personalize](skills/dev/dev-personalize/SKILL.md) | 从已授权的工作历史提炼个人习惯，生成可维护的项目技能 |
 | [dev-status](skills/dev/dev-status/SKILL.md) | 只读汇总当前或指定历史范围的进度与待决事项，按需制作报告视频 |
 | [dev-intake](skills/dev/dev-intake/SKILL.md) | 合并聊天、Issue、截图、日志、评审等来源，保留出处与范围 |
@@ -112,11 +113,16 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 使用 dev-learn：帮我沿“创建账号”走通入口、业务规则、存储和回显，
 指出后续改成多租户时会涉及哪些边界。
 
+使用 dev-handoff：保存当前开发上下文，下一次重点完成剩余验证。
+引用已有规格和证据，保存后继续当前任务。
+
 使用 dev-archive：这个需求已经上线。核对当前代码和发布记录，
 更新术语、ADR 和错误经验，处理已经冲突的旧文档。
 ```
 
 `$dev-workflow` 等调用语法由具体 Agent 决定；普通语言指定技能也可以。详细衔接与例子见 [开发流程](docs/workflow.md)。
+
+`dev-handoff` 可以独立安装，只服务开发任务，记录沿用 `.agents/dev/changes/<日期-主题>/handoff.md`。保存、跨会话接续与明确暂停的区别、来源方法和必要适配见[开发上下文交接](docs/dev-handoff.md)。已有 `dev-workflow` 的项目按[交接入口迁移](docs/installation.md#开发交接入口迁移)一起更新；新增能力尚未包含在所用 npm 版本时，使用包含该变更的源码安装。
 
 ## 怎样组合工程实践与验证闭环
 
@@ -155,7 +161,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | 位置 | 保存什么 |
 | --- | --- |
 | `AGENTS.md` | 简短导航、必要项目约定；不放完整百科 |
-| `.agents/dev/changes/<日期-主题>/` | 活跃需求的简报、规格、切片、进展和证据 |
+| `.agents/dev/changes/<日期-主题>/` | 活跃需求的简报、规格、切片、进展、证据和按需创建的 handoff.md |
 | `.agents/dev/notes/index.md` | 常用知识入口；不维护全量注册表 |
 | `.agents/dev/notes/glossary.md` | 术语、别名、适用范围与代码映射 |
 | `.agents/dev/notes/context/` | 代码本身解释不了的背景和约束 |
@@ -228,5 +234,7 @@ node scripts/install-hooks.mjs
 技能组织方式还参考 [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 与 [Harness engineering](https://openai.com/index/harness-engineering/)。文章的组织原则已转化为本项目的本地编写与知识管理说明；未转载文章全文。代理配置字段的理解另参考 [MetaCubeX 文档](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b)，运行说明已写在技能本地，不要求使用者访问该文档。
 
 任务与计划交接还对照 [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices)、[Claude 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)及 [OpenAI 技能评测](https://developers.openai.com/blog/eval-skills)：在既有切片与多阶段方法中补足可接手上下文、可观察验收和风险适配，不移植整套官方示例模板。逐项原文、保留内容与必要适配见[维护记录](.agents/dev/changes/2026-11-11-dev-plan-task-handoffs/source-adaptations.md)，该记录说明当时的对照范围，不代表当前材料或运行版的升级验收。
+
+`dev-handoff` 继续采用已收录的 Matt handoff 与 pstack 会话接续、安全暂停完整方法，并对照 Anthropic/Claude 的上下文工程、长任务接续与技能编写文章，以及 OpenAI Agents SDK 的 handoff/context 文档。具体采用内容、保留步骤与适配理由见[开发上下文交接](docs/dev-handoff.md)；官方文章仅作方法对照，未转载全文，也未作为新增整库材料收录。
 
 项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。

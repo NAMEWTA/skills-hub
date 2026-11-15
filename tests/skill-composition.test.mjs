@@ -26,6 +26,8 @@ test('整个开发领域没有重复方法和内嵌执行包', () => {
     'visual-equivalence.md': 'dev-verify', 'investigation.md': 'dev-learn',
     'source-adapter.md': 'dev-issue-setup', 'autonomous-execution.md': 'dev-workflow',
     'worktree-cleanup.md': 'dev-deploy',
+    'handoff-method.md': 'dev-handoff', 'session-resume.md': 'dev-handoff',
+    'safe-pause.md': 'dev-handoff',
   })) assert.deepEqual(paths.filter(p => p.endsWith(path.join('references', name))), [path.join(owner, 'references', name)]);
 });
 

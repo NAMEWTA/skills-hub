@@ -16,8 +16,10 @@ Concentrated source licenses and notices:
 
 - pstack-MIT.txt: Copyright (c) 2026 Lauren Tan. Applies to the selected
   harness/pstack material and retained earlier pstack adaptations, including
-  earlier automations. The byte source is claude-code/LICENSE in that tree.
-- mattpocock-skills-MIT.txt: Copyright (c) 2026 Matt Pocock.
+  earlier automations, plus development session pickup and safe pause methods.
+  The byte source is claude-code/LICENSE in that tree.
+- mattpocock-skills-MIT.txt: Copyright (c) 2026 Matt Pocock, including the
+  development handoff method adapted in dev-handoff.
 - deepseek-harness-MIT.txt: Copyright (c) 2026 DeepSeek. Only .agents/skills
   is selected; this does not bundle the upstream Host, npm/Python dependencies,
   or vendor implementation described in that repository's root notices.

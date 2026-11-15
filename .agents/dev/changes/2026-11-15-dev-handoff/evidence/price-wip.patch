@@ -1,0 +1,7 @@
+diff --git a/src/price.mjs b/src/price.mjs
+index b0c577e..76b749c 100644
+--- a/src/price.mjs
++++ b/src/price.mjs
+@@ -1 +1 @@
+-export function price(value) { return String(value); }
++export function price(value) { return value.toFixed(2); }

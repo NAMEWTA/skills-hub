@@ -61,6 +61,24 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 安装事务依次取得 `.agents/.skills-wta-install.lock/` 和 `.agents/.skills-hub-install.lock/`，同时持有两把锁，防止新旧安装器并发写入同一批技能。旧锁名有意保留以兼容 `skills-wta`；安装结束仅释放本次自己取得的锁。若异常终止留下锁，先确认没有新旧安装进程，再移除遗留锁并检查备份。不要在进程运行时删除锁。
 
+## 开发交接入口迁移
+
+`dev-handoff` 是独立的 dev 技能，接管原 `dev-workflow` 中的交接方法、会话接续、安全暂停和交接模板。使用包含该变更的更新后源码，在目标项目根目录一起更新旧调用者与新入口：
+
+```bash
+node /path/to/skills-hub/install.mjs install --skill dev-workflow dev-handoff
+```
+
+若原来安装了整个开发领域，直接更新整个领域即可，相关帮助、学习与计划入口也会同步：
+
+```bash
+node /path/to/skills-hub/install.mjs install --domain dev
+```
+
+只选择部分技能的项目，按原选择更新已安装的 `dev-help`、`dev-learn`、`dev-plan`，使其导航指向新入口。也可只安装 `dev-handoff` 使用其保存、交接与接续方法；它不要求其他领域技能。
+
+安装器会先备份再完整替换有差异的 `dev-workflow`，旧交接资源随整包替换移出运行目录，无需手动删文件。只新增 `dev-handoff` 而不更新旧 `dev-workflow` 会留下旧方法副本。项目已经创建的 `handoff.md`、规格、计划和其他业务记录不搬迁、不重写，继续引用原真实位置。完整能力与边界见[开发上下文交接](dev-handoff.md)。
+
 ## 合并后的 UI 入口
 
 `dev-figma-design` 已合并到 `dev-ui-design`。设计系统、颜色与语义 token、组件状态和视觉检查完整保留在新包内，直接用于项目代码，无需 Figma。

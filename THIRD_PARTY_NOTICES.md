@@ -7,8 +7,8 @@
 | NAMEWTA | [项目 MIT](licenses/PROJECT-LICENSE.txt) | 本项目原创说明、整合与程序 |
 | Herdr 贡献者 | [Apache 2.0](licenses/herdr-Apache-2.0.txt) | Herdr 技能完整原件、中文译文与 `system-herdr` 运行适配；已更名并保留本地追加的启动示例 |
 | Copyright (c) 2026 DeepSeek | [MIT](licenses/deepseek-harness-MIT.txt) | 知识、归档、写作方法与笔记实例的中文译文及适配 |
-| Copyright (c) 2026 Matt Pocock | [MIT](licenses/mattpocock-skills-MIT.txt) | 需求、架构、实施、诊断、审查与写作资料的中文译文及适配 |
-| Copyright (c) 2026 Lauren Tan | [MIT](licenses/pstack-MIT.txt) | 当前 `harness/pstack` 所选树中的方法、操作规程与实例；既有运行适配仍保留旧 pstack（含旧 automations）所需许可 |
+| Copyright (c) 2026 Matt Pocock | [MIT](licenses/mattpocock-skills-MIT.txt) | 需求、架构、实施、诊断、审查、写作与开发交接资料的中文译文及适配 |
+| Copyright (c) 2026 Lauren Tan | [MIT](licenses/pstack-MIT.txt) | 当前 `harness/pstack` 所选树中的方法、操作规程与实例，含开发会话接续和安全暂停；既有运行适配仍保留旧 pstack（含旧 automations）所需许可 |
 | Copyright (c) 2026 Elaya | [MIT](licenses/ai-design-skills-MIT.txt) | 完整设计资料的中文译文及适配 |
 | Copyright (c) 2026 wta | [MIT](licenses/Speculo-MIT.txt)、[完整第三方通知](licenses/Speculo-THIRD-PARTY-NOTICES.txt) | Speculo 整仓被动快照、中文对照及已有运行适配；MIT 不替代下列嵌套第三方许可或历史文本权利 |
 | Copyright (c) 2026 Ting'an Wang | [MIT](licenses/Speculo-skills-hub-MIT.txt) | Speculo 的 12 个 skills-hub 包；同 blob 法律原件集中保留一份，包内原件各自保留 |
@@ -57,5 +57,7 @@ Herdr 许可原文固定于提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` 的
 许可原文保持原语言和原始版权声明，中文技能正文不能替代法律原文。对照资料中保留的署名和链接属于历史原件内容，不是运行时外部依赖。
 
 仅参考写作或技术原理、未取得全文转载许可的文章不作全文转载。本项目提供自己的本地说明；来源致谢不表示取得来源仓库未授权目录的复制许可。
+
+`dev-handoff` 复用已收录的 Matt handoff 与 pstack session-pickup、pause-safely 方法，适用上述现有 MIT 许可；本次为方法迁移与必要适配，不新增法律原文副本。Anthropic 和 OpenAI 官方文章/文档仅作具名方法参考，不收录 SDK、演示 harness 或文章全文；具体采用与改造见[开发交接说明](docs/dev-handoff.md)。
 
 PR 原件附带的贡献者声明已完整保存在对照资料，README 集中致谢。Apache 许可原件的 Git blob 为 `d645695673349e3947e8e5ae42332d0ac3164cd7`，NOTICE 为 `9671676ba14c852a29dd87f22d2b63f207f0b941`，核对日期 2026-11-07。NOTICE 列出的其他软件组件没有随本项目收录。
