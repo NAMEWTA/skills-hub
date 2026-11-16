@@ -61,3 +61,11 @@ Herdr 许可原文固定于提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` 的
 `dev-handoff` 复用已收录的 Matt handoff 与 pstack session-pickup、pause-safely 方法，适用上述现有 MIT 许可；本次为方法迁移与必要适配，不新增法律原文副本。Anthropic 和 OpenAI 官方文章/文档仅作具名方法参考，不收录 SDK、演示 harness 或文章全文；具体采用与改造见[开发交接说明](docs/dev-handoff.md)。
 
 PR 原件附带的贡献者声明已完整保存在对照资料，README 集中致谢。Apache 许可原件的 Git blob 为 `d645695673349e3947e8e5ae42332d0ac3164cd7`，NOTICE 为 `9671676ba14c852a29dd87f22d2b63f207f0b941`，核对日期 2026-11-07。NOTICE 列出的其他软件组件没有随本项目收录。
+
+
+## ops 新增来源与许可
+
+- Anthropic oncall-kit：Issue #3 固定快照的 `skills/triage`、`templates`、`eval` 完整子树及相应中文对照；实际采用只进入 ops。完整 Apache 2.0 原文取自同版仓库根 LICENSE，保存在 [oncall-kit 许可](licenses/oncall-kit/LICENSE)。所核查树未包含 NOTICE。
+- OpenAI skills 的 Sentry：完整 `skills/.curated/sentry` 子树与中文/字节对照；只读观测方法进入 ops-inspect。树内 LICENSE.txt 原样保留，集中副本为 [OpenAI Sentry Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)。来源图标只留在被动材料，不进入运行技能或 npm 包。
+
+上面旧来源的法律原文、快照和采用映射保持不变。新来源的版本身份、Git blob、原文/译文摘要与实际运行路径以父子清单为依据。修改说明见 [ops 方法归属](docs/ops-method-ownership.md)，中文运行适配不冒称未经修改的原件。

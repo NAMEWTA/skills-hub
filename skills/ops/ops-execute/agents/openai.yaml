@@ -1,0 +1,4 @@
+interface:
+  display_name: "运维执行与记录"
+  short_description: "复核真实目标与授权，执行既有运维入口并保存可接续的逐目标事实。"
+  default_prompt: "使用 $ops-execute 接续当前运维任务，核对目标、已有授权与执行入口，保存同一 run 的逐目标结果并核实中断状态。"

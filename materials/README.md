@@ -4,6 +4,8 @@
 
 ## 六个准确来源
 
+下表是既有开发与系统材料来源；本次 ops 的新增来源单元见后面的独立表，既有六项身份与运行映射不随新增领域刷新。
+
 | 项目与子清单 | 仓库 | 跟踪分支 | 所选来源根 |
 | --- | --- | --- | --- |
 | [pstack](pstack/manifest.tsv) | [cursor/plugins](https://github.com/cursor/plugins/tree/main/harness/pstack) | `main` | `harness/pstack` |
@@ -14,6 +16,17 @@
 | [herdr](herdr/manifest.tsv) | [herdrdev/herdr](https://github.com/herdrdev/herdr/tree/master/skills/herdr) | `master` | `skills/herdr` |
 
 每次显式同步解析指定分支当次最新 SHA，整次原件、对照、映射和差异使用同一个 SHA。Speculo 的父清单必须写 `ref=HEAD`：当前默认分支解析为 `main`，以后每次重新解析，不能长期固定为 `main`；同步脚本只有 `ref === 'HEAD'` 才动态解析。其余五项目固定跟踪表中指定的 `main` 或 `master`。父清单的 `ref`、`revision` 和 `source_root` 记录当前快照身份；本文链接中的浮动分支不是快照身份，也不表示检查会自动联网更新。
+
+## ops 新增来源
+
+| 项目与子清单 | 仓库 | 跟踪分支 | 完整选定来源根 |
+| --- | --- | --- | --- |
+| [oncall-triage](oncall-triage/manifest.tsv) | [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit) | `main` | `skills/triage` |
+| [oncall-templates](oncall-templates/manifest.tsv) | 同一 oncall-kit 快照 | `main` | `templates` |
+| [oncall-replay](oncall-replay/manifest.tsv) | 同一 oncall-kit 快照 | `main` | `eval` |
+| [openai-sentry](openai-sentry/manifest.tsv) | [openai/skills](https://github.com/openai/skills) | `main` | `skills/.curated/sentry` |
+
+每个来源根均完整收录，不因只采用其中一种方法而漏掉同树文件。实际采用只映射到 ops 的唯一 owner，其余完整参考保持空 runtime_paths，不声称运行版已移植。中文底稿忠实保留原文，运维范围与本地适配单独见[ops 方法归属](../docs/ops-method-ownership.md)。新来源仍使用以下同一双树/清单/同步/验证规则，不修改其他领域旧映射。
 
 ## 物理布局与内容规则
 

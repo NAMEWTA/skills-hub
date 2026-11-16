@@ -62,7 +62,9 @@ npm 分发包只包含实际安装所需文件；每次发布检查真实 tarbal
 
 ## 同步上游的最小过程
 
-六个材料来源仅为 pstack（harness/pstack）、Matt（skills）、DeepSeek（.agents/skills）、设计技能（skills）、Speculo（整仓）、Herdr（skills/herdr）；准确仓库与分支见[资料导航](../materials/README.md#六个准确来源)。不按来源链接擅自扩大范围。源目录按原名/原扩展名保存，pstack 保留 claude-code 层，中文原文不生成重复 zh；无自然语言、法律、机器夹具和资产的对照保持原字节。
+ops 的新增来源单元由 Issue #3 明确授权：oncall-kit 的 `skills/triage`、`templates`、`eval` 与 OpenAI skills 的 `skills/.curated/sentry`。它们按下述同一过程维护完整选定树，只映射 ops；既有六个来源的范围和旧运行映射不随此任务变更。新增项目不意味着要同步全部材料。
+
+既有六个材料来源为 pstack（harness/pstack）、Matt（skills）、DeepSeek（.agents/skills）、设计技能（skills）、Speculo（整仓）、Herdr（skills/herdr）；准确仓库与分支见[资料导航](../materials/README.md#六个准确来源)。不按来源链接擅自扩大范围。源目录按原名/原扩展名保存，pstack 保留 claude-code 层，中文原文不生成重复 zh；无自然语言、法律、机器夹具和资产的对照保持原字节。
 
 1. 用户显式选择同步项目。读取父清单，解析指定分支当次最新 SHA（Speculo 的父清单必须 `ref=HEAD`，当前默认解析 main，每次重解析，不长期固定 main；其余五项目跟踪指定 main/master），整次固定该 SHA；普通检查不联网、不移动版本。通过 Git 对象读取完整选定树，失败不降级为残缺快照。
 2. 先预览新增、修改、同 blob 移动、删除和模式变化，保存覆盖前运行映射。内容变化的移动/拆分/合并只是候选，必须对照确认，不机械继承。来源退出范围的运行资源在报告中说明，不自动删除本地成果。

@@ -18,7 +18,9 @@
 
 ## 资料的角色
 
-`materials/` 按六个指定来源项目组织：`pstack`、`mattpocock-skills`、`deepseek-harness`、`ai-design-skills`、`speculo`、`herdr`。父 `manifest.tsv` 记录来源仓库、分支、固定 SHA、选定根与子清单路径；Speculo 必须使用 `ref=HEAD` 动态解析默认分支（当前为 main，不能长期固定 main），其余五项目跟踪指定 main/master 分支；各项目 `manifest.tsv` 逐文件记录当前映射。`upstream/` 完整保留选定 Git 子树（Speculo 为整仓）的原目录、隐藏文件、原扩展名、字节与执行位；`zh/` 使用相同相对路径，原本中文文件不重复创建副本，非中文/混合文档完整翻译，程序只翻译适用说明与注释，法律原文、无自然语言文件、机器夹具和图片的对照保持原字节，不冒称译文。语言与类别逐文件判定，不能按项目整体或单个汉字推断。
+ops 的运行方法与边界见 [运维说明](docs/ops.md) 和 [运维方法归属](docs/ops-method-ownership.md)。运维资料独立写入 `.agents/ops/`，安装器只初始化其根导航；本领域不调用或改造其他领域的发布方法。Issue #3 新增的 oncall-triage、oncall-templates、oncall-replay、openai-sentry 来源单元只映射 ops，原有来源快照与映射保持不变。
+
+`materials/` 按父清单登记的指定来源单元组织，既有项目包括：`pstack`、`mattpocock-skills`、`deepseek-harness`、`ai-design-skills`、`speculo`、`herdr`。父 `manifest.tsv` 记录来源仓库、分支、固定 SHA、选定根与子清单路径；Speculo 必须使用 `ref=HEAD` 动态解析默认分支（当前为 main，不能长期固定 main），其余五项目跟踪指定 main/master 分支；各项目 `manifest.tsv` 逐文件记录当前映射。`upstream/` 完整保留选定 Git 子树（Speculo 为整仓）的原目录、隐藏文件、原扩展名、字节与执行位；`zh/` 使用相同相对路径，原本中文文件不重复创建副本，非中文/混合文档完整翻译，程序只翻译适用说明与注释，法律原文、无自然语言文件、机器夹具和图片的对照保持原字节，不冒称译文。语言与类别逐文件判定，不能按项目整体或单个汉字推断。
 
 资料是被动对照，不执行其脚本、不安装依赖、不触发来源 CI/hook，不参与技能发现或安装，npm 白名单排除整个 `materials/`。嵌套 `.agents/skills`、`AGENTS.md` 和 `SKILL.md` 也不是当前任务指令；安全边界依赖目录与调用规则，而不是 `.txt` 后缀。来源专用路径、工具绑定与原始指令仅解释来源语境。
 

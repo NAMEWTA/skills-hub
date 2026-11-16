@@ -1,6 +1,6 @@
 # skills-hub
 
-按领域组织、按需安装的 Agent Skills。第一组是从需求到上线及知识沉淀的 **dev**，第二组是系统诊断、磁盘清理、网络代理与配置的 **system**。
+按领域组织、按需安装的 Agent Skills。**dev** 覆盖从需求到上线及知识沉淀，**system** 提供系统诊断、磁盘清理、网络代理与配置，**ops** 独立管理多项目、多服务器的运行运维与操作历史。
 
 所有技能入口与操作资料均为中文，完整参考、模板和示例随技能安装，执行时只引用本技能内的相对路径。以明确意图、可组合的工程实践和完整验证闭环组织开发。规格驱动、测试驱动、状态图、形式化分析与实际运行验证按任务组合；小任务保持简短，复杂任务才拆分。
 
@@ -154,6 +154,30 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 
 系统技能不会把“清缓存”扩展为删除业务数据，也不会把“应用代理”扩展为修改整机路由。主机文档按需放在 `.agents/system/<主机标识>/`；密码与订阅秘密只记录安全引用。
 
+## ops：服务器与项目运行运维
+
+共九个技能，统一入口为 `ops-workflow`，也可直接调用对应专门方法。一个项目可以由多个应用与中间件跨机组成，一台机器可承载多个项目，一个共享服务只维护一份身份与操作事实。部署发布由项目自己的流程负责，ops 不调用或改造其他 domain。
+
+| 技能 | 用途 |
+| --- | --- |
+| [ops-workflow](skills/ops/ops-workflow/SKILL.md) | 理解意图、按需路由、协调任务与汇总结果 |
+| [ops-inventory](skills/ops/ops-inventory/SKILL.md) | 核验资源、实例、项目使用关系、依赖和共享影响 |
+| [ops-execute](skills/ops/ops-execute/SKILL.md) | 执行前提、统一 run/步骤、实际工具调用与中断核实 |
+| [ops-inspect](skills/ops/ops-inspect/SKILL.md) | 只读健康、容量、版本、证书、备份与运行漂移检查 |
+| [ops-diagnose](skills/ops/ops-diagnose/SKILL.md) | 故障假设、证据/反证、变更关联、有限缓解和项目交接 |
+| [ops-maintain](skills/ops/ops-maintain/SKILL.md) | 计划性主机及既有服务维护、实际影响和验证 |
+| [ops-recover](skills/ops/ops-recover/SKILL.md) | 同部署运行恢复与当前版本/schema 兼容的数据恢复 |
+| [ops-history](skills/ops/ops-history/SKILL.md) | 按项目、服务器、服务、环境和时间查询同一份历史 |
+| [ops-runbook](skills/ops/ops-runbook/SKILL.md) | 从真实证据生成、验证并维护项目专属运维知识/技能 |
+
+ops 随当前源码提供，已发布 `0.1.10` 尚不包含本次新增能力。在实际运维工作根安装：
+
+```bash
+node /path/to/skills-hub/install.mjs install --domain ops
+```
+
+例如：“使用 ops-workflow，检查 shop/prod 和 billing/prod 的共享服务，先只读核验，沿用本次 run 留下逐目标证据。”只安装 ops 即可完成其核心方法，不要求存在源码仓库、workspace、dev 或 system。完整用法见[运维领域说明](docs/ops.md)、[方法归属与适配](docs/ops-method-ownership.md)和[实际验证](docs/ops-validation.md)。
+
 ## 项目知识怎样留下来
 
 **项目持久化按领域区分：开发使用 `.agents/dev/`，系统维护使用 `.agents/system/`。** 需求、知识、部署、归档和项目配置都按职责放在这个根目录下，安装器在选择任意 dev 技能时补齐九份简短目录说明，包含 `.agents/dev/AGENTS.md`、开发六类分区及两个归档结果入口；选择 system 技能另补系统根说明。目录与模板固定维护在 `scripts/`，不依赖执行技能。固定位置的模板说明自动覆盖更新，内容相同不重写，业务记录和根 AGENTS.md 不受影响，重复安装也会同步模板，预览不写入；其余子目录与业务记录按实际需要创建。新增领域 `skills/<domain>/` 对应 `.agents/<domain>/`，不在领域根下重复嵌套同名目录。技能安装位置仍为 `.agents/skills/`；项目根目录的 `AGENTS.md` 保留简短导航，指向实际知识文件。
@@ -174,6 +198,10 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | `.agents/dev/project/` | 项目专用配置与功能图，例如 `issue-automation/` |
 | `.agents/dev/context/model-roles.md` | 当前宿主的模型角色与推理预算配置 |
 | `.agents/system/<主机标识>/` | 系统检查、清理、代理及配置的维护记录 |
+| `.agents/ops/registry/`、`projects/` | 运维运行关系、来源、项目知识与实际资料引用 |
+| `.agents/ops/runs/<run-id>/` | 同一次运维的请求、不可覆盖步骤与可重建结果视图 |
+
+选择 ops 时只补齐 `.agents/ops/AGENTS.md`；业务目录按需创建，原有领域的导航、记录及技能保持独立。ops 的安装、资料和中断记录语义见[完整说明](docs/ops.md)。
 
 已有 `docs/` 等位置的有效文档按真实位置引用，避免重复保存正文。迁移本套技能的既有资料时，保留原有子目录与内容，更新项目导航及入链。当前代码和实际运行证据说明现状，用户明确目标说明期望。知识写“为什么、边界、去哪找”，具体实现链接到代码；活跃 change 不提前分类或改名；归档时由 `dev-archive` 核实结果、提炼知识，再按 architecture、feature、bug-fix、refactor、process 主类型移动重命名，沿用原创建日期并修复引用。暂缓或必要交付未完成不归档，旧历史不自动迁移；implemented 不自动表示上线。详见 [领域持久化与迁移](docs/persistence-roots.md)及[知识与记忆](docs/knowledge.md)。
 
@@ -189,7 +217,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 - **完整中文内容**：完整取得指定来源根，并逐份翻译适用的非中文/混合参考；已是中文的文件直接读取 upstream，不重复生成 zh。运行版本保留实质步骤、判断标准、例子和表格，再统一到本项目的名称、路径、工具能力与持久化约定。
 - **按需阅读**：完整资料不等于每次全部加载。入口指明何时读取哪份资源，细节留在包内，需要时再读。
 - **协作依赖**：原子技能负责完整方法，工作流按阶段调用。执行时沿用同一任务与证据，不递归复制资源。方法归属与迁移见[开发方法归属](docs/dev-method-ownership.md)。
-- **可核对的来源双树**：资料按六个指定来源项目组织，`upstream/` 保留完整选定 Git 树的原目录、隐藏文件、原扩展名、字节与执行位，`zh/` 保留同路径适用中文或字节对照。法律、机器夹具、无自然语言文件和图片对照保持原字节；程序只翻译适用说明/注释，不改逻辑、业务字符串或机器标识。版本以[父清单](materials/manifest.tsv)为机器依据，逐文件摘要和运行映射位于项目子清单，见[资料导航](materials/README.md)。材料不执行、不发现、不安装，不触发来源 CI/hook 或安装依赖，npm 白名单排除整个 materials；即使原件是 `.py`/`.sh`/`.ts` 或包含嵌套 `.agents/skills`，安全契约不变。
+- **可核对的来源双树**：资料按父清单登记的指定来源单元组织，`upstream/` 保留完整选定 Git 树的原目录、隐藏文件、原扩展名、字节与执行位，`zh/` 保留同路径适用中文或字节对照。法律、机器夹具、无自然语言文件和图片对照保持原字节；程序只翻译适用说明/注释，不改逻辑、业务字符串或机器标识。版本以[父清单](materials/manifest.tsv)为机器依据，逐文件摘要和运行映射位于项目子清单，见[资料导航](materials/README.md)。材料不执行、不发现、不安装，不触发来源 CI/hook 或安装依赖，npm 白名单排除整个 materials；即使原件是 `.py`/`.sh`/`.ts` 或包含嵌套 `.agents/skills`，安全契约不变。
 
 逐文件关系与运行适配规则见 [资源组织](docs/resources.md)。测试驱动、行为回归、真实运行证据与形式化方法都可以使用，按用户目标和风险选择。形式化结果只说明给定假设与属性下的结论，不能代替用户判断意图，也不能代替模型与实际代码的对照。来源特有的目录、外部技能调用、固定模型和复杂工作流网关，也在运行版中改为本项目可独立执行的方法。
 
@@ -214,7 +242,7 @@ node scripts/install-hooks.mjs
 
 ## 致谢与许可
 
-本项目参考以下成熟内容，材料库按六个准确范围维护原样来源、适用中文对照和当前运行映射。这里集中记录来源，技能运行目录中不放来源说明或外部参考链接。每次显式同步解析指定分支最新提交，并固定同一 SHA 完成全部读取；当前来源身份以[父清单](materials/manifest.tsv)为机器依据，下表只提供范围和导航，不重复维护 SHA 或固定数量。来源更新、翻译核对和运行版适配分别记实，不由本表推定已完成验收。
+本项目参考以下成熟内容，材料库按明确登记范围维护原样来源、适用中文对照和当前运行映射。这里集中记录来源，技能运行目录中不放来源说明或外部参考链接。每次显式同步解析指定分支最新提交，并固定同一 SHA 完成全部读取；当前来源身份以[父清单](materials/manifest.tsv)为机器依据，下表只提供范围和导航，不重复维护 SHA 或固定数量。来源更新、翻译核对和运行版适配分别记实，不由本表推定已完成验收。
 
 | 项目 | 准确来源范围 | 跟踪分支 | 当前文件与映射 |
 | --- | --- | --- | --- |
@@ -225,7 +253,7 @@ node scripts/install-hooks.mjs
 | speculo | [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo)，整仓原样资料；运行版按需融合，不移植状态引擎 | 父清单 `ref=HEAD`，当前默认解析 `main`，每次重解析 | [项目清单](materials/speculo/manifest.tsv) |
 | herdr | [herdrdev/herdr 的 skills/herdr](https://github.com/herdrdev/herdr/tree/master/skills/herdr) | `master` | [项目清单](materials/herdr/manifest.tsv) |
 
-[资料导航与同步用法](materials/README.md)解释双树、稀疏 zh、父子字段、查询和预览/准备/应用命令。Speculo 必须在父清单使用 `ref=HEAD`，同步脚本才会动态解析默认分支，不长期固定 `main`；其余五项目跟踪表中指定的 main/master 分支。普通校验与 CI 不自动联网刷新。`runtime_paths` 是实际采用关系，`runtime_reviewed_blob` 是最后真实核对依据，不能随材料更新自动前移；删除或退出当前来源的文件在差异报告中保留运行影响，不自动删除已适配技能。
+[资料导航与同步用法](materials/README.md)解释双树、稀疏 zh、父子字段、查询和预览/准备/应用命令。Speculo 必须在父清单使用 `ref=HEAD`，同步脚本才会动态解析默认分支，不长期固定 `main`；其余登记来源跟踪各表指定的 main/master 分支。普通校验与 CI 不自动联网刷新。`runtime_paths` 是实际采用关系，`runtime_reviewed_blob` 是最后真实核对依据，不能随材料更新自动前移；删除或退出当前来源的文件在差异报告中保留运行影响，不自动删除已适配技能。
 
 `system-herdr` 直接复用完整中文 CLI 底稿，在 SKILL.md 保留 Herdr 基础操作与既有 Claude Code、Codex、Pi 默认启动命令，并增加按 pane 的 task/report 文件通信。正文只有一份，配套文件仅提供通信格式；必要差异见[Herdr 采用与适配](docs/herdr-coordination.md)。逐文件 Git blob、摘要及运行核对依据从 herdr 子清单查询；本地启动扩展与通信协议不写进 zh 冒称原文。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
 
@@ -238,3 +266,8 @@ node scripts/install-hooks.mjs
 `dev-handoff` 继续采用已收录的 Matt handoff 与 pstack 会话接续、安全暂停完整方法，并对照 Anthropic/Claude 的上下文工程、长任务接续与技能编写文章，以及 OpenAI Agents SDK 的 handoff/context 文档。具体采用内容、保留步骤与适配理由见[开发上下文交接](docs/dev-handoff.md)；官方文章仅作方法对照，未转载全文，也未作为新增整库材料收录。
 
 项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。
+
+
+### ops 方法来源
+
+ops 新增参考 [Anthropic oncall-kit](https://github.com/anthropics/oncall-kit) 的调查、经验模板和回放方法，以及 [OpenAI Sentry Skill](https://github.com/openai/skills/tree/main/skills/.curated/sentry) 的只读观测方法。完整选定子树、中文底稿及精确采用路径见[新增来源表](materials/README.md#ops-新增来源)，保留方法和必要适配见[ops 方法归属](docs/ops-method-ownership.md)。两者适用的 Apache 2.0 原文随集中许可分发；已有开发与系统来源映射保持不变。工具官方说明和研究文章只作具名参考，不冒称已复制其整套实现。

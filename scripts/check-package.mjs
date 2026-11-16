@@ -138,7 +138,7 @@ export function checkPackage(root = ROOT) {
       }
     }
     for (const domain of domains) {
-      if (['dev', 'system'].includes(domain) && !existsSync(join(prefix, '.agents', domain, 'AGENTS.md'))) {
+      if (['dev', 'system', 'ops'].includes(domain) && !existsSync(join(prefix, '.agents', domain, 'AGENTS.md'))) {
         throw new Error(`安装所选领域后缺少持久化导航：${domain}`);
       }
     }

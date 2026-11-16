@@ -1,0 +1,5 @@
+interface:
+  display_name: "既有服务运行恢复"
+  short_description: "核验制品、配置与数据前提，恢复现有服务并验证共享消费者"
+  default_prompt: "使用 $ops-recover 恢复已有服务运行，核实前次执行状态并报告逐目标结果。"
+

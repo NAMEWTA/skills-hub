@@ -1,0 +1,2 @@
+path	kind	language	source_git_mode	source_git_blob	upstream_sha256	zh_path	zh_sha256	runtime_paths	runtime_reviewed_blob	adaptation
+replay.md	document	en	100644	e5438477a6026744f865a0b169465fb34cf4c282	999cb67aca30dc4ac905da669c47f56551a42c1d4a271bb30f88c940c701d488	zh/replay.md	891bee1b78856753f043ad73dcb9cea07e36fb4f7f522fe101d3440daf618290	skills/ops/ops-runbook/references/replay-evaluation.md;skills/ops/ops-runbook/assets/replay-results.md	e5438477a6026744f865a0b169465fb34cf4c282	保留完整留出回放、数值判据与迭代；仅明确选择该评估时适用，不建立强制审批/自动发布；见docs/ops-method-ownership.md。
