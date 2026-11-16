@@ -62,8 +62,8 @@ skills/dev/dev-build/references/real-evidence.md	skills/dev/dev-guardrails/refer
 skills/dev/dev-build/references/reflection-synthesis.md	skills/dev/dev-archive/references/review-synthesis.md
 skills/dev/dev-build/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
 skills/dev/dev-build/references/runtime-forensics.md	skills/dev/dev-benchmark/references/runtime-forensics.md
-skills/dev/dev-build/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-build/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-build/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-build/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-build/references/source-analytics.md	skills/dev/dev-why/references/source-analytics.md
 skills/dev/dev-build/references/source-code-history.md	skills/dev/dev-why/references/source-code-history.md
 skills/dev/dev-build/references/source-conversations.md	skills/dev/dev-why/references/source-conversations.md
@@ -118,8 +118,8 @@ skills/dev/dev-debug/references/perf-issue.md	skills/dev/dev-benchmark/reference
 skills/dev/dev-debug/references/prototype.md	skills/dev/dev-build/references/prototype.md
 skills/dev/dev-debug/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-debug/references/runtime-forensics.md	skills/dev/dev-benchmark/references/runtime-forensics.md
-skills/dev/dev-debug/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-debug/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-debug/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-debug/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-debug/references/source-analytics.md	skills/dev/dev-why/references/source-analytics.md
 skills/dev/dev-debug/references/source-code-history.md	skills/dev/dev-why/references/source-code-history.md
 skills/dev/dev-debug/references/source-conversations.md	skills/dev/dev-why/references/source-conversations.md
@@ -158,8 +158,8 @@ skills/dev/dev-deploy/references/parallel-coverage.md	skills/dev/dev-parallel/re
 skills/dev/dev-deploy/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
 skills/dev/dev-deploy/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-deploy/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
-skills/dev/dev-deploy/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-deploy/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-deploy/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-deploy/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-deploy/references/source-analytics.md	skills/dev/dev-why/references/source-analytics.md
 skills/dev/dev-deploy/references/source-code-history.md	skills/dev/dev-why/references/source-code-history.md
 skills/dev/dev-deploy/references/source-conversations.md	skills/dev/dev-why/references/source-conversations.md
@@ -214,8 +214,8 @@ skills/dev/dev-help/references/context/setup/references/program-coordination.md	
 skills/dev/dev-help/references/context/setup/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-help/references/context/setup/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-help/references/context/setup/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
-skills/dev/dev-help/references/context/setup/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-help/references/context/setup/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-help/references/context/setup/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-help/references/context/setup/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-help/references/context/setup/references/status-report.md	skills/dev/dev-status/references/status-report.md
 skills/dev/dev-help/references/context/setup/references/technical-writing.md	skills/dev/dev-writing/references/technical-writing.md
 skills/dev/dev-help/references/context/setup/references/verifiable-units.md	skills/dev/dev-guardrails/references/verifiable-units.md
@@ -256,7 +256,7 @@ skills/dev/dev-help/references/principles/typescript-patterns.md	skills/dev/dev-
 skills/dev/dev-help/references/principles/verifiable-units.md	skills/dev/dev-guardrails/references/verifiable-units.md
 skills/dev/dev-help/references/workflow/assets/decision-log.tsv	skills/dev/dev-workflow/assets/decision-log.tsv
 skills/dev/dev-help/references/workflow/assets/decision-trail.md	skills/dev/dev-workflow/assets/decision-trail.md
-skills/dev/dev-help/references/workflow/assets/handoff.md	skills/dev/dev-workflow/assets/handoff.md
+skills/dev/dev-help/references/workflow/assets/handoff.md	skills/dev/dev-handoff/assets/handoff.md
 skills/dev/dev-help/references/workflow/entry.md	skills/dev/dev-workflow/SKILL.md
 skills/dev/dev-help/references/workflow/references/adversarial-review.md	skills/dev/dev-review/references/adversarial-review.md
 skills/dev/dev-help/references/workflow/references/agent-writing.md	skills/dev/dev-writing/references/agent-writing.md
@@ -296,7 +296,7 @@ skills/dev/dev-help/references/workflow/references/feature-delivery.md	skills/de
 skills/dev/dev-help/references/workflow/references/feature-map-example.md	skills/dev/dev-verify/references/feature-map-example.md
 skills/dev/dev-help/references/workflow/references/feature-map-index.md	skills/dev/dev-verify/references/feature-map-index.md
 skills/dev/dev-help/references/workflow/references/feature-search-example.md	skills/dev/dev-verify/references/feature-search-example.md
-skills/dev/dev-help/references/workflow/references/handoff-method.md	skills/dev/dev-workflow/references/handoff-method.md
+skills/dev/dev-help/references/workflow/references/handoff-method.md	skills/dev/dev-handoff/references/handoff-method.md
 skills/dev/dev-help/references/workflow/references/hillclimb.md	skills/dev/dev-benchmark/references/hillclimb.md
 skills/dev/dev-help/references/workflow/references/incident-investigation.md	skills/dev/dev-why/references/incident-investigation.md
 skills/dev/dev-help/references/workflow/references/investigation-synthesis.md	skills/dev/dev-why/references/investigation-synthesis.md
@@ -321,8 +321,8 @@ skills/dev/dev-help/references/workflow/references/reflection-method.md	skills/d
 skills/dev/dev-help/references/workflow/references/reflection-synthesis.md	skills/dev/dev-archive/references/review-synthesis.md
 skills/dev/dev-help/references/workflow/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
 skills/dev/dev-help/references/workflow/references/runtime-forensics.md	skills/dev/dev-benchmark/references/runtime-forensics.md
-skills/dev/dev-help/references/workflow/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-help/references/workflow/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-help/references/workflow/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-help/references/workflow/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-help/references/workflow/references/skill-mechanics.md	skills/dev/dev-writing/references/skill-format.md
 skills/dev/dev-help/references/workflow/references/source-analytics.md	skills/dev/dev-why/references/source-analytics.md
 skills/dev/dev-help/references/workflow/references/source-code-history.md	skills/dev/dev-why/references/source-code-history.md
@@ -461,7 +461,7 @@ skills/dev/dev-learn/references/investigation-synthesis.md	skills/dev/dev-why/re
 skills/dev/dev-learn/references/investigator-brief.md	skills/dev/dev-why/references/investigator-brief.md
 skills/dev/dev-learn/references/notes-guide.md	skills/dev/dev-archive/references/notes-guide.md
 skills/dev/dev-learn/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
-skills/dev/dev-learn/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-learn/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-learn/references/source-analytics.md	skills/dev/dev-why/references/source-analytics.md
 skills/dev/dev-learn/references/source-code-history.md	skills/dev/dev-why/references/source-code-history.md
 skills/dev/dev-learn/references/source-conversations.md	skills/dev/dev-why/references/source-conversations.md
@@ -561,8 +561,8 @@ skills/dev/dev-setup/references/program-coordination.md	skills/dev/dev-workflow/
 skills/dev/dev-setup/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-setup/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-setup/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
-skills/dev/dev-setup/references/safe-pause.md	skills/dev/dev-workflow/references/safe-pause.md
-skills/dev/dev-setup/references/session-resume.md	skills/dev/dev-workflow/references/session-resume.md
+skills/dev/dev-setup/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-setup/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-setup/references/status-report.md	skills/dev/dev-status/references/status-report.md
 skills/dev/dev-setup/references/technical-writing.md	skills/dev/dev-writing/references/technical-writing.md
 skills/dev/dev-setup/references/unattended-work.md	skills/dev/dev-help/references/guide-autonomous.md
@@ -805,3 +805,7 @@ skills/dev/dev-workflow/references/visual-equivalence.md	skills/dev/dev-verify/r
 skills/dev/dev-workflow/references/worktree-cleanup.md	skills/dev/dev-deploy/references/worktree-cleanup.md
 skills/dev/dev-issue-fix/references/source-adapter.md	skills/dev/dev-issue-setup/references/source-adapter.md
 skills/dev/dev-issue-triage/references/source-adapter.md	skills/dev/dev-issue-setup/references/source-adapter.md
+skills/dev/dev-workflow/assets/handoff.md	skills/dev/dev-handoff/assets/handoff.md
+skills/dev/dev-workflow/references/handoff-method.md	skills/dev/dev-handoff/references/handoff-method.md
+skills/dev/dev-workflow/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
+skills/dev/dev-workflow/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md

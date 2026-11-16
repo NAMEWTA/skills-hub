@@ -1,0 +1,54 @@
+# dev-handoff 验证记录
+
+## 验证对象
+
+基线为 `main@e058268749db6dcfcf3dca89b0134529be195442`。本地 2817 个文件的内容与执行位组成文件树 `c722ab71f9e07d2b1194d351f0596929f0615941`，与 GitHub 基线一致；在隔离工作区实施，未修改其他项目或生产环境。
+
+## 来源与完整性
+
+三份主要原件、完整中文对照及新运行版已逐段核对，来源 Git blob 与 SHA-256 均匹配现有子清单。完整保留 Matt 五项要求、会话接续五步及回复、安全暂停四步及回复；必要适配及局部路由变更见 [来源记录](source-adaptations.md)。主三行核对依据已更新，其他大型来源入口的核对依据未前移。
+
+## 结构与分发检查
+
+执行环境：Linux，Node.js `v24.22.1`，npm `11.9.0`。
+
+| 检查 | 实际结果与范围 |
+| --- | --- |
+| `node scripts/check.mjs` | 通过：36 个技能（31 个 dev），363 份 Markdown、982 个本地链接；六来源 1346 个原件的集合、哈希、blob、模式及运行映射通过 |
+| `node scripts/check.mjs --full` | 包装、持久化、资料检查通过；隔离测试 303 项通过，三组 CLI 测试因缺少既有 npm 依赖在模块导入前失败。没有将本地完整门禁记为通过 |
+| 依赖恢复 | `npm ci --offline` 缓存不足；正常 `npm ci --ignore-scripts --no-audit --no-fund` 下载锁定的 `wrap-ansi@10.0.2` 被网络策略返回 HTTP 403。未修改依赖版本、锁文件、测试或门禁以绕过限制 |
+| 有限状态故障注入示例 | 单独执行通过：原实现、隔离故障和恢复三次实际枚举；不是新 TLC 求解 |
+| `node scripts/check-statechart-replay.mjs` | 通过：现有捕获结果回放，不冒称新的求解 |
+| 真实 npm 打包与单技能安装 | `packPackage` 成功生成并验证实际 tarball，共 465 个分发文件；解包后通过包内 Node 安装入口单独安装 `dev-handoff`，六个文件逐字节一致，无 system 目录与 materials 分发。该检查不代替受网络限制的完整 npm 依赖安装 |
+| `git diff --check` 与独立审查 | 通过；独立审查没有发现需要修复的具体问题 |
+
+首次包装检查发现新增文档引用的本记录尚未创建，补齐记录后重新检查通过。真实 tarball 的 SHA-256 为 `3bf88cc84df0258b3d717c9b9869969d26d8bd827348973f5318153940dd55ad`，仅对应当次被检查的包内容，不代表发布版本。
+
+远端已完成仓库原有 CI，实施提交为 [`dd85dc342c602a02f6728e06fd7e641ef9f5b607`](https://github.com/NAMEWTA/skills-hub/commit/dd85dc342c602a02f6728e06fd7e641ef9f5b607)。[PR 验证运行](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940)和[分支推送运行](https://github.com/NAMEWTA/skills-hub/actions/runs/43727281446)均通过，六个 job 全部为 success。
+
+| PR 平台 | 运行结果 |
+| --- | --- |
+| [Linux / Node 22.14](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070280) | 依赖安装、完整门禁、状态图回放、真实 npm tarball 安装均通过 |
+| [Windows / Node 24](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070001) | 同上，全部通过 |
+| [macOS / Node 24](https://github.com/NAMEWTA/skills-hub/actions/runs/43727341940/job/132852070242) | 同上，全部通过 |
+
+因此本地下载限制未留下完整依赖测试与三平台分发验证缺口。此处只记录已经观察到的指定运行；后续提交仍以 [PR #1 的当前 Checks](https://github.com/NAMEWTA/skills-hub/pull/1/checks)为准。
+
+## 独立任务观察
+
+使用三个隔离 Git 项目、四次独立会话，每个项目仅安装 `dev-handoff`。提供实际任务、安装后的入口与原始文件，不提供预期输出或主实现结论。完整请求、输入与原始交接见[任务证据](evidence/scenarios.md)。
+
+| 场景 | 观察到的行为 |
+| --- | --- |
+| 保存后继续 | 先写交接，再完成计划第 2 项；测试从 1 通过/1 失败变为 2 项通过；下一会话重点保留为尚未定义的非字符串输入，未擅自扩展实现 |
+| 带 WIP 明确暂停 | 只写交接与任务专用补丁，没有继续开发或声称行为测试通过；原源码、协作者文件和 HEAD 均未改变 |
+| 旧摘要与实现冲突 | 核对原计划后发现字符串输入未拒绝，实际测试 2 通过/1 失败；继续修复并得到 5 项通过，保留原接口和目标，没有重开规划 |
+| 用上一个会话生成的交接冷启动 | 新会话从暂停场景真实交接恢复，未重复应用已有补丁，完成空值分支，现有 2 项测试通过 |
+
+四次均保留协作者的修改，没有自行提交或推送。前三次执行后重新检查 Git HEAD 与协作者文件哈希；明确暂停场景源码哈希也与输入相同。最后一次接续又确认协作者文件、原测试及 HEAD 不变。
+
+这些是实际任务行为观察；没有为技能文案逐句写镜像式断言。现有单一方法归属回归增加三个新 owner 断言，资源移动表由原有测试逐行验证。
+
+## 边界
+
+本轮不实现会话日志发现、宿主启动、调度或格式迁移。隔离任务观察不能冒称已在 Claude Code、Codex CLI、Pi 的全部版本分别运行。未发布 npm、未合并 PR。
