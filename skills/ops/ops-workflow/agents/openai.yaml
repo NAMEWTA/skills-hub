@@ -1,0 +1,4 @@
+interface:
+  display_name: "统一运维入口"
+  short_description: "协调服务器、项目与共享服务的运维任务"
+  default_prompt: "使用 $ops-workflow 明确这次运维的实际目标，按需选择方法，沿用同一份记录并验证结果。"

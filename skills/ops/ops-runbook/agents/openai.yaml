@@ -1,0 +1,4 @@
+interface:
+  display_name: "项目运维手册与技能"
+  short_description: "从真实运维证据生成并维护项目专属方法"
+  default_prompt: "使用 $ops-runbook 从授权的项目运维证据整理并验证范围明确的项目 ops 技能。"

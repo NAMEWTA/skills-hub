@@ -1,0 +1,6 @@
+interface:
+  display_name: "Sentry（只读可观测性）"
+  short_description: "只读 Sentry 可观测性"
+  icon_small: "./assets/sentry-small.svg"
+  icon_large: "./assets/sentry.png"
+  default_prompt: "使用只读 Sentry 数据调查此问题，报告可能根因、影响和后续步骤。"

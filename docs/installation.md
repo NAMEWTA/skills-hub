@@ -61,6 +61,19 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 安装事务依次取得 `.agents/.skills-wta-install.lock/` 和 `.agents/.skills-hub-install.lock/`，同时持有两把锁，防止新旧安装器并发写入同一批技能。旧锁名有意保留以兼容 `skills-wta`；安装结束仅释放本次自己取得的锁。若异常终止留下锁，先确认没有新旧安装进程，再移除遗留锁并检查备份。不要在进程运行时删除锁。
 
+## 独立 ops 领域
+
+包含本次新增能力的源码提供九个 ops 技能。当前已发布 `0.1.10` 不包含此变更，先在实际运维工作根使用源码入口：
+
+```bash
+node /path/to/skills-hub/install.mjs install --domain ops --dry-run
+node /path/to/skills-hub/install.mjs install --domain ops
+```
+
+选择任意 ops 技能只新增/更新 `.agents/ops/AGENTS.md` 这一份托管导航，不生成 registry、runs 或项目事实，也不执行任何服务器操作。业务目录按需创建，根 AGENTS.md 与其他领域记录不改。重复安装、备份、失败回滚和预览继续遵循上面的同一安装契约。
+
+完整领域包含 `ops-workflow`、inventory、execute、inspect、diagnose、maintain、recover、history、runbook。部分安装不解析或自动安装兄弟依赖；需要某方法而未安装时明确缺口。专门技能可直接使用，不强制 workflow。ops 不依赖其他 domain；各项目发布仍按自己的方法执行。用法、技能发现和独立 CLI 上下文见[运维说明](ops.md)。
+
 ## 开发交接入口迁移
 
 `dev-handoff` 是独立的 dev 技能，接管原 `dev-workflow` 中的交接方法、会话接续、安全暂停和交接模板。使用包含该变更的更新后源码，在目标项目根目录一起更新旧调用者与新入口：

@@ -30,7 +30,7 @@ for (const [label, args, expected] of [
   ['dev domain', ['--domain', 'dev'], dev],
   ['system only', ['--skill', 'system-inspect'], [system]],
   ['mixed domains', ['--skill', 'dev-intake', 'system-inspect'], [...dev, system].sort()],
-  ['all domains', ['--all'], [...dev, system].sort()],
+  ['all domains', ['--all'], [...dev, system, '.agents/ops/AGENTS.md'].sort()],
 ]) test(`installing ${label} bootstraps exactly the selected domain records`, t => {
   const root = project(t);
   const preview = success(run(root, 'install', ...args, '--dry-run'));

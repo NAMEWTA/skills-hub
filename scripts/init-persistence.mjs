@@ -14,6 +14,7 @@ const targets = [
   ['dev', 'project', '.agents/dev/project'],
   ['dev', 'context', '.agents/dev/context'],
   ['system', 'system', '.agents/system'],
+  ['ops', 'ops', '.agents/ops'],
 ];
 
 function inspect(project, relative, fsOps) {

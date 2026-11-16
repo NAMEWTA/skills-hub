@@ -1,0 +1,5 @@
+interface:
+  display_name: "运维运行检查"
+  short_description: "只读核验服务器、服务与项目健康，保留时间、来源和覆盖缺口"
+  default_prompt: "使用 $ops-inspect 检查指定项目或服务器，沿用已有运维记录并报告真实证据。"
+

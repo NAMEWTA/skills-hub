@@ -1,0 +1,4 @@
+interface:
+  display_name: "运维历史与交接"
+  short_description: "按项目或服务器追溯同一批操作记录与未知结果"
+  default_prompt: "使用 $ops-history 查询指定项目或服务器的运维时间线、实际结果和未完成事项。"

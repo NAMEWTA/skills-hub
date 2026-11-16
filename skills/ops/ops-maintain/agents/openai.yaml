@@ -1,0 +1,5 @@
+interface:
+  display_name: "服务器与服务维护"
+  short_description: "按实际资源影响维护主机和现有服务，核对变更集合与消费者结果"
+  default_prompt: "使用 $ops-maintain 完成明确范围的维护，先核对共享影响并沿用同一运维记录。"
+

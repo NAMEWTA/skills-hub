@@ -30,7 +30,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
-    if (selected.some(skill => ['dev', 'system'].includes(skill.domain))) {
+    if (selected.some(skill => ['dev', 'system', 'ops'].includes(skill.domain))) {
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
     const dryRun = argv.includes('--dry-run');
