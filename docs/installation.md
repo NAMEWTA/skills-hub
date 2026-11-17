@@ -120,6 +120,27 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 安装器会先备份再完整替换有差异的 `dev-workflow`，旧交接资源随整包替换移出运行目录，无需手动删文件。只新增 `dev-handoff` 而不更新旧 `dev-workflow` 会留下旧方法副本。项目已经创建的 `handoff.md`、规格、计划和其他业务记录不搬迁、不重写，继续引用原真实位置。完整能力与边界见[开发上下文交接](dev-handoff.md)。
 
+## 开发原型入口迁移
+
+`dev-prototype` 是独立的 dev 技能。默认把已确认文档转成沿项目风格的完整交互 HTML，记录用户对具体版本与范围的确认；原 `dev-build` 内的四份探索原型方法也完整迁入该包。安装器和 TUI 沿用动态发现，不需要另一个注册表或安装模式。树中搜索 `dev-prototype`、`原型` 或描述中的中文用途即可选择；确认原型的方法、模板、Node 指纹工具随整包复制。
+
+本次只交付源码，不代表 npm 新版已经发布。使用包含本变更的源码，在目标项目根更新整个 dev 领域，可同步所有调用者和迁移后的唯一方法：
+
+```bash
+node /path/to/skills-hub/install.mjs install --domain dev --dry-run
+node /path/to/skills-hub/install.mjs install --domain dev
+```
+
+只安装部分技能时，至少一起更新旧方法所在包与新入口，并更新实际已安装的相关调用者：
+
+```bash
+node /path/to/skills-hub/install.mjs install --skill dev-build dev-prototype
+```
+
+相关调用者包括 dev-workflow、dev-intake、dev-grill、dev-spec、dev-ui-design、dev-plan、dev-review、dev-verify、dev-handoff、dev-archive 和 dev-help。安装器不自动解析兄弟依赖；缺少所需入口时说明安装缺口，继续不依赖它的工作。只新增 dev-prototype 而不更新旧 dev-build，会保留旧探索方法副本。
+
+整包备份替换会移除 dev-build 内迁出的四份资源，不改写用户已经生成的规格、原型或确认记录。任意 dev 技能仍只初始化既有开发导航；实际 `prototype/index.html`、资源与 `prototype-review.md` 在运行技能时按需写入同一 change，不写进 `.agents/skills/`。已有原型保留实际位置，后续引用固定版本；无需为了安装搬迁业务资料。完整用法见[可视化意图确认](dev-prototype.md)。
+
 ## 合并后的 UI 入口
 
 `dev-figma-design` 已合并到 `dev-ui-design`。设计系统、颜色与语义 token、组件状态和视觉检查完整保留在新包内，直接用于项目代码，无需 Figma。

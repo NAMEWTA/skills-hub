@@ -64,6 +64,8 @@ Herdr 许可原文固定于提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` 的
 
 `dev-handoff` 复用已收录的 Matt handoff 与 pstack session-pickup、pause-safely 方法，适用上述现有 MIT 许可；本次为方法迁移与必要适配，不新增法律原文副本。Anthropic 和 OpenAI 官方文章/文档仅作具名方法参考，不收录 SDK、演示 harness 或文章全文；具体采用与改造见[开发交接说明](docs/dev-handoff.md)。
 
+`dev-prototype` 复用已收录 Speculo 的原型证据说明、完整采购申请引用示例及其 HTML/CSS/JS 的中文适配，并接管已有 Matt/pstack 探索方法；适用上述现有许可原文。采购示例不分发画廊的照片、品牌字体、图标库和其他页面分支。OpenAI、Anthropic、Google、Superpowers、GitHub Spec Kit 的其他资料只作方法研究，不复制全文或导入整库。逐项采用、固定来源与必要适配见[原型说明](docs/dev-prototype.md)和[维护记录](.agents/dev/changes/2026-11-17-dev-prototype/source-adaptations.md)。
+
 PR 原件附带的贡献者声明已完整保存在对照资料，README 集中致谢。Apache 许可原件的 Git blob 为 `d645695673349e3947e8e5ae42332d0ac3164cd7`，NOTICE 为 `9671676ba14c852a29dd87f22d2b63f207f0b941`，核对日期 2026-11-07。NOTICE 列出的其他软件组件没有随本项目收录。
 
 

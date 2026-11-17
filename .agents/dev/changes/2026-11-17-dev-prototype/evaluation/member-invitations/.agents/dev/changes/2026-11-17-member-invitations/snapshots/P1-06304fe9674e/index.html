@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>松林协作 · 成员邀请原型</title>
+  <style>
+    /* BASELINE: current/index.html 的布局、配色、密度与 720px 断点。 */
+    :root{--bg:#14202b;--surface:#1d2d3b;--line:#354755;--text:#edf3f7;--muted:#a8b7c2;--accent:#62d6b6;--danger:#ff9e9e;--radius:6px;--sidebar:204px;color-scheme:dark}
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,sans-serif}
+    body.drawer-open{overflow:hidden}
+    [hidden]{display:none!important}
+    .shell{display:grid;grid-template-columns:var(--sidebar) minmax(0,1fr);min-height:100vh}
+    aside{padding:24px 18px;border-right:1px solid var(--line)}
+    nav{margin-top:14px}
+    nav a{display:block;padding:10px;color:var(--muted);text-decoration:none}
+    nav a[aria-current]{background:var(--surface);color:var(--accent);border-radius:var(--radius)}
+    nav a[aria-disabled]{cursor:default}
+    main{padding:28px;max-width:1200px;min-width:0;width:100%}
+    .topbar{display:flex;gap:16px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:16px}
+    h1{font-size:22px;margin:0}
+    h2{font-size:17px;margin:0}
+    h3{font-size:16px;margin:0 0 12px}
+    p{margin:0 0 12px}
+    .breadcrumb{margin-bottom:6px}
+    .top-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+    .panel{margin-top:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+    .panel-heading{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+    .count{font-size:13px;color:var(--muted);font-weight:400}
+    button,input,select{font:inherit}
+    button{background:var(--accent);color:var(--bg);border:1px solid transparent;border-radius:var(--radius);padding:8px 14px;cursor:pointer;min-height:40px}
+    button:hover:not(:disabled){filter:brightness(1.06)}
+    button:disabled{cursor:not-allowed;opacity:.5}
+    .secondary{background:transparent;color:var(--text);border-color:var(--line)}
+    .danger{background:var(--danger);color:var(--bg)}
+    .danger-outline{background:transparent;color:var(--danger);border-color:var(--danger)}
+    .text-action{background:transparent;color:var(--accent);padding:6px 8px;min-height:36px;white-space:nowrap}
+    table{width:100%;border-collapse:collapse}
+    th,td{text-align:left;border-bottom:1px solid var(--line);padding:12px;vertical-align:middle}
+    th{font-weight:500;color:var(--muted);font-size:13px}
+    tbody tr:last-child td{border-bottom:0}
+    td.email{overflow-wrap:anywhere}
+    th:last-child,td:last-child{padding-right:4px}
+    .member-table td:first-child{min-width:88px}
+    .invitation-table td:first-child{width:56%}
+    .invitation-table td:not(:first-child){white-space:nowrap}
+    .muted{color:var(--muted)}
+    .small{font-size:13px}
+    .badge{display:inline-block;border:1px solid var(--line);border-radius:var(--radius);padding:2px 7px;font-size:12px;white-space:nowrap;color:var(--muted)}
+    .pending-badge{color:var(--accent);border-color:#3e6c66;background:#203e42}
+    .permission-note{margin:16px 0 0;padding:12px 14px;border-left:2px solid var(--muted);background:var(--surface);color:var(--muted)}
+    .feedback{margin-top:16px;padding:12px 14px;border:1px solid #3e6c66;border-radius:var(--radius);background:#203e42;color:var(--text);overflow-wrap:anywhere}
+    .empty-state{padding:28px 12px;text-align:center}
+    .empty-state h3{margin-bottom:6px}
+    .empty-state button{margin-top:8px}
+    :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* DEMO: 与业务面板分开的场景控制，不会调用任何网络服务。 */
+    .demo-panel{margin-top:28px;padding:16px 18px;border:1px dashed var(--line);border-radius:var(--radius)}
+    .demo-heading{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+    .demo-heading h2{font-size:14px}
+    .demo-controls{display:flex;align-items:end;flex-wrap:wrap;gap:12px;margin-top:16px}
+    .demo-controls label{display:grid;gap:6px;font-size:13px;color:var(--muted)}
+    .demo-controls select{min-width:168px}
+    .demo-controls button{font-size:13px}
+    select,input{background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:var(--radius);padding:9px 11px;min-height:42px;max-width:100%}
+    details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+    summary{cursor:pointer;color:var(--muted);font-size:13px}
+    .walkthrough{padding-left:22px;color:var(--muted);font-size:13px}
+    .walkthrough li{padding:4px 0}
+
+    /* DRAWER: 新增交互沿用基线 token；固定页头/页脚，正文独立滚动。 */
+    #invitation-drawer{position:fixed;inset:0 0 0 auto;margin:0;width:min(460px,100vw);max-width:100vw;height:100vh;height:100dvh;max-height:100dvh;padding:0;border:0;border-left:1px solid var(--line);background:var(--surface);color:var(--text);box-shadow:-16px 0 40px #0004;overflow:hidden}
+    #invitation-drawer[open]{display:grid;grid-template-rows:auto minmax(0,1fr) auto;animation:drawer-enter .16s ease-out}
+    #invitation-drawer::backdrop{background:#0c141ca6}
+    .drawer-header{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:22px 24px;border-bottom:1px solid var(--line)}
+    .drawer-header h2{font-size:20px;line-height:1.5}
+    .drawer-header .eyebrow{font-size:12px;color:var(--muted);margin:0 0 4px}
+    .close-button{padding:4px;width:36px;height:36px;min-height:36px;font-size:24px;line-height:1;border-color:transparent}
+    .drawer-body{padding:24px;overflow-y:auto;overscroll-behavior:contain;min-height:0}
+    .drawer-footer{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;padding:16px 24px;border-top:1px solid var(--line);background:var(--surface);padding-bottom:max(16px,env(safe-area-inset-bottom))}
+    .field{margin-top:24px}
+    .field label{display:block;font-weight:500;margin-bottom:8px}
+    .field input,.field select{width:100%}
+    .field .hint{margin:8px 0 0;font-size:13px;color:var(--muted)}
+    input[aria-invalid="true"]{border-color:var(--danger)}
+    .form-message{padding:12px 14px;margin-top:20px;border:1px solid var(--line);border-radius:var(--radius);font-size:14px}
+    .form-error{border-color:#8b5e65;background:#422f3a;color:#ffd2d2;overflow-wrap:anywhere}
+    .loading-message{display:flex;gap:10px;align-items:center;color:var(--muted)}
+    .spinner{display:inline-block;flex:none;width:15px;height:15px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite}
+    .detail-list{margin:24px 0}
+    .detail-list>div{border-bottom:1px solid var(--line);padding:14px 0}
+    .detail-list dt{font-size:13px;color:var(--muted);margin-bottom:6px}
+    .detail-list dd{margin:0;overflow-wrap:anywhere}
+    .detail-list>div:first-child{padding-top:0}
+    .success-mark{width:40px;height:40px;display:grid;place-items:center;border-radius:50%;background:#203e42;color:var(--accent);border:1px solid #3e6c66;margin-bottom:16px;font-size:22px}
+    .success-title{font-size:18px;margin-bottom:8px}
+    .warning-box{border:1px solid #8b5e65;border-radius:var(--radius);padding:14px;color:#ffd2d2;margin-top:22px}
+    .warning-box p:last-child{margin-bottom:0}
+    .wrap{overflow-wrap:anywhere}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes drawer-enter{from{transform:translateX(24px);opacity:.5}to{transform:translateX(0);opacity:1}}
+    @media(max-width:720px){
+      .shell{grid-template-columns:1fr}
+      aside{border-right:0;border-bottom:1px solid var(--line);padding:12px}
+      nav{display:flex;margin-top:6px;gap:4px}
+      main{padding:16px}
+      .topbar{align-items:flex-start}
+      .panel{padding:16px}
+      .top-actions{justify-content:flex-end}
+    }
+    @media(max-width:520px){
+      .topbar{flex-wrap:wrap}
+      .top-actions{width:100%;justify-content:space-between}
+      .responsive-table,.responsive-table tbody,.responsive-table tr,.responsive-table td{display:block;width:100%}
+      .responsive-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+      .responsive-table tr{padding:10px 0;border-bottom:1px solid var(--line)}
+      .responsive-table tr:last-child{border-bottom:0}
+      .responsive-table td{border:0;padding:5px 0;display:grid;grid-template-columns:54px minmax(0,1fr);gap:12px;white-space:normal!important}
+      .responsive-table td::before{content:attr(data-label);color:var(--muted);font-size:13px}
+      .invitation-table td:first-child{width:100%}
+      .responsive-table td:last-child{padding-right:0}
+      .responsive-table .text-action{justify-self:start;margin-left:-8px}
+      .demo-controls{align-items:stretch}
+      .demo-controls label{width:100%}
+      .demo-controls select{width:100%}
+      #invitation-drawer{width:100%;border-left:0}
+      .drawer-header{padding:18px 16px}
+      .drawer-body{padding:20px 16px}
+      .drawer-footer{padding-left:16px;padding-right:16px}
+      .drawer-footer button{flex:1}
+    }
+    @media(prefers-reduced-motion:reduce){#invitation-drawer[open],.spinner{animation:none}}
+  </style>
+</head>
+<body>
+  <div class="shell" id="workspace-shell">
+    <aside>
+      <strong>松林协作</strong>
+      <nav aria-label="工作区导航">
+        <a href="#members" aria-disabled="true" data-out-of-scope="概览" title="本次原型仅开放成员页">概览</a>
+        <a href="#members" aria-current="page">成员</a>
+        <a href="#members" aria-disabled="true" data-out-of-scope="设置" title="本次原型仅开放成员页">设置</a>
+      </nav>
+    </aside>
+    <main id="members">
+      <header class="topbar">
+        <div><p class="muted breadcrumb">工作区 / 团队</p><h1>成员</h1></div>
+        <div class="top-actions"><span class="badge" id="viewer-badge">管理员 · 林可</span><button type="button" id="invite-open" data-action="open-invite">邀请成员</button></div>
+      </header>
+      <p id="permission-note" class="permission-note" hidden>你当前以普通成员身份查看。只有管理员可以邀请成员或撤销邀请；你仍可查看成员和邀请详情。</p>
+      <div id="page-feedback" class="feedback" role="status" aria-live="polite" hidden></div>
+
+      <section class="panel" aria-labelledby="member-heading">
+        <div class="panel-heading"><h2 id="member-heading">工作区成员</h2><span class="count">2 人</span></div>
+        <table class="member-table responsive-table" aria-label="工作区成员列表">
+          <thead><tr><th scope="col">姓名</th><th scope="col">邮箱</th><th scope="col">角色</th></tr></thead>
+          <tbody>
+            <tr><td data-label="姓名">林可</td><td data-label="邮箱" class="email">lin@example.test</td><td data-label="角色">管理员</td></tr>
+            <tr><td data-label="姓名">许言</td><td data-label="邮箱" class="email">xu@example.test</td><td data-label="角色">成员</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="panel" aria-labelledby="invitation-heading">
+        <div class="panel-heading"><h2 id="invitation-heading" tabindex="-1">待接受邀请</h2><span id="invitation-count" class="count">1 条</span></div>
+        <p class="muted small">受邀者接受邀请后，才会加入工作区。</p>
+        <table id="invitation-table" class="invitation-table responsive-table" aria-label="待接受邀请列表">
+          <thead><tr><th scope="col">邮箱</th><th scope="col">角色</th><th scope="col">状态</th><th scope="col">操作</th></tr></thead>
+          <tbody id="invitation-rows"></tbody>
+        </table>
+        <div id="invitation-empty" class="empty-state" hidden>
+          <h3>暂无待接受邀请</h3>
+          <p class="muted" id="empty-description">邀请同事加入，一起协作。</p>
+          <button type="button" id="empty-invite-open" data-action="open-invite">邀请成员</button>
+        </div>
+      </section>
+
+      <section class="demo-panel" aria-labelledby="demo-heading">
+        <div class="demo-heading"><h2 id="demo-heading">原型演示</h2><span class="badge">虚构数据 · 本地模拟</span></div>
+        <p class="muted small">不会发送真实邮件。数据仅保存在当前页面，刷新或重置会恢复初始状态。</p>
+        <div class="demo-controls">
+          <label for="demo-role">查看身份<select id="demo-role"><option value="admin">管理员 · 林可</option><option value="member">普通成员 · 许言</option></select></label>
+          <label for="demo-outcome">发送结果<select id="demo-outcome"><option value="success">正常成功</option><option value="fail-once">下次失败，重试成功</option></select></label>
+          <button class="secondary" id="demo-empty" type="button">演示空态</button>
+          <button class="secondary" id="demo-long" type="button">演示长邮箱</button>
+          <button class="secondary" id="demo-reset" type="button">重置演示</button>
+        </div>
+        <details>
+          <summary>走查提示</summary>
+          <ol class="walkthrough">
+            <li>点击“邀请成员”，用新邮箱选择成员或只读角色；提交后观察等待、成功与列表新增。</li>
+            <li>试试空邮箱、错误格式、已有成员 <strong>lin@example.test</strong>，或重复邀请列表中的邮箱。</li>
+            <li>把发送结果切为“下次失败，重试成功”，提交后保留输入并重试。</li>
+            <li>点击邀请的“查看”，先取消一次撤销，再确认撤销；观察列表与数量变化。</li>
+            <li>切换普通成员查看权限说明；用“演示空态”“演示长邮箱”检查不同数据状态。</li>
+            <li>在窄屏打开抽屉；试用 Tab、Shift+Tab、Enter 和 Escape。发送中关闭抽屉会取消本次模拟请求。</li>
+          </ol>
+        </details>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="invitation-drawer" aria-labelledby="drawer-title">
+    <header class="drawer-header">
+      <div><p class="eyebrow">团队成员</p><h2 id="drawer-title" tabindex="-1">邀请成员</h2></div>
+      <button type="button" id="drawer-close" class="secondary close-button" aria-label="关闭抽屉">×</button>
+    </header>
+    <div id="drawer-body" class="drawer-body"></div>
+    <footer id="drawer-footer" class="drawer-footer"></footer>
+  </dialog>
+
+  <script>
+    'use strict';
+    // 所有状态仅存在内存；此文件没有 fetch、XHR、WebSocket、邮箱服务或外部依赖。
+    const MEMBERS = [{email:'lin@example.test'},{email:'xu@example.test'}];
+    const INITIAL_INVITATIONS = [{id:'inv-1',email:'chen.yu@example.test',role:'readonly',createdAt:'2026-11-17 09:30',invitedBy:'林可'}];
+    const LONG_EMAIL = 'collaboration.research.and.design.team@north-pine-workspace.example.test';
+    const SEND_DELAY = 1100;
+    const REVOKE_DELAY = 650;
+    const state = {
+      invitations:INITIAL_INVITATIONS.map(item=>({...item})),
+      viewer:'admin',outcome:'success',nextId:2,view:'closed',selectedId:null,
+      form:{email:'',role:'member',error:'',errorKind:''},pending:null,requestVersion:0
+    };
+    const $ = id=>document.getElementById(id);
+    const drawer = $('invitation-drawer');
+    let returnFocus = null;
+    const escapeHTML = value=>String(value).replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
+    const roleLabel = role=>role==='readonly'?'只读':'成员';
+    const isAdmin = ()=>state.viewer==='admin';
+    const selectedInvitation = ()=>state.invitations.find(item=>item.id===state.selectedId);
+    const normalizeEmail = email=>email.trim().toLowerCase();
+
+    function announce(message){
+      $('page-feedback').textContent=message;
+      $('page-feedback').hidden=false;
+    }
+
+    function clearFeedback(){
+      $('page-feedback').textContent='';
+      $('page-feedback').hidden=true;
+    }
+
+    function renderInvitations(){
+      $('invitation-count').textContent=`${state.invitations.length} 条`;
+      $('invitation-table').hidden=state.invitations.length===0;
+      $('invitation-empty').hidden=state.invitations.length!==0;
+      $('invitation-rows').innerHTML=state.invitations.map(item=>`
+        <tr data-invitation-id="${escapeHTML(item.id)}">
+          <td class="email" data-label="邮箱">${escapeHTML(item.email)}</td>
+          <td data-label="角色">${roleLabel(item.role)}</td>
+          <td data-label="状态"><span><span class="badge pending-badge">待接受</span></span></td>
+          <td data-label="操作"><button type="button" class="text-action" data-action="view-invitation" data-id="${escapeHTML(item.id)}" aria-label="查看 ${escapeHTML(item.email)} 的邀请详情">查看</button></td>
+        </tr>`).join('');
+    }
+
+    function renderPermissions(){
+      const admin=isAdmin();
+      $('viewer-badge').textContent=admin?'管理员 · 林可':'普通成员 · 许言';
+      $('permission-note').hidden=admin;
+      for(const id of ['invite-open','empty-invite-open']){
+        $(id).disabled=!admin;
+        if(admin) $(id).removeAttribute('aria-describedby');
+        else $(id).setAttribute('aria-describedby','permission-note');
+      }
+      $('empty-description').textContent=admin?'邀请同事加入，一起协作。':'只有管理员可以发起邀请。你可以查看成员和邀请详情。';
+      $('demo-role').value=state.viewer;
+      $('demo-outcome').value=state.outcome;
+    }
+
+    function renderPage(){renderInvitations();renderPermissions();}
+
+    function abortPending(){
+      state.requestVersion++;
+      if(state.pending) window.clearTimeout(state.pending.timer);
+      state.pending=null;
+    }
+
+    function focusAfterRender(targetId){
+      window.requestAnimationFrame(()=>{
+        if(drawer.open && $(targetId)) $(targetId).focus();
+      });
+    }
+
+    function openDrawer(view,trigger){
+      if(!drawer.open) returnFocus=trigger||document.activeElement;
+      state.view=view;
+      renderDrawer();
+      if(!drawer.open) drawer.showModal();
+      document.body.classList.add('drawer-open');
+      focusAfterRender(view==='create'?'invite-email':'drawer-title');
+    }
+
+    function closeDrawer(){
+      const cancelled=Boolean(state.pending);
+      abortPending();
+      state.view='closed';
+      if(drawer.open) drawer.close();
+      document.body.classList.remove('drawer-open');
+      const trigger=returnFocus;
+      returnFocus=null;
+      if(trigger && trigger.isConnected && !trigger.disabled && trigger.getClientRects().length){trigger.focus();}
+      else $('invitation-heading').focus();
+      if(cancelled) announce('已取消本次操作，邀请列表未改变。');
+    }
+
+    function openCreate(trigger){
+      if(!isAdmin()){announce('只有管理员可以邀请成员。');return;}
+      abortPending();
+      clearFeedback();
+      state.form={email:'',role:'member',error:'',errorKind:''};
+      state.selectedId=null;
+      openDrawer('create',trigger);
+    }
+
+    function openDetails(id,trigger){
+      if(!state.invitations.some(item=>item.id===id)) return;
+      abortPending();
+      state.selectedId=id;
+      openDrawer('details',trigger);
+    }
+
+    function detailMarkup(item){
+      return `<dl class="detail-list">
+        <div><dt>邮箱</dt><dd>${escapeHTML(item.email)}</dd></div>
+        <div><dt>角色</dt><dd>${roleLabel(item.role)}</dd></div>
+        <div><dt>状态</dt><dd><span class="badge pending-badge">待接受</span></dd></div>
+        <div><dt>邀请时间</dt><dd>${escapeHTML(item.createdAt)}</dd></div>
+        <div><dt>邀请人</dt><dd>${escapeHTML(item.invitedBy)}</dd></div>
+      </dl>`;
+    }
+
+    function renderDrawer(){
+      const busy=Boolean(state.pending);
+      drawer.setAttribute('aria-busy',String(busy));
+      if(state.view==='create'){
+        const fieldError=state.form.errorKind==='field';
+        $('drawer-title').textContent='邀请成员';
+        $('drawer-body').innerHTML=`
+          <p class="muted">通过邮箱邀请同事加入松林协作。</p>
+          <form id="invite-form" novalidate>
+            <div class="field"><label for="invite-email">邮箱 <span class="muted small">（必填）</span></label>
+              <input id="invite-email" name="email" type="email" autocomplete="off" inputmode="email" spellcheck="false" maxlength="254" required value="${escapeHTML(state.form.email)}" placeholder="name@example.test" aria-invalid="${fieldError}" aria-describedby="email-hint${fieldError?' form-error':''}" ${busy?'disabled':''}>
+              <p id="email-hint" class="hint">输入受邀者的邮箱地址。</p>
+            </div>
+            <div class="field"><label for="invite-role">工作区角色</label>
+              <select id="invite-role" name="role" aria-describedby="role-hint" ${busy?'disabled':''}><option value="member" ${state.form.role==='member'?'selected':''}>成员</option><option value="readonly" ${state.form.role==='readonly'?'selected':''}>只读</option></select>
+              <p id="role-hint" class="hint">${state.form.role==='readonly'?'只读成员可以查看工作区内容，不能编辑。':'成员可以参与工作区协作与编辑。'}</p>
+            </div>
+            <div id="form-error" class="form-message form-error" role="alert" tabindex="-1" ${state.form.error?'':'hidden'}>${escapeHTML(state.form.error)}</div>
+            <div id="send-progress" class="form-message loading-message" role="status" ${busy?'':'hidden'}><span class="spinner" aria-hidden="true"></span><span>正在发送邀请，请稍候…</span></div>
+          </form>`;
+        $('drawer-footer').innerHTML=`<button type="button" class="secondary" data-action="close-drawer">${busy?'取消发送':'取消'}</button><button type="submit" form="invite-form" id="invite-submit" ${busy?'disabled':''}>${busy?'发送中…':state.form.errorKind==='send'?'重试邀请':'发送邀请'}</button>`;
+      }else if(state.view==='details'){
+        const item=selectedInvitation();
+        if(!item){closeDrawer();return;}
+        $('drawer-title').textContent='邀请详情';
+        $('drawer-body').innerHTML=`<p class="muted">此邀请尚未被接受。</p>${detailMarkup(item)}${isAdmin()?'':`<p class="permission-note" id="detail-permission">只有管理员可以撤销邀请。你当前以普通成员身份查看。</p>`}`;
+        $('drawer-footer').innerHTML=`<button type="button" class="secondary" data-action="close-drawer">关闭</button><button type="button" id="revoke-open" class="danger-outline" data-action="request-revoke" ${isAdmin()?'':'disabled aria-describedby="detail-permission"'}>撤销邀请</button>`;
+      }else if(state.view==='success'){
+        const item=selectedInvitation();
+        if(!item){closeDrawer();return;}
+        $('drawer-title').textContent='邀请已发送';
+        $('drawer-body').innerHTML=`<div class="success-mark" aria-hidden="true">✓</div><h3 class="success-title">等待对方加入</h3><p class="muted wrap">已邀请 ${escapeHTML(item.email)}。这条邀请已出现在待接受列表中。</p>${detailMarkup(item)}`;
+        $('drawer-footer').innerHTML=`<button type="button" class="secondary" data-action="continue-inviting">继续邀请</button><button type="button" data-action="close-drawer">返回列表</button>`;
+      }else if(state.view==='revoke'){
+        const item=selectedInvitation();
+        if(!item){closeDrawer();return;}
+        $('drawer-title').textContent='确认撤销邀请';
+        $('drawer-body').innerHTML=`<p>撤销以下待接受邀请？</p><p class="wrap"><strong>${escapeHTML(item.email)}</strong></p><p class="muted">工作区角色：${roleLabel(item.role)}</p><div class="warning-box"><p>撤销后，对方将无法通过这条邀请加入工作区。</p><p>需要时，你可以重新邀请对方。</p></div>${busy?'<div class="form-message loading-message" role="status"><span class="spinner" aria-hidden="true"></span><span>正在撤销邀请…</span></div>':''}`;
+        $('drawer-footer').innerHTML=`<button type="button" class="secondary" id="revoke-cancel" data-action="cancel-revoke">${busy?'取消撤销':'保留邀请'}</button><button type="button" id="revoke-confirm" class="danger" data-action="confirm-revoke" ${busy?'disabled':''}>${busy?'撤销中…':'确认撤销'}</button>`;
+      }
+    }
+
+    function validateEmail(raw){
+      const email=normalizeEmail(raw);
+      if(!email) return '请输入邮箱地址。';
+      if(email.length>254 || !/^[^\s@]+@[^\s@.]+(?:\.[^\s@.]+)+$/.test(email) || !$('invite-email').validity.valid) return '请输入完整且有效的邮箱，例如 name@example.test。';
+      if(MEMBERS.some(item=>normalizeEmail(item.email)===email)) return '该邮箱已经是工作区成员，无需再次邀请。';
+      if(state.invitations.some(item=>normalizeEmail(item.email)===email)) return '该邮箱已有待接受邀请，可返回列表查看详情。';
+      return '';
+    }
+
+    function submitInvitation(){
+      if(state.pending || state.view!=='create') return;
+      if(!isAdmin()){announce('只有管理员可以邀请成员。');closeDrawer();return;}
+      state.form.email=$('invite-email').value;
+      state.form.role=$('invite-role').value;
+      const error=validateEmail(state.form.email);
+      if(error){
+        state.form.error=error;state.form.errorKind='field';renderDrawer();focusAfterRender('invite-email');return;
+      }
+      const email=normalizeEmail(state.form.email);
+      const role=state.form.role;
+      const willFail=state.outcome==='fail-once';
+      state.form.error='';state.form.errorKind='';
+      const requestVersion=++state.requestVersion;
+      const timer=window.setTimeout(()=>{
+        if(requestVersion!==state.requestVersion) return;
+        state.pending=null;
+        if(!isAdmin()){closeDrawer();announce('当前身份没有邀请权限，未创建邀请。');return;}
+        if(willFail){
+          state.outcome='success';renderPermissions();
+          state.form.error='发送失败：邀请服务暂时无法响应。邮箱与角色已保留，请重试。';
+          state.form.errorKind='send';renderDrawer();focusAfterRender('form-error');return;
+        }
+        // 在模拟提交完成时再次去重；生产必须由服务端原子保证。
+        if(state.invitations.some(item=>normalizeEmail(item.email)===email)){
+          state.form.error='该邮箱已有待接受邀请，可返回列表查看详情。';state.form.errorKind='field';renderDrawer();focusAfterRender('invite-email');return;
+        }
+        const item={id:`inv-${state.nextId++}`,email,role,createdAt:'2026-11-17 10:00（演示）',invitedBy:'林可'};
+        state.invitations.unshift(item);state.selectedId=item.id;state.view='success';
+        renderPage();renderDrawer();announce(`邀请已发送至 ${email}，等待对方接受。`);focusAfterRender('drawer-title');
+      },SEND_DELAY);
+      state.pending={kind:'send',timer};renderDrawer();focusAfterRender('drawer-close');
+    }
+
+    function requestRevoke(){
+      if(!isAdmin() || state.pending || state.view!=='details') return;
+      state.view='revoke';renderDrawer();focusAfterRender('revoke-cancel');
+    }
+
+    function cancelRevoke(){
+      abortPending();state.view='details';renderDrawer();focusAfterRender('revoke-open');
+    }
+
+    function confirmRevoke(){
+      if(!isAdmin() || state.pending || state.view!=='revoke') return;
+      const item=selectedInvitation();
+      if(!item) return;
+      const requestVersion=++state.requestVersion;
+      const timer=window.setTimeout(()=>{
+        if(requestVersion!==state.requestVersion) return;
+        state.pending=null;
+        if(!isAdmin()){closeDrawer();announce('当前身份没有撤销权限，邀请仍然保留。');return;}
+        state.invitations=state.invitations.filter(invitation=>invitation.id!==item.id);
+        renderInvitations();closeDrawer();announce(`已撤销 ${item.email} 的邀请。`);
+      },REVOKE_DELAY);
+      state.pending={kind:'revoke',timer};renderDrawer();focusAfterRender('revoke-cancel');
+    }
+
+    function resetDemo(){
+      if(drawer.open) closeDrawer();
+      abortPending();
+      state.invitations=INITIAL_INVITATIONS.map(item=>({...item}));
+      state.viewer='admin';state.outcome='success';state.nextId=2;state.selectedId=null;
+      state.form={email:'',role:'member',error:'',errorKind:''};state.view='closed';
+      renderPage();announce('已恢复初始演示数据：管理员身份、正常发送、1 条待接受邀请。');
+    }
+
+    document.addEventListener('click',event=>{
+      const outOfScope=event.target.closest('[data-out-of-scope]');
+      if(outOfScope){event.preventDefault();announce(`本次原型仅开放成员页，${outOfScope.dataset.outOfScope}导航位置已保留。`);return;}
+      const button=event.target.closest('button[data-action]');
+      if(!button || button.disabled) return;
+      switch(button.dataset.action){
+        case 'open-invite':openCreate(button);break;
+        case 'view-invitation':openDetails(button.dataset.id,button);break;
+        case 'close-drawer':closeDrawer();break;
+        case 'continue-inviting':openCreate();break;
+        case 'request-revoke':requestRevoke();break;
+        case 'cancel-revoke':cancelRevoke();break;
+        case 'confirm-revoke':confirmRevoke();break;
+      }
+    });
+    drawer.addEventListener('submit',event=>{if(event.target.id==='invite-form'){event.preventDefault();submitInvitation();}});
+    drawer.addEventListener('input',event=>{
+      if(event.target.id!=='invite-email') return;
+      state.form.email=event.target.value;
+      if(state.form.errorKind==='field'){
+        state.form.error='';state.form.errorKind='';$('form-error').hidden=true;
+        event.target.setAttribute('aria-invalid','false');event.target.setAttribute('aria-describedby','email-hint');
+      }
+    });
+    drawer.addEventListener('change',event=>{
+      if(event.target.id==='invite-role'){
+        state.form.role=event.target.value;
+        $('role-hint').textContent=state.form.role==='readonly'?'只读成员可以查看工作区内容，不能编辑。':'成员可以参与工作区协作与编辑。';
+      }
+    });
+    $('drawer-close').addEventListener('click',closeDrawer);
+    drawer.addEventListener('cancel',event=>{event.preventDefault();closeDrawer();});
+    drawer.addEventListener('click',event=>{
+      const rect=drawer.getBoundingClientRect();
+      if(event.target===drawer && (event.clientX<rect.left || event.clientX>rect.right || event.clientY<rect.top || event.clientY>rect.bottom)) closeDrawer();
+    });
+    $('demo-role').addEventListener('change',event=>{
+      if(drawer.open) closeDrawer();
+      abortPending();state.viewer=event.target.value;renderPage();
+      announce(isAdmin()?'已切换为管理员，可以邀请成员和撤销邀请。':'已切换为普通成员，可查看列表和详情；创建与撤销不可用。');
+    });
+    $('demo-outcome').addEventListener('change',event=>{
+      state.outcome=event.target.value;
+      announce(state.outcome==='fail-once'?'下一次有效发送将模拟失败，随后可直接重试成功。':'发送结果已切换为正常成功。');
+    });
+    $('demo-empty').addEventListener('click',()=>{
+      abortPending();state.invitations=[];renderPage();announce('已切换为空态演示；可用“重置演示”恢复初始邀请。');
+    });
+    $('demo-long').addEventListener('click',()=>{
+      abortPending();
+      if(!state.invitations.some(item=>item.email===LONG_EMAIL)) state.invitations.push({id:`inv-${state.nextId++}`,email:LONG_EMAIL,role:'member',createdAt:'2026-11-17 09:45',invitedBy:'林可'});
+      renderPage();announce('已加入一条长邮箱示例，可打开详情并缩窄窗口检查换行。');
+    });
+    $('demo-reset').addEventListener('click',resetDemo);
+    renderPage();
+  </script>
+</body>
+</html>
