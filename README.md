@@ -88,7 +88,7 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 
 ## dev：完整开发流程
 
-共 31 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，跨阶段任务用 `dev-workflow`，明确阶段直接使用对应技能；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
+共 32 个开发技能。初次使用可以先用 `dev-setup` 核对可用工具与模型角色，跨阶段任务用 `dev-workflow`，明确阶段直接使用对应技能；不确定入口时用 `dev-help`。模型配置是按实际能力选择的可选约定，不是固定厂商、固定推理预算或自动安装步骤。
 
 | 技能 | 用途 |
 | --- | --- |
@@ -109,6 +109,7 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 | [dev-sharpen](skills/dev/dev-sharpen/SKILL.md) | 用四问深化待执行请求、原始材料、方法与独立证据 |
 | [dev-parallel](skills/dev/dev-parallel/SKILL.md) | 分工覆盖、多个候选比选、交叉评审与统一集成 |
 | [dev-ui-design](skills/dev/dev-ui-design/SKILL.md) | 产品界面、设计系统与落地页，完整 token、组件状态与视觉规范 |
+| [dev-prototype](skills/dev/dev-prototype/SKILL.md) | 将完整需求转为遵循项目风格的交互 HTML，记录真实用户确认及固定版本，贯穿实施验收 |
 | [dev-build](skills/dev/dev-build/SKILL.md) | 根据规格实施、集成并验证当前成果 |
 | [dev-tdd](skills/dev/dev-tdd/SKILL.md) | 在真实公共接口逐行为进行红绿循环，保留能经受重构的测试 |
 | [dev-guardrails](skills/dev/dev-guardrails/SKILL.md) | 把重复问题转为类型、接口、lint、预算与其他结构约束 |
@@ -136,6 +137,9 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 使用 dev-handoff：保存当前开发上下文，下一次重点完成剩余验证。
 引用已有规格和证据，保存后继续当前任务。
 
+使用 dev-prototype：完整理解这个 change 的最终文档，沿用当前项目风格，
+把全部用户旅程做成可交互 HTML，让我实际体验并确认，再据此实施。
+
 使用 dev-archive：这个需求已经上线。核对当前代码和发布记录，
 更新术语、ADR 和错误经验，处理已经冲突的旧文档。
 ```
@@ -143,6 +147,8 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 `$dev-workflow` 等调用语法由具体 Agent 决定；普通语言指定技能也可以。详细衔接与例子见 [开发流程](docs/workflow.md)。
 
 `dev-handoff` 可以独立安装，只服务开发任务，记录沿用 `.agents/dev/changes/<日期-主题>/handoff.md`。保存、跨会话接续与明确暂停的区别、来源方法和必要适配见[开发上下文交接](docs/dev-handoff.md)。已有 `dev-workflow` 的项目按[交接入口迁移](docs/installation.md#开发交接入口迁移)一起更新；新增能力尚未包含在所用 npm 版本时，使用包含该变更的源码安装。
+
+`dev-prototype` 将文字对齐后的需求变成可以亲自操作的确认依据。用户确认过的 HTML/CSS/JS 决定其覆盖范围内的布局和交互；文档解释意图、业务边界与证据位置，任务安排实现。默认保存在同一 change 的 `prototype/index.html` 与 `prototype-review.md`，实际用户确认和浏览器自检分别记实。原有探索方法从 dev-build 唯一迁入该技能，完整保留。使用和来源见[可视化意图确认](docs/dev-prototype.md)，更新方法见[原型入口迁移](docs/installation.md#开发原型入口迁移)。本次未增加 npm 版本，先使用包含该变更的源码。
 
 ## 怎样组合工程实践与验证闭环
 
@@ -286,6 +292,8 @@ node scripts/install-hooks.mjs
 任务与计划交接还对照 [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices)、[Claude 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)及 [OpenAI 技能评测](https://developers.openai.com/blog/eval-skills)：在既有切片与多阶段方法中补足可接手上下文、可观察验收和风险适配，不移植整套官方示例模板。逐项原文、保留内容与必要适配见[维护记录](.agents/dev/changes/2026-11-11-dev-plan-task-handoffs/source-adaptations.md)，该记录说明当时的对照范围，不代表当前材料或运行版的升级验收。
 
 `dev-handoff` 继续采用已收录的 Matt handoff 与 pstack 会话接续、安全暂停完整方法，并对照 Anthropic/Claude 的上下文工程、长任务接续与技能编写文章，以及 OpenAI Agents SDK 的 handoff/context 文档。具体采用内容、保留步骤与适配理由见[开发上下文交接](docs/dev-handoff.md)；官方文章仅作方法对照，未转载全文，也未作为新增整库材料收录。
+
+`dev-prototype` 复用 Speculo 的原型证据方法与完整采购申请引用示例，迁入已有 Matt/pstack 探索方法，并研究 OpenAI、Anthropic、Google/Gemini、Superpowers 和 GitHub Spec Kit 的设计上下文、交互反馈与实际验证做法。完整来源、版本、保留与改造见[调研与迁移决策](docs/dev-prototype.md#调研与具体参考)。最新研究和已收录快照分开记录，不宣称整个上游已同步；其他文章只作方法参考。
 
 项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发；自有领域使用集中许可，独立上游包另外随技能携带适用法律文件。安装器不创建项目级许可目录，再次分发时须保留适用许可。
 

@@ -115,7 +115,7 @@ skills/dev/dev-debug/references/module-exploration.md	skills/dev/dev-learn/refer
 skills/dev/dev-debug/references/outcome-execution.md	skills/dev/dev-guardrails/references/outcome-execution.md
 skills/dev/dev-debug/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
 skills/dev/dev-debug/references/perf-issue.md	skills/dev/dev-benchmark/references/performance-issue.md
-skills/dev/dev-debug/references/prototype.md	skills/dev/dev-build/references/prototype.md
+skills/dev/dev-debug/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
 skills/dev/dev-debug/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-debug/references/runtime-forensics.md	skills/dev/dev-benchmark/references/runtime-forensics.md
 skills/dev/dev-debug/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
@@ -176,10 +176,10 @@ skills/dev/dev-deploy/references/verification-maintenance.md	skills/dev/dev-veri
 skills/dev/dev-grill/references/decision-format.md	skills/dev/dev-archive/references/decision-format.md
 skills/dev/dev-grill/references/domain-modeling.md	skills/dev/dev-architecture/references/domain-modeling.md
 skills/dev/dev-grill/references/glossary-format.md	skills/dev/dev-archive/references/glossary-format.md
-skills/dev/dev-grill/references/logic-prototype.md	skills/dev/dev-build/references/logic-prototype.md
-skills/dev/dev-grill/references/prototype-method.md	skills/dev/dev-build/references/prototype-method.md
+skills/dev/dev-grill/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
+skills/dev/dev-grill/references/prototype-method.md	skills/dev/dev-prototype/references/prototype-method.md
 skills/dev/dev-grill/references/research-method.md	skills/dev/dev-plan/references/research-method.md
-skills/dev/dev-grill/references/ui-prototype.md	skills/dev/dev-build/references/ui-prototype.md
+skills/dev/dev-grill/references/ui-prototype.md	skills/dev/dev-prototype/references/ui-prototype.md
 skills/dev/dev-guardrails/references/guide-principles.md	skills/dev/dev-help/references/guide-principles.md
 skills/dev/dev-guardrails/references/measurement-checklist.md	skills/dev/dev-benchmark/references/measurement-checklist.md
 skills/dev/dev-help/references/context/personal/assets/action-contract.md	skills/dev/dev-build/assets/action-contract.md
@@ -314,7 +314,7 @@ skills/dev/dev-help/references/workflow/references/parallel-coverage.md	skills/d
 skills/dev/dev-help/references/workflow/references/perf-issue.md	skills/dev/dev-benchmark/references/performance-issue.md
 skills/dev/dev-help/references/workflow/references/phase-boundaries.md	skills/dev/dev-workflow/references/phase-boundaries.md
 skills/dev/dev-help/references/workflow/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
-skills/dev/dev-help/references/workflow/references/prototype.md	skills/dev/dev-build/references/prototype.md
+skills/dev/dev-help/references/workflow/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
 skills/dev/dev-help/references/workflow/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-help/references/workflow/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-help/references/workflow/references/reflection-method.md	skills/dev/dev-archive/references/parallel-retrospective.md
@@ -506,9 +506,9 @@ skills/dev/dev-plan/references/decision-interview.md	skills/dev/dev-grill/refere
 skills/dev/dev-plan/references/domain-modeling.md	skills/dev/dev-architecture/references/domain-modeling.md
 skills/dev/dev-plan/references/feature-execution.md	skills/dev/dev-build/references/feature-delivery.md
 skills/dev/dev-plan/references/glossary-format.md	skills/dev/dev-archive/references/glossary-format.md
-skills/dev/dev-plan/references/logic-prototype.md	skills/dev/dev-build/references/logic-prototype.md
-skills/dev/dev-plan/references/prototype-method.md	skills/dev/dev-build/references/prototype-method.md
-skills/dev/dev-plan/references/ui-prototype.md	skills/dev/dev-build/references/ui-prototype.md
+skills/dev/dev-plan/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
+skills/dev/dev-plan/references/prototype-method.md	skills/dev/dev-prototype/references/prototype-method.md
+skills/dev/dev-plan/references/ui-prototype.md	skills/dev/dev-prototype/references/ui-prototype.md
 skills/dev/dev-review/references/architecture-method.md	skills/dev/dev-architecture/references/architecture-method.md
 skills/dev/dev-review/references/autonomy-boundaries.md	skills/dev/dev-guardrails/references/authorized-progress.md
 skills/dev/dev-review/references/behavior-verification.md	skills/dev/dev-guardrails/references/behavior-tests.md
@@ -628,9 +628,9 @@ skills/dev/dev-tdd/references/type-discipline.md	skills/dev/dev-guardrails/refer
 skills/dev/dev-tdd/references/typescript-method.md	skills/dev/dev-guardrails/references/typescript-method.md
 skills/dev/dev-tdd/references/typescript-patterns.md	skills/dev/dev-guardrails/references/typescript-patterns.md
 skills/dev/dev-tdd/references/verified-landing.md	skills/dev/dev-deploy/references/verified-landing.md
-skills/dev/dev-ui-design/references/logic-prototype.md	skills/dev/dev-build/references/logic-prototype.md
-skills/dev/dev-ui-design/references/prototype.md	skills/dev/dev-build/references/prototype-method.md
-skills/dev/dev-ui-design/references/ui-prototype.md	skills/dev/dev-build/references/ui-prototype.md
+skills/dev/dev-ui-design/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
+skills/dev/dev-ui-design/references/prototype.md	skills/dev/dev-prototype/references/prototype-method.md
+skills/dev/dev-ui-design/references/ui-prototype.md	skills/dev/dev-prototype/references/ui-prototype.md
 skills/dev/dev-verify/assets/check-record.md	skills/dev/dev-formal-verify/assets/check-record.md
 skills/dev/dev-verify/assets/example/implementation.mjs	skills/dev/dev-formal-verify/assets/example/implementation.mjs
 skills/dev/dev-verify/assets/example/model.mjs	skills/dev/dev-formal-verify/assets/example/model.mjs
@@ -774,7 +774,7 @@ skills/dev/dev-workflow/references/principles/type-discipline.md	skills/dev/dev-
 skills/dev/dev-workflow/references/principles/typescript-method.md	skills/dev/dev-guardrails/references/typescript-method.md
 skills/dev/dev-workflow/references/principles/typescript-patterns.md	skills/dev/dev-guardrails/references/typescript-patterns.md
 skills/dev/dev-workflow/references/principles/verifiable-units.md	skills/dev/dev-guardrails/references/verifiable-units.md
-skills/dev/dev-workflow/references/prototype.md	skills/dev/dev-build/references/prototype.md
+skills/dev/dev-workflow/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
 skills/dev/dev-workflow/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-workflow/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-workflow/references/reflection-method.md	skills/dev/dev-archive/references/parallel-retrospective.md
@@ -809,3 +809,7 @@ skills/dev/dev-workflow/assets/handoff.md	skills/dev/dev-handoff/assets/handoff.
 skills/dev/dev-workflow/references/handoff-method.md	skills/dev/dev-handoff/references/handoff-method.md
 skills/dev/dev-workflow/references/session-resume.md	skills/dev/dev-handoff/references/session-resume.md
 skills/dev/dev-workflow/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
+skills/dev/dev-build/references/prototype-method.md	skills/dev/dev-prototype/references/prototype-method.md
+skills/dev/dev-build/references/ui-prototype.md	skills/dev/dev-prototype/references/ui-prototype.md
+skills/dev/dev-build/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
+skills/dev/dev-build/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
