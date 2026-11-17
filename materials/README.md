@@ -20,12 +20,13 @@
 | [openai-sentry](openai-sentry/manifest.tsv) | `skills/.curated/sentry` | ops 只读观测 |
 | [archify](archify/manifest.tsv) | `archify` | 独立 `zh-archify` 技能 |
 | [modern-web-guidance](modern-web-guidance/manifest.tsv) | `skills` | 独立 `zh-modern-web-guidance`、`zh-chrome-extensions` 技能 |
+| [dashboard-design-skill](dashboard-design-skill/manifest.tsv) | `skills/dashboard-design` | 独立 `zh-dashboard-design` 仪表盘设计技能 |
 
 显式同步先解析所选 `ref`，再固定同一个提交读取原件、生成对照与差异。`ref=HEAD` 表示每次解析远端默认分支；Speculo 使用这一约定。其他单元按父清单中的命名分支跟踪。普通校验与 CI 不自动刷新来源。
 
 ## 物理布局与内容规则
 
-Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`。中文底稿保留原 name，运行包使用 `zh-` 名称。安装与维护见[独立上游技能](../docs/upstream-skills.md)。
+Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`；Dashboard Design 的 `upstream/SKILL.md` 对应来源 `skills/dashboard-design/SKILL.md`。中文底稿保留原 name，运行包使用 `zh-` 名称。安装与维护见[独立上游技能](../docs/upstream-skills.md)。
 
 ```text
 materials/

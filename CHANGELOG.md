@@ -2,6 +2,10 @@
 
 ## 未发布
 
+- 新增独立中文技能 `zh-dashboard-design`，完整对应 Otabek Abdiraimov 的 Dashboard Design 2.1.0：入口与十份参考涵盖 KPI、图表、热力图、目标卡片、响应式布局、Web 与 SwiftUI 的截图 QA。
+- 建立固定提交的 11 份原文与中文底稿、逐文件 Git blob 和 SHA-256 映射；保留 React/TypeScript、Tailwind、SwiftUI、CSS 代码块与作者署名规则，并集中登记 MIT 许可。
+- 新技能可通过 CLI/TUI 单独选取或与其他领域技能混选，不改动已有 dev 方法职责、安装器与发布版本。
+
 ## 0.1.14 — 2026-11-17
 
 - 保留现有 dev 技能与 ID，明确需求整理、决策访谈、行为规格和请求改写的触发边界，完整实施简报归 `dev-spec`。
