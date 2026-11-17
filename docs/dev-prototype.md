@@ -33,19 +33,20 @@
 
 ### 安装和 TUI
 
-本 change 不增加 npm 版本号，也不执行 npm 发版；请使用包含此变更的源码。在目标项目根目录运行更新后的安装器：
+`dev-prototype` 从 `0.1.12` 起随 npm 包提供。在目标项目根目录更新整个 dev 领域，可让调用者与迁移后的方法同时生效：
 
 ```bash
-node /path/to/skills-hub/install.mjs install --domain dev
+npx @namewta/skills-hub@0.1.12 install --domain dev --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain dev
 ```
 
 部分安装至少一起更新旧方法所有者和新入口：
 
 ```bash
-node /path/to/skills-hub/install.mjs install --skill dev-build dev-prototype
+npx @namewta/skills-hub@0.1.12 install --skill dev-build dev-prototype
 ```
 
-完整流程建议更新整个 dev 域，让规格、UI、计划、实施、审查、验证和交接引用同时生效。安装器不自动安装兄弟依赖。TUI 沿用原有动态发现，新技能位于 dev 域，可以用 `dev-prototype`、“原型”或“可视化”搜索和选择，无需注册表或新的交互界面。
+完整流程建议更新整个 dev 域，让规格、UI、计划、实施、审查、验证和交接引用同时生效。安装器不自动安装兄弟依赖。运行 `npx @namewta/skills-hub@0.1.12` 进入 TUI；新技能位于 dev 域，可以用 `dev-prototype`、“原型”或“可视化”搜索和选择，与 `upstream-skills` 分组中的技能混选。TUI 沿用原有动态发现，无需注册表或新的交互界面。源码安装仍可运行 `node /path/to/skills-hub/install.mjs` 并使用相同参数。
 
 安装器复制整个技能资源包；更新旧 dev-build 时四份原型方法随整包替换移出运行目录。用户已有 change 与业务原型不搬迁、不删除，详见[迁移说明](installation.md#开发原型入口迁移)。
 

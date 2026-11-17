@@ -2,20 +2,20 @@
 
 ## 分发内容
 
-包名为 `@namewta/skills-hub`，当前包版本为 `0.1.11`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.11`（分页树形搜索交互）或 `npx @namewta/skills-hub@0.1.11 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
+包名为 `@namewta/skills-hub`，当前包版本为 `0.1.12`。下文 `0.0.8` 的迁移与重试示例保留为历史说明；当前安装推荐 `npx @namewta/skills-hub@0.1.12`（分页树形搜索交互）或 `npx @namewta/skills-hub@0.1.12 install --domain dev`。需要 Node.js 22.14+，安装器和运行工具使用 JavaScript，不需要 Python 或 TypeScript 编译器。
 
 在目标项目根目录运行：
 
 ```sh
-npx @namewta/skills-hub@0.1.11 list
-npx @namewta/skills-hub@0.1.11 install --domain dev
-npx @namewta/skills-hub@0.1.11 install --skill dev-spec system-proxy
-npx @namewta/skills-hub@0.1.11 install --domain dev --replace
+npx @namewta/skills-hub@0.1.12 list
+npx @namewta/skills-hub@0.1.12 install --domain dev
+npx @namewta/skills-hub@0.1.12 install --skill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.12 install --domain dev --replace
 ```
 
 `npx` 负责取得 npm 包，安装器按明确选择把完整技能复制到当前项目的 `.agents/skills/`；自有领域许可集中保留，独立上游包的法律文件随技能一起复制，不另建项目许可目录。包没有安装后自动执行的 lifecycle hook。源码方式仍可使用 `node /path/to/skills-hub/install.mjs`，参数一致。
 
-`package.json` 的文件白名单只分发安装器、交互 CLI、`scripts/init-persistence.mjs` 及 `scripts/persistence/` 固定模板、`skills/` 与 `upstream-skills/` 两类技能、许可、README 与法律说明。选择 dev/system/ops 技能时由安装代码按领域补齐缺失导航，不依赖技能执行；这些安装资源不复制进目标技能目录。交互 UI 依赖由 npm 安装；实际 tarball 检查允许正常解析这些依赖，再验证包内命令、文件复制与重复安装；无依赖夹具继续验证完全离线 npm 安装。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.1.11.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
+`package.json` 的文件白名单只分发安装器、交互 CLI、`scripts/init-persistence.mjs` 及 `scripts/persistence/` 固定模板、`skills/` 与 `upstream-skills/` 两类技能、许可、README 与法律说明。选择 dev/system/ops 技能时由安装代码按领域补齐缺失导航，不依赖技能执行；这些安装资源不复制进目标技能目录。交互 UI 依赖由 npm 安装；实际 tarball 检查允许正常解析这些依赖，再验证包内命令、文件复制与重复安装；无依赖夹具继续验证完全离线 npm 安装。`materials/`、开发测试、维护工具和凭据不进入 npm 包；源码仓库继续保留完整来源对照。本次 scoped 包的发布附件为 `namewta-skills-hub-0.1.12.tgz`，是实际提交到 npm 的同一个压缩包，同时提供 `SHA256SUMS`。
 
 ## 仓库与旧版迁移
 
@@ -58,7 +58,9 @@ npm version patch --no-git-tag-version
 
 工作流先固定提交及版本，将准备阶段的同一个 SHA 显式传给[跨平台验证](../.github/workflows/validate.yml)和发布任务，不在验证时重新解析标签。Linux 检查最低 Node.js 22.14.0，Windows 与 macOS 检查 Node.js 24；执行全部维护测试、状态图捕获轨迹回放，以及实际 npm 包的安装与命令验证。Linux 另运行 `npm run check:upstream`，检查已安装 Archify 的完整 finalize 和真实浏览器门禁。发布任务依赖这些任务全部成功。
 
-仓库 Secret `NPM_TOKEN` 在发布步骤映射为 `NODE_AUTH_TOKEN`；不写入源码、包、技能、版本说明或日志。它的授权范围需要覆盖 `@namewta` scope 下 `@namewta/skills-hub` 新包的创建与发布，以及需要使用的只读 stage 查询；已有其他包的权限不会自动覆盖此包。token 的能力和包侧权限决定结果是直接发布还是进入暂存审批。需要维护者批准的暂存包会保留为待审查状态，不能把 CLI 的成功输出当作已经公开。只读识别 stage 还需要该凭据有本包的读取权限；权限错误会明确停止，不按“没有 stage”继续重发。GitHub 自动提供的 `GITHUB_TOKEN` 只在发布任务拥有写 Release / 标签权限；普通验证任务保持只读。
+仓库 Secret `NPM_TOKEN` 在发布步骤映射为 `NODE_AUTH_TOKEN`；不写入源码、包、技能、版本说明或日志。它的授权范围需要覆盖 `@namewta` scope 下 `@namewta/skills-hub` 新包的创建与发布，以及需要使用的只读 stage 查询；已有其他包的权限不会自动覆盖此包。直接上传要求凭据与包侧策略允许 `npm publish`；[stage-only token](https://docs.npmjs.com/about-access-tokens/#publishing-with-a-stage-only-token) 会使普通 `npm publish` 以 `E_STAGE_REQUIRED` 拒绝，创建 stage 必须显式执行 `npm stage publish`。本发布器仍调用普通 `npm publish`，只读取并接续已存在的 stage，不自动转换为暂存上传。
+
+需要维护者批准的暂存包会保留为待审查状态，不能把 CLI 的成功输出当作已经公开。只读识别 stage 还需要该凭据有本包的读取权限；权限错误会明确停止，不按“没有 stage”继续重发。GitHub 自动提供的 `GITHUB_TOKEN` 只在发布任务拥有写 Release / 标签权限；普通验证任务保持只读。
 
 发布任务使用 `--provenance` 并申请 `id-token: write`。如果以后为此包配置 npm trusted publisher，填写仓库 `NAMEWTA/skills-hub` 与工作流文件名 `release.yml`；当前工作流也具备 npm 使用 OIDC 的条件。npm 的当前政策正在调整 token 直接发布能力，长期使用可按[官方可信发布说明](https://docs.npmjs.com/trusted-publishers/)完成包侧绑定，不将修改账户权限混入普通技能安装。
 
@@ -80,6 +82,16 @@ npm 发布后会读回 registry 的版本与完整性；随后准备 GitHub Rele
 某个外部步骤失败时，按实际结果报告，不把 npm 和 GitHub 视为同一事务。可重跑原失败任务，或在 Actions 选择原版本标签并填写相同版本号继续。主分支已前进时，不要把新的 main 提交当作原提交重试。
 
 如果需要修改已发布包的内容，应发布新版本。即使修改只涉及发布脚本，新提交也不能替代已有版本标签指向的提交。标签已经存在时须保持原 SHA；若修复后的流程无法在原提交上完成，应明确处理剩余发布步骤，不能移动标签或覆盖 npm 版本。标签尚未创建时，只有实际 tarball 完整性相同且新提交通过全部检查，才能继续原版本的收尾。
+
+## npm 上传后的异步可用性
+
+npm CLI 成功返回后，版本可能尚不可安装或通过公开 metadata 查询。[npm 发布时扫描公告](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/)说明，新包会在公开前接受扫描，通常约需 5 分钟，高峰或受包内容、大小影响时可能需 15 分钟以上；这些时间不是服务保证。公开版本返回 404 本身不能区分扫描、待审查或其他未公开状态。
+
+脚本只上传一次，随后进入 **20 分钟的只读核验窗口**：立即查询一次，尚未读到公开版本或可核验 stage 时，在检查之间等待至多 30 秒并输出已等待及剩余时间；最后一次等待按剩余预算缩短。窗口使用单调时钟计算，查询沿用各请求的 30 秒超时。等待过程中不会再次调用 `npm publish`，也不会改写包内容或跳过扫描。
+
+只有公开 metadata 的包名、版本和完整 SHA-512 SRI 与本次压缩包一致，才确认 npm 已发布并继续正式发布 GitHub Release。发现完整核验通过的 stage 时立即沿用下节的待审批草稿流程；不把未知 `status` 当作公开成功。完整性冲突、查询权限错误或其他请求失败仍明确停止。npm CLI 自身失败时只按原流程核对一次已有公开版本或 stage，无法核实时保留原错误，不把失败上传变成自动重传。
+
+20 分钟是本项目的等待预算，不代表 npm 承诺届时公开。超时后任务以非零状态结束，说明公开状态仍未确认，并保留当前版本；先只读核对 npm 扫描或审批状态，不要盲目重复上传。确认同版本已经公开，或由维护者完成必要批准后，再从同一提交恢复；已有公开包和 stage 的完整性与幂等检查继续适用。
 
 ## npm 进入暂存审批时
 
@@ -106,7 +118,7 @@ npm stage approve <stage-id> --registry=https://registry.npmjs.org/
 
 先检查包名、版本与内容，再由本人完成批准所要求的 2FA；也可在 npm 网站的 **Staged Packages** 标签页审查和批准。自动流程不会调用 stage approve / reject，不修改审批权限，不收集验证码。批准完成后，重跑**原提交**的发布任务或选择对应版本标签：公开版本的完整性通过核对后，流程只移除自身的 `skills-hub:npm-stage` 待审批标记，保留维护者已有正文和追加说明，然后正式发布 GitHub Release。
 
-没有 `NODE_AUTH_TOKEN` 的 OIDC 发布仍可运行，但 OIDC 短期发布凭据不能用于这些 stage 查询。若公开版本始终不可读，脚本会明确报告只读识别能力缺口，不假装已发布。CLI 返回后只做有限次数的公开版本/stage 核验，不无限轮询。
+没有 `NODE_AUTH_TOKEN` 的 OIDC 发布仍可运行，但 OIDC 短期发布凭据不能用于这些 stage 查询。若公开版本在上述 20 分钟核验窗口后仍不可读，脚本会明确报告只读识别能力缺口，不假装已发布，也不无限轮询。
 
 ## 官方依据
 
@@ -115,6 +127,7 @@ npm stage approve <stage-id> --registry=https://registry.npmjs.org/
 - [GitHub：Release 附件 API](https://docs.github.com/en/rest/releases/assets)：授权下载附件，以及上传失败后 `starter` 空占位的处理。
 - [npm：访问令牌](https://docs.npmjs.com/about-access-tokens/)：granular token 的发布权限、2FA 与 stage-only 区别。
 - [npm：可信发布](https://docs.npmjs.com/trusted-publishers/)：OIDC、Node/npm 版本前提、仓库与工作流绑定。
+- [npm：发布时恶意软件扫描](https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/)：上传与公开可用之间存在异步扫描延迟，典型等待时间不构成服务保证。
 - [npm：暂存发布](https://docs.npmjs.com/staged-publishing/)及 [npm stage 命令](https://docs.npmjs.com/cli/v12/commands/npm-stage/)：维护者审查、2FA、只读命令与凭据限制。
 - npm CLI v12.2.1：[列表及分页](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/list.js)、[详情](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/view.js)、[tarball 下载](https://github.com/npm/cli/blob/v12.2.1/lib/commands/stage/download.js)、[响应测试](https://github.com/npm/cli/blob/v12.2.1/test/lib/commands/stage/view.js)与 [摘要计算](https://github.com/npm/cli/blob/v12.2.1/lib/utils/tar.js)。
 

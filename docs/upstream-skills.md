@@ -18,19 +18,19 @@ Google 仓库提供的是两个技能，HTML、CSS、JavaScript 等是其中的�
 
 ```sh
 # 打开 TUI
-npx @namewta/skills-hub@0.1.11
+npx @namewta/skills-hub@0.1.12
 
 # 一次安装整个上游独立技能分组
-npx @namewta/skills-hub@0.1.11 install --domain upstream-skills
+npx @namewta/skills-hub@0.1.12 install --domain upstream-skills
 
 # 只安装一个中文技能
-npx @namewta/skills-hub@0.1.11 install --skill zh-archify
+npx @namewta/skills-hub@0.1.12 install --skill zh-archify
 
 # 混合安装自有技能和上游中文技能
-npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-modern-web-guidance
+npx @namewta/skills-hub@0.1.12 install --skill dev-architecture zh-archify zh-modern-web-guidance
 
 # 先预览
-npx @namewta/skills-hub@0.1.11 install --domain upstream-skills --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain upstream-skills --dry-run
 ```
 
 TUI 显示 `upstream-skills（上游独立技能）`。选中分组即选中全部子项，也可只勾某个 `zh-*`，或者与其他领域混选。直接输入 `archify`、`zh-archify`、`上游` 或中文用途搜索；Tab 勾选，方向键移动/翻页，Enter 查看确认。搜索和翻页不会清空已选项。预览、取消、备份替换、失败回滚与已有领域共用同一套安装逻辑。
