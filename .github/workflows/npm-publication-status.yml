@@ -1,0 +1,121 @@
+name: Inspect npm publication status
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/npm-publication-status.yml']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '要查询的版本；留空使用 package.json 的版本'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Read public metadata and publication lifecycle
+        env:
+          REQUESTED_VERSION: ${{ inputs.version }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          import { appendFileSync, readFileSync } from 'node:fs';
+
+          const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
+          const packageName = '@namewta/skills-hub';
+          const version = process.env.REQUESTED_VERSION?.trim() || pkg.version;
+          const semver = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?$/;
+          if (pkg.name !== packageName || typeof version !== 'string' || version.length > 128 || !semver.test(version)) {
+            console.error('包名必须为 @namewta/skills-hub，版本必须为有效的发布版本号。');
+            process.exit(1);
+          }
+
+          const token = process.env.NODE_AUTH_TOKEN;
+          const registry = 'https://registry.npmjs.org';
+          const encodedName = '@' + encodeURIComponent(packageName.slice(1)).replace(/%2F/gi, '%2f');
+          const encodedVersion = encodeURIComponent(version);
+          const results = [];
+
+          function selectFields(value) {
+            const selected = {};
+            if (!value || typeof value !== 'object' || Array.isArray(value)) return selected;
+            for (const key of ['packageName', 'name', 'version', 'status']) {
+              if (typeof value[key] === 'string') selected[key] = safeText(value[key]);
+            }
+            if (typeof value.dist?.integrity === 'string') {
+              selected.dist = { integrity: safeText(value.dist.integrity) };
+            }
+            return selected;
+          }
+
+          function safeText(value) {
+            return (token ? value.replaceAll(token, '[redacted]') : value).slice(0, 512);
+          }
+
+          async function inspect(query, path, { authenticated = false, packument = false } = {}) {
+            const result = { query };
+            try {
+              const response = await fetch(registry + path, {
+                method: 'GET',
+                redirect: 'error',
+                headers: {
+                  Accept: 'application/json',
+                  'Cache-Control': 'no-cache',
+                  ...(authenticated && token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                signal: AbortSignal.timeout(30_000),
+              });
+              result.httpStatus = response.status;
+              if (response.ok) {
+                try {
+                  const body = await response.json();
+                  if (packument) {
+                    result.versionPresent = Boolean(body?.versions && Object.hasOwn(body.versions, version));
+                    Object.assign(result, selectFields(result.versionPresent ? body.versions[version] : null));
+                  } else {
+                    Object.assign(result, selectFields(body));
+                  }
+                } catch {
+                  result.invalidJson = true;
+                }
+              }
+            } catch (error) {
+              result.requestError = error?.name === 'TimeoutError' ? 'timeout' : 'request-failed';
+            }
+            console.log(JSON.stringify(result));
+            results.push(result);
+          }
+
+          await inspect('public-version', `/${encodedName}/${encodedVersion}`);
+          await inspect('public-latest', `/${encodedName}/latest`);
+          await inspect('public-packument', `/${encodedName}`, { packument: true });
+          await inspect('publication-lifecycle', `/-/package/${encodedName}/version/${encodedVersion}/status`, { authenticated: true });
+
+          const summary = [
+            `## npm 发布状态：${packageName}@${version}`,
+            '',
+            '以下为只读查询结果。工作流完成不表示版本已经发布；lifecycle 的 404 也可能表示没有查询权限。',
+            '',
+            '```json',
+            JSON.stringify(results, null, 2),
+            '```',
+            '',
+            '状态未确认前不要重跑发布。仅在公开版本及原 tarball 完整性匹配后，按发布指南恢复原提交。',
+            '',
+          ].join('\n');
+          if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary);
+          NODE
