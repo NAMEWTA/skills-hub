@@ -7,7 +7,7 @@ import { planPersistence, applyPersistence, rollbackPersistence } from './script
 
 export const repositoryRoot = path.dirname(fileURLToPath(import.meta.url));
 export const licenseBundleFiles = Object.freeze([
-  'PROJECT-LICENSE.txt', 'THIRD_PARTY_NOTICES.txt', 'deepseek-harness-MIT.txt',
+  'PROJECT-LICENSE.txt', 'deepseek-harness-MIT.txt',
   'mattpocock-skills-MIT.txt', 'pstack-MIT.txt', 'ai-design-skills-MIT.txt',
   'Speculo-MIT.txt', 'taste-skill-MIT.txt', 'humanlayer-Apache-2.0.txt',
   'humanlayer-NOTICE.txt', 'herdr-Apache-2.0.txt',

@@ -1,5 +1,3 @@
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/modern-web-guidance/guides/ui-behaviors/scroll-entry-exit-effects.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 <a id="add-entry-and-exit-effects-to-elements-as-they-enter-or-exit-the-scrollport"></a>
 
 # 为进入或离开滚动可视区的元素添加效果

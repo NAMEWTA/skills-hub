@@ -17,12 +17,12 @@
 
 ## 安装与第一次使用
 
-ops 随 `0.1.12` 提供。在实际运维工作根使用对应 npm 版本，或当前源码安装器：
+在实际运维工作根安装需要的技能，使用 npm 最新发布版本或当前源码入口：
 
 ```bash
-npx @namewta/skills-hub@0.1.12 list --domain ops
-npx @namewta/skills-hub@0.1.12 install --domain ops --dry-run
-npx @namewta/skills-hub@0.1.12 install --domain ops
+npx @namewta/skills-hub@latest list --domain ops
+npx @namewta/skills-hub@latest install --domain ops --dry-run
+npx @namewta/skills-hub@latest install --domain ops
 ```
 
 完整领域会安装九个 `.agents/skills/ops-*/` 包，并只初始化 `.agents/ops/AGENTS.md`。不会预生成服务器、项目、run 或业务目录；不会连接任何服务器。安装器按原有机制备份替换所选技能、更新所选领域导航，业务记录及项目根 `AGENTS.md` 保留。
@@ -56,7 +56,7 @@ Agent 先按 execute 的方法建立无远端目标的本地 run，再逐步补�
 
 workflow 根据意图选择必要方法。查历史不会顺带重启服务，生成技能不要求重新走维护流程。一次故障处理可以依次使用 inventory、history、diagnose、recover，但这是当前问题需要的组合，不是固定流水线。
 
-专门技能维护完整方法及模板，编排入口传递已有事实。内部协作按技能名查找实际安装入口，不使用 `../兄弟技能/` 资源引用，不复制第二套方法。详细归属与来源适配见[方法归属](ops-method-ownership.md)。
+专门技能维护完整方法及模板，编排入口传递已有事实。内部协作按技能名查找实际安装入口，不使用 `../兄弟技能/` 资源引用，不复制第二套方法。完整方法职责和协作边界见[方法归属](ops-method-ownership.md)。
 
 ## 多项目与多服务器的关系
 
@@ -180,8 +180,8 @@ node .agents/skills/ops-execute/scripts/ops-record.mjs show --root . --run host-
 
 ## 范围与验证
 
-首版提供完整技能方法、Markdown 模型/模板、控制端记录助手与既有工具操作参考，不新增常驻调度器、CMDB、Web 控制台或 Agent runtime。SSH/systemd/Compose、Ansible、Rundeck 和平台 CLI 均按实际可用能力使用；可选 Sentry 只读方法的字段与输出范围保存在 inspect 包内。
+ops 提供完整方法、Markdown 模型与模板、控制端记录助手和既有工具操作参考。运行任务由实际宿主和后端执行；仓库不部署常驻调度器、CMDB、Web 控制台或 Agent runtime。SSH/systemd/Compose、Ansible、Rundeck 和平台 CLI 均按实际可用能力使用；可选 Sentry 只读方法的字段与输出范围保存在 inspect 包内。
 
-结构校验保证包装和引用；记录/安装测试保证确定性行为；隔离 OpenSSH 案例验证真实连接与 fixture 服务恢复；自然语言任务验证检查技能选择和边界。不同证据不互相替代。具体命令、覆盖范围、环境与限制见[验证记录](ops-validation.md)。
+验证分别核对包装和引用、安装与记录工具、隔离 OpenSSH 场景，以及自然请求的选择与边界。各层结论只覆盖实际运行范围，不能相互替代。可执行命令、环境前提和维护场景见[ops 验证](ops-validation.md)。
 
-本文对应 [Issue #3](https://github.com/NAMEWTA/skills-hub/issues/3)。来源、完整方法归属和必要适配见[方法归属](ops-method-ownership.md)，安装语义见[安装契约](installation.md)，其他领域继续按各自既有说明使用。
+安装行为见[安装契约](installation.md)。第三方来源、署名、许可和改造声明统一见[THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)。

@@ -3,13 +3,7 @@ name: zh-chrome-extensions
 description: "使用 Manifest V3 最佳实践构建并发布 Chrome 扩展。当用户要求创建、修改、调试或理解 Chrome 浏览器扩展、附加组件，或涉及 Chrome Extensions API 的任何内容时，使用此技能。 提及以下内容时触发：Chrome 扩展、浏览器扩展、manifest.json、content script、浏览器场景中的 service worker、浏览器扩展场景中的 popup、side panel、chrome.* API、declarativeNetRequest、omnibox、扩展场景中的 context menu、userScripts、用户脚本、脚本管理器，或构建与 Chrome 浏览器 UI 集成功能的任何请求。 向 Chrome Web Store 发布的相关任务也触发：发布扩展、准备上架、回应审核拒绝、编写权限理由或起草隐私政策。"
 ---
 
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/chrome-extensions/SKILL.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 # Chrome 扩展
-
-## 中文适配说明
-
-默认使用中文解释与交付。本文及 `references/` 提供固定上游版本的中文对照，代码、API 名称和可执行命令保持原样。涉及现代 Web 指南时，遵循 `zh-modern-web-guidance` 的正常检索流程：仍运行原名 `modern-web-guidance` CLI，保留版本握手与功能门禁。CLI 最新结果可能是英文；本地中文对照用于辅助理解，与最新检索结果冲突时以本次 CLI 结果为准，不得用本地文件替代或绕过检索策略。
 
 使用 Manifest V3 构建可用于生产的 Chrome 扩展，并发布到 Chrome Web Store。
 

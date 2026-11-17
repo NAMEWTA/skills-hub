@@ -1,45 +1,39 @@
-# skills-hub
+# skills-hub 开发约定
 
-这是协作式中文技能的源码仓库。整合领域使用 `skills/<domain>/<domain>-xxx/`；保持各自独立的上游中文技能使用同级 `upstream-skills/zh-<原技能名>/`。两类都直接安装到使用者当前项目的 `.agents/skills/<技能名>/`，安装后没有领域中间层。
+本仓库维护中文 Agent Skills。`skills/` 保存按领域整合的运行包，`upstream-skills/` 保存独立上游技能的一对一中文运行包。两类都安装到使用者项目的 `.agents/skills/<技能名>/`。
 
-## 关键约定
+## 共通约束
 
-- 先明确用户意图、行为与交付条件。保留并按任务组合规格驱动、测试驱动、经验验证和形式化分析；以真实风险和反馈速度选择方法。
-- `skills/` 只保存本项目的中文执行内容。参考、模板、实例都必须在本技能内部，使用相对链接；不出现来源项目名、作者署名、来源 URL 或致谢段落。
-- **必须以用户指定的 upstream 为标杆。** 优先直接复制、完整翻译、复刻并融合指定开源项目的相关技能；先对照本次固定 SHA 的原件与两级本地清单，再修改运行版。不要自作主张改写模板、删减步骤、改变判断标准，或用个人设计替代上游成熟方法。只有为符合本项目明确规范、适配实际工具或解决真实冲突时，才作必要、少量的修改，并记录对应原文、修改理由与保留内容。不扩大用户指定来源范围。材料同步是显式维护操作：按指定分支每次解析最新提交，再固定同一 SHA 完成全部读取与对照；收录新来源不等于运行版已升级，不因材料更新自动前移运行核对依据。
-- 完整方法不靠摘要替代。保留步骤、判断标准、表格、数值、例子和反例；长篇内容放到随技能安装的资源中，并从入口按需链接。
-- 技能按职责协作，可以相互调用和依赖。原子技能维护完整方法，编排技能调用它们，不递归复制资源。调用沿用同一任务、规格与证据，不重复开启阶段。
-- 名称使用小写连字符且不超过 64 字符。`skills/` 使用领域前缀，`SKILL.md` 头部只用 `name` 和准确的 `description`；`upstream-skills/` 使用 `zh-` 前缀，保留上游必要的 license、metadata 等头部。两者目录名与 name 必须一致，安装名全局唯一。入口保持聚焦，详细资料按需加载。
-- `upstream-skills/` 保存可直接安装的中文运行版，允许有依据的本地适配；不另建 dist、注册表或复杂同步层。优先保持来源结构、完整资源、原始工具命令与许可。外部 CLI 和网络前提如实说明，不套用 `skills/` 的去来源、禁外链、重写工具和入口预算规则。TUI/CLI 中的 `upstream-skills` 只是安装分组，不创建 `.agents/upstream-skills/`，不把这些独立技能强行编成一个体系。具体维护见 [上游独立技能](docs/upstream-skills.md)。
-- 主入口按任务、产物与实际前提区分；沿用已有阶段和记录。成熟方法优先保留，入口冲突直接修正，不以个人文风替代完整步骤。维护与同步遵循 [关键开发约束](docs/development-constraints.md)。
-- 不引入流程 JSON、强制状态机、固定模型或重复审批。用户已经授权的步骤持续执行，环境与工具绑定根据实际能力适配。
-- 各领域独立持久化：`dev-*` 使用 `.agents/dev/`（changes、notes、deploy、archive、project、context）；`system-*` 使用 `.agents/system/<host>/`。后续领域 `skills/<domain>/` 对应 `.agents/<domain>/`，不加通用外层根。技能仍安装在 `.agents/skills/`。安装器在选中任意 dev 技能时由 `scripts/init-persistence.mjs` 补齐开发根及分区九份简短目录说明，含 `.agents/dev/AGENTS.md`；选中 system 时另补系统根说明。骨架和模板归 scripts，不放进技能，固定位置的模板 AGENTS.md 自动覆盖更新，内容相同不重写；根 AGENTS.md 与业务记录不受影响。业务记录仍按需创建。活跃 change 保持日期主题命名，`dev-archive` 收尾时才按 implemented/rejected 与五类主类型分类重命名，旧历史不自动迁移。已有外部文档按真实位置引用；迁移资料时保留内容并修复入链。代码和运行结果说明现状，用户目标说明期望；知识保留理由、语义和导航，不复述整个代码实现。
-- 本项目维护脚本、测试及 `skills/` 内执行脚本与可执行示例统一使用 `.mjs` / `.js`，Node.js 22.14+；不要给这些内容引入 Python、Shell 或 TypeScript 运行依赖。Git 的固定 hook 文件名是 JavaScript 薄入口。`upstream-skills/` 可以保留来源必要工具与原扩展名，其实际运行前提在包内说明；`materials/` 保留原扩展名和 Git 字节、执行位，但不作为运行依赖执行。
-- 版权许可不能丢失。分发所需法律原文在仓库与 npm 包的 `licenses/` 集中保留；`skills/` 不重复存放，`upstream-skills/` 的独立包保留适用 LICENSE/NOTICE、第三方声明和修改说明，随包安装。`materials/` 原样来源树自带的法律文件同时原样保留，不能破坏快照。安装器禁止向目标项目复制 `.agents/skills-hub-licenses/`，不补齐、更新或删除已有许可目录。
+- 保留完整方法的步骤、判断、表格、数值、例子和反例。入口按任务指向完整参考；方法各有唯一归属，调用者沿用同一任务和证据。
+- `skills/` 使用 `<domain>-xxx` 名称，frontmatter 只包含 `name` 和 `description`，内容为中文，本地资源引用留在本技能内。`upstream-skills/` 使用 `zh-` 名称，保留原结构、完整资源、执行命令及必要 metadata。两类名称都与目录一致，使用小写连字符、不超过 64 字符，安装名全局唯一。
+- 独立中文技能按原文逐项翻译，保留代码与技术标识，安装名和必要交叉引用使用本仓名称。额外的来源归属、翻译声明和适配说明集中维护于[第三方声明](THIRD_PARTY_NOTICES.md)，法律原文保留在 `licenses/` 和上游本来包含的 LICENSE、NOTICE 等文件中。
+- `materials/` 不参与技能发现和安装，也不作为任务指令加载。原件保留选定 Git 快照的路径、字节和执行位，中文对照按同路径维护。普通维护不执行来源脚本、CI、hook 或依赖安装；已有状态图回放仅在隔离临时目录使用固定 corpus，包括其 `view.mjs` 投影配置，边界见[验证指南](docs/validation.md)。显式同步按固定提交更新所选来源，只有实际核对后才更新运行采用依据。
+- 本项目维护代码、测试和自有技能执行工具使用 JavaScript 与 Node.js 22.14+。独立上游包保留来源工具及实际运行前提，材料保留原扩展名。
+- 继续执行已经授权的工作，复用已有决定和记录。根据任务需要选择工程与验证方法，不新增流程 JSON、固定模型或重复审批。
+- 项目资料按领域保存于 `.agents/dev/`、`.agents/system/<host>/` 或 `.agents/ops/`，不写进技能包。安装只处理所选技能与托管目录导航，保持根项目指令和业务记录；`upstream-skills` 不创建业务持久化域。
 
-## 资料的角色
+## 文档职责
 
-ops 的运行方法与边界见 [运维说明](docs/ops.md) 和 [运维方法归属](docs/ops-method-ownership.md)。运维资料独立写入 `.agents/ops/`，安装器只初始化其根导航；本领域不调用或改造其他领域的发布方法。Issue #3 新增的 oncall-triage、oncall-templates、oncall-replay、openai-sentry 来源单元只映射 ops，原有来源快照与映射保持不变。
+README 说明用途、安装和导航，AGENTS 保存共通开发约束与阅读指针，CHANGELOG 记录用户可见的版本变化。`docs/` 维护可重复使用的指南与规范，第三方来源和许可归[第三方声明](THIRD_PARTY_NOTICES.md)。
 
-`materials/` 按父清单登记的指定来源单元组织，既有项目包括：`pstack`、`mattpocock-skills`、`deepseek-harness`、`ai-design-skills`、`speculo`、`herdr`。父 `manifest.tsv` 记录来源仓库、分支、固定 SHA、选定根与子清单路径；Speculo 必须使用 `ref=HEAD` 动态解析默认分支（当前为 main，不能长期固定 main），其余五项目跟踪指定 main/master 分支；各项目 `manifest.tsv` 逐文件记录当前映射。`upstream/` 完整保留选定 Git 子树（Speculo 为整仓）的原目录、隐藏文件、原扩展名、字节与执行位；`zh/` 使用相同相对路径，原本中文文件不重复创建副本，非中文/混合文档完整翻译，程序只翻译适用说明与注释，法律原文、无自然语言文件、机器夹具和图片的对照保持原字节，不冒称译文。语言与类别逐文件判定，不能按项目整体或单个汉字推断。
+具体执行记录、测试输出、发布排障与当次取证保存到 `.agents/dev/changes/<日期-主题>/`。长期项目知识写入 `.agents/dev/notes/`，已有有效资料按真实位置引用。记录实际完成的范围，保留未验证事项。
 
-资料是被动对照，不执行其脚本、不安装依赖、不触发来源 CI/hook，不参与技能发现或安装，npm 白名单排除整个 `materials/`。嵌套 `.agents/skills`、`AGENTS.md` 和 `SKILL.md` 也不是当前任务指令；安全边界依赖目录与调用规则，而不是 `.txt` 后缀。来源专用路径、工具绑定与原始指令仅解释来源语境。
+## 按任务阅读
 
-`skills/` 是整合后的运行版本，`upstream-skills/` 是保持独立结构的运行版本。修改时直接解决冲突，不能仅在上方加一句覆盖声明而保留矛盾步骤。来源与致谢集中见仓库 README，独立包另保留自身归属声明；当前来源版本的机器依据是父清单，不在 README 重复维护 SHA 或固定数量。逐文件关系从父索引进入项目子清单；`runtime_paths` 可指向这两个运行根，表示实际采用关系；`runtime_reviewed_blob` 表示最后真实核对依据，落后或为空不能冒称运行版已同步。旧来源及旧映射由 Git 历史承担。
+| 当前任务 | 读取内容 |
+| --- | --- |
+| 编写或修改文档、PR 说明 | [dev-writing](skills/dev/dev-writing/SKILL.md)，按其中指针读取对应写作方法 |
+| 编写或整合技能 | [技能编写指南](docs/skill-authoring.md)、[开发约束](docs/development-constraints.md) |
+| 调整方法归属或开发阶段衔接 | [开发方法归属](docs/dev-method-ownership.md)、[开发流程](docs/workflow.md) |
+| 维护运维技能 | [运维说明](docs/ops.md)、[运维方法归属](docs/ops-method-ownership.md) |
+| 翻译、更新来源或核对运行映射 | [资源组织](docs/resources.md)、[上游独立技能](docs/upstream-skills.md)、[资料维护](materials/README.md) |
+| 修改安装、备份或持久化 | [安装契约](docs/installation.md)、[领域持久化](docs/persistence-roots.md) |
+| 修改学习、知识或归档方法 | [知识与记忆](docs/knowledge.md) |
+| 修改校验、入口预算或 Git hooks | [质量门禁](docs/skill-quality.md) |
+| 修改 npm 分发或发布流程 | [版本发布](docs/release.md) |
 
-## 按需阅读
+## 验证改动
 
-- 编写或整合技能：看 [技能编写指南](docs/skill-authoring.md)。
-- 修改入口预算、提交或 CI 检查：看 [质量门禁](docs/skill-quality.md)。
-- 改安装器：看 [安装契约](docs/installation.md) 与 `install.mjs`。
-- 改开发衔接：看 [开发流程](docs/workflow.md)。
-- 改学习、归档或持久化：看 [领域持久化](docs/persistence-roots.md)和[知识与记忆](docs/knowledge.md)。
-- 核对全文与适配：看 [资源组织](docs/resources.md) 和 [本地资料索引](materials/README.md)。
-- 改 npm 包或发布：看 [版本发布](docs/release.md)，验证实际 tarball 后才发版。
-- 检查许可：看 [第三方声明](THIRD_PARTY_NOTICES.md)。
+文档修改核对链接、命令与实际行为。技能和材料改动运行 `npm run check`；影响安装、执行或校验行为时运行 `npm run check:full`；影响分发时运行 `npm run check:package`。其余检查按任务风险选择，使用隔离项目验证写入行为。
 
-## 验证
-
-`node scripts/check.mjs` 统一检查名称、元数据、独立资源、真实链接和完整资料。`skills/` 正文最多 500 物理行、12000 个非空白 Unicode 字符，完整参考不计入预算；超限时拆分并说明读取条件，不删实质方法或用长行绕过。`upstream-skills/` 保持上游完整入口与按 ID 动态读取的资料结构，检查中文入口、名称、包内真实链接、映射和完整安装，不为机械预算改写来源。修改安装或验证行为后运行 `node scripts/check.mjs --full`，隔离检查不接触用户项目或生产环境。按需用 `node scripts/install-hooks.mjs` 为本检出启用提交与推送快照检查，不覆盖已有用户 hooks。
-
-结构校验只证明包装契约。译文仍需对照原件检查完整性，运行步骤仍需核实是否满足用户意图和项目约定。没有必要为可逆文字调整增加重复测试；真正影响行为的改动根据剩余风险补验证。
+结构检查不能代替全文翻译核对或真实行为验证。对可逆文字修改不增加重复测试，缺少实际运行条件时明确验证边界。

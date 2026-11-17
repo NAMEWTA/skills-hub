@@ -1,5 +1,3 @@
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/chrome-extensions/references/extensions/user-scripts.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 # User Scripts API
 
 `chrome.userScripts` API 允许扩展在运行时执行**用户提供的任意代码**，这些代码不能作为扩展包的一部分分发。这与内容脚本（随扩展打包）和 `chrome.scripting`（程序化执行扩展自身代码）有本质区别。

@@ -1,43 +1,31 @@
 # 来源快照、中文对照与运行映射
 
-`materials/` 是维护用被动资料库，不是运行技能目录。模型是：**当前来源快照 + 当前适用中文对照 + 当前运行映射 + 本次差异报告**。版本以[父清单](manifest.tsv)为机器依据；本文只维护导航、规则与用法，不重复维护 SHA 或文件数量，也不把结构准备、来源更新写成翻译及运行适配已验收。
+`materials/` 保存维护用的来源快照、适用中文对照和逐文件运行映射。它不参与技能发现、安装或 npm 分发，也不作为任务指令加载。来源版本以[父清单](manifest.tsv)为准；第三方署名、引用与许可统一见[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
-## 六个准确来源
+## 来源单元
 
-下表是既有开发与系统材料来源；本次 ops 的新增来源单元见后面的独立表，既有六项身份与运行映射不随新增领域刷新。
+一个来源单元对应某个提交中的完整目录。来源仓库、跟踪分支和固定提交由父清单维护，下表说明范围与使用方向；是否实际采用，以子清单的 `runtime_paths` 为准。
 
-| 项目与子清单 | 仓库 | 跟踪分支 | 所选来源根 |
-| --- | --- | --- | --- |
-| [pstack](pstack/manifest.tsv) | [cursor/plugins](https://github.com/cursor/plugins/tree/main/harness/pstack) | `main` | `harness/pstack` |
-| [mattpocock-skills](mattpocock-skills/manifest.tsv) | [mattpocock/skills](https://github.com/mattpocock/skills/tree/main/skills) | `main` | `skills` |
-| [deepseek-harness](deepseek-harness/manifest.tsv) | [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness/tree/master/.agents/skills) | `master` | `.agents/skills` |
-| [ai-design-skills](ai-design-skills/manifest.tsv) | [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills/tree/main/skills) | `main` | `skills` |
-| [speculo](speculo/manifest.tsv) | [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo) | 父清单 `ref=HEAD`，当前解析为 `main` | `.`，整仓 |
-| [herdr](herdr/manifest.tsv) | [herdrdev/herdr](https://github.com/herdrdev/herdr/tree/master/skills/herdr) | `master` | `skills/herdr` |
+| 来源单元与清单 | 完整选定来源根 | 主要使用方向 |
+| --- | --- | --- |
+| [pstack](pstack/manifest.tsv) | `harness/pstack` | 开发方法 |
+| [mattpocock-skills](mattpocock-skills/manifest.tsv) | `skills` | 开发方法 |
+| [deepseek-harness](deepseek-harness/manifest.tsv) | `.agents/skills` | 知识、写作与归档 |
+| [ai-design-skills](ai-design-skills/manifest.tsv) | `skills` | 设计方法 |
+| [speculo](speculo/manifest.tsv) | `.`，整仓 | 开发与系统方法 |
+| [herdr](herdr/manifest.tsv) | `skills/herdr` | 终端控制 |
+| [oncall-triage](oncall-triage/manifest.tsv) | `skills/triage` | ops 调查 |
+| [oncall-templates](oncall-templates/manifest.tsv) | `templates` | ops 经验与手册 |
+| [oncall-replay](oncall-replay/manifest.tsv) | `eval` | ops 回放评估 |
+| [openai-sentry](openai-sentry/manifest.tsv) | `skills/.curated/sentry` | ops 只读观测 |
+| [archify](archify/manifest.tsv) | `archify` | 独立 `zh-archify` 技能 |
+| [modern-web-guidance](modern-web-guidance/manifest.tsv) | `skills` | 独立 `zh-modern-web-guidance`、`zh-chrome-extensions` 技能 |
 
-每次显式同步解析指定分支当次最新 SHA，整次原件、对照、映射和差异使用同一个 SHA。Speculo 的父清单必须写 `ref=HEAD`：当前默认分支解析为 `main`，以后每次重新解析，不能长期固定为 `main`；同步脚本只有 `ref === 'HEAD'` 才动态解析。其余五项目固定跟踪表中指定的 `main` 或 `master`。父清单的 `ref`、`revision` 和 `source_root` 记录当前快照身份；本文链接中的浮动分支不是快照身份，也不表示检查会自动联网更新。
-
-## ops 新增来源
-
-| 项目与子清单 | 仓库 | 跟踪分支 | 完整选定来源根 |
-| --- | --- | --- | --- |
-| [oncall-triage](oncall-triage/manifest.tsv) | [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit) | `main` | `skills/triage` |
-| [oncall-templates](oncall-templates/manifest.tsv) | 同一 oncall-kit 快照 | `main` | `templates` |
-| [oncall-replay](oncall-replay/manifest.tsv) | 同一 oncall-kit 快照 | `main` | `eval` |
-| [openai-sentry](openai-sentry/manifest.tsv) | [openai/skills](https://github.com/openai/skills) | `main` | `skills/.curated/sentry` |
-
-每个来源根均完整收录，不因只采用其中一种方法而漏掉同树文件。实际采用只映射到 ops 的唯一 owner，其余完整参考保持空 runtime_paths，不声称运行版已移植。中文底稿忠实保留原文，运维范围与本地适配单独见[ops 方法归属](../docs/ops-method-ownership.md)。新来源仍使用以下同一双树/清单/同步/验证规则，不修改其他领域旧映射。
+显式同步先解析所选 `ref`，再固定同一个提交读取原件、生成对照与差异。`ref=HEAD` 表示每次解析远端默认分支；Speculo 使用这一约定。其他单元按父清单中的命名分支跟踪。普通校验与 CI 不自动刷新来源。
 
 ## 物理布局与内容规则
 
-独立上游技能另登记两个来源单元，实际运行文件直接映射到同级 `upstream-skills/zh-*`，不并入 dev 或 ops：
-
-| 项目与子清单 | 仓库 | 跟踪分支 | 完整选定来源根 |
-| --- | --- | --- | --- |
-| [archify](archify/manifest.tsv) | [tt-a1i/archify](https://github.com/tt-a1i/archify) | `main` | `archify` |
-| [modern-web-guidance](modern-web-guidance/manifest.tsv) | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) | `main` | `skills`，含两个独立技能 |
-
-Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`。中文底稿保留原 name，只有运行包改为 `zh-` 名。维护与安装见[上游独立技能](../docs/upstream-skills.md)。
+Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`。中文底稿保留原 name，运行包使用 `zh-` 名称。安装与维护见[独立上游技能](../docs/upstream-skills.md)。
 
 ```text
 materials/
@@ -137,7 +125,9 @@ node scripts/sync-materials.mjs --project mattpocock-skills --apply --from temp/
 
 ## 隔离、安全与许可
 
-即使保留 `.py`、`.sh`、`.ts`、可执行位、嵌套 `.agents/skills`、`SKILL.md`、`AGENTS.md` 或 `.github/`，它们也只是被动资料：不作为当前任务指令、不参与技能发现、不执行来源脚本或 CI/hook、不安装其依赖、不复制进目标项目。npm 文件白名单排除整个 `materials/`；安全性来自目录边界与显式调用，不是把文本改成 `.txt`。
+即使保留 `.py`、`.sh`、`.ts`、可执行位、嵌套 `.agents/skills`、`SKILL.md`、`AGENTS.md` 或 `.github/`，它们也不作为当前任务指令、不参与技能发现、不复制进目标项目。安装与普通维护不运行来源脚本、CI、hook 或依赖安装；npm 文件白名单排除整个 `materials/`。
+
+已有状态图回放使用一个明确的维护入口：[check-statechart-replay.mjs](../scripts/check-statechart-replay.mjs)将清单指定的固定 corpus 复制到临时目录，调用本项目的状态图工具读取已捕获输出，并动态加载夹具中的 `view.mjs` 投影配置。这部分是代码执行，不能表述为纯静态读取；它不运行新的 TLC 求解，也不授权执行其他来源程序。具体验证前提见[验证指南](../docs/validation.md)。
 
 选定来源树内自带的 LICENSE/NOTICE 是原样快照的一部分，不能移走或改译。根 [licenses/](../licenses/) 则保存实际仓库/npm 分发需要的适用法律文本，可能包括所选子树范围之外的同版仓库根许可，以及已被运行版采用的旧来源许可。维护集中许可不等于扩大 upstream 范围；移除当前来源映射不取消已有法律义务。安装器不向用户项目复制许可目录，也不补齐、更新或删除已有 `.agents/skills-hub-licenses/`。详见[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
@@ -151,4 +141,4 @@ node scripts/check.mjs --full
 npm run check:package
 ```
 
-本地校验核实两级唯一性、路径/symlink、文件集合、摘要、Git blob、可用平台上的执行位、稀疏对照、法律/机器字节及运行文件归属；显式提供本地 Git 对象库时可核对固定提交树。摘要和“出现中文”不能证明分类准确、翻译忠实或运行版已适配。状态图命令只是 **captured-output replay**，不是新的 TLC 求解。实际执行结果与未覆盖范围应如实记录在[验证记录](../docs/validation.md)，不能由本文导航推定验收完成。完整方法与适配契约见[资源组织](../docs/resources.md)和[关键开发约束](../docs/development-constraints.md)。
+本地校验核实两级唯一性、路径/symlink、文件集合、摘要、Git blob、可用平台上的执行位、稀疏对照、法律/机器字节及运行文件归属；显式提供本地 Git 对象库时可核对固定提交树。摘要和“出现中文”不能证明分类准确、翻译忠实或运行版已适配。状态图命令只是 **captured-output replay**，不是新的 TLC 求解。实际执行结果与未覆盖范围保存在对应 `.agents/dev/changes/` 中；[验证指南](../docs/validation.md)说明如何选择检查和解释结果。完整方法与适配契约见[资源组织](../docs/resources.md)和[关键开发约束](../docs/development-constraints.md)。

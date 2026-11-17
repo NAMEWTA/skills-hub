@@ -1,100 +1,124 @@
-# 第三方许可声明
+# 第三方来源与许可
 
-本项目新增原创内容采用根目录 MIT 许可；复制、翻译与适配的材料保留各自版权与适用许可，不因收录而改为 MIT。集中法律原文在 `licenses/`，随本仓库及 npm 包分发；被动来源快照中的 LICENSE、NOTICE 和归属文件另在其原位置原样保留，不因集中分发而删除。安装器不向使用者项目复制、补齐、更新或删除 `.agents/skills-hub-licenses/`，也不触碰已有目标许可目录。
+本文集中说明 skills-hub 采用的第三方内容、中文翻译与本地适配，以及对应许可。项目原创内容采用 [MIT](LICENSE)；被收录内容继续适用原作者的版权和许可。感谢下列项目的作者与贡献者。
 
-自有 `skills/` 运行包不重复存放来源介绍或法律说明；再次分发这些技能时必须同时保留适用的配套许可，不能假定安装器已复制集中法律目录。独立 `upstream-skills/` 包则保留适用 LICENSE/NOTICE、第三方归属与本地修改说明，随技能一起安装到 `.agents/skills/<技能名>/`；集中副本和包内法律文件各有职责。
+[licenses/](licenses/) 保存适用许可、NOTICE 和归属声明的原文，随源码仓库和 npm 包分发。所选上游树自带的法律文件也保留在原路径，维持文件对应关系；本文不替代这些法律原文。安装器只复制所选技能及其包内资源，不另建项目级许可目录。单独再次分发技能或材料时，应一并提供适用的许可和归属信息。
 
-| 权利人 | 许可原文 | 本项目使用范围 |
+## 已收录来源
+
+来源仓库、跟踪分支和固定提交以[材料父清单](materials/manifest.tsv)为准；下表的项目清单记录逐文件原件、中文对照和实际采用路径。存在中文对照不代表该文件已经进入运行技能。
+
+| 来源与权利人 | 收录范围与主要用途 | 许可原文与映射 |
 | --- | --- | --- |
-| NAMEWTA | [项目 MIT](licenses/PROJECT-LICENSE.txt) | 本项目原创说明、整合与程序 |
-| Herdr 贡献者 | [Apache 2.0](licenses/herdr-Apache-2.0.txt) | Herdr 技能完整原件、中文译文与 `system-herdr` 运行适配；已更名并保留本地追加的启动示例 |
-| Copyright (c) 2026 DeepSeek | [MIT](licenses/deepseek-harness-MIT.txt) | 知识、归档、写作方法与笔记实例的中文译文及适配 |
-| Copyright (c) 2026 Matt Pocock | [MIT](licenses/mattpocock-skills-MIT.txt) | 需求、架构、实施、诊断、审查、写作与开发交接资料的中文译文及适配 |
-| Copyright (c) 2026 Lauren Tan | [MIT](licenses/pstack-MIT.txt) | 当前 `harness/pstack` 所选树中的方法、操作规程与实例，含开发会话接续和安全暂停；既有运行适配仍保留旧 pstack（含旧 automations）所需许可 |
-| Copyright (c) 2026 Elaya | [MIT](licenses/ai-design-skills-MIT.txt) | 完整设计资料的中文译文及适配 |
-| Copyright (c) 2026 wta | [MIT](licenses/Speculo-MIT.txt)、[完整第三方通知](licenses/Speculo-THIRD-PARTY-NOTICES.txt) | Speculo 整仓被动快照、中文对照及已有运行适配；MIT 不替代下列嵌套第三方许可或历史文本权利 |
-| Copyright (c) 2026 Ting'an Wang | [MIT](licenses/Speculo-skills-hub-MIT.txt) | Speculo 的 12 个 skills-hub 包；同 blob 法律原件集中保留一份，包内原件各自保留 |
-| Copyright (c) 2026 Ting'an Wang；Copyright (c) 2026 dualface | [MIT](licenses/Speculo-ste-zh-MIT.txt)、[NOTICE](licenses/Speculo-ste-zh-NOTICE.txt) | Speculo 的 `skills-hub/writing/ste-zh`；保留来源与概念参考边界，不包含 ASD-STE100 标准或词典 |
-| Copyright (c) 2026 wta | [eli5 完整通知](licenses/Speculo-eli5-THIRD-PARTY-NOTICES.txt) | Speculo 的 `skills-hub/writing/eli5`，保留 MIT 和教学研究仅作概念参考的边界；`align-intent` 的 MIT 与 Speculo 根许可同 blob |
-| Copyright (c) 2026 VoltAgent | [MIT](licenses/awesome-design-md-MIT.txt) | Speculo 内保留的十份 awesome-design-md 分析及其完整中文对照，不授予第三方品牌字体或商标权利 |
-| Yosuke Ota；eslint-visitor-keys contributors；Microsoft | [解析器完整许可集](licenses/Speculo-vendor-parsers-NOTICES.txt) | Speculo 内 `optimize-codex-config/scripts/vendor`：toml-eslint-parser 1.0.3（MIT）、eslint-visitor-keys 5.0.0（Apache 2.0）、jsonc-parser 3.3.1（MIT）；均为被动资料，不运行 |
-| Lucide Icons and Contributors；Cole Bemis | [Lucide 1.37.0 完整 LICENSE](licenses/lucide-1.37.0-LICENSE.txt)、[取证记录](licenses/Speculo-ASSET-LEGAL-PROVENANCE.txt) | 已镜像 Lucide 1.37.0；精确版本法律原件包含 ISC 及 Feather 衍生图标的 MIT，不能只保留 ISC 名称 |
-| Unsplash 摄影来源 | [画廊完整归属原件](licenses/Speculo-gallery-ATTRIBUTION.txt)、[官方许可页原始 HTML](licenses/Unsplash-LICENSE-page.html.txt)、[官方条款页原始 HTML](licenses/Unsplash-TERMS-page.html.txt) | 已镜像三张照片的来源归属及取得时的官方完整条款；不是对照片历史条款版本或额外权利已核实的证明，见下方边界 |
-| Copyright (c) 2026 Leonxlnx | [MIT](licenses/taste-skill-MIT.txt) | 设计材料内嵌的额外授权内容 |
-| HumanLayer；Copyright 2025-2026 QueryTale, Inc. d/b/a HumanLayer | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) | PR 资料引用的视觉说明方法；中文译文与运行流程已有修改 |
-| Copyright (c) 2026 tt-a1i (Archify)；Copyright (c) 2025 Cocoon AI；相关第三方权利人 | [Apache 2.0](licenses/archify/LICENSE)、[历史 MIT](licenses/archify/LICENSE-MIT)、[NOTICE](licenses/archify/NOTICE)、[完整第三方通知](licenses/archify/THIRD_PARTY_NOTICES.md.txt)、[JetBrains Mono OFL](licenses/archify/assets/JetBrainsMono-OFL.txt)、[Pele MIT](licenses/archify/explainer/vendor/pele/LICENSE) | Archify 完整选定技能子树、中文对照和 `zh-archify` 独立运行包；原工具、字体、第三方组件及品牌图形继续适用各自声明 |
-| GoogleChrome/modern-web-guidance 贡献者；Mozilla Contributors 及下述文档来源 | [软件 Apache 2.0](licenses/modern-web-guidance/LICENSE)、[文档 CC-BY 4.0](licenses/modern-web-guidance/CC-BY-4.0.txt)、[固定版 README 及归属声明](licenses/modern-web-guidance/SOURCE-README.txt) | 所选 `skills` 树中的两个完整技能及静态指南中文对照，分别映射 `zh-modern-web-guidance` 与 `zh-chrome-extensions`；软件与文档的许可分别保留 |
+| [cursor/plugins — pstack](https://github.com/cursor/plugins/tree/main/harness/pstack)，Lauren Tan | `harness/pstack`；开发方法、会话接续和安全暂停。既有 issue 自动化适配仍保留较早版本方法。 | [MIT](licenses/pstack-MIT.txt)；[清单](materials/pstack/manifest.tsv) |
+| [mattpocock/skills](https://github.com/mattpocock/skills)，Matt Pocock | `skills`；需求、架构、实施、诊断、审查、写作、原型和开发交接方法。 | [MIT](licenses/mattpocock-skills-MIT.txt)；[清单](materials/mattpocock-skills/manifest.tsv) |
+| [deepseek-ai/deepseek-harness](https://github.com/deepseek-ai/deepseek-harness)，DeepSeek | `.agents/skills`；知识、归档、写作与笔记实例。未收录 Host、vendor 或仓库根声明中的 npm/Python 依赖实现。 | [MIT](licenses/deepseek-harness-MIT.txt)；[清单](materials/deepseek-harness/manifest.tsv) |
+| [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)，Elaya | `skills`；设计方法与资料。设计材料内嵌的 Leon / leonxlnx 授权另行保留。 | [MIT](licenses/ai-design-skills-MIT.txt)、[taste-skill MIT](licenses/taste-skill-MIT.txt)；[清单](materials/ai-design-skills/manifest.tsv) |
+| [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo)，wta 及其列出的第三方作者 | 整仓被动快照、中文对照及按需采用的方法；嵌套内容适用下方单独列出的许可。 | [MIT](licenses/Speculo-MIT.txt)、[上游完整声明](licenses/Speculo-THIRD-PARTY-NOTICES.txt)；[清单](materials/speculo/manifest.tsv) |
+| [herdrdev/herdr](https://github.com/herdrdev/herdr)，Herdr 贡献者 | `skills/herdr`；`system-herdr` 的终端控制方法。未收录 Herdr 程序或 vendor 树。 | [Apache 2.0](licenses/herdr-Apache-2.0.txt)；[清单](materials/herdr/manifest.tsv) |
+| [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit)，Anthropic 及贡献者 | `skills/triage`、`templates`、`eval`；分别用于事故调查、经验手册和回放评估方法。 | [Apache 2.0](licenses/oncall-kit/LICENSE)；[调查](materials/oncall-triage/manifest.tsv)、[模板](materials/oncall-templates/manifest.tsv)、[回放](materials/oncall-replay/manifest.tsv)清单 |
+| [openai/skills — Sentry](https://github.com/openai/skills/tree/main/skills/.curated/sentry)，OpenAI 及贡献者 | `skills/.curated/sentry`；只读错误观测、范围核对与脱敏方法用于 `ops-inspect`。 | [Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)；[清单](materials/openai-sentry/manifest.tsv) |
+| [HumanLayer](https://github.com/humanlayer/humanlayer) / [Dex Horthy](https://github.com/dexhorthy)，QueryTale, Inc. d/b/a HumanLayer | 既有 PR 视觉说明中的 show-me 方法；已作中文翻译和流程适配。NOTICE 中列出的其他程序组件未因此一并收录。 | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) |
 
-来源项目、固定修订和贡献者致谢集中见 [README](README.md#致谢与许可)。所有纳入对照的文件可在 [本地资料索引](materials/README.md) 中找到，原件与中文底稿均保留，不需要访问来源仓库才能核对。
+### 整合内容的修改范围
 
-## 既有整合来源与法律核对
+自有领域的运行内容在完整方法基础上作中文翻译，并调整技能名称、项目路径、宿主能力与职责归属。来源语境保存在 `materials/`，本地差异记录在子清单的 `adaptation` 字段。
 
-以下六个既有来源的法律核对使用各路所列固定提交的本地 Git 对象，不检出、不运行来源、不向 `upstream/` 添加范围外文件。集中许可逐字节与对应对象核对；Speculo、Matt 和 pstack 旧集中副本多出的一个末尾空行已恢复为对象原字节。
+- `dev-handoff` 采用 Matt handoff 及 pstack session-pickup、pause-safely 方法，把临时交接改为项目持久资料，并适配技能调用、既有授权和恢复核对。
+- `dev-prototype` 采用 Speculo 的原型证据方法、采购申请引用示例，以及 Matt/pstack 的完整探索方法。采购示例只分发必要 HTML/CSS/JS，不包含来源画廊的照片、品牌字体或图标库。
+- `system-herdr` 保留完整 CLI 方法；客户端启动示例与按 pane 的 task/report 文件通信属于本地扩展。
+- ops 将调查、经验和只读观测方法适配到本领域的 registry、run、项目资料与实际工具能力。领域之间不因此产生自动安装依赖。
+- issue 初始化、分诊和复现修复保留 pstack 较早 [Benny 自动化资料](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny)的方法；通用来源接口和项目配置属于本地适配，原 Slack 分支保留其身份核对与回读要求。
 
-| 项目 | 本次固定提交 | 核对范围与集中许可依据 |
+## 独立中文上游技能
+
+以下目录对应所选版本的原技能文件，保留完整结构和内容。自然语言文档由 skills-hub 翻译为中文；运行包使用 `zh-` 名称，并调整必要的自身调用、交叉技能名称和本地链接。代码示例、工具程序、协议字段及法律原文按原件保留。译文的英文标题锚点用于兼容原有片段链接。
+
+| 中文运行包 | 固定来源 | 逐文件对应 |
 | --- | --- | --- |
-| pstack | `2eaf46574b25cdf7ef8c849837099b866b7438ce` | 仅 `harness/pstack`；该树唯一法律原件为 `claude-code/LICENSE`；仓库根无 LICENSE |
-| mattpocock-skills | `4ae2317ddb22b046e26455e4f9c9b3aaaf62212d` | 仅 `skills`，集中许可取同版仓库根 LICENSE |
-| deepseek-harness | `e8f7b93a344964de3dca1ace9e72b6e4d6de87cb` | 仅 `.agents/skills`，集中许可取同版仓库根 LICENSE；根第三方通知涉及未收录的 Host、vendor、npm、Python 分发，不因文档中的引用引入这些依赖或扩大收录 |
-| ai-design-skills | `456d9e0d3e2d84c748bb143c6ca3d90c45e16213` | 仅 `skills`，集中许可取同版仓库根 LICENSE；原有 taste-skill 额外授权继续保留 |
-| speculo | `994a64427a6784053dd092a86713870062cfde2f` | 整仓；根 LICENSE、第三方通知及全部嵌套 LICENSE / NOTICE / ATTRIBUTION 依据如上，不能仅按一份 MIT 处理 |
-| herdr | `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` | 仅 `skills/herdr`，集中许可取同版仓库根 LICENSE |
+| `zh-archify` | [tt-a1i/archify，a7ed6fd 的 archify/](https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify) | [Archify 清单](materials/archify/manifest.tsv) |
+| `zh-modern-web-guidance` | [GoogleChrome/modern-web-guidance，64a6d70 的 skills/modern-web-guidance/](https://github.com/GoogleChrome/modern-web-guidance/tree/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/modern-web-guidance) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
+| `zh-chrome-extensions` | [同版 skills/chrome-extensions/](https://github.com/GoogleChrome/modern-web-guidance/tree/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/chrome-extensions) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
 
-本次 Speculo 全树按 LICENSE / NOTICE / THIRD-PARTY-NOTICES / ATTRIBUTION 类文件名枚举到 21 个法律与归属文件，合计 9 个不同 Git blob；这 9 个 blob 均在集中目录找到原字节相同的副本（原有根 MIT 一份，新增八份）。这只证明快照现有声明的完整保留，不证明未附第三方条款或历史语料的权利已经闭合。
-
-Speculo 的 12 个 Ting'an Wang MIT 包包括 automation/grok-bot-team-steward、coding/{gitea-repo,github-repo-steward,vscode-fullstack}、design/photo-retouch、system/{clash-client-profile,linux-dev-disk-cleanup,optimize-codex-config,proxy-region-locale,system-health-audit,windows-dev-disk-cleanup}、writing/job-application，均相对其 `skills-hub/`。十份设计分析的内嵌来源修订是 `c7c1bada4eda972236d124e06ee58df129a9266b`；这是 Speculo 固定快照中记录的来源，不另行升级该来源。
-
-### 第三方资产与历史文本的边界及未闭合事项
-
-此前 Speculo 资产的法律补充只为已纳入的内容保留法律原文，没有扩大当时六个材料来源根、升级来源或整合新技能。该次补充文件仅在 `licenses/`；固定 Speculo 快照、运行技能与安装器当时保持不变。[完整取证记录](licenses/Speculo-ASSET-LEGAL-PROVENANCE.txt)列出每个 URL、UTC 取得时间、响应字节数及 SHA-256。后续独立上游技能与 ops 来源在各自章节另行登记。
-
-`assets/lucide.js` 文件头及归属原件共同指定 `lucide v1.37.0`。已核实官方 npm 注册表与该精确版本 CDN 的包身份均为 `lucide@1.37.0`，来源库为 `lucide-icons/lucide`。注册表 SLSA 声明指向提交 `796dad298f8d78c5da204c3e62a5ed93c2bfcd1e`；已读取其内容，但未独立验证声明的密码学签名或透明日志。精确版本 `https://unpkg.com/lucide@1.37.0/LICENSE`、官方来源库标签 `1.37.0` 的 LICENSE、该提交的 LICENSE 三者响应均为 **3208 字节、SHA-256 `b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57`**，原字节保存在集中目录。全文除 Lucide ISC 外还包含 Feather 衍生图标名单及 Cole Bemis MIT，均完整保留；未套用最新许可证，也未下载程序包来重新比对镜像 JS，因此镜像身份依据仍是其声明头与固定版本法律／元数据一致性。
-
-Speculo 原通知明确说明软件许可不授予第三方品牌字体、照片、商标的额外权利。画廊归属原件记录三张 Unsplash 照片 ID：`1497366754035-f200968a6e72`（Proxyclick Visitor Management）、`1470770841072-f978cf4d019e`、`1500530855697-b586d89ba3ee`。已从官方 `https://unsplash.com/license` 及 `https://unsplash.com/terms` 保存完整 HTML 响应正文原字节（2026-11-12 UTC 取得；不执行其中脚本）。许可页为版权许可，条款第 5 节明确排除照片所含商标、可辨识人物及艺术作品等额外权利；完整条款中的其他限制也不因本摘要而省略或失效。保存官方条款不等于取得人物／商标等额外授权。
-
-Unsplash 页面是取得时的在线版本，尚未核实三张照片各自上传／下载或 Speculo 固定快照时适用的历史条款版本，不能将现行页面冒称固定历史许可。照片特定权利清理及历史版本确认仍是明确缺口，不能声称全部第三方资产已完成法律清理。历史文本同样不主动添加任何自造许可。
-
-`template/workflows/person/person-m-mao-zedong-cognitive-os/books/src/` 是历史文本来源语料。Speculo 原通知不声称作者身份或重新授权；本项目也不以 MIT 将这些文本重新授权。完整收录快照不是对其全部第三方权利已获授权的承诺；再次分发相应材料前，应单独核实适用权利与条件。历史研究链接及概念参考也不自动变为可全文转载的许可。
-
-Herdr 许可原文固定于提交 `ee5bfb5041bb3e4a49d591c72308aae3c81ecdde` 的根目录 `LICENSE`，Git blob 为 `261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64`；该修订无上游 `NOTICE` 文件。本次仅收录技能文档，不收录其程序或 vendor 组件。
-
-许可原文保持原语言和原始版权声明，中文技能正文不能替代法律原文。对照资料中保留的署名和链接属于历史原件内容，不是运行时外部依赖。
-
-仅参考写作或技术原理、未取得全文转载许可的文章不作全文转载。本项目提供自己的本地说明；来源致谢不表示取得来源仓库未授权目录的复制许可。
-
-`dev-handoff` 复用已收录的 Matt handoff 与 pstack session-pickup、pause-safely 方法，适用上述现有 MIT 许可；本次为方法迁移与必要适配，不新增法律原文副本。Anthropic 和 OpenAI 官方文章/文档仅作具名方法参考，不收录 SDK、演示 harness 或文章全文；具体采用与改造见[开发交接说明](docs/dev-handoff.md)。
-
-`dev-prototype` 复用已收录 Speculo 的原型证据说明、完整采购申请引用示例及其 HTML/CSS/JS 的中文适配，并接管已有 Matt/pstack 探索方法；适用上述现有许可原文。采购示例不分发画廊的照片、品牌字体、图标库和其他页面分支。OpenAI、Anthropic、Google、Superpowers、GitHub Spec Kit 的其他资料只作方法研究，不复制全文或导入整库。逐项采用、固定来源与必要适配见[原型说明](docs/dev-prototype.md)和[维护记录](.agents/dev/changes/2026-11-17-dev-prototype/source-adaptations.md)。
-
-PR 原件附带的贡献者声明已完整保存在对照资料，README 集中致谢。Apache 许可原件的 Git blob 为 `d645695673349e3947e8e5ae42332d0ac3164cd7`，NOTICE 为 `9671676ba14c852a29dd87f22d2b63f207f0b941`，核对日期 2026-11-07。NOTICE 列出的其他软件组件没有随本项目收录。
-
-
-## ops 新增来源与许可
-
-- Anthropic oncall-kit：Issue #3 固定快照的 `skills/triage`、`templates`、`eval` 完整子树及相应中文对照；实际采用只进入 ops。完整 Apache 2.0 原文取自同版仓库根 LICENSE，保存在 [oncall-kit 许可](licenses/oncall-kit/LICENSE)。所核查树未包含 NOTICE。
-- OpenAI skills 的 Sentry：完整 `skills/.curated/sentry` 子树与中文/字节对照；只读观测方法进入 ops-inspect。树内 LICENSE.txt 原样保留，集中副本为 [OpenAI Sentry Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)。来源图标只留在被动材料，不进入运行技能或 npm 包。
-
-上面旧来源的法律原文、快照和采用映射保持不变。新来源的版本身份、Git blob、原文/译文摘要与实际运行路径以父子清单为依据。修改说明见 [ops 方法归属](docs/ops-method-ownership.md)，中文运行适配不冒称未经修改的原件。
-
-## 独立上游技能的固定来源与许可
-
-以下包保持来源独立结构，不合并进 dev、ops 等领域。固定来源与逐文件对应由[父清单](materials/manifest.tsv)及各项目子清单记录；材料中的中文底稿保留原 name，安装包使用 `zh-` 前缀。完整中文化、名称调整与必要本地适配均属于修改，不能宣称为官方中文发布或未经修改的原件。
-
-| 来源 | 固定提交与选定根 | 中文运行包与逐文件依据 |
-| --- | --- | --- |
-| [tt-a1i/archify](https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify) | `a7ed6fd6657da90414831d1d42cf95987188750c`；`source_root=archify` | [zh-archify 修改与来源说明](upstream-skills/zh-archify/UPSTREAM.md)；[Archify 子清单](materials/archify/manifest.tsv) |
-| [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance/tree/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills) | `64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65`；`source_root=skills` | [zh-modern-web-guidance](upstream-skills/zh-modern-web-guidance/UPSTREAM.md)、[zh-chrome-extensions](upstream-skills/zh-chrome-extensions/UPSTREAM.md) 修改与来源说明；[Google 子清单](materials/modern-web-guidance/manifest.tsv) |
+上述中文化与名称调整是本项目的修改，原作者和相关组织未因此为译文提供背书。项目补充的来源与修改说明集中在本文，技能目录不额外添加 `UPSTREAM.md` 或翻译声明段落。清单中的 `zh_path`、`runtime_paths` 和摘要可用于逐文件核对。
 
 ### Archify
 
-Archify 的默认许可为 Apache 2.0，文件或第三方声明另有规定的部分继续适用其原许可。其 NOTICE 保留 tt-a1i、Cocoon AI 版权及源自 Cocoon-AI/architecture-diagram-generator 的归属，并说明转为 Apache 2.0 前收到的 MIT 代码与既有发布仍保留原授权。完整历史 MIT、第三方通知、JetBrains Mono 的 SIL OFL 1.1 和 Pele 的 MIT 均原样保留；不能以 Apache 2.0 概括全部字体、组件或品牌图形权利。
+版权归 tt-a1i (Archify)、Cocoon AI 及各组件作者。Archify 源自 [Cocoon-AI/architecture-diagram-generator](https://github.com/Cocoon-AI/architecture-diagram-generator)。默认许可为 Apache 2.0；转换前取得的 MIT 代码和既有发布继续保留原授权，详见原始 NOTICE。
 
-本项目保留上述六份法律原文在原有技能位置，并在 `licenses/archify/` 保存集中副本。中文修改限于完整文档翻译、运行包名称与自身调用引用、中文使用约定及必要说明；渲染器、schema、程序协议与业务字符串保留上游内容。各文件的原样保留或适配依据见子清单及包内说明，法律原文没有改译。来源同版根许可的集中收录不扩大 `materials/archify/upstream/` 的选定范围。
+| 适用内容 | 原始声明 |
+| --- | --- |
+| Archify 默认许可与来源归属 | [Apache 2.0](licenses/archify/LICENSE)、[NOTICE](licenses/archify/NOTICE) |
+| 历史 MIT 授权 | [LICENSE-MIT](licenses/archify/LICENSE-MIT) |
+| Simple Icons、品牌图形及其他第三方边界 | [上游第三方声明](licenses/archify/THIRD_PARTY_NOTICES.md.txt) |
+| JetBrains Mono 字体 | [SIL OFL 1.1](licenses/archify/assets/JetBrainsMono-OFL.txt) |
+| Pele Mermaid 渲染组件，kepano | [MIT](licenses/archify/explainer/vendor/pele/LICENSE) |
+
+这六份文件既有集中原文，也在 `zh-archify` 中按上游原路径保留。字体、图标和品牌的单独条件不因软件采用 Apache 2.0 而改变。
 
 ### Google modern-web-guidance
 
-根据该固定提交的[原 README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/README.md#license)，除非另有说明，软件代码采用 Apache License 2.0，文档及指南内容采用 Creative Commons Attribution 4.0 International（CC-BY 4.0）。本项目保留[原始 README 全文](licenses/modern-web-guidance/SOURCE-README.txt)的归属声明：部分文档源自 [MDN Web Docs](https://developer.mozilla.org/) 的 Mozilla Contributors，以及 [W3C](https://www.w3.org/)、[WHATWG](https://whatwg.org/) 和 [IETF](https://www.ietf.org/) 规范。
+归属 GoogleChrome/modern-web-guidance 贡献者。固定版本的 [README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/README.md#license)区分软件代码的 [Apache 2.0](licenses/modern-web-guidance/LICENSE) 与 `guides/` 文档内容的 [CC-BY 4.0](licenses/modern-web-guidance/CC-BY-4.0.txt)，另有声明的内容从其声明。原 README 全文保存在 [SOURCE-README.txt](licenses/modern-web-guidance/SOURCE-README.txt)。
 
-两个独立包的入口与随包静态指南均提供完整中文翻译，译文继续标明 CC-BY 4.0 及来源，软件代码保留其原许可；本仓库 MIT 不替代这些许可。中文化保留原可执行代码块、API 名、guide ID、命令和版本语义，并保留原英文标题锚点。商店/隐私文案模板中的自然语言也翻译为中文，原占位符与结构保留。运行入口改为 `zh-` 名称，固定中文资料与上游 CLI 动态响应的差异另作说明；原作者和相关组织不因收录而对本地翻译或适配提供背书。
+按其归属声明，部分文档源自 [MDN Web Docs](https://developer.mozilla.org/) 的 Mozilla Contributors，以及 [W3C](https://www.w3.org/)、[WHATWG](https://whatwg.org/) 和 [IETF](https://www.ietf.org/) 规范。两个中文包的文档和指南保留这些来源及适用许可；商店、隐私文案模板中的自然语言也翻译为中文，原占位符和结构保留。本仓库 MIT 不替代这些许可。
 
-Apache 2.0、CC-BY 4.0 完整法律文本、原 README 归属与本地修改说明同时保留在两个运行包，随包安装；集中法律副本见 `licenses/modern-web-guidance/`。这些补充法律文件不扩大材料 `source_root=skills`，也不将该仓库其他程序目录作为已收录源码。
+## Speculo 内嵌内容
+
+Speculo 的根 MIT 不覆盖其所有第三方内容。下列原始声明随被动材料保存，并在 `licenses/` 提供集中副本。
+
+| 内容与权利人 | 许可及归属原文 |
+| --- | --- |
+| `skills-hub` 中的 Ting'an Wang 技能包 | [MIT](licenses/Speculo-skills-hub-MIT.txt) |
+| `writing/ste-zh`，Ting'an Wang、dualface | [MIT](licenses/Speculo-ste-zh-MIT.txt)、[NOTICE](licenses/Speculo-ste-zh-NOTICE.txt)；不包含 ASD-STE100 标准或词典 |
+| `writing/eli5`，wta | [完整声明](licenses/Speculo-eli5-THIRD-PARTY-NOTICES.txt)，含教学研究仅作概念参考的边界；`align-intent` 适用 Speculo 根 MIT |
+| awesome-design-md 设计分析，VoltAgent | [MIT](licenses/awesome-design-md-MIT.txt) |
+| toml-eslint-parser 1.0.3、eslint-visitor-keys 5.0.0、jsonc-parser 3.3.1，Yosuke Ota、相关贡献者、Microsoft | [完整许可集](licenses/Speculo-vendor-parsers-NOTICES.txt)，分别为 MIT、Apache 2.0、MIT；仅作被动资料 |
+| Lucide 1.37.0，Lucide Icons and Contributors、Cole Bemis | [完整 LICENSE](licenses/lucide-1.37.0-LICENSE.txt)，含 Lucide ISC、Feather 衍生图标名单及 MIT |
+| Unsplash 画廊照片 | [原始归属](licenses/Speculo-gallery-ATTRIBUTION.txt)、[许可页原文](licenses/Unsplash-LICENSE-page.html.txt)、[条款页原文](licenses/Unsplash-TERMS-page.html.txt) |
+
+照片、字体、商标及历史文本的单独权利不会由软件 MIT 自动授予。Unsplash 法律页面保存的是取得时版本，照片对应的历史条款和额外权利未全部核实。`person-m-mao-zedong-cognitive-os/books/src/` 的历史语料也没有由 Speculo 或本项目重新授予 MIT 许可。再次分发相应材料前需核实其适用条件。
+
+Lucide 与 Unsplash 补充法律文件的来源 URL、取得时间、摘要和核对边界见[资产许可来源记录](licenses/Speculo-ASSET-LEGAL-PROVENANCE.txt)。这些文件用于说明已保留资产的权利依据，不表示全部第三方资产已完成权利清理。
+
+## 方法与规范参考
+
+以下资料用于概念、格式或工具语义对照，未整篇转载，也未作为新增材料树或运行依赖收录。实际采用的开源方法和许可已列在前文；查看文章或较新提交不代表本地材料已整体更新。
+
+### 技能组织、写作与知识管理
+
+| 参考 | 对应内容 |
+| --- | --- |
+| [Agent Skills specification](https://agentskills.io/specification) | 技能元数据、文件组织和按需读取 |
+| [Anthropic 技能编写指南](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices)、[技能概述](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) | 描述、入口长度、资源引用和渐进式披露 |
+| [OpenAI 技能文档](https://learn.chatgpt.com/docs/build-skills)、[Rethinking skills and prompts](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra)、[Harness engineering](https://openai.com/index/harness-engineering/) | 入口路由、项目知识与执行环境约束 |
+| [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[技能评测](https://developers.openai.com/blog/eval-skills)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices) | 可接手的计划、可观察验收和风险适配 |
+| [MetaCubeX 文档固定版本](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b) | 代理配置字段与相关技术语义 |
+
+### 上下文交接
+
+[Anthropic 长任务实践](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)、[上下文工程](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)和[后续 harness 实践](https://www.anthropic.com/engineering/harness-design-long-running-apps)用于对照进度、决定、证据与会话接续；[OpenAI Agents SDK handoffs](https://openai.github.io/openai-agents-python/handoffs/) 和 [context](https://openai.github.io/openai-agents-python/context/)用于区分交接目标、输入上下文与本地状态。项目未引入对应 SDK 或演示 harness。
+
+### 原型与设计验证
+
+主要复制适配来自已收录的 Speculo、Matt 和 pstack。Speculo 的[原型入口](https://github.com/NAMEWTA/Speculo/blob/994a64427a6784053dd092a86713870062cfde2f/template/workflows/specdev/specdev-p-prototype/SKILL.md)、[证据方法](https://github.com/NAMEWTA/Speculo/blob/994a64427a6784053dd092a86713870062cfde2f/template/workflows/specdev/specdev-p-prototype/references/design-evidence.md)和[完整引用示例](https://github.com/NAMEWTA/Speculo/blob/994a64427a6784053dd092a86713870062cfde2f/template/workflows/specdev/specdev-p-prototype/references/design-evidence-example.md)提供直接代码证据与同场景对照方法。
+
+补充对照包括 Matt 的 [prototype](https://github.com/mattpocock/skills/blob/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/engineering/prototype/SKILL.md)、[LOGIC](https://github.com/mattpocock/skills/blob/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/engineering/prototype/LOGIC.md)、[UI](https://github.com/mattpocock/skills/blob/5863806dd4e15c63174bee4e7515a4256792ecfa/skills/engineering/prototype/UI.md)，以及 pstack 的[原型方法](https://github.com/cursor/plugins/blob/3fa33bb0f927bea2ccacd48a3cfda95145fb6bae/pstack/skills/poteto-mode/playbooks/prototype.md)、[Experience First](https://github.com/cursor/plugins/blob/3fa33bb0f927bea2ccacd48a3cfda95145fb6bae/pstack/skills/principle-experience-first/SKILL.md)和[视觉对齐](https://github.com/cursor/plugins/blob/3fa33bb0f927bea2ccacd48a3cfda95145fb6bae/pstack/skills/poteto-mode/playbooks/visual-parity.md)。
+
+| 参考 | 对应内容 |
+| --- | --- |
+| OpenAI [Figma 实施技能](https://github.com/openai/skills/blob/0e7823cca07bc2cbf34718a383f9ae92525be6a5/skills/.curated/figma-implement-design/SKILL.md)、[前端设计](https://learn.chatgpt.com/use-cases/frontend-designs)、[页面内反馈](https://openai.com/index/codex-for-almost-everything/) | 项目设计上下文、token、浏览器状态与视口核对 |
+| Anthropic [frontend-design](https://github.com/anthropics/skills/blob/41bbe19d1a1a7eaab5e7bb9050a417e5c6cffc8f/skills/frontend-design/SKILL.md)、[web-artifacts-builder](https://github.com/anthropics/skills/blob/ef740771ac901e03fbca3ce4e1c453a96010f30a/skills/web-artifacts-builder/SKILL.md)、[应用开发 harness](https://www.anthropic.com/research/harness-design-long-running-apps)、[端到端验证](https://www.anthropic.com/research/effective-harnesses-for-long-running-agents) | 视觉约束、HTML 交付与实际用户路径验证 |
+| Google [Gemini Canvas](https://blog.google/products-and-platforms/products/gemini/gemini-collaboration-features/)、[Stitch](https://blog.google/innovation-and-ai/models-and-research/google-labs/stitch-ai-ui-design/) | 代码预览、交互修改与完整用户旅程 |
+| obra/superpowers [visual companion](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/brainstorming/visual-companion.md) | 视觉问题与概念澄清的区分、真实反馈 |
+| GitHub Spec Kit [spec template](https://github.com/github/spec-kit/blob/e210504aa09c9273a38bba665b12b8088468c96f/templates/spec-template.md) | 用户旅程、独立验证与行为边界 |
+
+确认原型对可见效果的优先级是本项目的开发约定，不代表上述来源共同制定的标准。
+
+### 运维工具与工程方法
+
+| 参考 | 对应内容 |
+| --- | --- |
+| [Ansible check/diff](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html) | 后端预览、真实执行与输出保密的区别 |
+| [Rundeck Executions](https://docs.rundeck.com/docs/manual/07-executions.html) | node/step、输出、再次运行与中断核对 |
+| Docker Compose [logs](https://docs.docker.com/reference/cli/docker/compose/logs/) / [restart](https://docs.docker.com/reference/cli/docker/compose/restart/) | 有界日志与实例重启语义 |
+| Google SRE [Incident Response](https://sre.google/workbook/incident-response/) / [Postmortem Culture](https://sre.google/sre-book/postmortem-culture/) | 事件记录、恢复、根因与可执行复盘 |

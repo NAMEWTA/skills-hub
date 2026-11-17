@@ -34,7 +34,8 @@ test('整个开发领域没有重复方法和内嵌执行包', () => {
 });
 
 test('全部迁移记录指向保留的完整资源', () => {
-  const lines = fs.readFileSync(path.join(repositoryRoot, 'docs/dev-resource-moves.tsv'), 'utf8').trim().split('\n').slice(1);
+  const lines = fs.readFileSync(path.join(repositoryRoot, 'tests/fixtures/dev-resource-moves.tsv'), 'utf8').trim().split('\n').slice(1);
+  assert.ok(lines.length > 0, '迁移记录不能为空');
   for (const line of lines) {
     const [removed, owner] = line.split('\t');
     assert.ok(fs.existsSync(path.join(repositoryRoot, owner)), owner);

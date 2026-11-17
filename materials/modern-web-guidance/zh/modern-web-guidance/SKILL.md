@@ -3,8 +3,6 @@ name: modern-web-guidance
 description: "现代 Web 开发最佳实践的搜索工具。强制要求：所有 HTML/CSS 和客户端 JS 任务都必须首先执行。不要跳过；Web API 发展迅速，训练知识中包含过时模式。 遇到以下任务立即触发：模态框/对话框/弹出层、表格、深色模式、锚点定位、容器查询、视图过渡、滚动驱动动画、视差/显现效果、表单、校验、自动填充、无障碍、自定义下拉选择器、滚动条、CWV（LCP、INP、CLS）、content-visibility、fetch 优先级、图片优化、安全、通行密钥、HTML 清理、Web Components、日期/时区、浏览器内置 AI、WebAssembly、框架中的标准 HTML/CSS/DOM 等。 以下任务不触发：后端（SQL、ORM、API 路由）、基础设施/脚本（CI/CD、Docker、Actions、Python/Go、Git），以及工具配置/琐碎操作（Vite、tsconfig、ESLint、测试、复制/重命名、第三方文档）等。"
 ---
 
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/modern-web-guidance/SKILL.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 # Modern Web Guidance
 
 在实现或更新任何 Web UI、CSS 布局/动画、客户端 JS 逻辑（日期/时区、内容清理、性能、无障碍、用户体验修复）的**开始阶段**，先搜索并获取标准化的现代 Web 最佳实践，再编写临时解决方案或添加依赖。

@@ -1,5 +1,3 @@
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/tt-a1i/archify/blob/a7ed6fd6657da90414831d1d42cf95987188750c/archify/renderers/class/README.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 <a id="class-and-interface-renderer"></a>
 
 # 类与接口渲染器

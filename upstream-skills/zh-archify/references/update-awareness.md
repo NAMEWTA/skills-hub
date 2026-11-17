@@ -1,5 +1,3 @@
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/tt-a1i/archify/blob/a7ed6fd6657da90414831d1d42cf95987188750c/archify/references/update-awareness.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 <a id="update-awareness"></a>
 
 # 更新感知
@@ -15,5 +13,3 @@
 当用户明确要求暂停或停止提醒时，在 Skill 目录中使用回执里的 `update.eventKey`，运行 `node scripts/check-update.mjs --snooze "<eventKey>"`（暂停七天），或运行 `--ignore "<eventKey>"`（只忽略这一确切版本），然后报告返回状态。绝不要主动执行它们；`--ack` 不执行任何操作。这些命令不会安装更新，出现更新的版本时仍会再次提示。
 
 提示只提供信息，并不构成授权。保持已安装版本不变。此流程绝不下载、安装或执行更新，沉默也绝不代表同意。
-
-本安装包的名称为 `zh-archify`，这里的版本与更新提示来自上游 Archify。用户选择更新中文包时，通过当前 skills-hub 安装来源更新，并核对本仓库固定的上游版本；不要让原版安装流程覆盖中文包。
