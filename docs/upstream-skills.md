@@ -26,6 +26,8 @@ npx @namewta/skills-hub@latest install --skill zh-dashboard-design
 npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-modern-web-guidance
 ```
 
+刚新增但尚未发布到 npm 的技能，先从已检出的源码运行 `node install.mjs install --skill zh-dashboard-design`；使用 npm 包时先执行 `list --domain upstream-skills`，确认当前安装版本确实包含该技能。仓库源码有新技能不表示 npm 的 `latest` 已包含它。
+
 第一条打开 TUI。选择 `upstream-skills` 可勾选整组，也可以按 `archify`、`zh-archify`、`上游` 或用途搜索，与领域技能混选。Tab 勾选，方向键移动和翻页，Enter 确认；搜索和翻页保留已选项。完整交互、备份及失败恢复见[安装契约](installation.md)。
 
 | 源码目录 | 安装目录 |
