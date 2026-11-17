@@ -19,11 +19,11 @@ npx @namewta/skills-hub install --domain dev
 # 混选开发技能和独立中文技能
 npx @namewta/skills-hub install --skill dev-prototype zh-archify
 
-# 新技能尚未发版时，从已检出的仓库源码安装
-node install.mjs install --skill zh-dashboard-design
+# 从 npm 发布版本安装仪表盘设计中文技能
+npx @namewta/skills-hub@0.1.15 install --skill zh-dashboard-design
 
-# 后续 npm 版本包含该技能时，再从 npm 单独安装
-npx @namewta/skills-hub@latest install --skill zh-dashboard-design
+# 从当前仓库源码安装
+node install.mjs install --skill zh-dashboard-design
 
 # 安装前预览
 npx @namewta/skills-hub install --domain upstream-skills --dry-run
