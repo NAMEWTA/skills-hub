@@ -44,6 +44,13 @@ test('search matches domains, leaves and Chinese purposes while retaining parent
 });
 
 async function searchKeys(t, keys, catalog = skills) {
+  // 夹具模拟可交互终端，不继承 CI 的 TERM=dumb（readline 会禁用编辑键）。
+  const previousTerm = process.env.TERM;
+  process.env.TERM = 'xterm-256color';
+  t.after(() => {
+    if (previousTerm === undefined) delete process.env.TERM;
+    else process.env.TERM = previousTerm;
+  });
   const input = new PassThrough(), output = new PassThrough();
   let rendered = '';
   output.on('data', chunk => { rendered += chunk; });

@@ -1,6 +1,12 @@
 # 验证记录
 
-本页按变更批次保存实测证据。当前代码统一使用 Node.js；历史章节中的 Python、Bun 和 TypeScript 记录只说明当时执行过什么，不再作为安装前提。当前可复现命令见文末。
+本页按变更批次保存实测证据。自有维护代码和 `skills/` 统一使用 Node.js；独立上游包保留原工具与前提。历史章节中的 Python、Bun 和 TypeScript 记录只说明当时执行过什么，不再作为自有技能安装前提。当前可复现命令见文末。
+
+## 2026-11-17：独立上游中文技能与双根安装
+
+新增 `zh-archify`、`zh-modern-web-guidance`、`zh-chrome-extensions`，完整来源与中文材料复用既有父子清单，安装器和 TUI 同时发现 `skills/` 与 `upstream-skills/`。本地隔离回归 351 项全部通过，状态图回放 33 项通过；来源逐文件身份、安装事务、混选及终端边界已有实际检查。
+
+完整范围、实际 CLI 检查及本地浏览器受限情况见[本次验证](../.agents/dev/changes/2026-11-17-upstream-skills/verification.md)，逐项适配见[来源与适配](../.agents/dev/changes/2026-11-17-upstream-skills/source-adaptations.md)。Linux CI 另外执行已安装 Archify 的真实 browser-check，不能用本地 HTML 生成代替。发布结果以对应提交的 Actions 和公开版本完整性为准。
 
 ## 2026-11-12：Herdr 操作与文件通信收敛
 

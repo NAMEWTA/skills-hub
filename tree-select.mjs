@@ -24,9 +24,11 @@ export function createSkillTree(skills) {
   const nodes = [root];
   for (const domain of [...new Set(skills.map(skill => skill.domain))]) {
     const children = skills.filter(skill => skill.domain === domain);
-    nodes.push({ value: `@domain:${domain}`, label: `${domain}/`, depth: 1, names: children.map(skill => skill.name) });
+    const upstream = domain === 'upstream-skills';
+    const label = upstream ? `${domain}/（上游独立技能）` : `${domain}/`;
+    nodes.push({ value: `@domain:${domain}`, label, depth: 1, groupType: upstream ? '分组' : '领域', names: children.map(skill => skill.name) });
     nodes.push(...children.map(skill => ({ value: skill.name, label: skill.name, depth: 2,
-      domain: `@domain:${domain}`, hint: `${domain} · ${skill.description ?? ''}`, names: [skill.name] })));
+      domain: `@domain:${domain}`, hint: `${label} · ${skill.description ?? ''}`, names: [skill.name] })));
   }
   const byValue = new Map(nodes.map(node => [node.value, node]));
   return {
@@ -53,7 +55,7 @@ export function createSkillTree(skills) {
   };
 }
 
-// 每页只属于一个领域；领域行始终置顶且可勾选，不与子项一起滚出屏幕。
+// 每页只属于一个分组；分组行始终置顶且可勾选，不与子项一起滚出屏幕。
 export function createTreePager(tree, pageSize = 8) {
   let query = '', size = Math.max(1, pageSize), page = 0, cursor = 0;
   function pages() {
@@ -131,7 +133,7 @@ export function fitTreeText(value, width) {
 export function renderTreePage(tree, pager, { columns = 80, colors = pc, error = '' } = {}) {
   const c = colors, view = pager.view(), width = Math.max(12, columns - 1);
   const line = (text, style = value => value) => style(fitTreeText(text, width));
-  const lines = [line('◆ 搜索并选择领域 / 技能', c.green), line(`│ 搜索：${view.query || '输入名称 / 用途'} ▌`), '│'];
+  const lines = [line('◆ 搜索并选择分组 / 技能', c.green), line(`│ 搜索：${view.query || '输入名称 / 用途'} ▌`), '│'];
   for (const [index, node] of view.rows.entries()) {
     const active = index === view.cursor;
     const state = tree.state(node.value);
@@ -140,7 +142,7 @@ export function renderTreePage(tree, pager, { columns = 80, colors = pc, error =
       : index === view.rows.length - 1 ? '   └─ ' : '   ├─ ';
     const prefix = `│ ${active ? '›' : ' '} ${branch}${marker} `;
     const suffix = node.depth < 2 ? `  ${node.names.filter(name => tree.names().includes(name)).length}/${node.names.length}` : '';
-    const name = node.depth < 2 ? `${node.label}${node.depth === 1 ? '  领域' : ''}` : node.label;
+    const name = node.depth < 2 ? `${node.label}${node.depth === 1 ? `  ${node.groupType}` : ''}` : node.label;
     const label = fitTreeText(`${prefix}${name}${suffix}`, width).slice(prefix.length);
     // 行首保留非空树枝，避免折行工具裁掉缩进；目录与技能有不同图标和颜色。
     lines.push(c.gray(prefix.slice(0, -2)) + (state === 'none' ? c.dim(`${marker} `) : c.green(`${marker} `))

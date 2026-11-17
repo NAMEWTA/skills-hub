@@ -79,43 +79,49 @@ export function select(skills, domains = [], names = [], allSkills = false) {
 
 export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}) {
   const skillRoot = path.join(repository, 'skills');
+  const upstreamRoot = path.join(repository, 'upstream-skills');
   const licenseRoot = path.join(repository, 'licenses');
   const exists = (filename) => fsOps.lstatSync(filename, { throwIfNoEntry: false });
 
   function catalog() {
     const skills = [];
     const seen = new Set();
-    const rootStat = exists(skillRoot);
-    if (rootStat?.isSymbolicLink()) throw new InstallError(`Symlinked source directory: ${skillRoot}`);
-    if (!rootStat?.isDirectory()) throw new InstallError(`No skills found in ${skillRoot}`);
-    for (const domain of fsOps.readdirSync(skillRoot).sort()) {
-      const domainPath = path.join(skillRoot, domain);
-      const domainStat = exists(domainPath);
-      if (domainStat.isSymbolicLink()) throw new InstallError(`Symlinked source directory: ${domainPath}`);
-      if (!domainStat.isDirectory()) continue;
-      for (const name of fsOps.readdirSync(domainPath).sort()) {
-        const source = path.join(domainPath, name);
-        const sourceStat = exists(source);
-        if (sourceStat.isSymbolicLink()) throw new InstallError(`Symlinks are not supported: ${source}`);
-        if (!sourceStat.isDirectory()) continue;
-        const manifest = path.join(source, 'SKILL.md');
-        if (!exists(manifest)) continue;
-        if (!slug.test(domain) || !slug.test(name)) throw new InstallError(`Invalid domain or skill name: ${domain}/${name}`);
-        if (name.length > 64 || !name.startsWith(`${domain}-`)) {
-          throw new InstallError(`Skill must be named ${domain}-xxx (max 64 characters): ${name}`);
-        }
-        regularFiles(source, fsOps);
-        const header = readUtf8(manifest, fsOps).match(frontmatterPattern);
-        if (!header) throw new InstallError(`Missing frontmatter: ${manifest}`);
-        const declared = header[1].match(/^name:\s*([^\r\n]+)/m)?.[1].trim().replace(/^["']+|["']+$/g, '');
-        if (declared !== name) throw new InstallError(`Frontmatter name must equal directory name: ${manifest}`);
-        if (seen.has(name)) throw new InstallError(`Duplicate install name: ${name}`);
-        seen.add(name);
-        const description = header[1].match(/^description:\s*([^\r\n]+)/m)?.[1].trim().replace(/^["']|["']$/g, '') ?? '';
-        skills.push({ domain, name, source, description });
-      }
+    function directories(root) {
+      const rootStat = exists(root);
+      if (!rootStat) return [];
+      if (rootStat.isSymbolicLink()) throw new InstallError(`Symlinked source directory: ${root}`);
+      if (!rootStat.isDirectory()) throw new InstallError(`Expected a source directory: ${root}`);
+      return fsOps.readdirSync(root).sort().filter(name => {
+        const source = path.join(root, name);
+        const stat = exists(source);
+        if (stat.isSymbolicLink()) throw new InstallError(`Symlinked source directory: ${source}`);
+        return stat.isDirectory();
+      });
     }
-    if (!skills.length) throw new InstallError(`No skills found in ${skillRoot}`);
+    function addSkill(domain, name, source, prefix) {
+      const manifest = path.join(source, 'SKILL.md');
+      if (!exists(manifest)) return;
+      if (!slug.test(domain) || !slug.test(name)) throw new InstallError(`Invalid domain or skill name: ${domain}/${name}`);
+      if (name.length > 64 || !name.startsWith(`${prefix}-`)) {
+        throw new InstallError(`Skill must be named ${prefix}-xxx (max 64 characters): ${name}`);
+      }
+      regularFiles(source, fsOps);
+      const header = readUtf8(manifest, fsOps).match(frontmatterPattern);
+      if (!header) throw new InstallError(`Missing frontmatter: ${manifest}`);
+      const declared = header[1].match(/^name:\s*([^\r\n]+)/m)?.[1].trim().replace(/^["']+|["']+$/g, '');
+      if (declared !== name) throw new InstallError(`Frontmatter name must equal directory name: ${manifest}`);
+      if (seen.has(name)) throw new InstallError(`Duplicate install name: ${name}`);
+      seen.add(name);
+      const description = header[1].match(/^description:\s*([^\r\n]+)/m)?.[1].trim().replace(/^["']|["']$/g, '') ?? '';
+      skills.push({ domain, name, source, description });
+    }
+    for (const domain of directories(skillRoot)) {
+      if (domain === 'upstream-skills') throw new InstallError('The upstream-skills group belongs at the repository root, not inside skills/.');
+      const domainPath = path.join(skillRoot, domain);
+      for (const name of directories(domainPath)) addSkill(domain, name, path.join(domainPath, name), domain);
+    }
+    for (const name of directories(upstreamRoot)) addSkill('upstream-skills', name, path.join(upstreamRoot, name), 'zh');
+    if (!skills.length) throw new InstallError(`No skills found in ${skillRoot} or ${upstreamRoot}`);
     return skills;
   }
 
@@ -128,9 +134,9 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
 
   function plan(skills, project, replace = true) {
     const actualProject = fsOps.realpathSync(project);
-    for (const source of [skillRoot, licenseRoot]) {
+    for (const source of [skillRoot, upstreamRoot, licenseRoot]) {
       if (exists(source) && isWithin(actualProject, fsOps.realpathSync(source))) {
-        throw new InstallError("Run from the target project, outside this repository's source skills and licenses directories.");
+        throw new InstallError("Run from the target project, outside this repository's source skills and licenses directories (including upstream-skills).");
       }
     }
     const agents = path.join(project, '.agents');
@@ -239,6 +245,7 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
        skills-hub install <selection> [--dry-run] [--replace]
 
 Install complete skills into the current project's .agents/skills/. No destination option.
+--domain upstream-skills selects the independent Chinese upstream skills; it creates no domain navigation.
 Selected dev/system/ops domains also initialize missing domain AGENTS.md navigation; managed templates are updated; business records are preserved.
 --dry-run  Preview without writing files.
 Differing selected skills are backed up and replaced automatically.
@@ -284,7 +291,8 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
     const selected = select(skills, args.domains, args.names, everything);
     if (!selected.length) throw new InstallError("Choose --domain, --skill, or --all. Run 'list' to see available skills.");
     if (args.command === 'list') {
-      for (const skill of selected) stdout(`${skill.domain.padEnd(8)} ${skill.name}`);
+      const width = Math.max(8, ...selected.map(skill => skill.domain.length));
+      for (const skill of selected) stdout(`${skill.domain.padEnd(width)} ${skill.name}`);
       return 0;
     }
     const actualProject = fs.realpathSync(project);

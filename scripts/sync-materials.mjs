@@ -5,7 +5,7 @@ import os from 'node:os';
 import crypto from 'node:crypto';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
-import { readMaterials, parseTsvTable, stringifyTsv, resolveMaterialPath, PARENT_COLUMNS, CHILD_COLUMNS } from './materials-manifest.mjs';
+import { readMaterials, parseTsvTable, stringifyTsv, resolveMaterialPath, isRuntimeFilePath, PARENT_COLUMNS, CHILD_COLUMNS } from './materials-manifest.mjs';
 
 // Compatibility aliases; the shared reader owns the schema.
 export const PARENT = PARENT_COLUMNS;
@@ -189,7 +189,7 @@ async function validatePrepared(root, p, snap, repoRoot) {
     if (new Set(destinations).size!==destinations.length) throw Error('Duplicate runtime paths');
     if (new Set(destinations.filter(p=>p.startsWith('skills/dev/')).map(p=>p.split('/')[2])).size>1) throw Error('Development method must have one owning skill');
     for (const rp of destinations) {
-      requireSafe(rp); if (!/^skills\/[^/]+\/[^/]+\/.+/.test(rp)) throw Error('Runtime outside skill files');
+      requireSafe(rp); if (!isRuntimeFilePath(rp)) throw Error('Runtime outside skill files');
       resolveMaterialPath(repoRoot,rp);
     }
   }

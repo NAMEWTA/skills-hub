@@ -1,6 +1,11 @@
 # 更新记录
 
-## 未发布
+## 0.1.11 — 2026-11-17
+
+- 新增同级 `upstream-skills/`，提供可独立安装的 `zh-archify`、`zh-modern-web-guidance`、`zh-chrome-extensions`；完整中文入口和参考配套保留来源代码、模板、字体、标识符与许可。
+- CLI/TUI 统一发现两个安装根；新增 `upstream-skills（上游独立技能）` 安装分组，支持原名/中文搜索、分页、混选、预览、备份和回滚，不创建业务持久化域。
+- 复用两级 materials 清单建立完整来源/中文/运行映射；保留适配与上游版本独立维护，材料同步不覆盖运行版或自动推进核对依据。
+- npm 包包含独立运行包，实际 tarball 检查覆盖两个根、完整资源和执行位；Linux CI 增加已安装 Archify 的真实浏览器交付检查。
 
 - 新增独立 ops 领域：`ops-workflow` 入口与 inventory、execute、inspect、diagnose、maintain、recover、history、runbook 八项专门方法，覆盖多项目、多服务器及共享服务运行关系。
 - 新增统一 Markdown 运维记录助手，支持主/子 run、不可覆盖步骤、摘要冲突检测与写入责任交接；不执行输入命令，不新增远程执行引擎。

@@ -46,6 +46,26 @@ function fixture(t) {
   return { root, skill, entry, reference };
 }
 
+test('upstream packages preserve metadata, licenses and dynamic guides while still checking local links and Chinese entry', t => {
+  const root = temporary(t);
+  write(path.join(root, 'LICENSE'), '许可\n');
+  for (const name of licenseBundleFiles) write(path.join(root, 'licenses', name), '许可\n');
+  const prefix = path.join(root, 'upstream-skills/zh-sample');
+  const header = '---\nname: zh-sample\ndescription: 独立中文上游技能。\nlicense: Apache-2.0\nmetadata:\n  author: original\n  version: "1"\n---\n';
+  const entry = write(path.join(prefix, 'SKILL.md'), header + '# 中文入口\n[来源](https://github.com/example/upstream)\n');
+  write(path.join(prefix, 'LICENSE'), 'Original upstream license\n');
+  write(path.join(prefix, 'guides/topic.md'), '# 由 CLI 按 ID 获取的指南\n');
+  write(path.join(prefix, 'scripts/tool.sh'), '#!/bin/sh\nprintf "upstream"\n');
+  const inspect = () => check(root, { output() {} });
+  assert.deepEqual(inspect(), []);
+  fs.appendFileSync(entry, '[遗漏资源](missing.md)\n');
+  assert.match(inspect().join('\n'), /missing link target/);
+  write(entry, header.replace('独立中文上游技能。', 'English only') + '# 中文入口\n');
+  assert.match(inspect().join('\n'), /expected Chinese description/);
+  write(entry, header.replace('license: Apache-2.0', 'description: 重复\nlicense: Apache-2.0') + '# 中文入口\n');
+  assert.match(inspect().join('\n'), /duplicate metadata/);
+});
+
 test('a full local Chinese resource is resolvable', (t) => {
   const f = fixture(t);
   const destinations = markdownDestinations('参见 [完整说明](references/完整说明.md#设计)。');
@@ -100,6 +120,11 @@ test('a resource index connects all full references', (t) => {
 test('a nested fence example does not create a fake resource link', () => {
   const body = '````markdown\n```text\n```\n[示例](not-a-real-resource.md)\n````\n[真实](references/完整说明.md)';
   assert.deepEqual(markdownDestinations(body), ['references/完整说明.md']);
+});
+test('inline Markdown and HTML examples are not resource links; actual links still resolve', () => {
+  const text = '`[output](/abs/output.html)` and `<a href="example.html">Example</a>`; ``<a href="with`tick.html">``\n[real](references/real.md) and [`API`](references/api.md)';
+  assert.deepEqual(markdownDestinations(text), ['references/real.md', 'references/api.md']);
+  assert.deepEqual(markdownDestinations('Unclosed ` example [actual](real.md)'), ['real.md']);
 });
 test('HTML entities cannot hide an external reference', () => {
   for (const body of ['<a href="https&colon;&sol;&sol;docs.example.edu/reference">说明</a>', '[说明](&#x68;ttps://docs.example.edu/reference)']) assert.ok(runtimeIssues(body).length > 0, body);

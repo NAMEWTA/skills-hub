@@ -30,6 +30,15 @@
 
 ## 物理布局与内容规则
 
+独立上游技能另登记两个来源单元，实际运行文件直接映射到同级 `upstream-skills/zh-*`，不并入 dev 或 ops：
+
+| 项目与子清单 | 仓库 | 跟踪分支 | 完整选定来源根 |
+| --- | --- | --- | --- |
+| [archify](archify/manifest.tsv) | [tt-a1i/archify](https://github.com/tt-a1i/archify) | `main` | `archify` |
+| [modern-web-guidance](modern-web-guidance/manifest.tsv) | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) | `main` | `skills`，含两个独立技能 |
+
+Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`。中文底稿保留原 name，只有运行包改为 `zh-` 名。维护与安装见[上游独立技能](../docs/upstream-skills.md)。
+
 ```text
 materials/
   manifest.tsv
@@ -86,7 +95,7 @@ TSV 列顺序固定，支持带引号的制表符、换行与双引号转义。�
 | `upstream_sha256` | 原件实际 SHA-256 |
 | `zh_path` | 相对项目目录的 `zh/<path>`；中文原文时为空 |
 | `zh_sha256` | 对照实际 SHA-256；无副本时为空 |
-| `runtime_paths` | 仓库内真实采用文件，限 `skills/`，多项用分号；未采用可为空 |
+| `runtime_paths` | 仓库内真实采用文件，限 `skills/<domain>/<技能>/...` 或 `upstream-skills/zh-<原名>/...`，多项用分号；未采用可为空 |
 | `runtime_reviewed_blob` | 运行映射最后真实核对的来源 blob；无映射或旧依据未知时为空 |
 | `adaptation` | 当前关系、原文要点、必要适配理由和适用范围；不堆叠失效历史 |
 

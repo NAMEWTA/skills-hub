@@ -18,6 +18,7 @@ class InstallFixture {
     fs.copyFileSync(path.join(repositoryRoot, 'scripts/init-persistence.mjs'), path.join(this.repository, 'scripts/init-persistence.mjs'));
     fs.cpSync(path.join(repositoryRoot, 'scripts/persistence'), path.join(this.repository, 'scripts/persistence'), { recursive: true });
     this.skillRoot = path.join(this.repository, 'skills');
+    this.upstreamRoot = path.join(this.repository, 'upstream-skills');
     this.licenseRoot = path.join(this.repository, 'licenses');
     for (const name of [...licenseBundleFiles, 'third-party.txt']) write(path.join(this.licenseRoot, name), `Fixture legal notice: ${name}\n`);
     this.licenseTarget = path.join(this.project, '.agents', 'skills-hub-licenses');
@@ -29,7 +30,7 @@ class InstallFixture {
     };
   }
   writeSkill(domain, name) {
-    const folder = path.join(this.skillRoot, domain, name);
+    const folder = domain === 'upstream-skills' ? path.join(this.upstreamRoot, name) : path.join(this.skillRoot, domain, name);
     for (const [relative, content] of Object.entries({
       'SKILL.md': `---\nname: ${name}\ndescription: A fixture skill for ${domain}.\n---\n\n# ${name}\n`,
       'references/details.md': 'Fixture reference.\n',
@@ -103,7 +104,8 @@ contract('domain installs flat into the current project', (f) => {
   f.noTemporaryArtifacts();
 });
 contract('installation inside the source tree is rejected without writes', (f) => {
-  for (const cwd of [f.skillRoot, f.sources['dev-alpha'], path.join(f.sources['dev-alpha'], 'references'), f.licenseRoot]) {
+  const upstream = f.writeSkill('upstream-skills', 'zh-example');
+  for (const cwd of [f.skillRoot, f.sources['dev-alpha'], path.join(f.sources['dev-alpha'], 'references'), f.upstreamRoot, upstream, path.join(upstream, 'references'), f.licenseRoot]) {
     for (const extra of [[], ['--dry-run']]) {
       const before = snapshot(f.repository);
       const result = command(process.execPath, [path.join(f.repository, 'install.mjs'), 'install', '--skill', 'dev-alpha', ...extra], { cwd });
@@ -125,6 +127,34 @@ contract('mixed and repeated selections form a union', (f) => {
 contract('all selects every domain', (f) => {
   f.success(f.cli('install', '--all'));
   assert.deepEqual(f.names(), new Set(Object.keys(f.sources)));
+});
+contract('upstream group lists and installs complete Chinese packages without domain navigation', (f) => {
+  const source = f.writeSkill('upstream-skills', 'zh-archify');
+  f.writeSkill('upstream-skills', 'zh-modern-web-guidance');
+  // 同仓材料依旧是被动对照，不参与运行技能发现。
+  write(path.join(f.repository, 'materials/example/upstream/SKILL.md'), 'not an installable entry');
+  const names = f.success(f.cli('list', '--domain', 'upstream-skills')).stdout.trim().split('\n').map(line => line.trim().split(/\s+/)[1]);
+  assert.deepEqual(names, ['zh-archify', 'zh-modern-web-guidance']);
+  const before = snapshot(f.project);
+  const preview = f.success(f.cli('install', '--domain', 'upstream-skills', '--dry-run'));
+  assert.match(preview.stdout, /would install\s+zh-archify/);
+  assert.deepEqual(snapshot(f.project), before);
+  f.success(f.cli('install', '--domain', 'upstream-skills'));
+  assert.deepEqual(f.names(), new Set(names));
+  assert.deepEqual(snapshot(path.join(f.target, 'zh-archify')), snapshot(source));
+  assert.deepEqual(fs.readdirSync(path.join(f.project, '.agents')), ['skills']);
+  assert.match(f.success(f.cli('install', '--skill', 'zh-archify')).stdout, /unchanged/);
+  f.noTemporaryArtifacts();
+});
+contract('upstream leaves mix with domain selections and all includes both source roots', (f) => {
+  f.writeSkill('upstream-skills', 'zh-archify');
+  f.writeSkill('upstream-skills', 'zh-modern-web-guidance');
+  f.success(f.cli('install', '--domain', 'dev', '--skill', 'zh-archify', 'dev-alpha'));
+  assert.deepEqual(f.names(), new Set(['dev-alpha', 'dev-beta', 'zh-archify']));
+  assert.ok(fs.existsSync(path.join(f.project, '.agents/dev/AGENTS.md')));
+  assert.ok(!fs.existsSync(path.join(f.project, '.agents/upstream-skills')));
+  f.success(f.cli('install', '--all'));
+  assert.deepEqual(f.names(), new Set([...Object.keys(f.sources), 'zh-archify', 'zh-modern-web-guidance']));
 });
 contract('every skill resource is copied without creating project licenses', (f) => {
   f.success(f.cli('install', '--skill', 'dev-alpha'));
@@ -210,6 +240,25 @@ contract('replacement backs up only differing selected skills', (f) => {
 contract('source names must have their domain prefix', (f) => {
   f.writeSkill('dev', 'other-name'); assert.match(f.failure('install', '--all').stderr, /Skill must be named dev-xxx/);
 });
+contract('upstream names require zh prefix without weakening domain names', (f) => {
+  f.writeSkill('upstream-skills', 'archify');
+  assert.match(f.failure('install', '--all').stderr, /Skill must be named zh-xxx/);
+});
+contract('upstream frontmatter must equal the installed directory name', (f) => {
+  const source = f.writeSkill('upstream-skills', 'zh-archify');
+  const filename = path.join(source, 'SKILL.md');
+  fs.writeFileSync(filename, fs.readFileSync(filename, 'utf8').replace('name: zh-archify', 'name: archify'));
+  assert.match(f.failure('install', '--all').stderr, /Frontmatter name must equal directory name/);
+});
+contract('flat names are unique across domain and upstream roots', (f) => {
+  f.writeSkill('zh', 'zh-example');
+  f.writeSkill('upstream-skills', 'zh-example');
+  assert.match(f.failure('install', '--all').stderr, /Duplicate install name: zh-example/);
+});
+contract('upstream group cannot also be declared as a domain', (f) => {
+  write(path.join(f.skillRoot, 'upstream-skills/upstream-skills-example/SKILL.md'), 'reserved group');
+  assert.match(f.failure('install', '--all').stderr, /upstream-skills group belongs at the repository root/);
+});
 contract('source frontmatter name must match its directory', (f) => {
   const filename = path.join(f.sources['dev-alpha'], 'SKILL.md');
   fs.writeFileSync(filename, fs.readFileSync(filename, 'utf8').replace('name: dev-alpha', 'name: dev-other'));
@@ -226,6 +275,8 @@ contract('source resource symlinks are rejected', (f) => {
 });
 for (const [label, resolve] of [
   ['skill', (f) => f.sources['dev-alpha']], ['domain', (f) => path.join(f.skillRoot, 'dev')], ['root', (f) => f.skillRoot],
+  ['upstream skill', (f) => f.writeSkill('upstream-skills', 'zh-example')],
+  ['upstream root', (f) => { f.writeSkill('upstream-skills', 'zh-example'); return f.upstreamRoot; }],
 ]) contract(`source ${label} symlinks are rejected`, (f) => {
   const original = resolve(f); const moved = path.join(f.root, 'moved-source'); fs.renameSync(original, moved);
   if (!f.link(original, moved)) return;
@@ -306,6 +357,23 @@ contract('publish failure rolls back new installation and replacement', (f) => {
   } });
   assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project, true), /rolled back/);
   assert.deepEqual(snapshot(f.target), before); assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha'))); f.noTemporaryArtifacts();
+});
+contract('upstream replacement failure rolls back both roots and preserves its backup', (f) => {
+  f.sources['zh-archify'] = f.writeSkill('upstream-skills', 'zh-archify');
+  const installed = f.seed('zh-archify', true);
+  const before = snapshot(f.target);
+  const installer = f.installer({ renameSync(source, destination) {
+    if (path.basename(source) === 'zh-archify' && path.basename(path.dirname(source)).startsWith('.skills-hub-stage-')) throw new Error('simulated upstream publish failure');
+    return fs.renameSync(source, destination);
+  } });
+  assert.throws(() => installer.apply(f.selected('dev-alpha', 'zh-archify'), f.project), /rolled back/);
+  assert.deepEqual(snapshot(f.target), before);
+  assert.ok(fs.existsSync(path.join(installed, 'local-note.txt')));
+  assert.ok(!fs.existsSync(path.join(f.project, '.agents/dev')));
+  f.noTemporaryArtifacts();
+  f.success(f.cli('install', '--skill', 'zh-archify'));
+  assert.deepEqual(snapshot(installed), snapshot(f.sources['zh-archify']));
+  assert.equal(f.backups('zh-archify').length, 1);
 });
 contract('failed rollback preserves a recoverable backup', (f) => {
   const old = f.seed('dev-alpha', true); const previous = snapshot(old);

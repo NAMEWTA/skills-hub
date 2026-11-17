@@ -37,6 +37,30 @@ test('same SHA is deterministic, preserves CRLF, and apply only selected snapsho
  await f.run('apply',a); assert.equal(await fs.readFile(path.join(f.materialsRoot,'speculo','upstream','a.md'),'utf8'),'English original\r\n');
  assert.equal(await f.run('dry-run'),await f.run('dry-run'));
 });
+test('upstream runtime mapping survives source refresh without overwriting local adaptation or advancing review', async t => {
+ const f = await fixture(t);
+ f.row.runtime_paths = 'upstream-skills/zh-sample/SKILL.md';
+ f.row.runtime_reviewed_blob = f.row.source_git_blob;
+ const runtime = path.join(f.root, f.row.runtime_paths);
+ await fs.mkdir(path.dirname(runtime), { recursive: true });
+ await fs.writeFile(runtime, '本地适配：保留项目约束。\n'); await f.write();
+ const reviewed = f.row.runtime_reviewed_blob;
+ await fs.writeFile(path.join(f.repo, 'a.md'), 'Updated English method\n'); f.commit();
+ const prepared = path.join(f.tmp, 'upstream-refresh');
+ const report = await f.run('prepare', prepared); assert.match(report, /upstream-skills\/zh-sample\/SKILL.md/);
+ await review(prepared, async rows => {
+   const translated = '更新后的完整中文方法\n';
+   rows[0].language = 'en'; rows[0].zh_path = 'zh/a.md'; rows[0].zh_sha256 = hash(translated);
+   await fs.mkdir(path.join(prepared, 'speculo/zh'), { recursive: true });
+   await fs.writeFile(path.join(prepared, 'speculo/zh/a.md'), translated);
+ });
+ await f.run('apply', prepared);
+ assert.equal(await fs.readFile(runtime, 'utf8'), '本地适配：保留项目约束。\n');
+ const [updated] = parseTsv(await fs.readFile(path.join(f.materialsRoot, 'speculo/manifest.tsv'), 'utf8'));
+ assert.equal(updated.runtime_reviewed_blob, reviewed);
+ assert.notEqual(updated.source_git_blob, reviewed);
+ assert.deepEqual(check(f.root, { output() {} }), []);
+});
 test('network/branch failure and source-root absence leave official files intact',async t=>{
  const f=await fixture(t); const before=await fs.readFile(path.join(f.materialsRoot,'speculo','manifest.tsv'),'utf8');
  f.p.repository=path.join(f.tmp,'missing');await f.write();await assert.rejects(f.run('prepare',path.join(f.tmp,'bad')));

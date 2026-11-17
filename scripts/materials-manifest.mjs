@@ -4,6 +4,11 @@ import path from 'node:path';
 export const PARENT_COLUMNS = ['project', 'repository', 'ref', 'revision', 'source_root', 'manifest_path'];
 export const CHILD_COLUMNS = ['path', 'kind', 'language', 'source_git_mode', 'source_git_blob', 'upstream_sha256', 'zh_path', 'zh_sha256', 'runtime_paths', 'runtime_reviewed_blob', 'adaptation'];
 
+// A mapping points to a file in an installable package, never to passive materials.
+export function isRuntimeFilePath(value) {
+  return /^(?:skills\/(?!upstream-skills\/)[^/]+\/[^/]+|upstream-skills\/zh-[a-z0-9]+(?:-[a-z0-9]+)*)\/.+/.test(value);
+}
+
 function table(text) {
   const records = []; let row = []; let cell = ''; let state = 'plain';
   const endCell = () => { row.push(cell); cell = ''; state = 'plain'; };

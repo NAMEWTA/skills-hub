@@ -1,8 +1,8 @@
 # skills-hub
 
-按领域组织、按需安装的 Agent Skills。**dev** 覆盖从需求到上线及知识沉淀，**system** 提供系统诊断、磁盘清理、网络代理与配置，**ops** 独立管理多项目、多服务器的运行运维与操作历史。
+按领域和独立技能集合组织、按需安装的 Agent Skills。**dev** 覆盖从需求到上线及知识沉淀，**system** 提供系统诊断、磁盘清理、网络代理与配置，**ops** 独立管理多项目、多服务器的运行运维与操作历史；**upstream-skills** 收录保持各自结构的上游中文技能。
 
-所有技能入口与操作资料均为中文，完整参考、模板和示例随技能安装，执行时只引用本技能内的相对路径。以明确意图、可组合的工程实践和完整验证闭环组织开发。规格驱动、测试驱动、状态图、形式化分析与实际运行验证按任务组合；小任务保持简短，复杂任务才拆分。
+技能入口与操作说明为中文，完整参考、模板和示例随技能安装。自有领域使用包内资源；独立上游包保留原工具与必要外部服务，代码和技术标识保持原值，运行前提见包内说明。开发技能以明确意图、可组合的工程实践和完整验证闭环组织任务，按需组合规格驱动、测试驱动、状态图、形式化分析与实际运行验证。
 
 ## 安装
 
@@ -10,16 +10,16 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.10
+npx @namewta/skills-hub@0.1.11
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.10
+npm install -g @namewta/skills-hub@0.1.11
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.10 list
-npx @namewta/skills-hub@0.1.10 install --domain dev
-npx @namewta/skills-hub@0.1.10 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.11 list
+npx @namewta/skills-hub@0.1.11 install --domain dev
+npx @namewta/skills-hub@0.1.11 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；同名技能存在差异时自动备份替换，无需额外参数。非交互环境继续要求明确参数，不会等待输入。
@@ -65,6 +65,26 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 ### 从 skills-wta 迁移
 
 从旧包 `skills-wta@0.0.1` 切换到 `@namewta/skills-hub@0.0.8`，继续在同一项目运行上面的安装命令。新旧版本使用相同的 `.agents/skills/<技能名>/`，技能内容相同则不变，有差异时自动备份替换；新的开发记录写入 `.agents/dev/`，系统维护记录写入 `.agents/system/`；已有项目记录按迁移说明处理，安装器不会自动搬迁。新版不再复制项目许可目录，新备份使用 `.agents/.skills-hub-backups/`；已有许可和备份保持原样。旧 GitHub 标签 `v0.0.1` 保留为原包历史；本次从已发布的 scoped npm `0.0.7` 递增 `+0.0.1` 发布 `0.0.8`，使用 `v0.0.8` 标签，不覆盖历史版本。详见[迁移说明](docs/installation.md#从-skills-wta-迁移)。
+
+## upstream-skills：独立上游中文技能
+
+这组技能分别维护，不要求属于同一套流程。直接从与 `skills/` 同级的 `upstream-skills/` 安装，名称统一加 `zh-`：
+
+| 技能 | 用途 | 对应来源 |
+| --- | --- | --- |
+| [zh-archify](upstream-skills/zh-archify/SKILL.md) | 架构、流程、时序、状态、ERD 等交互图和单页解释 | [tt-a1i/archify](https://github.com/tt-a1i/archify) |
+| [zh-modern-web-guidance](upstream-skills/zh-modern-web-guidance/SKILL.md) | HTML、CSS、客户端 JavaScript 的现代 Web 实践与指南检索 | [GoogleChrome/modern-web-guidance](https://github.com/GoogleChrome/modern-web-guidance) |
+| [zh-chrome-extensions](upstream-skills/zh-chrome-extensions/SKILL.md) | Chrome 扩展与 Manifest V3 开发、权限和发布检查 | 同一 Google 仓库的独立扩展技能 |
+
+```sh
+npx @namewta/skills-hub@0.1.11 install --domain upstream-skills
+npx @namewta/skills-hub@0.1.11 install --skill zh-archify
+npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-modern-web-guidance
+```
+
+不带参数运行即可在 TUI 中选择 `upstream-skills（上游独立技能）`。可搜索原名、`zh-` 名和中文用途，分组全选或与其他领域混选。安装后仍是 `.agents/skills/zh-archify/` 等平级文件夹，不创建 `.agents/upstream-skills/`。
+
+上游映射与本地适配独立维护，资料更新不会自动覆盖中文运行版。Archify 携带完整本地运行资源，完整交付检查还需要 Chrome/Chromium；Google 检索 CLI 保持原命令和门禁，最新结果可能仍是英文，随包中文指南是固定版本对照。具体安装、映射、适配和更新方法见[上游独立技能说明](docs/upstream-skills.md)。
 
 ## dev：完整开发流程
 
@@ -170,7 +190,7 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | [ops-history](skills/ops/ops-history/SKILL.md) | 按项目、服务器、服务、环境和时间查询同一份历史 |
 | [ops-runbook](skills/ops/ops-runbook/SKILL.md) | 从真实证据生成、验证并维护项目专属运维知识/技能 |
 
-ops 随当前源码提供，已发布 `0.1.10` 尚不包含本次新增能力。在实际运维工作根安装：
+ops 随 `0.1.11` 的源码与 npm 包一起提供。在实际运维工作根安装：
 
 ```bash
 node /path/to/skills-hub/install.mjs install --domain ops
@@ -213,7 +233,7 @@ node /path/to/skills-hub/install.mjs install --domain ops
 
 每个技能是一个完整安装包：`SKILL.md` 说明何时使用、如何判断、做到什么程度；`references/` 放按需读取的完整中文方法；`assets/` 放可以复制到目标项目的模板；需要确定性操作时才提供 `scripts/`。`agents/openai.yaml` 提供界面元数据。
 
-- **全部本地引用**：技能正文、参考、模板和脚本不依赖外部文档，不出现来源项目名、来源作者名或致谢段落。内部资源引用不能越出本技能文件夹。
+- **自有领域全部本地引用**：`skills/` 的正文、参考、模板和脚本不依赖外部文档，不出现来源项目名、来源作者名或致谢段落。独立上游包保留必要来源与工具引用；两类包的内部资源链接都不能越出本技能文件夹。
 - **完整中文内容**：完整取得指定来源根，并逐份翻译适用的非中文/混合参考；已是中文的文件直接读取 upstream，不重复生成 zh。运行版本保留实质步骤、判断标准、例子和表格，再统一到本项目的名称、路径、工具能力与持久化约定。
 - **按需阅读**：完整资料不等于每次全部加载。入口指明何时读取哪份资源，细节留在包内，需要时再读。
 - **协作依赖**：原子技能负责完整方法，工作流按阶段调用。执行时沿用同一任务与证据，不递归复制资源。方法归属与迁移见[开发方法归属](docs/dev-method-ownership.md)。
@@ -238,11 +258,11 @@ node scripts/check-skill-quality.mjs --report
 node scripts/install-hooks.mjs
 ```
 
-校验同时拒绝运行目录中的非 JavaScript 脚本，materials 被动来源不受此扩展名约束；执行 `npm run check:package` 验证实际分发包及材料排除。校验覆盖命名、frontmatter、本地链接、单包资源可达性、外链与来源名称残留、许可附带以及对照文件完整性。结构检查不能代替内容质量审查；翻译和流程调整仍需对照全文检查。
+校验拒绝仓库维护代码和自有 `skills/` 中的非 JavaScript 脚本；`upstream-skills/` 保留来源必要工具，materials 继续是被动对照。`npm run check:package` 验证两个运行根的真实分发与安装，排除材料；有浏览器的环境用 `npm run check:upstream` 验证 Archify 完整交付。两类技能都检查命名、中文入口、真实本地链接和完整映射，自有领域另检查入口预算、资源可达性和来源残留。结构检查不能代替全文翻译与行为审查。
 
 ## 致谢与许可
 
-本项目参考以下成熟内容，材料库按明确登记范围维护原样来源、适用中文对照和当前运行映射。这里集中记录来源，技能运行目录中不放来源说明或外部参考链接。每次显式同步解析指定分支最新提交，并固定同一 SHA 完成全部读取；当前来源身份以[父清单](materials/manifest.tsv)为机器依据，下表只提供范围和导航，不重复维护 SHA 或固定数量。来源更新、翻译核对和运行版适配分别记实，不由本表推定已完成验收。
+本项目参考以下成熟内容，材料库按明确登记范围维护原样来源、适用中文对照和当前运行映射。来源在此集中导航，独立上游包另保留自身归属与许可；自有领域保持去来源的整合方式。每次显式同步解析指定分支最新提交，并固定同一 SHA 完成全部读取；当前来源身份以[父清单](materials/manifest.tsv)为机器依据，下表不重复维护 SHA 或固定数量。来源更新、翻译核对和运行版适配分别记实。
 
 | 项目 | 准确来源范围 | 跟踪分支 | 当前文件与映射 |
 | --- | --- | --- | --- |
@@ -252,12 +272,14 @@ node scripts/install-hooks.mjs
 | ai-design-skills | [elayadesign/ai-design-skills 的 skills](https://github.com/elayadesign/ai-design-skills/tree/main/skills) | `main` | [项目清单](materials/ai-design-skills/manifest.tsv) |
 | speculo | [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo)，整仓原样资料；运行版按需融合，不移植状态引擎 | 父清单 `ref=HEAD`，当前默认解析 `main`，每次重解析 | [项目清单](materials/speculo/manifest.tsv) |
 | herdr | [herdrdev/herdr 的 skills/herdr](https://github.com/herdrdev/herdr/tree/master/skills/herdr) | `master` | [项目清单](materials/herdr/manifest.tsv) |
+| archify | [tt-a1i/archify 的 archify](https://github.com/tt-a1i/archify/tree/main/archify) | `main` | [项目清单](materials/archify/manifest.tsv) |
+| modern-web-guidance | [GoogleChrome/modern-web-guidance 的 skills](https://github.com/GoogleChrome/modern-web-guidance/tree/main/skills) | `main` | [项目清单](materials/modern-web-guidance/manifest.tsv) |
 
 [资料导航与同步用法](materials/README.md)解释双树、稀疏 zh、父子字段、查询和预览/准备/应用命令。Speculo 必须在父清单使用 `ref=HEAD`，同步脚本才会动态解析默认分支，不长期固定 `main`；其余登记来源跟踪各表指定的 main/master 分支。普通校验与 CI 不自动联网刷新。`runtime_paths` 是实际采用关系，`runtime_reviewed_blob` 是最后真实核对依据，不能随材料更新自动前移；删除或退出当前来源的文件在差异报告中保留运行影响，不自动删除已适配技能。
 
 `system-herdr` 直接复用完整中文 CLI 底稿，在 SKILL.md 保留 Herdr 基础操作与既有 Claude Code、Codex、Pi 默认启动命令，并增加按 pane 的 task/report 文件通信。正文只有一份，配套文件仅提供通信格式；必要差异见[Herdr 采用与适配](docs/herdr-coordination.md)。逐文件 Git blob、摘要及运行核对依据从 herdr 子清单查询；本地启动扩展与通信协议不写进 zh 冒称原文。Herdr 在运行内容中作为实际操作工具名称保留，不作为来源署名或外部文档依赖。
 
-感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。材料完整性以所选根的 Git 树、两级清单与实际文件逐份核对，不用旧编号或历史计数替代；当前快照及适配是否验收应以真实验证记录为准。运行包按主题整合为独立中文技能，原品牌图片、原插件配置、自动联网安装器和复杂计划准入工具仅保留作对照，不成为使用条件。
+感谢这些内容的作者与贡献者。PR 视觉说明方法还通过上述资料引用了 [Dex Horthy](https://github.com/dexhorthy) 与 [HumanLayer show-me](https://github.com/humanlayer/humanlayer) 的贡献，对应 Apache 2.0 与 NOTICE 已一并附带。材料完整性以所选根的 Git 树、两级清单与实际文件逐份核对，不用旧编号或历史计数替代；当前快照及适配是否验收应以真实验证记录为准。自有领域按主题整合，原品牌图片、原插件配置和复杂计划准入工具仅作对照；独立上游包按自身完整运行需求保留必要资源和明确工具前提。
 
 技能组织方式还参考 [Rethinking skills and prompts for GPT-6 Astra](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) 与 [Harness engineering](https://openai.com/index/harness-engineering/)。文章的组织原则已转化为本项目的本地编写与知识管理说明；未转载文章全文。代理配置字段的理解另参考 [MetaCubeX 文档](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b)，运行说明已写在技能本地，不要求使用者访问该文档。
 
@@ -265,7 +287,7 @@ node scripts/install-hooks.mjs
 
 `dev-handoff` 继续采用已收录的 Matt handoff 与 pstack 会话接续、安全暂停完整方法，并对照 Anthropic/Claude 的上下文工程、长任务接续与技能编写文章，以及 OpenAI Agents SDK 的 handoff/context 文档。具体采用内容、保留步骤与适配理由见[开发上下文交接](docs/dev-handoff.md)；官方文章仅作方法对照，未转载全文，也未作为新增整库材料收录。
 
-项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发，不再由技能安装器复制到用户项目。再次分发技能时应保留适用许可。
+项目原创内容采用 [MIT](LICENSE)。原作者版权、MIT 许可、适用的 Apache 2.0 及 NOTICE 的分发文本集中保存在[许可目录](licenses/)并由[第三方声明](THIRD_PARTY_NOTICES.md)说明，包括设计材料内嵌的额外 MIT 声明。materials 选定来源树自带的法律文件也须原样保留，这是快照完整性要求，与根 licenses 的集中分发职责不同；当前来源移出范围也不取消既有运行内容的许可义务。许可随源码仓库和 npm 包分发；自有领域使用集中许可，独立上游包另外随技能携带适用法律文件。安装器不创建项目级许可目录，再次分发时须保留适用许可。
 
 
 ### ops 方法来源

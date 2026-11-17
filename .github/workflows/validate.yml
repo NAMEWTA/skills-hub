@@ -42,3 +42,6 @@ jobs:
         run: npm run check:statechart
       - name: Install and verify the actual npm tarball
         run: npm run check:package
+      - name: Render and browser-check the installed Chinese Archify skill
+        if: runner.os == 'Linux'
+        run: npm run check:upstream

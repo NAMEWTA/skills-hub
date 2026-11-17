@@ -62,6 +62,38 @@ test('search resets paging, focuses the matching skill and preserves selections'
   assert.equal(pager.view().page, 0);
 });
 
+test('upstream group keeps its Chinese label, search aliases and selection state across pages', () => {
+  const skills = [
+    { domain: 'dev', name: 'dev-spec', description: '开发规格' },
+    { domain: 'upstream-skills', name: 'zh-archify', description: '绘制架构图' },
+    { domain: 'upstream-skills', name: 'zh-modern-web-guidance', description: '现代网页开发指引' },
+    { domain: 'upstream-skills', name: 'zh-chrome-extensions', description: '浏览器扩展开发' },
+  ];
+  const tree = createSkillTree(skills), pager = createTreePager(tree, 2);
+  const group = '@domain:upstream-skills';
+  pager.search('上游独立技能');
+  assert.equal(pager.view().rows[pager.view().cursor].value, group);
+  assert.equal(pager.view().domainPages, 2);
+  pager.toggle();
+  assert.equal(tree.state(group), 'all');
+  pager.turn(1); pager.toggle(); // 排除第二页的 chrome 技能。
+  assert.equal(tree.state(group), 'partial');
+  for (const query of ['archify', 'zh-archify', '上游 架构']) {
+    pager.search(query);
+    assert.equal(pager.view().rows[pager.view().cursor].value, 'zh-archify');
+    const frame = stripVTControlCharacters(renderTreePage(tree, pager, { columns: 100 }));
+    assert.match(frame, /◩ upstream-skills\/（上游独立技能）  分组/);
+  }
+  pager.search('upstream-skills');
+  assert.equal(pager.view().rows[pager.view().cursor].value, group);
+  pager.toggle(); // 部分选中的父分组补齐全部，包括搜索外的项。
+  assert.equal(tree.state(group), 'all');
+  pager.search('dev'); pager.toggle();
+  assert.equal(tree.state('@all'), 'all');
+  tree.toggle('zh-chrome-extensions');
+  assert.deepEqual(tree.names(), ['dev-spec', 'zh-archify', 'zh-modern-web-guidance']);
+});
+
 test('resizing preserves the focused skill and recomputes page boundaries', () => {
   const { pager } = fixture();
   pager.turn(1); pager.move(3);
@@ -98,6 +130,13 @@ test('narrow frames, long Chinese text and emoji do not overflow or lose tree pr
 });
 
 test('real keys page as blocks, preserve search text and carry selection across domains', { timeout: 5000 }, async t => {
+  // 夹具模拟可交互终端，不继承 CI 的 TERM=dumb（readline 会禁用编辑键）。
+  const previousTerm = process.env.TERM;
+  process.env.TERM = 'xterm-256color';
+  t.after(() => {
+    if (previousTerm === undefined) delete process.env.TERM;
+    else process.env.TERM = previousTerm;
+  });
   const input = new PassThrough(), output = new PassThrough();
   let rendered = '';
   output.on('data', chunk => { rendered += chunk; });
