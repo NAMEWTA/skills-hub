@@ -1,23 +1,16 @@
 # 报告来源、初始化与持续任务
 
-## 核对上游后的职责区分
+报告来源、问题追踪器、代码仓库、UI 控制和持续触发是不同能力。配置记录实际可用的账号、范围和动作；不会自动安装连接器或授予权限。
 
-本次核对 `cursor/plugins` 的固定提交 `6b0300214a09fd6029cfb7077043125758cd1fd2`。以下原件与本仓库已有归档内容一致；运行技能使用随包资料，不依赖这些远程链接。
+<a id="核对上游后的职责区分"></a>
 
-| 原方法 | 实际职责 | 本地入口 |
-| --- | --- | --- |
-| [setup-pstack](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/skills/setup-pstack/SKILL.md) | 检查实际可用模型，配置角色、推理预算与规则；可继续建立项目验证技能 | `dev-setup` |
-| [setup-benny](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny/skills/setup-benny/SKILL.md) | 安装完整自动化资料，填写项目配置，核对来源、追踪器、仓库、控制与模型，准备两个任务并测试交接 | `dev-issue-setup` |
-| [自动化运行契约](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny/FOR_AGENTS.md) | 尚未启用的分诊与 UI 复现修复组合，依赖真实集成、用户配置和实际触发器 | 包内 `automation-intent.md` |
-| [分诊方法](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny/skills/triage-issue-reports/SKILL.md) | 从指定 Slack 频道读取报告，分类、查重、分流与一次结论 | `dev-issue-triage` |
-| [复现修复方法](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny/skills/reproduce-and-fix-issues/SKILL.md) | 核验分诊身份、真实 UI 双次复现、验证已有补丁及可选受限修复 | `dev-issue-fix` |
-| [配置示例](https://github.com/cursor/plugins/blob/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny/templates/configuration.example.yaml) | Slack 来源与运维配置、可适配追踪器、仓库、控制、预算及角色模型 | 各包的 `assets/configuration.yaml` |
+## 职责与入口
 
-上游这套自动化明确预设 Slack 报告来源，但追踪器是适配接口；示例里的仓库托管平台也不等于需求只能来自该平台。通用初始化负责模型与开发配置，报告管道另有自己的初始化方法。不能把上游示例说成已经提供任意邮件或监控服务的连接器。
+`dev-setup` 配置通用模型、角色和开发环境。报告管道由 `dev-issue-setup` 配置，分诊归 `dev-issue-triage`，可信交接后的 UI 复现和修复归 `dev-issue-fix`。共同来源协议只在 setup 维护，其他阶段按需调用。
 
-本次本地适配保留八阶段初始化、十阶段分诊和十五阶段 UI 复现修复的完整方法及失败分支，把来源与触发选择单独放入每个包自带的 `references/source-adapter.md`。其他来源的能力契约是本项目的适配；Slack 原生身份、可信交接、线程回复与回读要求仍作为完整分支保留。`materials/` 的原件不改写。
+运行方法保留初始化、分诊、复现修复和失败分支。来源适配定义需要什么真实能力，不等于仓库已经提供任意邮件或监控服务的连接器。收集和需求汇总使用对应任务模板，不能因来源相同就换成缺陷修复流程。
 
-收集或需求汇总另用一个简短的本地任务模板，保留用户的完整方法、范围、时间窗口与输出要求。这是初始化适配，未改写成熟的缺陷分诊规则，也没有新增连接器或工作流引擎。
+第三方来源及改造说明统一见[THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)。本页维护用户的配置、运行与交接契约。
 
 ## 如何选择技能
 
@@ -77,7 +70,7 @@
 
 来源回写只能回到已经核实的原报告，或使用预先选择的运行输出。发送结果未知时先查证，不改发其他位置或盲目重试。只有本次新建的追踪器对象才可以按已有授权进行交接失败补偿；不能删除或关闭原有来源问题来“回滚”。
 
-原方法的既有修复优先、归属检查、真实 UI 双次复现、前后媒体证据、有限预算、草稿 PR 和清理仍保留。分诊阶段不擅自运行复现或修改代码；只配置分诊也不要求 UI、录像或 PR 能力。
+UI 修复先查已有修复和归属，按所选模式保留双次真实复现、前后媒体证据、有限预算、草稿 PR 和清理。分诊阶段不擅自运行复现或修改代码；只配置分诊也不要求 UI、录像或 PR 能力。
 
 有人正在修复且尚无工件时，只停止竞争补丁。用户仅要求确认症状仍存在，可以在授权环境和版本范围内完成双次真实 UI 复现；确有同范围重复复现、现场冲突或用户限制时才停止。完成证据与结果后清理，不进入实现或 PR 阶段。
 
@@ -91,4 +84,4 @@
 
 修改运行方法时，核对三个协作技能及各自模板。共同来源协议归 `dev-issue-setup`；分诊和修复分别调用 `dev-issue-triage` 与 `dev-issue-fix` 的完整方法。保留上游成熟步骤；来源适配仅处理真实工具、项目路径和调用边界，不用抽象概括替代原有操作细节。
 
-同步时分别比较通用初始化、专用自动化初始化、分诊、复现修复和配置原件。把新增原生能力与本项目的适配区分清楚，更新来源映射和适配说明，再检查任务身份、幂等性、原来源回复、失败补偿和实际可读的协作入口。
+维护时分别核对通用初始化、报告管道初始化、分诊、UI 复现修复和配置接口。新增工具能力与本地适配分别登记，更新真实来源映射后，检查任务身份、重复投递、原来源回复、失败补偿和协作入口。材料同步方式见[开发约束](development-constraints.md#同步上游的最小过程)。

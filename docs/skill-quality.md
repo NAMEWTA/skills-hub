@@ -1,18 +1,12 @@
 # 技能入口预算与检查
 
+本页定义仓库可执行的质量规则。具体运行命令的前提、结果解释和专项选择见[验证指南](validation.md)；编写方法见[技能编写指南](skill-authoring.md)。
+
 ## 规范依据
 
-以下官方资料核对于 2026-11-07。格式要求、编写建议和本仓库门禁分别说明，后续同步时应重新核对来源。
+技能元数据、按需加载和简短入口遵循通用 Agent Skills 格式；本项目在此基础上约定自有 frontmatter、物理行数与非空白字符预算。官方参考及其采用关系统一见[第三方声明](../THIRD_PARTY_NOTICES.md)。本页的阈值是实际校验契约，不将编写建议等同于整个技能包的知识总量限制。
 
-| 来源 | 与本项目相关的要求或建议 |
-| --- | --- |
-| [Agent Skills 格式规范](https://agentskills.io/specification) | `name` 最多 64 字符，`description` 最多 1024 字符；推荐正文少于 5000 tokens、入口少于 500 行，并使用相对引用与渐进式披露。规范允许一些可选元数据，本仓库自有 `skills/` 只采用 `name`、`description` 是本地约定。 |
-| [Anthropic 编写最佳实践](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices) | 建议 `SKILL.md` 正文少于 500 行，接近上限时拆到参考文件；尽量直接链接所需资料，较长参考提供目录。500 行属于编写与性能建议，不是整个技能包的知识总量限制。 |
-| [Anthropic 技能概述](https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview) | 元数据供发现，技能触发后读取正文，资源按需访问。参考只有读取时才占上下文；脚本可运行后只返回结果。 |
-| [OpenAI 技能文档](https://learn.chatgpt.com/docs/build-skills) | 描述应短而准确，优先写核心目标和触发条件；名称和描述先参与发现，完整正文在采用技能后读取。 |
-| [OpenAI 技能与提示词文章](https://developers.openai.com/blog/rethinking-skills-and-prompts-for-gpt-6-astra) | 多流程技能的入口宜作为最小路由，指向需要的方法和脚本；过宽或互相冲突的描述会妨碍选择。 |
-
-5000 tokens 不等于 5000 个中文字符，也不等于 5000 个英文单词。本项目不固定模型 tokenizer，不用字符数量声称已经满足某个模型的精确 token 预算。
+字符数不是模型 token 数。本项目不固定 tokenizer，也不通过字符统计声称满足某个模型的精确 token 预算。
 
 ## 本仓库的可执行上限
 
@@ -35,13 +29,13 @@
 
 `upstream-skills/zh-<原技能名>/` 保持上游完整包的目录、工具、必要 metadata 和法律文件，不套用自有技能的入口预算、去来源、禁外部文档链接或脚本语言迁移规则。名称仍须不超过 64 字符、使用 `zh-` 前缀并与目录一致；描述必须是非空中文且不超过 1024 字符。两个运行根共用安装名空间，重复名称会失败。
 
-本地相对链接仍检查文件存在与单包边界。上游按 CLI、guide ID 或自身索引动态读取资源时，不要求全部 Markdown 都从 `SKILL.md` 的链接图可达；保留资源和按需读取方式，不能为机械通过自有门禁删减原包。法律原文与必要工具文件随包保留，译文、字节对照、适配说明和材料映射分别核查。
+本地相对链接仍检查文件存在与单包边界。上游按 CLI、guide ID 或自身索引动态读取资源时，不要求全部 Markdown 都从 `SKILL.md` 的链接图可达；保留资源和按需读取方式，不能为机械通过自有门禁删减原包。法律原文与必要工具文件随包保留，译文、字节对照和材料映射分别核查；来源与改造声明统一见[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
 两个根都安装到 `.agents/skills/<技能名>/`。`upstream-skills` 仅是安装分组，不创建 `.agents/upstream-skills/` 或套用 dev、ops 等领域记录模板。完整约定见[上游独立技能](upstream-skills.md)。
 
 ## 本地检查与构建
 
-仓库维护命令使用 Node.js 22.14+，不需要 Python 或额外 npm 运行依赖。Windows、macOS 与 Linux 使用相同的命令。独立上游技能的实际执行仍按包内声明核对其原始工具前提，例如 Archify 的浏览器门禁需要 Chrome 或 Chromium。
+仓库维护命令使用 Node.js 22.14+。快速结构检查使用标准库；完整测试和交互消费端验证先安装锁文件声明的 npm 依赖。Windows、macOS 与 Linux 使用相同的命令。独立上游技能的实际执行仍按包内声明核对其原始工具前提，例如 Archify 的浏览器门禁需要 Chrome 或 Chromium。
 
 ```sh
 # 快速结构检查：入口预算、独立包、链接、两级资料清单与映射
@@ -83,7 +77,7 @@ pre-commit 检查暂存内容，不能由工作区里尚未暂存的修正掩盖
 
 ## CI
 
-[验证工作流](../.github/workflows/validate.yml) 在每次 push 和 pull request 后运行 `node scripts/check.mjs --full`，覆盖 Linux、Windows、macOS，并运行状态图回放及实际 npm 压缩包的离线安装检查。任一适用的预算、包装、资料或行为检查失败都会使任务失败。
+[验证工作流](../.github/workflows/validate.yml) 在每次 push 和 pull request 后运行 `node scripts/check.mjs --full`，覆盖 Linux、Windows、macOS，并运行状态图回放及实际 npm 压缩包的消费端安装检查。任一适用的预算、包装、资料或行为检查失败都会使任务失败。
 
 Linux 另运行 `npm run check:upstream`：通过实际安装器将独立包复制到临时项目，运行 Archify doctor，并从其原始示例生成中文 locale 图表，要求 finalize 的校验、交付、严格检查与浏览器门禁通过。运行结果与环境限制须如实记录；结构检查或生成 HTML 不代表浏览器门禁已经通过，也不替代人工视觉审查。
 
@@ -93,7 +87,9 @@ Linux 另运行 `npm run check:upstream`：通过实际安装器将独立包复�
 
 维护脚本、测试及自有 `skills/` 内的脚本和可执行示例使用 `.mjs` 或 `.js`。门禁拒绝这些运行目录中的 Python、Shell 与 TypeScript 脚本；Git 规定的两个 hook 文件名除外，它们仍执行 JavaScript。独立 `upstream-skills/` 允许保留原包必要脚本及原扩展名，依赖和验证范围在包内说明，不因收录而改写工具。
 
-`materials/<project>/upstream/` 和 `zh/` 是被动来源对照，保留原扩展名，包括 `.py`、`.sh`、`.ts` 及执行位，但不作为运行依赖。此边界不靠 `.txt` 后缀判断。材料内嵌 `.agents/skills`、AGENTS.md、SKILL.md、CI 和 hook 不参与本项目技能发现或当前指令执行，不安装其依赖或触发来源工作流；npm 白名单排除整个 materials，安装器只从 `skills/` 与 `upstream-skills/` 两个运行根发现和安装。
+`materials/<project>/upstream/` 和 `zh/` 保留原扩展名与执行位，不成为已安装技能的隐含依赖。材料内嵌 `.agents/skills`、AGENTS.md、SKILL.md、CI 和 hook 不参与本项目技能发现或当前指令加载，不初始化其依赖或触发来源工作流；npm 白名单排除整个 materials。
+
+维护回放显式复制固定 statechart corpus 到临时目录，调用本项目工具并加载其中的 `view.mjs` 投影配置。这是已定义的夹具验证入口，不是任意来源脚本执行，也不启动新 TLC。安装器仍只从两个运行根发现和复制技能，回放说明见[验证指南](validation.md#行为与工具检查)。
 
 发布检查实际打包后安装 tarball，逐一核对技能资源与许可，防止源码可用但 npm 漏文件。发布流程见[版本发布](release.md)。
 
@@ -103,7 +99,7 @@ Linux 另运行 `npm run check:upstream`：通过实际安装器将独立包复�
 
 资料门禁核实父子唯一性、路径穿越/symlink、upstream/zh 实际集合、SHA-256、Git blob、平台可用的执行位、法律/机器/无语言字节对照，以及 runtime_paths 在 `skills/` 或 `upstream-skills/` 中的真实文件与自有开发方法单一归属。中文原文的 zh_path/zh_sha256 为空，不能将稀疏误判成缺译；非中文适用对照必须齐全。独立包为保持工具行为而原字节保留的程序、schema、夹具与代码注释，按实际语言和类别记录，不能冒称译文。显式提供本地 Git 对象库时可进一步对照固定提交的完整来源树，默认本地一致性检查不冒称远端树验收。
 
-哈希、出现中文和报告完成标记都不证明分类或全文翻译忠实。runtime_paths 只说明实际采用关系，runtime_reviewed_blob 是最后真实核对依据，不能随新材料自动前移。来源更新与运行适配分别验收，删除来源不自动删运行技能。原样来源自带法律文件保留在树内，实际分发所需法律文本集中于 licenses；独立 `upstream-skills/` 包另保留适用法律原文、归属和修改说明并随包安装，这些位置各有职责，不能互相替代。
+哈希、出现中文和报告完成标记都不证明分类或全文翻译忠实。runtime_paths 只说明实际采用关系，runtime_reviewed_blob 是最后真实核对依据，不能随新材料自动前移。来源更新与运行适配分别验收，删除来源不自动删运行技能。原样来源自带法律文件保留在树内，实际分发所需法律文本集中于 licenses；独立 `upstream-skills/` 包保留适用的上游原生法律文件并随包安装，统一来源及修改说明见[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
 隔离回归覆盖临时两级清单、缺失/额外文件、稀疏中文、字节对照、原扩展名与内嵌技能不参与运行约束及安装。本地临时 Git 仓库检验同步和冲突失败，不依赖公网或正在迁移的真实材料。完整测试递归发现 tests 下的 Node 测试，不另维护材料测试注册表。状态图检查读取 pstack upstream 捕获夹具，是 captured-output replay，不是新 TLC 求解。
 

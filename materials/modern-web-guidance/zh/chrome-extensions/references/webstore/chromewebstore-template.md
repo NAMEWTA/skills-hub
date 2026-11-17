@@ -1,5 +1,3 @@
-> 翻译修改说明：本文由 skills-hub 根据[固定版本原文](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/chrome-extensions/references/webstore/chromewebstore-template.md)翻译并作中文阅读适配。原始可执行代码示例保持不变，原作者归属及适用许可继续保留。
-
 # CHROMEWEBSTORE.md 模板
 
 将此模板复制到项目根目录，命名为 `CHROMEWEBSTORE.md`，然后填写每个章节。标有 `[REQUIRED]` 的字段必须在提交前填写完成；标有 `[RECOMMENDED]` 的字段可选，但能提高条目质量和获批机会。

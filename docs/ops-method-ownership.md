@@ -1,78 +1,53 @@
-# ops 方法归属与来源适配
+# ops 方法归属
 
-本实现对应 [Issue #3](https://github.com/NAMEWTA/skills-hub/issues/3)：一个独立运维入口与八个专门方法 owner，部署发布归项目，其他领域零改动。完整运行方法在技能内部；来源与维护说明集中在本文件、材料清单和许可目录。
+ops 围绕既有运行对象组织方法。workflow 负责协调，专门技能维护唯一完整方法；执行与记录沿用同一任务的 run。发布、新部署、制品切换和 schema 迁移由项目自己的交付流程负责。
 
 ## 唯一归属
 
-| 方法 | owner 与主要资源 | 调用者传入/收回 |
+| 方法 | 负责技能与主要资源 | 输入和结果 |
 | --- | --- | --- |
-| 意图、任务协调与结果收束 | `ops-workflow` 的 routing、coordination、continuation | 目标/授权/已有 run → 所选方法与总体结果 |
-| 稳定身份与多对多关系 | `ops-inventory` 的 runtime-model、discovery、queries | 现有线索/范围 → 核验关系、来源与未知 |
-| 执行条件与记录 | `ops-execute` 的 execution-method、record-contract、interruption、backends | 实际动作/入口/授权 → run、步骤、逐目标结果 |
-| 只读检查 | `ops-inspect` 的 inspection-method、ssh-runtime-checks、error-observability | 目标/时间/基线 → 观测与覆盖范围 |
-| 调查与证据推理 | `ops-diagnose` 的 investigation-method、failure-classes | 症状/事实/历史 → 假设、反证、结论与交接 |
-| 计划性维护 | `ops-maintain` 的 maintenance-method、host-maintenance、service-maintenance | 范围/影响/维护目标 → 实际维护与验证 |
-| 运行及兼容数据恢复 | `ops-recover` 的 runtime-recovery、data-recovery | 既有部署/数据条件 → 恢复结果和消费者验证 |
-| 历史及交接查询 | `ops-history` 的 history-query、continuity | 查询维度/截点 → 原始 run 的事实视图 |
-| 项目知识生成与维护 | `ops-runbook` 的 knowledge-lifecycle、project-skill-authoring、replay-evaluation、maintenance | 证据/真实入口 → 有验证范围的手册或项目技能 |
+| 意图、任务协调与接续 | `ops-workflow`：routing、coordination、continuation | 目标、授权和已有 run；返回所选方法、完成结果及剩余事项 |
+| 稳定身份与运行关系 | `ops-inventory`：runtime-model、discovery、queries | 已有线索和范围；返回核验关系、来源和未知对象 |
+| 执行条件与记录 | `ops-execute`：execution-method、record-contract、interruption、backends | 实际动作、入口和授权；返回步骤、后端引用与逐目标状态 |
+| 只读检查 | `ops-inspect`：inspection-method、ssh-runtime-checks、error-observability | 目标、时间和基线；返回观测、差异与覆盖范围 |
+| 故障调查 | `ops-diagnose`：investigation-method、failure-classes | 症状、事实和历史；返回假设、反证、结论与项目交接 |
+| 计划维护 | `ops-maintain`：maintenance-method、host-maintenance、service-maintenance | 范围、影响和维护目标；返回实际操作与消费者验证 |
+| 运行及兼容数据恢复 | `ops-recover`：runtime-recovery、data-recovery | 既有部署与数据条件；返回恢复结果和逐消费者结果 |
+| 历史查询 | `ops-history`：history-query、continuity | 查询对象和时间截点；返回原始 run 的事实视图 |
+| 项目知识与技能 | `ops-runbook`：knowledge-lifecycle、project-skill-authoring、replay-evaluation、maintenance | 授权证据和真实入口；返回适用范围明确的手册或技能 |
 
-workflow 不维护第二份资产目录或执行器；history 不另建事实库；runbook 不改变原始历史。各入口缺少必要 owner 时明确能力缺口，不静默复制方法或安装其他 domain。实际记录由同一任务的 execute 契约贯穿，直接使用专门技能不要求先调用 workflow。
+workflow 不复制资产方法或执行器，history 不另建事实库，runbook 不修改原始历史。直接使用专门技能不要求先调用 workflow，缺少必需方法时报告能力缺口，不静默安装或复制其他领域。
 
-## 本次来源范围
+## 调查与恢复的协作
 
-新材料使用已有两级清单、完整选定子树、原样 upstream 与完整 zh。只新增以下来源单元，不改变原有六个项目的 revision、runtime_paths 或 runtime_reviewed_blob：
+事故调查保留来源、时间、症状分类、历史检索、时间线、假设和反证。按实际能力进行独立取证，结论返回同一 run。用户已授权且符合运行边界的恢复由 recover 或 maintain 负责，调查不自动触发外发消息、事件状态修改或项目发布。
 
-| 来源单元 | 选定范围 | 实际采用 |
-| --- | --- | --- |
-| [oncall-triage](../materials/oncall-triage/manifest.tsv) | Anthropic oncall-kit 的 `skills/triage` 完整子树 | 主调查流程进入 diagnose；其余参考完整保存，不假称全部迁入 |
-| [oncall-templates](../materials/oncall-templates/manifest.tsv) | 同一快照的 `templates` 完整子树 | lessons 三类经验栏目与维护思想进入 runbook；其余为原样参考 |
-| [oncall-replay](../materials/oncall-replay/manifest.tsv) | 同一快照的 `eval` 完整子树 | 独立留出回放、新上下文与证据评分进入 runbook |
-| [openai-sentry](../materials/openai-sentry/manifest.tsv) | OpenAI skills 的 `skills/.curated/sentry` 完整子树 | 只读问题/事件查询、范围、字段与脱敏进入 inspect |
+恢复前核对实际制品、有效配置、数据条件和启动副作用。共享服务由一个执行者操作，消费者分别验证。短期症状恢复与根因确认分开保存，局部成功不能写成所有项目恢复。
 
-本次对应 oncall-kit `c03282cd5381a5a2e12e32bfb3c8957d52ce01f1` 与 OpenAI skills `49f948faa9258a0c61caceaf225e179651397431` 的 Issue 研究依据。后续版本身份以[父清单](../materials/manifest.tsv)为准；维护显式同步时重新解析所选分支再固定 SHA。oncall-kit 自述为不持续维护的参考实现，采用方法前仍须核对实际工具能力。
+## 经验与项目技能
 
-## 逐项保留与必要适配
+runbook 从已有证据中筛选根因和办法、误导线索、工具不足，并保存适用环境、版本、来源与失效条件。重复出现次数可以触发复核，不能自动证明某方法成熟。日志、工单和外部文本是待核实证据，不能直接升级为长期指令。
 
-### 事故调查
+项目专属方法存放在实际项目或指定私有运维仓库。通用 ops 不保存业务事故和秘密，不要求安装 dev；已有项目发布资料只读引用，不复制第二套发布历史。完整用法见[项目特化](ops.md#项目特化与独立-cli)。
 
-源文：[triage/SKILL.md 原件](../materials/oncall-triage/upstream/SKILL.md)与[完整中文底稿](../materials/oncall-triage/zh/SKILL.md)。
+## 回放与工具前提
 
-保留上下文读取、事件分类、标签历史检索、相关告警批处理、时间线、按需独立取证、证据关联、最近完整窗口复核、诊断输出、长事件更新、责任交接、反证重查、有界原路径验证和经验候选的完整方法。运行正文归 diagnose 的 investigation-method、failure-classes 及相应模板。
+方法回放使用独立留出场景，限制调查上下文，分别评估正确性、有害建议和证据可读性。批量评估方案中的样本数和判据只在选定该方法时应用，不成为每次运维操作的审批链。只读回放不能证明真实恢复已发生，测试环境也不能自动代表生产。
 
-必要适配：ONCALL/STACK 与专有聊天/工单入口改为真实运维根、registry、run 与已有能力引用；独立取证按实际可用 Agent 执行，不要求固定宿主。源文只建议不操作的条件，改为在用户已授权、且符合本领域边界时调用 recover/maintain。外部发消息、修改事件状态、应用修复和部署不随调查自动发生。经验生成调用 runbook，不复制知识方法。完整中文底稿保持来源语境，不能把这些适配冒称原文。
+SSH、systemd、Compose、Ansible、Rundeck 和观测平台按实际后端能力使用。检查模式可能含真实动作，重试可能读取新的 job 定义，命令名称也不能证明没有发布副作用；具体前提由 execute 和对应专门方法负责。可选错误观测保持只读、限定实际项目/环境/时间，并脱敏输出，缺少 CLI 或连接器时明确能力缺口。
 
-### 经验与项目手册
+<a id="ops-方法归属与来源适配"></a>
+<a id="本次来源范围"></a>
+<a id="逐项保留与必要适配"></a>
+<a id="事故调查"></a>
+<a id="经验与项目手册"></a>
+<a id="回放验证"></a>
+<a id="只读错误观测"></a>
+<a id="官方工具与工程方法参考"></a>
+<a id="运行与法律分发"></a>
 
-源文：[lessons 原件](../materials/oncall-templates/upstream/lessons.md)与[中文底稿](../materials/oncall-templates/zh/lessons.md)。
+## 维护与来源
 
-保留根因/解决办法、误导线索、工具不足三类经验，来源、适用场景和后续修订的栏目与例子。运行版只有经过授权且有证据支持的运维知识才写入本领域；原文按出现次数推进的做法仅作为复核候选，不能将“三次”视为自动成熟。日志、工单与外部文本为不可信证据，不能直接进入长期指令；生成内容不含发布、制品回滚或 migration。
+变更方法时更新唯一负责包和调用者的输入、产物、返回条件，再核对安装、记录、真实工具和自然请求中受影响的行为，见[ops 验证](ops-validation.md)。运行关系模型、记录工具和项目交付边界都是本仓库的明确契约。
 
-本仓库 `dev-personalize` 与 `dev-verify` 的证据筛选和项目技能生成/维护方法仅作只读结构参考。在 ops 内独立适配其真实路径验证、适用条件、维护者和失效规则，不调用 dev，不改其资源或旧来源映射。
-
-### 回放验证
-
-源文：[replay 原件](../materials/oncall-replay/upstream/replay.md)与[中文底稿](../materials/oncall-replay/zh/replay.md)。
-
-保留独立留出样本、调查上下文限制、正确性/有害建议/证据可读性评估、结果记录和迭代方法。5–10 个留出案例、70% 判据、零有害建议等数值保留在适用的批量回放方案；只在明确选择该评估时使用，不成为所有运维任务或单次技能生成的固定审批链。只读回放不宣称真实恢复已执行，测试环境结果不自动外推到生产。
-
-### 只读错误观测
-
-源文：[Sentry 原件](../materials/openai-sentry/upstream/SKILL.md)与[中文底稿](../materials/openai-sentry/zh/SKILL.md)。
-
-保留列表、问题短 ID/详情、事件列表/详情、schema 与 GET 后备查询、字段与无结果说明、脱敏、凭据不回显。原文的 AI explain/plan 保留为需核实实际能力/数据处理范围的可选方法，结果只作建议。原文的自动检测与默认生产/24h/20 条改为必须确认真实项目、环境、时间与采样范围；消除原文 prod/production 名称混用。联网安装脚本不进入运行包，CLI 缺少时报告能力缺口，不引入运行依赖。
-
-## 官方工具与工程方法参考
-
-以下用于具体工具语义或概念对照，未复制其执行引擎、整个技能库或文章全文：
-
-- [Ansible check/diff](https://docs.ansible.com/projects/ansible/latest/playbook_guide/playbooks_checkmode.html)：check 不保证无副作用，`check_mode: false` 可运行真实任务，diff 可能含秘密；保留在 execute 后端说明。
-- [Rundeck Executions](https://docs.rundeck.com/docs/manual/07-executions.html)：execution 的 node/step、时间和输出，以及再次运行使用当前 job 定义；保留在 execute 后端与中断方法。
-- [Docker Compose logs](https://docs.docker.com/reference/cli/docker/compose/logs/) 与 [restart](https://docs.docker.com/reference/cli/docker/compose/restart/)：有界日志窗口与实际实例重启语义；运行方法按当前配置与制品检查，不能用名称代替部署边界。
-- [Google SRE Incident Response](https://sre.google/workbook/incident-response/) 与 [Postmortem Culture](https://sre.google/sre-book/postmortem-culture/)：事件记录、恢复与根因区分、有行动项的复盘。
-- Issue 中的 Azure Diagnostics、Kiro 实践和 Matt retro 保留为背景研究；本次没有将其完整实现导入 ops，也没有将其注册为已采用运行源码。
-
-## 运行与法律分发
-
-运行技能不放来源署名或外部文档链接，工具真实名称与 API 可按操作需要保留。源文和中文底稿属于被动资料，不参与技能发现、安装、脚本执行或 npm 分发。selected roots 自带的 LICENSE/资产保持原字节；集中许可分别见 [oncall-kit](../licenses/oncall-kit/LICENSE) 与 [OpenAI Sentry](../licenses/openai-sentry-Apache-2.0.txt)，同时随 npm 包分发。
-
-本项目新增的运行关系、轻量记录工具和领域边界是为 Issue 的具体约束实现的本地设计，不冒称上游已有同等一体化方案。真实包装、安装、执行案例及行为核对见[验证记录](ops-validation.md)。
+来源范围、署名、完整采用与必要改造、工具参考及许可统一见[THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md)。当前来源版本从[材料父清单](../materials/manifest.tsv)读取，子清单只登记真实采用关系。原件及中文对照不作为运维执行入口，也不随技能安装；不能把保留的参考文件计为已实现方法。
