@@ -49,6 +49,17 @@ test('one tree mixes a domain, a child exclusion and another domain leaf', async
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/system-clean')), false);
 });
 
+test('interactive upstream installation uses the shared installer without domain initialization', async t => {
+  const project = temporary(t, 'skills-hub upstream tree ');
+  const ctx = context(['zh-archify']);
+  assert.equal(await interactive({ project, argv: ['install', '--dry-run'], ...ctx }), 0);
+  assert.equal(fs.existsSync(path.join(project, '.agents')), false);
+  assert.equal(await interactive({ project, ...ctx }), 0);
+  assert.ok(fs.existsSync(path.join(project, '.agents/skills/zh-archify/SKILL.md')));
+  assert.deepEqual(fs.readdirSync(path.join(project, '.agents')), ['skills']);
+  assert.ok(!ctx.ui.notes.some(note => note.includes('将补齐所选领域')));
+});
+
 test('tree cancellation and declined confirmation do not write', async t => {
   const project = temporary(t, 'skills-hub tree cancel ');
   assert.equal(await interactive({ project, ...context(Symbol('cancel')) }), 0);

@@ -44,7 +44,21 @@ export function outsideFences(text) {
 }
 
 export function markdownDestinations(text) {
-  const prose = outsideFences(text);
+  const unfenced = outsideFences(text);
+  // Inline code is an example, not a link dependency (including HTML snippets).
+  const runs = [...unfenced.matchAll(/`+/g)];
+  let prose = ''; let cursor = 0;
+  for (let index = 0; index < runs.length; index += 1) {
+    const opening = runs[index];
+    const closingIndex = runs.findIndex((run, position) => position > index && run[0].length === opening[0].length);
+    if (closingIndex < 0) continue;
+    const closing = runs[closingIndex];
+    prose += unfenced.slice(cursor, opening.index);
+    prose += unfenced.slice(opening.index, closing.index + closing[0].length).replace(/[^\n]/g, ' ');
+    cursor = closing.index + closing[0].length;
+    index = closingIndex;
+  }
+  prose += unfenced.slice(cursor);
   const destinations = [];
   for (const match of prose.matchAll(/!?\[[^\]\n]*\]\(([^)\n]+)\)/g)) {
     destinations.push(match[1].trim().split(' "', 1)[0].split(" '", 1)[0].replace(/^[<>]+|[<>]+$/g, ''));
@@ -141,7 +155,7 @@ export function checkScriptFormats(root = repositoryRoot) {
   const failures = [];
   for (const filename of filesUnder(root)) {
     const relative = path.relative(root, filename).split(path.sep).join('/');
-    if (relative.startsWith('materials/') || relative.startsWith('licenses/')) continue;
+    if (relative.startsWith('materials/') || relative.startsWith('licenses/') || relative.startsWith('upstream-skills/')) continue;
     const disallowedExtension = /\.(?:py|sh|bash|ts|tsx|cjs|ps1|bat|cmd)$/i.test(filename);
     const descriptor = fs.openSync(filename, 'r');
     const prefix = Buffer.alloc(256);
@@ -166,18 +180,22 @@ export function checkSkillMetadata(skill, root = repositoryRoot) {
   const header = content.match(frontmatterPattern)?.[1];
   const relative = path.relative(root, manifest);
   if (header === undefined) return [`${relative}: missing frontmatter`];
+  const imported = skill.domain === 'upstream-skills';
   const fields = new Map();
   for (const line of header.split(/\r?\n/)) {
     if (!line.trim()) continue;
-    const match = line.match(/^([a-z_]+):\s*(.+)$/);
+    // Imported packages retain upstream metadata such as license and nested version/author.
+    if (imported && /^\s/.test(line)) continue;
+    const match = line.match(imported ? /^([a-z][a-z0-9_-]*):\s*(.*)$/ : /^([a-z_]+):\s*(.+)$/);
     if (!match) { failures.push(`${relative}: use simple name/description scalar metadata`); continue; }
     if (fields.has(match[1])) failures.push(`${relative}: duplicate metadata field ${match[1]}`);
     fields.set(match[1], match[2]);
   }
-  if (fields.size !== 2 || !fields.has('name') || !fields.has('description')) failures.push(`${relative}: expected name and description`);
+  if ((!imported && fields.size !== 2) || !fields.has('name') || !fields.has('description')) failures.push(`${relative}: expected name and description`);
   const description = (fields.get('description') ?? '').trim().replace(/^["']+|["']+$/g, '');
   if (!description || Array.from(description).length > 1024 || /[<>]/.test(description)) failures.push(`${relative}: missing or invalid description`);
-  failures.push(...entryIssues(relative.split(path.sep).join('/'), content));
+  if (imported && !/[\u3400-\u9fff]/u.test(description)) failures.push(`${relative}: expected Chinese description`);
+  if (!imported) failures.push(...entryIssues(relative.split(path.sep).join('/'), content));
   if (!/[\u3400-\u9fff]/u.test(content)) failures.push(`${relative}: expected Chinese skill content`);
   const metadata = path.join(skill.source, 'agents', 'openai.yaml');
   if (fs.existsSync(metadata) && !readUtf8(metadata).includes(`$${skill.name}`)) failures.push(`${path.relative(root, metadata)}: default prompt must name the skill`);
@@ -227,6 +245,8 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
   failures.push(...checkScriptFormats(root), ...duplicateResourceIssues(skills));
   for (const skill of skills) {
     failures.push(...checkSkillMetadata(skill, root));
+    // Standalone upstream packages keep their own legal files, tools and source URLs.
+    if (skill.domain === 'upstream-skills') continue;
     for (const filename of regularFiles(skill.source)) {
       const relative = path.relative(root, filename);
       if (path.basename(filename).startsWith('LICENSE') || path.basename(filename) === 'NOTICE.md') failures.push(`${relative}: keep legal notices in the companion license bundle`);
@@ -254,6 +274,9 @@ export function check(root = repositoryRoot, { output = console.log } = {}) {
     }
   }
   for (const skill of skills) {
+    // Upstream guides may be selected by CLI/guide ID rather than static Markdown links.
+    // Their complete file inventory and per-file adoption are checked by materials manifests.
+    if (skill.domain === 'upstream-skills') continue;
     for (const filename of [...unreachableMarkdown(skill.source, graph)].sort()) failures.push(`${path.relative(root, filename)}: no local link path from this skill's SKILL.md`);
   }
   output(`Checked ${skills.length} skills, ${markdown.length} Markdown files, ${checkedLinks} local links.`);

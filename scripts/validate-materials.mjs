@@ -4,7 +4,7 @@ import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
 import { repositoryRoot, isMain } from '../install.mjs';
-import { readMaterials, resolveMaterialPath } from './materials-manifest.mjs';
+import { readMaterials, resolveMaterialPath, isRuntimeFilePath } from './materials-manifest.mjs';
 export { parseTsv } from './materials-manifest.mjs';
 const hash = (algorithm, bytes) => createHash(algorithm).update(bytes).digest('hex');
 const oid = value => /^(?:[a-f0-9]{40}|[a-f0-9]{64})$/.test(value);
@@ -127,7 +127,7 @@ export function check(root = repositoryRoot, { output = console.log, gitReposito
       const owners = new Set(destinations.filter(p => p.startsWith('skills/dev/')).map(p => p.split('/')[2]));
       if (owners.size > 1) fail('development method must have one owning skill');
       for (const destination of destinations) {
-        if (!/^skills\/[^/]+\/[^/]+\/.+/.test(destination)) { fail(`runtime destination outside skills or not a skill file: ${destination}`); continue; }
+        if (!isRuntimeFilePath(destination)) { fail(`runtime destination outside skills/upstream-skills or not a skill file: ${destination}`); continue; }
         try { resolveMaterialPath(root, destination); } catch (error) { fail(`runtime destination: ${error.message}`); }
       }
       if (row.runtime_reviewed_blob && (!destinations.length || !oid(row.runtime_reviewed_blob))) fail('runtime_reviewed_blob requires runtime mapping and valid reviewed blob');

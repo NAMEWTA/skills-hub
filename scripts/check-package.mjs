@@ -6,6 +6,7 @@ import { basename, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { runNpm } from './npm-cli.mjs';
+import { catalog } from '../install.mjs';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
@@ -34,17 +35,17 @@ export function validatePack(info, root = ROOT) {
   const installerResources = persistenceResources(root);
   for (const resource of installerResources) allowedRoot.add(resource);
   for (const file of info.files) {
-    if (!allowedRoot.has(file.path) && !/^(skills|licenses)\//.test(file.path)) {
+    if (!allowedRoot.has(file.path) && !/^(skills|upstream-skills|licenses)\//.test(file.path)) {
       throw new Error(`npm 包包含范围外文件：${file.path}`);
     }
-    if (/\.(py|pyc|sh|bash|ts|tsx|ps1|cmd|bat)$/.test(file.path)) {
+    if (!file.path.startsWith('upstream-skills/') && /\.(py|pyc|sh|bash|ts|tsx|ps1|cmd|bat)$/.test(file.path)) {
       throw new Error(`npm 包仍含非 JavaScript 运行脚本：${file.path}`);
     }
   }
   for (const required of allowedRoot) {
     if (!paths.has(required)) throw new Error(`npm 包缺少 ${required}`);
   }
-  for (const directory of ['skills', 'licenses']) {
+  for (const directory of ['skills', 'upstream-skills', 'licenses'].filter(directory => existsSync(join(root, directory)))) {
     for (const relative of regularFiles(join(root, directory))) {
       if (!paths.has(`${directory}/${relative}`)) throw new Error(`npm 包缺少运行资源：${directory}/${relative}`);
     }
@@ -112,25 +113,21 @@ export function checkPackage(root = ROOT) {
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
     const domains = new Set();
-    for (const domain of readdirSync(join(root, 'skills'))) {
-      for (const name of readdirSync(join(root, 'skills', domain))) {
-        const source = join(root, 'skills', domain, name);
-        if (!existsSync(join(source, 'SKILL.md'))) continue;
-        const target = join(prefix, '.agents', 'skills', name);
-        for (const relative of regularFiles(source)) {
-          if (!readFileSync(join(source, relative)).equals(readFileSync(join(target, relative)))) {
-            throw new Error(`npm 安装后资源内容不同：${name}/${relative}`);
-          }
-          if (process.platform !== 'win32') {
-            const executable = file => lstatSync(file).mode & 0o111;
-            if (Boolean(executable(join(source, relative))) !== Boolean(executable(join(target, relative)))) {
-              throw new Error(`npm 安装后脚本执行位不同：${name}/${relative}`);
-            }
+    for (const { domain, name, source } of catalog(root)) {
+      const target = join(prefix, '.agents', 'skills', name);
+      for (const relative of regularFiles(source)) {
+        if (!readFileSync(join(source, relative)).equals(readFileSync(join(target, relative)))) {
+          throw new Error(`npm 安装后资源内容不同：${name}/${relative}`);
+        }
+        if (process.platform !== 'win32') {
+          const executable = file => lstatSync(file).mode & 0o111;
+          if (Boolean(executable(join(source, relative))) !== Boolean(executable(join(target, relative)))) {
+            throw new Error(`npm 安装后脚本执行位不同：${name}/${relative}`);
           }
         }
-        domains.add(domain);
-        skills += 1;
       }
+      domains.add(domain);
+      skills += 1;
     }
     for (const relative of regularFiles(join(root, 'licenses'))) {
       if (!readFileSync(join(root, 'licenses', relative)).equals(readFileSync(join(installed, 'licenses', relative)))) {
@@ -146,6 +143,7 @@ export function checkPackage(root = ROOT) {
       if (!readFileSync(join(root, resource)).equals(readFileSync(join(installed, resource)))) throw new Error(`安装初始化资源不同：${resource}`);
     }
     runNode(cli, ['install', '--all'], prefix);
+    if (existsSync(join(prefix, '.agents', 'upstream-skills'))) throw new Error('上游独立技能分组不应创建业务持久化目录');
     if (existsSync(join(prefix, '.agents', 'skills-hub-licenses'))) throw new Error('安装器不应创建项目许可目录');
     console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);
     return { name: packed.name, version: packed.version, filename: packed.filename, skills, files: packed.files.length, integrity: packed.integrity };

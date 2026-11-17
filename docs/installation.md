@@ -2,17 +2,26 @@
 
 ## 源码和安装结构
 
-源码由 `skills/<domain>/<domain>-xxx/SKILL.md` 自动发现，不另建人工维护的技能注册表。安装后完整复制到当前工作目录的 `.agents/skills/<domain>-xxx/`，保留 references、assets、scripts 和 agents 等全部运行资源。完整许可保存在仓库与 npm 包的 `licenses/` 中；安装器不创建、复制、补齐、更新或删除目标项目的 `.agents/skills-hub-licenses/`，也不把许可放进技能目录。
+安装器从两处自动发现完整运行技能，不另建人工维护的技能注册表：
 
-开发技能产生的资料保存到 `.agents/dev/`，系统技能产生的主机资料保存到 `.agents/system/<host>/`；其他领域按 `.agents/<domain>/` 扩展。安装选择中包含任意 dev 技能时，安装器一次性补齐 `.agents/dev/` 根、changes、notes、deploy、archive、project、context 及 archive/changes 下 implemented、rejected 的九份短 AGENTS.md；包含 system 技能时另补 `.agents/system/AGENTS.md`。固定结构由 `scripts/init-persistence.mjs` 与 `scripts/persistence/` 维护，不属于技能包，也不执行技能脚本。命令行、领域和交互选择使用同一安装入口。固定位置的模板 AGENTS.md 在重复安装或升级时自动覆盖更新，内容相同则保持修改时间；根 AGENTS.md 不自动编辑，不迁移、覆盖或删除业务记录；list、help、取消和 dry-run 均不初始化。
+| 源码位置 | 安装位置 | 组织方式 |
+| --- | --- | --- |
+| `skills/<domain>/<domain>-xxx/SKILL.md` | `.agents/skills/<domain>-xxx/` | dev、system、ops 等领域体系 |
+| `upstream-skills/zh-<原名>/SKILL.md` | `.agents/skills/zh-<原名>/` | 中文化并作必要适配的上游独立技能 |
 
-文件安装核心无网络访问、无第三方运行依赖；npm 交互入口使用随 npm 安装的终端 UI 依赖，不安装包管理器、不修改 Agent 的全局配置，也不决定使用者的项目根目录。请先切换到目标项目根目录再运行；它有意不提供 `--target` 或安装目录交互。在本仓库的 `skills/` 或 `licenses/` 源目录及其子目录中运行安装会被拒绝，避免把技能复制进自身。
+两种技能都完整复制 references、assets、scripts、agents 等运行资源，安装后没有领域或来源中间层。上游独立技能名使用 `zh-` 前缀，目录名必须与 frontmatter 的 `name` 相同；两处运行目录的安装名全局唯一，重复时报错。领域技能继续使用自己的领域前缀。`materials/` 中的原件、中文对照和开发辅助技能不参与发现、安装或执行。
+
+完整许可保存在仓库与 npm 包的 `licenses/` 中；上游独立技能包内已有的 LICENSE、NOTICE 等法律文件随完整包保留。安装器不另外创建、复制、补齐、更新或删除目标项目的 `.agents/skills-hub-licenses/`。
+
+开发技能产生的资料保存到 `.agents/dev/`，系统技能产生的主机资料保存到 `.agents/system/<host>/`；其他领域按 `.agents/<domain>/` 扩展。安装选择中包含任意 dev 技能时，安装器一次性补齐 `.agents/dev/` 根、changes、notes、deploy、archive、project、context 及 archive/changes 下 implemented、rejected 的九份短 AGENTS.md；包含 system 技能时另补 `.agents/system/AGENTS.md`；包含 ops 技能时只补 `.agents/ops/AGENTS.md`。`upstream-skills` 只是安装分组，不是新的领域，不创建 `.agents/upstream-skills/` 或 `.agents/zh/`。固定结构由 `scripts/init-persistence.mjs` 与 `scripts/persistence/` 维护，不属于技能包，也不执行技能脚本。命令行、领域和交互选择使用同一安装入口。固定位置的模板 AGENTS.md 在重复安装或升级时自动覆盖更新，内容相同则保持修改时间；根 AGENTS.md 不自动编辑，不迁移、覆盖或删除业务记录；list、help、取消和 dry-run 均不初始化。
+
+文件安装核心无网络访问、无第三方运行依赖；npm 交互入口使用随 npm 安装的终端 UI 依赖，不安装包管理器、不修改 Agent 的全局配置，也不决定使用者的项目根目录。请先切换到目标项目根目录再运行；它有意不提供 `--target` 或安装目录交互。在本仓库的 `skills/`、`upstream-skills/` 或 `licenses/` 源目录及其子目录中运行安装会被拒绝，避免把技能复制进自身。
 
 ## npm 与源码入口
 
-npm 包名为 `@namewta/skills-hub`，当前版本 `0.1.7`，命令名为 `skills-hub`。运行 `npm install -g @namewta/skills-hub@0.1.7` 后，在目标项目根目录运行 `skills-hub`，或直接 `npx @namewta/skills-hub@0.1.7`，直接进入领域 / 技能树，不再分三种安装模式。根节点控制全部技能，领域节点控制该领域全部子项；支持领域与跨领域单项混选、全选后取消个别技能。绿色 `■` 全选、`◩` 部分选中、`□` 未选；目录以加粗名称与 `▸` 图标区分于带树枝的叶子技能。部分选中的父节点再次勾选会补齐全选，全选父节点再次勾选会清空其子项。
+npm 包名为 `@namewta/skills-hub`，命令名为 `skills-hub`。运行 `npm install -g @namewta/skills-hub` 后，在目标项目根目录运行 `skills-hub`，或直接 `npx @namewta/skills-hub`，进入分组 / 技能树。根节点控制全部技能；dev、system、ops 和 `upstream-skills/（上游独立技能）` 都作为一级分组，分组节点控制全部子项。支持整组与跨组单项混选、全选后取消个别技能。绿色 `■` 全选、`◩` 部分选中、`□` 未选；目录以加粗名称与 `▸` 图标区分于带树枝的叶子技能。部分选中的父节点再次勾选会补齐全选，全选父节点再次勾选会清空其子项。新增上游分组需使用包含本次变更的源码或发布版本；已发布旧包不会自动获得仓库中的新技能。
 
-直接输入关键词实时过滤，可按领域、技能名或中文用途搜索，支持非连续缩写与空格分隔的多个关键词（各词都须匹配），不支持拼音转换或拼写纠错。匹配领域时显示其全部子项，匹配技能时保留领域节点作为上下文；父节点操作始终作用于整个领域，包括搜索隐藏项。每页最多 8 个技能，按终端高度缩减；每页只属于一个领域，领域行固定在顶部、持续显示勾选状态并支持整组操作，跨页不会失去目录上下文。↑/↓ 只在当前页移动（不滚动、不跨页），←/→ 整页切换（边界不循环），Tab 勾选/取消，空搜索时也可按空格勾选，Enter 确认。搜索变化会重新定位，翻页不修改搜索文字；底部同时显示全局页码、领域内页码及总选中数。列表只显示技能名，当前焦点的用途在底部单独显示并按显示宽度截断，保留中文、emoji 与树枝缩进。清空或更换关键词保留已选项，无匹配时可退格修改或 Ctrl+U 清空搜索。至少选择一个技能才能继续，最终安装列表只包含叶子名称，不会因领域选择而重新加入已排除子项。Ctrl+C 取消；`install --dry-run` 只预览，同名技能有差异时自动备份替换，`install --replace` 仅保留兼容。非 TTY 不启动交互，需明确传参。
+直接输入关键词实时过滤，可按分组、技能名或中文用途搜索；例如 `archify`、`zh-archify`、`上游`、`upstream-skills` 都能找到对应项。支持非连续缩写与空格分隔的多个关键词（各词都须匹配），不支持拼音转换或拼写纠错。匹配分组时显示其全部子项，匹配技能时保留分组节点作为上下文；父节点操作始终作用于整个分组，包括搜索隐藏项。每页最多 8 个技能，按终端高度缩减；每页只属于一个分组，分组行固定在顶部、持续显示勾选状态并支持整组操作，跨页不会失去目录上下文。↑/↓ 只在当前页移动（不滚动、不跨页），←/→ 整页切换（边界不循环），Tab 勾选/取消，空搜索时也可按空格勾选，Enter 确认。搜索变化会重新定位，翻页不修改搜索文字；底部同时显示全局页码、组内页码及总选中数。列表只显示技能名，当前焦点的用途在底部单独显示并按显示宽度截断，保留中文、emoji 与树枝缩进。清空或更换关键词保留已选项，无匹配时可退格修改或 Ctrl+U 清空搜索。至少选择一个技能才能继续，最终安装列表只包含叶子名称，不会因分组选择而重新加入已排除子项。Ctrl+C 取消；`install --dry-run` 只预览，同名技能有差异时自动备份替换，`install --replace` 仅保留兼容。非 TTY 不启动交互，需明确传参。
 
 原有 `list`、`install --domain`、`install --skill`、`--all` 等参数保持兼容。也可从源码运行 `node /path/to/skills-hub/install.mjs`，命令参数完全相同；源码交互模式需先 `npm ci`。包本身没有 install/postinstall 钩子；下载或全局安装 npm 包不会写入任何项目的技能目录。
 
@@ -40,16 +49,33 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 | 命令 | 行为 |
 | --- | --- |
-| `list` | 列出当前源码中的全部领域和技能 |
+| `list` | 列出当前源码中的全部分组和技能 |
 | `list --domain dev` | 只列出该领域 |
+| `list --domain upstream-skills` | 只列出上游独立技能 |
 | `install --domain dev system` | 安装所列领域的全部技能 |
-| `install --skill dev-spec system-proxy` | 安装所列技能，允许跨领域 |
+| `install --domain upstream-skills` | 安装全部上游独立技能，不初始化领域目录 |
+| `install --skill dev-spec system-proxy zh-archify` | 安装所列技能，允许跨领域与上游分组混选 |
 | `install --domain system --skill dev-learn` | 领域选择与技能选择取并集，去重 |
-| `install --all` | 安装全部领域 |
+| `install --all` | 安装两处运行目录中的全部技能 |
 | `install … --dry-run` | 检查选择和冲突，展示计划，不创建目录或文件 |
 | `install … --replace` | 兼容参数；不同内容默认即先备份再替换 |
 
 没有选择、未知名称或非法源码命名会返回非零退出码。不能把拼错的技能静默跳过。
+
+## 上游独立技能
+
+`upstream-skills/` 保存可以直接修改、实际安装的中文适配版。`materials/` 保留来源原件和适用中文对照，供更新时比较；材料同步不会自动覆盖运行版。安装时读取完整运行包，不临时拼接译文、不在线翻译，也不执行上游仓库的安装或同步脚本。
+
+在目标项目中使用包含这些技能的源码：
+
+```bash
+node /path/to/skills-hub/install.mjs list --domain upstream-skills
+node /path/to/skills-hub/install.mjs install --skill zh-archify --dry-run
+node /path/to/skills-hub/install.mjs install --skill zh-archify zh-modern-web-guidance
+node /path/to/skills-hub/install.mjs install --domain upstream-skills
+```
+
+安装后入口是 `.agents/skills/zh-archify/SKILL.md`、`.agents/skills/zh-modern-web-guidance/SKILL.md` 等；原版名与本仓 `zh-` 名保持明确对应。命令行 `--skill` 使用完整安装名，交互搜索可以只输入原名。`--domain upstream-skills` 复用现有分组参数，不表示这些技能构成统一的领域流程。单装或混装均遵循相同的预览、备份、重复安装与失败恢复规则。
 
 ## 更新与冲突
 
@@ -63,12 +89,14 @@ npx @namewta/skills-hub@0.0.8 install --domain dev
 
 ## 独立 ops 领域
 
-包含本次新增能力的源码提供九个 ops 技能。当前已发布 `0.1.10` 不包含此变更，先在实际运维工作根使用源码入口：
+`0.1.11` 提供九个 ops 技能。在实际运维工作根使用 npm 入口：
 
 ```bash
-node /path/to/skills-hub/install.mjs install --domain ops --dry-run
-node /path/to/skills-hub/install.mjs install --domain ops
+npx @namewta/skills-hub@0.1.11 install --domain ops --dry-run
+npx @namewta/skills-hub@0.1.11 install --domain ops
 ```
+
+也可使用更新后的源码：`node /path/to/skills-hub/install.mjs install --domain ops`，加 `--dry-run` 可先预览。
 
 选择任意 ops 技能只新增/更新 `.agents/ops/AGENTS.md` 这一份托管导航，不生成 registry、runs 或项目事实，也不执行任何服务器操作。业务目录按需创建，根 AGENTS.md 与其他领域记录不改。重复安装、备份、失败回滚和预览继续遵循上面的同一安装契约。
 

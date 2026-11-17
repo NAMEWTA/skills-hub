@@ -116,6 +116,17 @@ scenario('runtime method has one dev owner and no duplicate paths', f => {
 scenario('reviewed blob cannot exist without runtime relationship', f => {
   f.row.runtime_paths = ''; f.row.runtime_reviewed_blob = 'b'.repeat(40); f.save(); assert.match(f.failures().join('\n'), /reviewed/);
 });
+scenario('an independent Chinese upstream package is a valid runtime mapping', f => {
+  f.row.runtime_paths = 'upstream-skills/zh-sample/references/method.md';
+  write(path.join(f.root, f.row.runtime_paths), '完整中文方法');
+  f.row.runtime_reviewed_blob = f.row.source_git_blob; f.save();
+  assert.deepEqual(f.failures(), []);
+  assert.equal(queryMaterials(readMaterials(f.root), { runtime_path: f.row.runtime_paths }).length, 1);
+});
+for (const destination of ['upstream-skills/sample/SKILL.md', 'upstream-skills/zh-/SKILL.md', 'upstream-skills/zh-sample', 'skills/upstream-skills/zh-sample/SKILL.md']) scenario(`invalid upstream runtime mapping: ${destination}`, f => {
+  f.row.runtime_paths = destination; write(path.join(f.root, destination), '错误位置'); f.save();
+  assert.match(f.failures().join('\n'), /runtime destination outside/);
+});
 scenario('stale reviewed blob is allowed and not advanced', f => {
   f.row.runtime_reviewed_blob = 'b'.repeat(40); f.save(); assert.deepEqual(f.failures(), []); assert.equal(readMaterials(f.root).rows[0].runtime_reviewed_blob, 'b'.repeat(40));
 });

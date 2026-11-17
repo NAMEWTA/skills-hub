@@ -20,7 +20,7 @@ test('the scoped tarball installs offline and exposes the skills-hub command', (
   write(path.join(root, 'package.json'), JSON.stringify({
     name: '@namewta/skills-hub', version: '0.0.2', type: 'module',
     bin: { 'skills-hub': './install.mjs' },
-    files: ['install.mjs', 'scripts/init-persistence.mjs', 'scripts/persistence/', 'skills/', 'licenses/', 'LICENSE', 'THIRD_PARTY_NOTICES.md'],
+    files: ['install.mjs', 'scripts/init-persistence.mjs', 'scripts/persistence/', 'skills/', 'upstream-skills/', 'licenses/', 'LICENSE', 'THIRD_PARTY_NOTICES.md'],
     license: 'MIT',
   }));
   fs.copyFileSync(path.join(repositoryRoot, 'install.mjs'), path.join(root, 'install.mjs'));
@@ -30,9 +30,14 @@ test('the scoped tarball installs offline and exposes the skills-hub command', (
   for (const name of ['README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) write(path.join(root, name), '测试发布文档。\n');
   for (const name of licenseBundleFiles) write(path.join(root, 'licenses', name), '测试许可。\n');
   write(path.join(root, 'skills', 'dev', 'dev-sample', 'SKILL.md'), '---\nname: dev-sample\ndescription: 测试离线安装。\n---\n\n# 测试\n');
+  write(path.join(root, 'upstream-skills/zh-sample/SKILL.md'), '---\nname: zh-sample\ndescription: 测试独立上游技能。\n---\n# 中文入口\n');
+  write(path.join(root, 'upstream-skills/zh-sample/LICENSE'), 'Upstream license\n');
+  write(path.join(root, 'upstream-skills/zh-sample/assets/font.bin'), Buffer.from([0, 128, 255]));
+  const executable = write(path.join(root, 'upstream-skills/zh-sample/scripts/tool.sh'), '#!/bin/sh\nprintf "upstream"\n');
+  fs.chmodSync(executable, 0o755);
   const packed = checkPackage(root);
   assert.equal(packed.name, '@namewta/skills-hub');
   assert.equal(packed.version, '0.0.2');
   assert.equal(packed.filename, 'namewta-skills-hub-0.0.2.tgz');
-  assert.equal(packed.skills, 1);
+  assert.equal(packed.skills, 2);
 });
