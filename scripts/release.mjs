@@ -3,6 +3,7 @@ import { appendFileSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from
 import { createHash } from 'node:crypto';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
+import { performance } from 'node:perf_hooks';
 import { pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { ROOT, packPackage } from './check-package.mjs';
@@ -207,7 +208,15 @@ export async function findVerifiedStage(packed, { token, request = fetch, expect
   return stage;
 }
 
-export async function ensureNpmPublication(packed, { token, request = fetch, publishPackage, beforePublish = async () => {}, wait = milliseconds => new Promise(done => setTimeout(done, milliseconds)), output = console.log } = {}) {
+export async function ensureNpmPublication(packed, {
+  token, request = fetch, publishPackage, beforePublish = async () => {},
+  wait = milliseconds => new Promise(done => setTimeout(done, milliseconds)),
+  now = () => performance.now(), timeoutMs = 20 * 60_000, intervalMs = 30_000,
+  output = console.log,
+} = {}) {
+  if (!Number.isSafeInteger(timeoutMs) || timeoutMs <= 0 || !Number.isSafeInteger(intervalMs) || intervalMs <= 0) {
+    throw new Error('npm 发布核验的等待上限与间隔必须是正整数毫秒');
+  }
   const url = npmMetadataUrl(packed.name, packed.version);
   async function inspect() {
     const metadata = await requestJson(url, { nullable: true, request });
@@ -221,13 +230,19 @@ export async function ensureNpmPublication(packed, { token, request = fetch, pub
   await beforePublish();
   let publishError;
   try { await publishPackage(); } catch (error) { publishError = error; }
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  const startedAt = now();
+  while (true) {
     const result = await inspect();
     if (result) return result;
     if (publishError) throw publishError;
-    if (attempt === 0) await wait(1500);
+    const elapsed = now() - startedAt;
+    const remaining = timeoutMs - elapsed;
+    if (remaining <= 0) {
+      throw new Error(`npm 命令已返回成功，但等待 ${Math.ceil(timeoutMs / 1000)} 秒后公开版本仍不可读${token ? '，也未找到可核验的 stage' : '；缺少 NODE_AUTH_TOKEN，无法只读识别是否进入 stage'}；发布状态未确认，保留当前版本与原压缩包并核对 npm 扫描或审批状态，不要重复 npm publish`);
+    }
+    output(`npm ${packed.name}@${packed.version} 上传命令已成功，公开版本尚不可读；继续只读核验（已等待 ${Math.floor(elapsed / 1000)} 秒，剩余 ${Math.ceil(remaining / 1000)} 秒），不会重复上传。`);
+    await wait(Math.min(intervalMs, remaining));
   }
-  throw new Error(`npm 命令已返回成功，但公开版本仍不可读${token ? '，也未找到可核验的 stage' : '；缺少 NODE_AUTH_TOKEN，无法只读识别是否进入 stage'}；保留当前版本并核对发布状态`);
 }
 
 export function stageNotice(body, stage = null) {

@@ -17,12 +17,12 @@
 
 ## 安装与第一次使用
 
-ops 随 `0.1.11` 提供。在实际运维工作根使用对应 npm 版本，或当前源码安装器：
+ops 随 `0.1.12` 提供。在实际运维工作根使用对应 npm 版本，或当前源码安装器：
 
 ```bash
-npx @namewta/skills-hub@0.1.11 list --domain ops
-npx @namewta/skills-hub@0.1.11 install --domain ops --dry-run
-npx @namewta/skills-hub@0.1.11 install --domain ops
+npx @namewta/skills-hub@0.1.12 list --domain ops
+npx @namewta/skills-hub@0.1.12 install --domain ops --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain ops
 ```
 
 完整领域会安装九个 `.agents/skills/ops-*/` 包，并只初始化 `.agents/ops/AGENTS.md`。不会预生成服务器、项目、run 或业务目录；不会连接任何服务器。安装器按原有机制备份替换所选技能、更新所选领域导航，业务记录及项目根 `AGENTS.md` 保留。

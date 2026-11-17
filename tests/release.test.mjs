@@ -333,6 +333,16 @@ function stageFixture(t) {
   return { bytes, packed, stage, calls, json, request };
 }
 
+function publicationClock() {
+  let elapsed = 0;
+  const waits = [];
+  return {
+    waits,
+    now: () => elapsed,
+    wait: async milliseconds => { waits.push(milliseconds); elapsed += milliseconds; },
+  };
+}
+
 test('stage inspection paginates from zero and verifies the original tarball without interpreting status', async (t) => {
   const f = stageFixture(t);
   const request = async (url, options) => {
@@ -417,6 +427,92 @@ test('a successful CLI response followed by public 404 is resolved through the n
   assert.deepEqual(result, { published: false, stage: f.stage });
 });
 
+test('a package becomes publicly readable after a long scan without another upload', async (t) => {
+  const f = stageFixture(t);
+  const clock = publicationClock();
+  const messages = [];
+  let published = 0;
+  let prepared = 0;
+  const result = await ensureNpmPublication(f.packed, {
+    token: 'test-token', ...clock, output: message => messages.push(message),
+    request: async (url, options) => {
+      assert.equal(options.method, 'GET');
+      if (new URL(url).pathname === '/-/stage') return f.json({ items: [], page: 0, perPage: 100, total: 0 });
+      assert.equal(String(url), npmMetadataUrl(f.packed.name, f.packed.version));
+      return clock.now() >= 16 * 60_000
+        ? f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: f.packed.integrity } })
+        : new Response(null, { status: 404 });
+    },
+    beforePublish: () => { prepared += 1; },
+    publishPackage: () => { published += 1; },
+  });
+  assert.deepEqual(result, { published: true, stage: null });
+  assert.equal(prepared, 1);
+  assert.equal(published, 1);
+  assert.equal(clock.now(), 16 * 60_000);
+  assert.ok(clock.waits.every(milliseconds => milliseconds === 30_000));
+  assert.match(messages[0], /已等待 0 秒，剩余 1200 秒/);
+  assert.match(messages.at(-1), /不会重复上传/);
+});
+
+test('a stage that appears during polling retains the original approval path and unknown status', async (t) => {
+  const f = stageFixture(t);
+  const clock = publicationClock();
+  let published = 0;
+  const result = await ensureNpmPublication(f.packed, {
+    token: 'test-token', ...clock, output() {},
+    request: (url, options) => new URL(url).pathname === '/-/stage' && clock.now() < 60_000
+      ? f.json({ items: [], page: 0, perPage: 100, total: 0 })
+      : f.request(url, options),
+    publishPackage: () => { published += 1; },
+  });
+  assert.deepEqual(result, { published: false, stage: f.stage });
+  assert.equal(result.stage.status, 'unknown-server-state');
+  assert.equal(published, 1);
+  assert.equal(clock.now(), 60_000);
+  assert.ok(f.calls.some(url => url.endsWith(`/-/stage/${f.stage.id}/tarball`)));
+});
+
+test('public integrity conflicts and stage permission failures stop polling without another upload', async (t) => {
+  for (const failure of ['integrity', 'stage-permission']) {
+    const f = stageFixture(t);
+    const clock = publicationClock();
+    let published = 0;
+    await assert.rejects(ensureNpmPublication(f.packed, {
+      token: 'test-token', ...clock, output() {},
+      request: async (url, options) => {
+        assert.equal(options.method, 'GET');
+        if (new URL(url).pathname === '/-/stage') {
+          return failure === 'stage-permission' && clock.now() > 0
+            ? new Response(null, { status: 403 })
+            : f.json({ items: [], page: 0, perPage: 100, total: 0 });
+        }
+        return failure === 'integrity' && clock.now() > 0
+          ? f.json({ name: f.packed.name, version: f.packed.version, dist: { integrity: 'sha512-different' } })
+          : new Response(null, { status: 404 });
+      },
+      publishPackage: () => { published += 1; },
+    }), failure === 'integrity' ? /内容与本次压缩包不一致/ : /返回 403/);
+    assert.equal(published, 1);
+    assert.deepEqual(clock.waits, [30_000]);
+  }
+});
+
+test('a failed upload is rechecked once but is not turned into a long polling or upload retry', async (t) => {
+  const f = stageFixture(t);
+  const failure = new Error('npm publish failed');
+  let published = 0;
+  let reads = 0;
+  await assert.rejects(ensureNpmPublication(f.packed, {
+    request: async () => { reads += 1; return new Response(null, { status: 404 }); },
+    publishPackage: () => { published += 1; throw failure; },
+    wait: () => { throw new Error('A failed upload must not wait for a scan'); },
+    output() {},
+  }), error => error === failure);
+  assert.equal(published, 1);
+  assert.equal(reads, 2);
+});
+
 test('approval recovery trusts verified public metadata without republishing or reading stage', async (t) => {
   const f = stageFixture(t);
   const result = await ensureNpmPublication(f.packed, {
@@ -444,12 +540,20 @@ test('OIDC-only publication remains available and absent stage-read credentials 
   assert.equal(result.published, true);
   assert.equal(published, 1);
   assert.match(messages[0], /没有 NODE_AUTH_TOKEN/);
+  const clock = publicationClock();
   let reads = 0;
+  let unavailableUploads = 0;
+  const pendingMessages = [];
   await assert.rejects(ensureNpmPublication(f.packed, {
     request: async () => { reads += 1; return new Response(null, { status: 404 }); },
-    publishPackage() {}, wait() {}, output() {},
-  }), /缺少 NODE_AUTH_TOKEN/);
-  assert.equal(reads, 3);
+    publishPackage: () => { unavailableUploads += 1; },
+    ...clock, timeoutMs: 65_000, output: message => pendingMessages.push(message),
+  }), /等待 65 秒后.*缺少 NODE_AUTH_TOKEN.*发布状态未确认.*不要重复 npm publish/);
+  assert.equal(reads, 5);
+  assert.equal(unavailableUploads, 1);
+  assert.deepEqual(clock.waits, [30_000, 30_000, 5_000]);
+  assert.equal(clock.now(), 65_000);
+  assert.match(pendingMessages.at(-1), /已等待 60 秒，剩余 5 秒/);
 });
 
 test('pending and approved release updates preserve human content and only change our stage notice', async (t) => {

@@ -10,16 +10,16 @@
 
 ```bash
 # 直接进入可搜索的领域 / 技能树
-npx @namewta/skills-hub@0.1.11
+npx @namewta/skills-hub@0.1.12
 
 # 或全局安装后运行
-npm install -g @namewta/skills-hub@0.1.11
+npm install -g @namewta/skills-hub@0.1.12
 skills-hub
 
 # 原有命令行安装方式继续保留
-npx @namewta/skills-hub@0.1.11 list
-npx @namewta/skills-hub@0.1.11 install --domain dev
-npx @namewta/skills-hub@0.1.11 install --skill dev-grill dev-spec system-proxy
+npx @namewta/skills-hub@0.1.12 list
+npx @namewta/skills-hub@0.1.12 install --domain dev
+npx @namewta/skills-hub@0.1.12 install --skill dev-grill dev-spec system-proxy
 ```
 
 在目标项目根目录执行，按领域或技能选择；npm 下载包不会自动安装技能。终端中不带参数运行 `skills-hub` 或 `skills-hub install`，直接进入可搜索的领域 / 技能树，无需先选择安装模式。勾选领域会选中其全部子技能，可再取消个别子项，也能混选其他领域的技能；根节点用于全选 / 清空。绿色 `■` 表示全选，`◩` 表示部分选中，`□` 表示未选；目录使用加粗名称与 `▸` 图标，技能用 `├─` / `└─` 树枝区分。直接输入名称、领域或中文用途实时模糊搜索，支持缩写与多个关键词；↑/↓ 页内移动、←/→ 整页翻页、Tab 勾选/取消、Enter 确认。每页只属于一个领域，领域行固定在顶部且可勾选；页内到达边界不会滚动加载，底部显示全局页码及领域内页码。技能说明只显示当前焦点项，避免长文本铺满终端。更换搜索词保留已选技能，Ctrl+U 清空搜索，Ctrl+C 取消。搜索时父节点仍操作整个领域（包括隐藏子项），部分选中时再勾父节点会补齐全选。支持 `skills-hub install --dry-run` 交互预览；同名技能存在差异时自动备份替换，无需额外参数。非交互环境继续要求明确参数，不会等待输入。
@@ -77,9 +77,9 @@ node C:\tools\skills-hub\install.mjs install --domain dev
 | [zh-chrome-extensions](upstream-skills/zh-chrome-extensions/SKILL.md) | Chrome 扩展与 Manifest V3 开发、权限和发布检查 | 同一 Google 仓库的独立扩展技能 |
 
 ```sh
-npx @namewta/skills-hub@0.1.11 install --domain upstream-skills
-npx @namewta/skills-hub@0.1.11 install --skill zh-archify
-npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-modern-web-guidance
+npx @namewta/skills-hub@0.1.12 install --domain upstream-skills
+npx @namewta/skills-hub@0.1.12 install --skill zh-archify
+npx @namewta/skills-hub@0.1.12 install --skill dev-architecture zh-archify zh-modern-web-guidance
 ```
 
 不带参数运行即可在 TUI 中选择 `upstream-skills（上游独立技能）`。可搜索原名、`zh-` 名和中文用途，分组全选或与其他领域混选。安装后仍是 `.agents/skills/zh-archify/` 等平级文件夹，不创建 `.agents/upstream-skills/`。
@@ -148,7 +148,12 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 
 `dev-handoff` 可以独立安装，只服务开发任务，记录沿用 `.agents/dev/changes/<日期-主题>/handoff.md`。保存、跨会话接续与明确暂停的区别、来源方法和必要适配见[开发上下文交接](docs/dev-handoff.md)。已有 `dev-workflow` 的项目按[交接入口迁移](docs/installation.md#开发交接入口迁移)一起更新；新增能力尚未包含在所用 npm 版本时，使用包含该变更的源码安装。
 
-`dev-prototype` 将文字对齐后的需求变成可以亲自操作的确认依据。用户确认过的 HTML/CSS/JS 决定其覆盖范围内的布局和交互；文档解释意图、业务边界与证据位置，任务安排实现。默认保存在同一 change 的 `prototype/index.html` 与 `prototype-review.md`，实际用户确认和浏览器自检分别记实。原有探索方法从 dev-build 唯一迁入该技能，完整保留。使用和来源见[可视化意图确认](docs/dev-prototype.md)，更新方法见[原型入口迁移](docs/installation.md#开发原型入口迁移)。本次未增加 npm 版本，先使用包含该变更的源码。
+`dev-prototype` 将文字对齐后的需求变成可以亲自操作的确认依据。用户确认过的 HTML/CSS/JS 决定其覆盖范围内的布局和交互；文档解释意图、业务边界与证据位置，任务安排实现。默认保存在同一 change 的 `prototype/index.html` 与 `prototype-review.md`，实际用户确认和浏览器自检分别记实。原有探索方法从 dev-build 唯一迁入该技能，完整保留。使用和来源见[可视化意图确认](docs/dev-prototype.md)，更新方法见[原型入口迁移](docs/installation.md#开发原型入口迁移)。`0.1.12` 已将该技能及其完整资源纳入 npm 包；已有开发技能的项目建议一起更新整个 dev 领域：
+
+```bash
+npx @namewta/skills-hub@0.1.12 install --domain dev --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain dev
+```
 
 ## 怎样组合工程实践与验证闭环
 
@@ -196,7 +201,7 @@ npx @namewta/skills-hub@0.1.11 install --skill dev-architecture zh-archify zh-mo
 | [ops-history](skills/ops/ops-history/SKILL.md) | 按项目、服务器、服务、环境和时间查询同一份历史 |
 | [ops-runbook](skills/ops/ops-runbook/SKILL.md) | 从真实证据生成、验证并维护项目专属运维知识/技能 |
 
-ops 随 `0.1.11` 的源码与 npm 包一起提供。在实际运维工作根安装：
+ops 随 `0.1.12` 的源码与 npm 包一起提供。在实际运维工作根安装：
 
 ```bash
 node /path/to/skills-hub/install.mjs install --domain ops

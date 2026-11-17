@@ -11,6 +11,7 @@ import { readMaterials, queryMaterials, resolveMaterialPath } from "./materials-
 
 const ROOT = path.dirname(import.meta.dirname);
 const PREFIX = "claude-code/skills/statechart/scripts/test/corpus/";
+const CASE_TIMEOUT_MS = process.platform === "win32" ? 120_000 : 45_000;
 const run = promisify(execFile);
 
 // Explicit repository root injection keeps tests independent of an in-progress materials migration.
@@ -67,33 +68,40 @@ export async function main({ materialsRoot = ROOT, runtimeRoot = ROOT } = {}) {
       while (next < cases.length) {
         const index = next++;
         const name = cases[index];
-        const directory = path.join(corpus, name);
-        const output = path.join(base, "output", name);
-        // 既检查全新目标，也覆盖支持的“已有空目录”发布路径。
-        if (index === 0) fs.mkdirSync(output, { recursive: true });
-        const args = ["--import", pathToFileURL(adapter).href, entry, path.join(directory, `${name}.tla`), "--out", output];
-        if (fs.existsSync(path.join(directory, "view.mjs"))) args.push("--view", path.join(directory, "view.mjs"));
-        const env = { ...process.env, JAVA: "captured-output-replay", TLA2TOOLS: placeholder, STATECHART_REPLAY: directory };
-        let result;
-        try { result = { ...(await run(process.execPath, args, { env, encoding: "utf8", timeout: 45_000, maxBuffer: 8 * 1024 * 1024 })), code: 0 }; }
-        catch (error) { if (typeof error.code !== "number") throw error; result = error; }
-        const savedExit = path.join(directory, "verdict-1.exit");
-        const code = fs.existsSync(savedExit) ? Number(fs.readFileSync(savedExit, "utf8")) : 0;
-        const expected = code === 0 ? 0 : [11, 12, 13].includes(code) ? 1 : 2;
-        assert.equal(result.code, expected, `${name}: 退出码；${result.stderr}`);
-        assert.equal(result.stderr, "", `${name}: stderr`);
-        const report = fs.readFileSync(path.join(output, "report.md"), "utf8");
-        const chart = fs.readFileSync(path.join(output, "chart.mmd"), "utf8");
-        const original = fs.readFileSync(path.join(directory, "report.md"), "utf8");
-        const originalChart = fs.readFileSync(path.join(directory, "chart.mmd"), "utf8");
-        const matches = (text, regex) => [...text.matchAll(regex)].map((match) => match.slice(1));
-        const rules = matches(report, /^## 违反 (.+)$/gm).flat();
-        assert.deepEqual(rules, matches(original, /^## (.+) breaks$/gm).flat(), `${name}: 违反规则`);
-        for (const pattern of [/^\s*(\[\*\]|s\d+) --> (s\d+)/gm, /^\s*class (s\d+) (\w+)/gm])
-          assert.deepEqual(matches(chart, pattern), matches(originalChart, pattern), `${name}: 图边或节点标记`);
-        assert.equal([...report.matchAll(/^\d+\. /gm)].length, [...original.matchAll(/^\d+\. /gm)].length, `${name}: 反例轨迹长度`);
-        assert.equal(fs.readFileSync(path.join(output, "tlc.out"), "utf8").includes("@!@!@"), false, `${name}: 工具协议清理`);
-        results[index] = { case: name, exit: result.code, rules };
+        const startedAt = performance.now();
+        console.log(`${name}: 开始回放（子进程超时上限 ${CASE_TIMEOUT_MS} ms）。`);
+        try {
+          const directory = path.join(corpus, name);
+          const output = path.join(base, "output", name);
+          // 既检查全新目标，也覆盖支持的“已有空目录”发布路径。
+          if (index === 0) fs.mkdirSync(output, { recursive: true });
+          const args = ["--import", pathToFileURL(adapter).href, entry, path.join(directory, `${name}.tla`), "--out", output];
+          if (fs.existsSync(path.join(directory, "view.mjs"))) args.push("--view", path.join(directory, "view.mjs"));
+          const env = { ...process.env, JAVA: "captured-output-replay", TLA2TOOLS: placeholder, STATECHART_REPLAY: directory };
+          let result;
+          try { result = { ...(await run(process.execPath, args, { env, encoding: "utf8", timeout: CASE_TIMEOUT_MS, maxBuffer: 8 * 1024 * 1024 })), code: 0 }; }
+          catch (error) { if (typeof error.code !== "number") throw error; result = error; }
+          const savedExit = path.join(directory, "verdict-1.exit");
+          const code = fs.existsSync(savedExit) ? Number(fs.readFileSync(savedExit, "utf8")) : 0;
+          const expected = code === 0 ? 0 : [11, 12, 13].includes(code) ? 1 : 2;
+          assert.equal(result.code, expected, `${name}: 退出码；${result.stderr}`);
+          assert.equal(result.stderr, "", `${name}: stderr`);
+          const report = fs.readFileSync(path.join(output, "report.md"), "utf8");
+          const chart = fs.readFileSync(path.join(output, "chart.mmd"), "utf8");
+          const original = fs.readFileSync(path.join(directory, "report.md"), "utf8");
+          const originalChart = fs.readFileSync(path.join(directory, "chart.mmd"), "utf8");
+          const matches = (text, regex) => [...text.matchAll(regex)].map((match) => match.slice(1));
+          const rules = matches(report, /^## 违反 (.+)$/gm).flat();
+          assert.deepEqual(rules, matches(original, /^## (.+) breaks$/gm).flat(), `${name}: 违反规则`);
+          for (const pattern of [/^\s*(\[\*\]|s\d+) --> (s\d+)/gm, /^\s*class (s\d+) (\w+)/gm])
+            assert.deepEqual(matches(chart, pattern), matches(originalChart, pattern), `${name}: 图边或节点标记`);
+          assert.equal([...report.matchAll(/^\d+\. /gm)].length, [...original.matchAll(/^\d+\. /gm)].length, `${name}: 反例轨迹长度`);
+          assert.equal(fs.readFileSync(path.join(output, "tlc.out"), "utf8").includes("@!@!@"), false, `${name}: 工具协议清理`);
+          results[index] = { case: name, exit: result.code, rules };
+          console.log(`${name}: 回放完成，耗时 ${Math.round(performance.now() - startedAt)} ms。`);
+        } catch (error) {
+          throw new Error(`${name}: 回放失败，耗时 ${Math.round(performance.now() - startedAt)} ms，子进程超时上限 ${CASE_TIMEOUT_MS} ms；${error instanceof Error ? error.message : String(error)}`, { cause: error });
+        }
       }
     }
     await Promise.all(Array.from({ length: Math.min(4, cases.length) }, worker));

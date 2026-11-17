@@ -89,11 +89,11 @@ node /path/to/skills-hub/install.mjs install --domain upstream-skills
 
 ## 独立 ops 领域
 
-`0.1.11` 提供九个 ops 技能。在实际运维工作根使用 npm 入口：
+`0.1.12` 提供九个 ops 技能。在实际运维工作根使用 npm 入口：
 
 ```bash
-npx @namewta/skills-hub@0.1.11 install --domain ops --dry-run
-npx @namewta/skills-hub@0.1.11 install --domain ops
+npx @namewta/skills-hub@0.1.12 install --domain ops --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain ops
 ```
 
 也可使用更新后的源码：`node /path/to/skills-hub/install.mjs install --domain ops`，加 `--dry-run` 可先预览。
@@ -124,20 +124,20 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 `dev-prototype` 是独立的 dev 技能。默认把已确认文档转成沿项目风格的完整交互 HTML，记录用户对具体版本与范围的确认；原 `dev-build` 内的四份探索原型方法也完整迁入该包。安装器和 TUI 沿用动态发现，不需要另一个注册表或安装模式。树中搜索 `dev-prototype`、`原型` 或描述中的中文用途即可选择；确认原型的方法、模板、Node 指纹工具随整包复制。
 
-本次只交付源码，不代表 npm 新版已经发布。使用包含本变更的源码，在目标项目根更新整个 dev 领域，可同步所有调用者和迁移后的唯一方法：
+`0.1.12` 将原型入口及其完整资源纳入 npm 包。在目标项目根更新整个 dev 领域，可同步所有调用者和迁移后的唯一方法：
 
 ```bash
-node /path/to/skills-hub/install.mjs install --domain dev --dry-run
-node /path/to/skills-hub/install.mjs install --domain dev
+npx @namewta/skills-hub@0.1.12 install --domain dev --dry-run
+npx @namewta/skills-hub@0.1.12 install --domain dev
 ```
 
 只安装部分技能时，至少一起更新旧方法所在包与新入口，并更新实际已安装的相关调用者：
 
 ```bash
-node /path/to/skills-hub/install.mjs install --skill dev-build dev-prototype
+npx @namewta/skills-hub@0.1.12 install --skill dev-build dev-prototype
 ```
 
-相关调用者包括 dev-workflow、dev-intake、dev-grill、dev-spec、dev-ui-design、dev-plan、dev-review、dev-verify、dev-handoff、dev-archive 和 dev-help。安装器不自动解析兄弟依赖；缺少所需入口时说明安装缺口，继续不依赖它的工作。只新增 dev-prototype 而不更新旧 dev-build，会保留旧探索方法副本。
+源码方式仍可运行 `node /path/to/skills-hub/install.mjs` 并使用相同参数。相关调用者包括 dev-workflow、dev-intake、dev-grill、dev-spec、dev-ui-design、dev-plan、dev-review、dev-verify、dev-handoff、dev-archive 和 dev-help。安装器不自动解析兄弟依赖；缺少所需入口时说明安装缺口，继续不依赖它的工作。只新增 dev-prototype 而不更新旧 dev-build，会保留旧探索方法副本。
 
 整包备份替换会移除 dev-build 内迁出的四份资源，不改写用户已经生成的规格、原型或确认记录。任意 dev 技能仍只初始化既有开发导航；实际 `prototype/index.html`、资源与 `prototype-review.md` 在运行技能时按需写入同一 change，不写进 `.agents/skills/`。已有原型保留实际位置，后续引用固定版本；无需为了安装搬迁业务资料。完整用法见[可视化意图确认](dev-prototype.md)。
 
