@@ -93,6 +93,16 @@ CLI 成功返回与公开版本可读是两个状态。公开查询返回 404 �
 
 npm CLI 自身失败时，脚本只按恢复流程核对一次已存在的公开版本或 stage；无法核实时保留原上传错误。窗口结束仍未确认公开会以非零状态结束，保留版本并报告实际状态。先只读核对扫描或审批结果，再从同一提交恢复。
 
+### 只读查询发布状态
+
+在 Actions 选择 [Inspect npm publication status](../.github/workflows/npm-publication-status.yml)，点击 **Run workflow**。`version` 留空时读取所选提交的 `package.json.version`，也可以填写要核对的版本。main 上该工作流文件发生变更时会自动查询一次。任务使用 Node.js 24，无需安装依赖，只发送固定 npm registry 的 GET 请求。
+
+日志和 Step Summary 分别列出精确公开版本、`latest` 阳性对照、packument 是否包含目标版本，以及该版本的发布生命周期。仅生命周期请求携带仓库 Secret `NPM_TOKEN`；输出限制为 HTTP 状态和包名、版本、状态、完整性等选定字段，不输出凭据或原始响应。
+
+[npm 官方 API 文档](https://api-docs.npmjs.com/)定义生命周期接口 `GET /-/package/{name}/version/{version}/status`，其中 scoped 包名的 `/` 编码为 `%2F`。它需要具有该包发布权限的 npm token。401、403、404 按原 HTTP 状态显示；生命周期 404 也可能表示没有查询权限，不能解释为版本不存在。`latest` 对照也无法读取时，先排查查询通道，不能据此判断目标版本状态。工作流完成仅表示查询结束，不代表发布完成。
+
+上传命令成功但公开状态未确认时，不直接重跑发布任务：现有发布器若仍查不到公开版本或 stage，会再次上传。先读取生命周期并核对公开版本；确认包名、版本及 SHA-512 SRI 与原 tarball 一致后，再恢复原提交。诊断工作流不上传包、不批准 stage、不修改 npm tag 或 GitHub Release。
+
 ## npm 进入暂存审批时
 
 公开版本不可读时，脚本查询固定 registry `https://registry.npmjs.org` 的已有 stage。只读协议如下：
