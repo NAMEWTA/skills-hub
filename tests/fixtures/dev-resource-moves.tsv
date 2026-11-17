@@ -576,7 +576,6 @@ skills/dev/dev-sharpen/assets/decision-trail.md	skills/dev/dev-workflow/assets/d
 skills/dev/dev-sharpen/references/custom-workflow.md	skills/dev/dev-workflow/references/custom-workflow.md
 skills/dev/dev-sharpen/references/decision-trail.md	skills/dev/dev-workflow/references/decision-trail.md
 skills/dev/dev-sharpen/scripts/append-decision-tsv.mjs	skills/dev/dev-workflow/scripts/append-decision-tsv.mjs
-skills/dev/dev-spec/references/implementation-brief.md	skills/dev/dev-intake/references/implementation-brief.md
 skills/dev/dev-spec/references/local-work-records.md	skills/dev/dev-plan/references/local-work-records.md
 skills/dev/dev-status/assets/action-contract.md	skills/dev/dev-build/assets/action-contract.md
 skills/dev/dev-status/references/action-ui.md	skills/dev/dev-build/references/action-ui.md
@@ -813,3 +812,4 @@ skills/dev/dev-build/references/prototype-method.md	skills/dev/dev-prototype/ref
 skills/dev/dev-build/references/ui-prototype.md	skills/dev/dev-prototype/references/ui-prototype.md
 skills/dev/dev-build/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
 skills/dev/dev-build/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
+skills/dev/dev-intake/references/implementation-brief.md	skills/dev/dev-spec/references/implementation-brief.md
