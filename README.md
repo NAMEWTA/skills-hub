@@ -19,6 +19,12 @@ npx @namewta/skills-hub install --domain dev
 # 混选开发技能和独立中文技能
 npx @namewta/skills-hub install --skill dev-prototype zh-archify
 
+# 新技能尚未发版时，从已检出的仓库源码安装
+node install.mjs install --skill zh-dashboard-design
+
+# 后续 npm 版本包含该技能时，再从 npm 单独安装
+npx @namewta/skills-hub@latest install --skill zh-dashboard-design
+
 # 安装前预览
 npx @namewta/skills-hub install --domain upstream-skills --dry-run
 ```
@@ -69,6 +75,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | [zh-archify](upstream-skills/zh-archify/SKILL.md) | 架构、流程、时序、状态、ERD 等交互图和单页解释 |
 | [zh-modern-web-guidance](upstream-skills/zh-modern-web-guidance/SKILL.md) | HTML、CSS、客户端 JavaScript 的现代 Web 实践与指南检索 |
 | [zh-chrome-extensions](upstream-skills/zh-chrome-extensions/SKILL.md) | Chrome 扩展、Manifest V3、权限、存储、消息和发布检查 |
+| [zh-dashboard-design](upstream-skills/zh-dashboard-design/SKILL.md) | 数据仪表盘的 KPI、图表、热力图、响应式布局、SwiftUI 与截图 QA |
 
 `upstream-skills` 只是安装分组，各技能按自身用途工作。中文说明与原版保持对应，代码、API、文件名和可执行命令保留。Archify 的完整交付检查需要 Chrome/Chromium；Modern Web Guidance 仍通过原 CLI 检索最新资料，返回内容可能是英文。运行前提与中文范围见[上游独立技能说明](docs/upstream-skills.md)。
 

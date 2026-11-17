@@ -11,3 +11,4 @@ oncall-replay	https://github.com/anthropics/oncall-kit	main	c03282cd5381a5a2e12e
 openai-sentry	https://github.com/openai/skills	main	49f948faa9258a0c61caceaf225e179651397431	skills/.curated/sentry	openai-sentry/manifest.tsv
 archify	https://github.com/tt-a1i/archify.git	main	a7ed6fd6657da90414831d1d42cf95987188750c	archify	archify/manifest.tsv
 modern-web-guidance	https://github.com/GoogleChrome/modern-web-guidance.git	main	64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65	skills	modern-web-guidance/manifest.tsv
+dashboard-design-skill	https://github.com/abdiraimov-otabek/dashboard-design-skill.git	main	463b8fdf62c640180ec1ba731f3616c2319bf68c	skills/dashboard-design	dashboard-design-skill/manifest.tsv

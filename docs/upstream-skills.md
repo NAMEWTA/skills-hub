@@ -9,6 +9,7 @@
 | [zh-archify](../upstream-skills/zh-archify/SKILL.md) | `archify` | 架构、流程、时序、状态、ERD 等交互图及单页解释 |
 | [zh-modern-web-guidance](../upstream-skills/zh-modern-web-guidance/SKILL.md) | `modern-web-guidance` | HTML、CSS、客户端 JavaScript 的现代 Web 实践和指南检索 |
 | [zh-chrome-extensions](../upstream-skills/zh-chrome-extensions/SKILL.md) | `chrome-extensions` | Chrome 扩展、Manifest V3、权限、存储、消息及发布检查 |
+| [zh-dashboard-design](../upstream-skills/zh-dashboard-design/SKILL.md) | `dashboard-design` | 数据分析与监测仪表盘、KPI、图表、热力图、SwiftUI、截图质量检查 |
 
 一份来源仓库可以提供多个技能。HTML、CSS 和 JavaScript 是知识主题，不各建安装包，也不根据语言统计划分 domain。准确来源、版权和改造范围见[第三方声明](../THIRD_PARTY_NOTICES.md)，当前来源版本由[材料父清单](../materials/manifest.tsv)维护。
 
@@ -21,8 +22,11 @@ npx @namewta/skills-hub@latest
 npx @namewta/skills-hub@latest install --domain upstream-skills --dry-run
 npx @namewta/skills-hub@latest install --domain upstream-skills
 npx @namewta/skills-hub@latest install --skill zh-archify
+npx @namewta/skills-hub@latest install --skill zh-dashboard-design
 npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-modern-web-guidance
 ```
+
+刚新增但尚未发布到 npm 的技能，先从已检出的源码运行 `node install.mjs install --skill zh-dashboard-design`；使用 npm 包时先执行 `list --domain upstream-skills`，确认当前安装版本确实包含该技能。仓库源码有新技能不表示 npm 的 `latest` 已包含它。
 
 第一条打开 TUI。选择 `upstream-skills` 可勾选整组，也可以按 `archify`、`zh-archify`、`上游` 或用途搜索，与领域技能混选。Tab 勾选，方向键移动和翻页，Enter 确认；搜索和翻页保留已选项。完整交互、备份及失败恢复见[安装契约](installation.md)。
 
@@ -32,6 +36,7 @@ npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-mo
 | `upstream-skills/zh-archify/` | `.agents/skills/zh-archify/` |
 | `upstream-skills/zh-modern-web-guidance/` | `.agents/skills/zh-modern-web-guidance/` |
 | `upstream-skills/zh-chrome-extensions/` | `.agents/skills/zh-chrome-extensions/` |
+| `upstream-skills/zh-dashboard-design/` | `.agents/skills/zh-dashboard-design/` |
 
 `--domain upstream-skills` 只复用分组参数，不声明共同工作流，不创建 `.agents/upstream-skills/`，也不改变包自己的产物位置。原名与 `zh-` 入口可以并存，由使用者选择；安装器不会自动删除原版。
 
@@ -64,6 +69,8 @@ npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-mo
 **Modern Web Guidance。** 入口和随包静态指南为中文，搜索、检索及版本检查继续使用 `npx -y modern-web-guidance@latest ...`。首次取得 CLI 通常需要网络，最新响应可能是英文。先遵循原有 search/retrieve 与策略检查，再按相同指南 ID 使用本地中文资料；有冲突时以本次 CLI 结果为准，并用中文解释。本地译文不替代最新检索或浏览器支持策略。
 
 **Chrome Extensions。** 入口与参考资料为中文，Chrome API、Manifest 字段和可执行代码保持真实语义。实际制作和测试扩展仍需要对应浏览器与环境，安装技能不自动配置它们。
+
+**Dashboard Design。** 入口与十份参考均为中文，保留原作者 Otabek 的设计方法、署名规则、全部 React/Tailwind、CSS、SwiftUI 和 Swift Charts 代码片段。Web 端的三宽度截图 QA 需要真实应用及浏览器环境；SwiftUI 的模拟器检查需要对应 Apple 开发环境。单纯安装技能不代表已执行这些测试。来源固定为上游 2.1.0 的 `skills/dashboard-design/`，仓库外层的 HTML 演示、README 图像及 Claude 插件安装元数据不属于选定子树。
 
 各包原生法律文本随完整资源保留。根项目许可不替代第三方许可，具体范围见[统一第三方声明](../THIRD_PARTY_NOTICES.md)。
 
