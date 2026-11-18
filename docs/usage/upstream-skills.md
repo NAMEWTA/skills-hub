@@ -26,7 +26,7 @@ npx @namewta/skills-hub@latest install --skill zh-dashboard-design
 npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-modern-web-guidance
 ```
 
-`zh-dashboard-design` 从 skills-hub **0.1.15** 起随 npm 包分发。可用 `npx @namewta/skills-hub@0.1.15 install --skill zh-dashboard-design` 安装固定版本，或用 `npx @namewta/skills-hub@latest list --domain upstream-skills` 核对最新公开包。源码安装时，在目标项目根目录运行 `node /path/to/skills-hub/install.mjs install --skill zh-dashboard-design`，将示例换成实际安装器路径。
+`zh-dashboard-design` 从 skills-hub **0.1.15** 起随 npm 包分发。可用 `npx @namewta/skills-hub@0.1.16 install --skill zh-dashboard-design` 安装固定版本，或用 `npx @namewta/skills-hub@latest list --domain upstream-skills` 核对最新公开包。源码安装时，在目标项目根目录运行 `node /path/to/skills-hub/install.mjs install --skill zh-dashboard-design`，将示例换成实际安装器路径。
 
 第一条打开交互选择。勾选 `upstream-skills` 安装整组，或搜索 `archify`、`zh-archify`、`上游` 来选个别技能。也可以与领域技能混选。按键、备份及失败恢复见[安装契约](installation.md#交互选择)。
 

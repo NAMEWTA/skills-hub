@@ -20,7 +20,7 @@ npx @namewta/skills-hub install --domain dev
 npx @namewta/skills-hub install --skill dev-prototype zh-archify
 
 # 从 npm 发布版本安装仪表盘设计中文技能
-npx @namewta/skills-hub@0.1.15 install --skill zh-dashboard-design
+npx @namewta/skills-hub@0.1.16 install --skill zh-dashboard-design
 
 # 从源码安装 Herdr Core 技能，替换安装器路径
 node /path/to/skills-hub/install.mjs install --skill system-herdr-core
@@ -44,7 +44,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | `ops` | 多项目、多服务器与共享服务的巡检、维护、恢复和操作历史 | [ops-workflow](skills/ops/ops-workflow/SKILL.md) |
 | `upstream-skills` | 保持独立结构的一对一中文技能 | 下表中的 `zh-*` 技能 |
 
-开发任务可以从 `dev-workflow` 开始，也可以直接选择当前需要的方法。例如，`dev-prototype` 把已收敛的需求变成可操作 HTML，`dev-build` 实现真实功能，`dev-handoff` 保存现场或接续工作。各技能沿用同一任务和证据，完整方法各维护一份。
+开发任务可以从 `dev-workflow` 开始，也可以直接选择当前需要的方法。多个已有 Change 要统一推进时，用 [dev-program](skills/dev/dev-program/SKILL.md) 整理依赖和可直接交给 Goal 的批次计划。例如，`dev-prototype` 把已收敛的需求变成可操作 HTML，`dev-build` 实现真实功能，`dev-handoff` 保存现场或接续工作。各技能沿用同一任务和证据，完整方法各维护一份。
 
 容易混淆的开发入口按希望获得的结果选择：
 

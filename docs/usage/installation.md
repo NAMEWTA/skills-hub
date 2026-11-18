@@ -119,6 +119,16 @@ npx @namewta/skills-hub@latest install --domain ops
 
 安装器升级不自动移动或删除项目资料。旧 `.agents/wtadev/` 中的开发资料对应到 `.agents/dev/` 同职责子目录，`system/<host>/` 对应到 `.agents/system/<host>/`。先清点和备份，再逐文件核对冲突、合并内容并修复链接，详见[迁移顺序](../reference/persistence-roots.md#从早期-agentswtadev-迁移)。
 
+## 多 Change 编排与原有队列方法
+
+在目标项目根目录使用包含 `dev-program` 的版本。整组安装使用 `--domain dev`。从当前源码按名更新调用者和方法所属包时，将下方路径换成源码安装器的位置。
+
+```sh
+node /path/to/skills-hub/install.mjs install --skill dev-workflow dev-help dev-program dev-parallel dev-deploy
+```
+
+单独编排可只安装 `dev-program`。原有批次与子 Change 记录沿用真实位置，按任务使用的其他开发阶段技能仍可单独选取。
+
 ## 开发交接入口迁移
 
 使用旧版 `dev-workflow` 的项目，一起更新调用者并安装负责交接的技能：

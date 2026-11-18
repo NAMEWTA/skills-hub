@@ -26,6 +26,7 @@
 
 自有领域的运行内容在完整方法基础上作中文翻译，并调整技能名称、项目路径、宿主能力与职责归属。来源语境保存在 `materials/`，本地差异记录在子清单的 `adaptation` 字段。
 
+- `dev-program` 的批次推进方法参考 Speculo 的目标计划与接续，跨 Change 交付点和 Goal 文本按本项目记录方式组织。pstack 的持续项目协调由 `dev-parallel` 承接，独立与堆叠 PR 队列由 `dev-deploy` 承接。
 - `dev-handoff` 采用 Matt handoff 及 pstack session-pickup、pause-safely 方法，把临时交接改为项目持久资料，并适配技能调用、既有授权和恢复核对。
 - `dev-prototype` 采用 Speculo 的原型证据方法、采购申请引用示例，以及 Matt/pstack 的完整探索方法。采购示例只分发必要 HTML/CSS/JS，不包含来源画廊的照片、品牌字体或图标库。
 - `system-herdr` 保留完整 CLI 方法；客户端启动示例与按 pane 的 task/report 文件通信属于本地扩展。

@@ -21,7 +21,7 @@ skills/dev/dev-build/references/architecture-method.md	skills/dev/dev-architectu
 skills/dev/dev-build/references/authoring-a-skill.md	skills/dev/dev-personalize/references/authoring-a-skill.md
 skills/dev/dev-build/references/autonomous-execution.md	skills/dev/dev-workflow/references/autonomous-execution.md
 skills/dev/dev-build/references/autonomy-boundaries.md	skills/dev/dev-guardrails/references/authorized-progress.md
-skills/dev/dev-build/references/autopilot-stack.md	skills/dev/dev-workflow/references/autopilot-stack.md
+skills/dev/dev-build/references/autopilot-stack.md	skills/dev/dev-deploy/references/autopilot-stack.md
 skills/dev/dev-build/references/babysit.md	skills/dev/dev-deploy/references/babysit.md
 skills/dev/dev-build/references/behavior-tests.md	skills/dev/dev-tdd/references/behavior-tests.md
 skills/dev/dev-build/references/behavior-verification.md	skills/dev/dev-guardrails/references/behavior-tests.md
@@ -55,7 +55,7 @@ skills/dev/dev-build/references/module-exploration.md	skills/dev/dev-learn/refer
 skills/dev/dev-build/references/outcome-execution.md	skills/dev/dev-guardrails/references/outcome-execution.md
 skills/dev/dev-build/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
 skills/dev/dev-build/references/perf-issue.md	skills/dev/dev-benchmark/references/performance-issue.md
-skills/dev/dev-build/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
+skills/dev/dev-build/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
 skills/dev/dev-build/references/pull-request-evidence.md	skills/dev/dev-deploy/references/pull-request-evidence.md
 skills/dev/dev-build/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-build/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
@@ -135,9 +135,7 @@ skills/dev/dev-debug/references/trace-forensics.md	skills/dev/dev-benchmark/refe
 skills/dev/dev-debug/references/two-axis-review.md	skills/dev/dev-review/references/two-axis-review.md
 skills/dev/dev-debug/references/verifiable-units.md	skills/dev/dev-guardrails/references/verifiable-units.md
 skills/dev/dev-deploy/references/autonomous-execution.md	skills/dev/dev-workflow/references/autonomous-execution.md
-skills/dev/dev-deploy/references/autonomous-queue.md	skills/dev/dev-workflow/references/autonomous-queue.md
 skills/dev/dev-deploy/references/autonomy-boundaries.md	skills/dev/dev-guardrails/references/authorized-progress.md
-skills/dev/dev-deploy/references/autopilot-stack.md	skills/dev/dev-workflow/references/autopilot-stack.md
 skills/dev/dev-deploy/references/boundary-discipline.md	skills/dev/dev-guardrails/references/boundary-discipline.md
 skills/dev/dev-deploy/references/change-impact.md	skills/dev/dev-review/references/change-impact.md
 skills/dev/dev-deploy/references/clear-writing.md	skills/dev/dev-writing/references/clear-writing.md
@@ -155,7 +153,7 @@ skills/dev/dev-deploy/references/investigator-brief.md	skills/dev/dev-why/refere
 skills/dev/dev-deploy/references/module-exploration.md	skills/dev/dev-learn/references/module-exploration.md
 skills/dev/dev-deploy/references/outcome-execution.md	skills/dev/dev-guardrails/references/outcome-execution.md
 skills/dev/dev-deploy/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
-skills/dev/dev-deploy/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
+skills/dev/dev-deploy/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
 skills/dev/dev-deploy/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-deploy/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
 skills/dev/dev-deploy/references/safe-pause.md	skills/dev/dev-handoff/references/safe-pause.md
@@ -199,8 +197,8 @@ skills/dev/dev-help/references/context/personal/references/tooling-review.md	ski
 skills/dev/dev-help/references/context/setup/assets/decision-log.tsv	skills/dev/dev-workflow/assets/decision-log.tsv
 skills/dev/dev-help/references/context/setup/assets/model-roles.md	skills/dev/dev-setup/assets/model-roles.md
 skills/dev/dev-help/references/context/setup/references/autonomous-execution.md	skills/dev/dev-workflow/references/autonomous-execution.md
-skills/dev/dev-help/references/context/setup/references/autonomous-queue.md	skills/dev/dev-workflow/references/autonomous-queue.md
-skills/dev/dev-help/references/context/setup/references/autopilot-stack.md	skills/dev/dev-workflow/references/autopilot-stack.md
+skills/dev/dev-help/references/context/setup/references/autonomous-queue.md	skills/dev/dev-deploy/references/autonomous-queue.md
+skills/dev/dev-help/references/context/setup/references/autopilot-stack.md	skills/dev/dev-deploy/references/autopilot-stack.md
 skills/dev/dev-help/references/context/setup/references/babysit.md	skills/dev/dev-deploy/references/babysit.md
 skills/dev/dev-help/references/context/setup/references/clear-writing.md	skills/dev/dev-writing/references/clear-writing.md
 skills/dev/dev-help/references/context/setup/references/configure-models.md	skills/dev/dev-setup/references/configure-models.md
@@ -210,7 +208,7 @@ skills/dev/dev-help/references/context/setup/references/feature-search-example.m
 skills/dev/dev-help/references/context/setup/references/formal-options.md	skills/dev/dev-setup/references/formal-options.md
 skills/dev/dev-help/references/context/setup/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
 skills/dev/dev-help/references/context/setup/references/plain-restatement.md	skills/dev/dev-learn/references/plain-restatement.md
-skills/dev/dev-help/references/context/setup/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
+skills/dev/dev-help/references/context/setup/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
 skills/dev/dev-help/references/context/setup/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-help/references/context/setup/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-help/references/context/setup/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
@@ -264,9 +262,9 @@ skills/dev/dev-help/references/workflow/references/alternative-designs.md	skills
 skills/dev/dev-help/references/workflow/references/architecture-method.md	skills/dev/dev-architecture/references/architecture-method.md
 skills/dev/dev-help/references/workflow/references/authoring-a-skill.md	skills/dev/dev-personalize/references/authoring-a-skill.md
 skills/dev/dev-help/references/workflow/references/autonomous-execution.md	skills/dev/dev-workflow/references/autonomous-execution.md
-skills/dev/dev-help/references/workflow/references/autonomous-queue.md	skills/dev/dev-workflow/references/autonomous-queue.md
+skills/dev/dev-help/references/workflow/references/autonomous-queue.md	skills/dev/dev-deploy/references/autonomous-queue.md
 skills/dev/dev-help/references/workflow/references/autonomy-boundaries.md	skills/dev/dev-guardrails/references/authorized-progress.md
-skills/dev/dev-help/references/workflow/references/autopilot-stack.md	skills/dev/dev-workflow/references/autopilot-stack.md
+skills/dev/dev-help/references/workflow/references/autopilot-stack.md	skills/dev/dev-deploy/references/autopilot-stack.md
 skills/dev/dev-help/references/workflow/references/babysit.md	skills/dev/dev-deploy/references/babysit.md
 skills/dev/dev-help/references/workflow/references/behavior-preserving-refactor.md	skills/dev/dev-build/references/behavior-preserving-refactor.md
 skills/dev/dev-help/references/workflow/references/behavior-tests.md	skills/dev/dev-tdd/references/behavior-tests.md
@@ -313,7 +311,7 @@ skills/dev/dev-help/references/workflow/references/outcome-execution.md	skills/d
 skills/dev/dev-help/references/workflow/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
 skills/dev/dev-help/references/workflow/references/perf-issue.md	skills/dev/dev-benchmark/references/performance-issue.md
 skills/dev/dev-help/references/workflow/references/phase-boundaries.md	skills/dev/dev-workflow/references/phase-boundaries.md
-skills/dev/dev-help/references/workflow/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
+skills/dev/dev-help/references/workflow/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
 skills/dev/dev-help/references/workflow/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
 skills/dev/dev-help/references/workflow/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-help/references/workflow/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
@@ -544,8 +542,8 @@ skills/dev/dev-review/references/verifiable-units.md	skills/dev/dev-guardrails/r
 skills/dev/dev-setup/assets/decision-log.tsv	skills/dev/dev-workflow/assets/decision-log.tsv
 skills/dev/dev-setup/assets/decision-trail.md	skills/dev/dev-workflow/assets/decision-trail.md
 skills/dev/dev-setup/references/autonomous-execution.md	skills/dev/dev-workflow/references/autonomous-execution.md
-skills/dev/dev-setup/references/autonomous-queue.md	skills/dev/dev-workflow/references/autonomous-queue.md
-skills/dev/dev-setup/references/autopilot-stack.md	skills/dev/dev-workflow/references/autopilot-stack.md
+skills/dev/dev-setup/references/autonomous-queue.md	skills/dev/dev-deploy/references/autonomous-queue.md
+skills/dev/dev-setup/references/autopilot-stack.md	skills/dev/dev-deploy/references/autopilot-stack.md
 skills/dev/dev-setup/references/babysit.md	skills/dev/dev-deploy/references/babysit.md
 skills/dev/dev-setup/references/clear-writing.md	skills/dev/dev-writing/references/clear-writing.md
 skills/dev/dev-setup/references/custom-workflow.md	skills/dev/dev-workflow/references/custom-workflow.md
@@ -557,7 +555,7 @@ skills/dev/dev-setup/references/getting-started.md	skills/dev/dev-help/reference
 skills/dev/dev-setup/references/host-adapter.md	skills/dev/dev-help/references/harness-adapter.md
 skills/dev/dev-setup/references/parallel-coverage.md	skills/dev/dev-parallel/references/parallel-coverage.md
 skills/dev/dev-setup/references/plain-restatement.md	skills/dev/dev-learn/references/plain-restatement.md
-skills/dev/dev-setup/references/program-coordination.md	skills/dev/dev-workflow/references/program-coordination.md
+skills/dev/dev-setup/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
 skills/dev/dev-setup/references/pull-request-procedure.md	skills/dev/dev-deploy/references/pull-request-procedure.md
 skills/dev/dev-setup/references/real-evidence.md	skills/dev/dev-guardrails/references/real-evidence.md
 skills/dev/dev-setup/references/review-triage.md	skills/dev/dev-review/references/review-triage.md
@@ -813,3 +811,6 @@ skills/dev/dev-build/references/ui-prototype.md	skills/dev/dev-prototype/referen
 skills/dev/dev-build/references/logic-prototype.md	skills/dev/dev-prototype/references/logic-prototype.md
 skills/dev/dev-build/references/prototype.md	skills/dev/dev-prototype/references/prototype.md
 skills/dev/dev-intake/references/implementation-brief.md	skills/dev/dev-spec/references/implementation-brief.md
+skills/dev/dev-workflow/references/program-coordination.md	skills/dev/dev-parallel/references/program-coordination.md
+skills/dev/dev-workflow/references/autonomous-queue.md	skills/dev/dev-deploy/references/autonomous-queue.md
+skills/dev/dev-workflow/references/autopilot-stack.md	skills/dev/dev-deploy/references/autopilot-stack.md
