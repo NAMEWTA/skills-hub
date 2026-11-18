@@ -2,6 +2,9 @@
 
 ## 未发布
 
+- 重整项目文档。安装与使用、开发协作、运行运维、项目参考和仓库维护现在从文档总导航进入。
+- 新增 `system-herdr-core`，提供 `hc` 的 agent 启动命令、终端操作和按需使用的 task/report 协作模板。
+
 ## 0.1.15 — 2026-11-17
 
 - 新增独立中文技能 `zh-dashboard-design`，完整对应 Otabek Abdiraimov 的 Dashboard Design 2.1.0：入口与十份参考涵盖 KPI、图表、热力图、目标卡片、响应式布局、Web 与 SwiftUI 的截图 QA。

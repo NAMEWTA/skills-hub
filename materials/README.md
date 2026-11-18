@@ -26,7 +26,7 @@
 
 ## 物理布局与内容规则
 
-Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`；Dashboard Design 的 `upstream/SKILL.md` 对应来源 `skills/dashboard-design/SKILL.md`。中文底稿保留原 name，运行包使用 `zh-` 名称。安装与维护见[独立上游技能](../docs/upstream-skills.md)。
+Archify 的 `upstream/SKILL.md` 对应来源 `archify/SKILL.md`；Google 的 `upstream/modern-web-guidance/SKILL.md` 对应来源 `skills/modern-web-guidance/SKILL.md`；Dashboard Design 的 `upstream/SKILL.md` 对应来源 `skills/dashboard-design/SKILL.md`。中文底稿保留原 name，运行包使用 `zh-` 名称。安装与维护见[独立上游技能](../docs/usage/upstream-skills.md)。
 
 ```text
 materials/
@@ -128,7 +128,7 @@ node scripts/sync-materials.mjs --project mattpocock-skills --apply --from temp/
 
 即使保留 `.py`、`.sh`、`.ts`、可执行位、嵌套 `.agents/skills`、`SKILL.md`、`AGENTS.md` 或 `.github/`，它们也不作为当前任务指令、不参与技能发现、不复制进目标项目。安装与普通维护不运行来源脚本、CI、hook 或依赖安装；npm 文件白名单排除整个 `materials/`。
 
-已有状态图回放使用一个明确的维护入口：[check-statechart-replay.mjs](../scripts/check-statechart-replay.mjs)将清单指定的固定 corpus 复制到临时目录，调用本项目的状态图工具读取已捕获输出，并动态加载夹具中的 `view.mjs` 投影配置。这部分是代码执行，不能表述为纯静态读取；它不运行新的 TLC 求解，也不授权执行其他来源程序。具体验证前提见[验证指南](../docs/validation.md)。
+已有状态图回放使用一个明确的维护入口：[check-statechart-replay.mjs](../scripts/check-statechart-replay.mjs)将清单指定的固定 corpus 复制到临时目录，调用本项目的状态图工具读取已捕获输出，并动态加载夹具中的 `view.mjs` 投影配置。这部分是代码执行，不能表述为纯静态读取；它不运行新的 TLC 求解，也不授权执行其他来源程序。具体验证前提见[验证指南](../docs/maintenance/validation.md)。
 
 选定来源树内自带的 LICENSE/NOTICE 是原样快照的一部分，不能移走或改译。根 [licenses/](../licenses/) 则保存实际仓库/npm 分发需要的适用法律文本，可能包括所选子树范围之外的同版仓库根许可，以及已被运行版采用的旧来源许可。维护集中许可不等于扩大 upstream 范围；移除当前来源映射不取消已有法律义务。安装器不向用户项目复制许可目录，也不补齐、更新或删除已有 `.agents/skills-hub-licenses/`。详见[第三方声明](../THIRD_PARTY_NOTICES.md)。
 
@@ -142,4 +142,4 @@ node scripts/check.mjs --full
 npm run check:package
 ```
 
-本地校验核实两级唯一性、路径/symlink、文件集合、摘要、Git blob、可用平台上的执行位、稀疏对照、法律/机器字节及运行文件归属；显式提供本地 Git 对象库时可核对固定提交树。摘要和“出现中文”不能证明分类准确、翻译忠实或运行版已适配。状态图命令只是 **captured-output replay**，不是新的 TLC 求解。实际执行结果与未覆盖范围保存在对应 `.agents/dev/changes/` 中；[验证指南](../docs/validation.md)说明如何选择检查和解释结果。完整方法与适配契约见[资源组织](../docs/resources.md)和[关键开发约束](../docs/development-constraints.md)。
+本地校验核实两级唯一性、路径/symlink、文件集合、摘要、Git blob、可用平台上的执行位、稀疏对照、法律/机器字节及运行文件归属；显式提供本地 Git 对象库时可核对固定提交树。摘要和“出现中文”不能证明分类准确、翻译忠实或运行版已适配。状态图命令只是 **captured-output replay**，不是新的 TLC 求解。实际执行结果与未覆盖范围保存在对应 `.agents/dev/changes/` 中；[验证指南](../docs/maintenance/validation.md)说明如何选择检查和解释结果。完整方法与适配契约见[资源组织](../docs/reference/resources.md)和[关键开发约束](../docs/maintenance/development-constraints.md)。

@@ -16,6 +16,7 @@
 | [elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)，Elaya | `skills`；设计方法与资料。设计材料内嵌的 Leon / leonxlnx 授权另行保留。 | [MIT](licenses/ai-design-skills-MIT.txt)、[taste-skill MIT](licenses/taste-skill-MIT.txt)；[清单](materials/ai-design-skills/manifest.tsv) |
 | [NAMEWTA/Speculo](https://github.com/NAMEWTA/Speculo)，wta 及其列出的第三方作者 | 整仓被动快照、中文对照及按需采用的方法；嵌套内容适用下方单独列出的许可。 | [MIT](licenses/Speculo-MIT.txt)、[上游完整声明](licenses/Speculo-THIRD-PARTY-NOTICES.txt)；[清单](materials/speculo/manifest.tsv) |
 | [herdrdev/herdr](https://github.com/herdrdev/herdr)，Herdr 贡献者 | `skills/herdr`；`system-herdr` 的终端控制方法。未收录 Herdr 程序或 vendor 树。 | [Apache 2.0](licenses/herdr-Apache-2.0.txt)；[清单](materials/herdr/manifest.tsv) |
+| [herdrdev/herdr-core](https://github.com/herdrdev/herdr-core)，Herdr Core 贡献者 | `skills/herdr-core`；`system-herdr-core` 的中文入口与手册读取方式。 | [Apache 2.0](licenses/herdr-Apache-2.0.txt)；[清单](materials/herdr-core/manifest.tsv) |
 | [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit)，Anthropic 及贡献者 | `skills/triage`、`templates`、`eval`；分别用于事故调查、经验手册和回放评估方法。 | [Apache 2.0](licenses/oncall-kit/LICENSE)；[调查](materials/oncall-triage/manifest.tsv)、[模板](materials/oncall-templates/manifest.tsv)、[回放](materials/oncall-replay/manifest.tsv)清单 |
 | [openai/skills — Sentry](https://github.com/openai/skills/tree/main/skills/.curated/sentry)，OpenAI 及贡献者 | `skills/.curated/sentry`；只读错误观测、范围核对与脱敏方法用于 `ops-inspect`。 | [Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)；[清单](materials/openai-sentry/manifest.tsv) |
 | [HumanLayer](https://github.com/humanlayer/humanlayer) / [Dex Horthy](https://github.com/dexhorthy)，QueryTale, Inc. d/b/a HumanLayer | 既有 PR 视觉说明中的 show-me 方法；已作中文翻译和流程适配。NOTICE 中列出的其他程序组件未因此一并收录。 | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) |
@@ -28,6 +29,7 @@
 - `dev-handoff` 采用 Matt handoff 及 pstack session-pickup、pause-safely 方法，把临时交接改为项目持久资料，并适配技能调用、既有授权和恢复核对。
 - `dev-prototype` 采用 Speculo 的原型证据方法、采购申请引用示例，以及 Matt/pstack 的完整探索方法。采购示例只分发必要 HTML/CSS/JS，不包含来源画廊的照片、品牌字体或图标库。
 - `system-herdr` 保留完整 CLI 方法；客户端启动示例与按 pane 的 task/report 文件通信属于本地扩展。
+- `system-herdr-core` 的运行版采用用户明确选用的触发条件，并增加客户端启动示例及按 Core 终端地址派发 task/report 的方法。许可原文与现有 Herdr Apache 2.0 文件字节相同。
 - ops 将调查、经验和只读观测方法适配到本领域的 registry、run、项目资料与实际工具能力。领域之间不因此产生自动安装依赖。
 - issue 初始化、分诊和复现修复保留 pstack 较早 [Benny 自动化资料](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny)的方法；通用来源接口和项目配置属于本地适配，原 Slack 分支保留其身份核对与回读要求。
 

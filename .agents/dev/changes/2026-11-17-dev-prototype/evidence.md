@@ -4,7 +4,7 @@
 
 ## 实现与基线
 
-已发布 [Issue #5](https://github.com/NAMEWTA/skills-hub/issues/5)，实现独立 `dev-prototype`、完整确认方法、证据引用方法和交互示例、四份探索方法迁移、下游衔接及只读指纹工具。来源逐项见 [source-adaptations](source-adaptations.md)，安装与使用见[原型说明](../../../../docs/dev-prototype.md)。
+已发布 [Issue #5](https://github.com/NAMEWTA/skills-hub/issues/5)，实现独立 `dev-prototype`、完整确认方法、证据引用方法和交互示例、四份探索方法迁移、下游衔接及只读指纹工具。来源逐项见 [source-adaptations](source-adaptations.md)，安装与使用见[原型说明](../../../../docs/development/prototype.md)。
 
 初始 main 为 `6fb7f89a87e741b2366f5a69eeb17f308a1508c8`。提交前已整合后来合入的 PR #6，最新验证基线为 `6a797e183b5df81402fe9e598df52bd9f1224d55`，树为 `3b2923929adfecd52ca0310730fac860cd0df535`。对应 Git 对象与 GitHub 返回的签名内容、SHA 和树一致。
 

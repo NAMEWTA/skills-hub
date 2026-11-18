@@ -1,0 +1,2 @@
+path	kind	language	source_git_mode	source_git_blob	upstream_sha256	zh_path	zh_sha256	runtime_paths	runtime_reviewed_blob	adaptation
+SKILL.md	document	en	100644	864a6e4681d629d1c46fa2f2c5a24fb4028e76d3	677e9f2e21f13a3ecf11708fc50211373fda7e50251e7e0cb303707ac8eed70a	zh/SKILL.md	420ddc085c386592c0c088e2dafada302051efa828686f9777827f77902baaf7	skills/system/system-herdr-core/SKILL.md	864a6e4681d629d1c46fa2f2c5a24fb4028e76d3	运行入口仅在用户明确选用 Core 时启用，沿用已授权的外部调用。保留 hc 与 App 手册读取方式。新增 Claude Code、Codex、Pi 启动约定和按 Core 终端地址使用的 task/report 文件协议。

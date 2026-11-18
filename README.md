@@ -22,8 +22,8 @@ npx @namewta/skills-hub install --skill dev-prototype zh-archify
 # 从 npm 发布版本安装仪表盘设计中文技能
 npx @namewta/skills-hub@0.1.15 install --skill zh-dashboard-design
 
-# 从当前仓库源码安装
-node install.mjs install --skill zh-dashboard-design
+# 从源码安装 Herdr Core 技能，替换安装器路径
+node /path/to/skills-hub/install.mjs install --skill system-herdr-core
 
 # 安装前预览
 npx @namewta/skills-hub install --domain upstream-skills --dry-run
@@ -33,7 +33,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 技能安装到当前项目的 `.agents/skills/<技能名>/`。重复安装时，相同内容保持不变，有差异的同名技能先备份再替换。安装器只复制文件，不执行技能中的工具；技能是否自动加载由所用 Agent 决定，也可以直接读取对应的 `SKILL.md`。
 
-全局命令、源码离线安装、备份恢复和旧版本迁移见[安装说明](docs/installation.md)。
+全局命令、源码离线安装、备份恢复和旧版本迁移见[安装说明](docs/usage/installation.md)。
 
 ## 选择技能
 
@@ -58,7 +58,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | 创建或跟进 PR、合并已验证改动；或发布到指定环境 | `dev-deploy`：PR 交付与环境部署两个分支 |
 | 编写项目技能；或从授权记录提炼稳定工作偏好 | `dev-personalize`：技能编写与偏好提炼两个分支 |
 
-这些入口按需调用。当前负责人沿用同一份权威行为契约、决定记录和有效证据，已有充分结果直接继续；可视化原型仍独立作为体验依据。完整边界见[开发流程](docs/workflow.md)。
+这些入口按需调用。当前负责人沿用同一份权威行为契约、决定记录和有效证据，已有充分结果直接继续；可视化原型仍独立作为体验依据。完整边界见[开发流程](docs/development/workflow.md)。
 
 ```text
 使用 dev-prototype：读取这个需求的规格和设计，沿用项目风格，
@@ -77,7 +77,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | [zh-chrome-extensions](upstream-skills/zh-chrome-extensions/SKILL.md) | Chrome 扩展、Manifest V3、权限、存储、消息和发布检查 |
 | [zh-dashboard-design](upstream-skills/zh-dashboard-design/SKILL.md) | 数据仪表盘的 KPI、图表、热力图、响应式布局、SwiftUI 与截图 QA |
 
-`upstream-skills` 只是安装分组，各技能按自身用途工作。中文说明与原版保持对应，代码、API、文件名和可执行命令保留。Archify 的完整交付检查需要 Chrome/Chromium；Modern Web Guidance 仍通过原 CLI 检索最新资料，返回内容可能是英文。运行前提与中文范围见[上游独立技能说明](docs/upstream-skills.md)。
+`upstream-skills` 只是安装分组，各技能按自身用途工作。中文说明与原版保持对应，代码、API、文件名和可执行命令保留。Archify 的完整交付检查需要 Chrome/Chromium；Modern Web Guidance 仍通过原 CLI 检索最新资料，返回内容可能是英文。运行前提与中文范围见[上游独立技能说明](docs/usage/upstream-skills.md)。
 
 ## 项目结构
 
@@ -91,21 +91,22 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 安装器直接扫描两个运行根，完整复制所选技能的 `SKILL.md`、`references/`、`assets/`、`scripts/` 和其他配套资源。安装后所有技能位于 `.agents/skills/` 同一层级。`materials/` 供维护时对照，不参与技能发现或安装。
 
-使用技能产生的项目资料按领域保存：开发资料位于 `.agents/dev/`，系统维护资料位于 `.agents/system/<主机标识>/`，运维资料位于 `.agents/ops/`。选择相关技能时，安装器维护对应的简短目录导航，业务记录按任务创建。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/persistence-roots.md)。
+使用技能产生的项目资料按领域保存：开发资料位于 `.agents/dev/`，系统维护资料位于 `.agents/system/<主机标识>/`，运维资料位于 `.agents/ops/`。选择相关技能时，安装器维护对应的简短目录导航，业务记录按任务创建。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/reference/persistence-roots.md)。
 
 ## 文档导航
 
 | 要完成的事 | 阅读入口 |
 | --- | --- |
-| 浏览完整文档、理解项目结构 | [文档导航](docs/README.md)、[架构设计](docs/architecture.md) |
-| 安装、升级、恢复备份或迁移旧包 | [安装说明](docs/installation.md) |
-| 组合开发技能，处理原型与交接 | [开发流程](docs/workflow.md)、[可交互原型](docs/dev-prototype.md)、[开发交接](docs/dev-handoff.md) |
-| 维护服务器和项目运行关系 | [运维说明](docs/ops.md) |
-| 使用和更新独立中文技能 | [上游独立技能](docs/upstream-skills.md) |
-| 理解技能归属和资源组织 | [开发方法归属](docs/dev-method-ownership.md)、[资源组织](docs/resources.md) |
-| 维护项目知识和记录位置 | [领域持久化](docs/persistence-roots.md)、[知识与记忆](docs/knowledge.md) |
-| 修改仓库、编写技能或文档 | [开发约定](AGENTS.md)、[技能编写指南](docs/skill-authoring.md) |
-| 检查质量和发布版本 | [质量门禁](docs/skill-quality.md)、[版本发布](docs/release.md) |
+| 浏览完整文档、理解项目结构 | [文档导航](docs/README.md)、[架构设计](docs/reference/architecture.md) |
+| 安装、升级、恢复备份或迁移旧包 | [安装说明](docs/usage/installation.md) |
+| 组合开发技能，处理原型与交接 | [开发流程](docs/development/workflow.md)、[可交互原型](docs/development/prototype.md)、[开发交接](docs/development/handoff.md) |
+| 维护服务器和项目运行关系 | [运维说明](docs/operations/overview.md) |
+| 用 Herdr TUI 或 Core 启动 agent、派发任务和收取结果 | [Herdr 协作](docs/usage/herdr-coordination.md) |
+| 使用和更新独立中文技能 | [上游独立技能](docs/usage/upstream-skills.md) |
+| 理解技能归属和资源组织 | [开发方法归属](docs/development/method-ownership.md)、[资源组织](docs/reference/resources.md) |
+| 维护项目知识和记录位置 | [领域持久化](docs/reference/persistence-roots.md)、[知识与记忆](docs/reference/knowledge.md) |
+| 修改仓库、编写技能或文档 | [开发约定](AGENTS.md)、[技能编写指南](docs/maintenance/skill-authoring.md) |
+| 检查质量和发布版本 | [质量门禁](docs/maintenance/skill-quality.md)、[版本发布](docs/maintenance/release.md) |
 | 查看版本变化 | [更新记录](CHANGELOG.md) |
 
 ## 致谢与许可

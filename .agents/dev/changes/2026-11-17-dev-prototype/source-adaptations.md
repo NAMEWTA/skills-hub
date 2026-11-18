@@ -1,6 +1,6 @@
 # 来源核验与必要适配
 
-关联 [Issue #5](https://github.com/NAMEWTA/skills-hub/issues/5)，核验日期 2026-11-17。完整来源链接和研究结论见[开发说明](../../../../docs/dev-prototype.md)。
+关联 [Issue #5](https://github.com/NAMEWTA/skills-hub/issues/5)，核验日期 2026-11-17。完整来源链接和研究结论见[开发说明](../../../../docs/development/prototype.md)。
 
 ## 固定材料与最新研究
 

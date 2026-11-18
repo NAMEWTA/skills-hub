@@ -5,7 +5,7 @@
 - 源码仓库：`NAMEWTA/skills-hub`；发布分支：`main`。
 - npm 包：`@namewta/skills-hub`；registry：`https://registry.npmjs.org/`。
 - 版本标签：`v<package.json version>`；GitHub Release 附件是同一次构建的 tarball 与 `SHA256SUMS`。
-- 执行入口：仓库 `.github/workflows/release.yml` 与 `scripts/release.mjs`；完整契约见[版本发布](../../../../docs/release.md)。
+- 执行入口：仓库 `.github/workflows/release.yml` 与 `scripts/release.mjs`；完整契约见[版本发布](../../../../docs/maintenance/release.md)。
 
 ## 准备与执行
 
