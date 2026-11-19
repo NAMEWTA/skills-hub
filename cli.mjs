@@ -2,7 +2,9 @@ import * as prompts from '@clack/prompts';
 import pc from 'picocolors';
 import stringWidth from 'string-width';
 import wrapAnsi from 'wrap-ansi';
-import { createInstaller, select, main } from './install.mjs';
+import { join } from 'node:path';
+import { createInstaller, select, main, readUtf8, repositoryRoot } from './install.mjs';
+import { isNpmInstallation, latestUpdate, installUpdate } from './scripts/update-cli.mjs';
 import { treeSelect } from './tree-select.mjs';
 export { matchesSkillSearch } from './tree-select.mjs';
 
@@ -12,7 +14,8 @@ export function formatSummary(names, columns = process.stdout.columns ?? 80) {
   return wrapAnsi(`${pc.bold(label)}${' '.repeat(Math.max(1, 8 - stringWidth(label)))}${names.join('、')}`, width, { hard: true });
 }
 
-export async function interactive({ argv = [], project = process.cwd(), ui = prompts, choose = treeSelect } = {}) {
+export async function interactive({ argv = [], project = process.cwd(), ui = prompts, choose = treeSelect,
+  checkUpdate = isNpmInstallation(repositoryRoot) ? latestUpdate : undefined, update = installUpdate } = {}) {
   if (argv.some(value => !['install', '--replace', '--dry-run'].includes(value))) {
     throw new Error('交互安装只接受 install、--replace 和 --dry-run。');
   }
@@ -23,6 +26,19 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
   };
   try {
     ui.intro(pc.cyan('skills-hub · 按需安装中文技能'));
+    const dryRun = argv.includes('--dry-run');
+    if (checkUpdate && !dryRun) {
+      const { version } = JSON.parse(readUtf8(join(repositoryRoot, 'package.json')));
+      const latest = await checkUpdate(version);
+      if (latest && await ask(ui.select({
+        message: `skills-hub ${latest} 已发布，当前版本为 ${version}`,
+        options: [{ value: true, label: '更新' }, { value: false, label: '跳过本次' }],
+        initialValue: false,
+      }))) {
+        try { return update(latest, { root: repositoryRoot, project, argv }); }
+        catch (error) { ui.note(error.message, '更新失败，可以继续使用当前版本'); }
+      }
+    }
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
     const installer = createInstaller();
     const skills = installer.catalog();
@@ -35,7 +51,6 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     if (selected.some(skill => ['dev', 'system', 'ops'].includes(skill.domain))) {
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
-    const dryRun = argv.includes('--dry-run');
     if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装或更新以上技能？（有差异的现有技能会先备份）', initialValue: true }))) {
       ui.cancel('已取消，未修改文件。'); return 0;
     }

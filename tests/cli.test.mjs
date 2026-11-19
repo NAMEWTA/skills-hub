@@ -7,6 +7,7 @@ import { interactive, formatSummary, matchesSkillSearch } from '../cli.mjs';
 import { createSkillTree } from '../tree-select.mjs';
 import { repositoryRoot } from '../install.mjs';
 import { temporary } from './helpers.mjs';
+import { latestUpdate, isNpmInstallation } from '../scripts/update-cli.mjs';
 
 function context(names, confirm = true) {
   const notes = [];
@@ -14,6 +15,38 @@ function context(names, confirm = true) {
     confirm: async () => confirm, isCancel: value => typeof value === 'symbol',
     spinner: () => ({ start() {}, stop() {} }) }, choose: async () => names };
 }
+
+test('update checks compare stable npm versions numerically and tolerate unavailable metadata', async () => {
+  const reply = version => async () => ({ ok: true, json: async () => ({ name: '@namewta/skills-hub', version }) });
+  assert.equal(await latestUpdate('0.1.9', reply('0.1.18')), '0.1.18');
+  assert.equal(await latestUpdate('0.1.18', reply('0.1.18')), undefined);
+  assert.equal(await latestUpdate('0.2.0', reply('0.1.18')), undefined);
+  assert.equal(await latestUpdate('0.1.9', reply('0.1.18-beta.1')), undefined);
+  assert.equal(await latestUpdate('0.1.9', async () => { throw new Error('offline'); }), undefined);
+  assert.equal(isNpmInstallation(path.join('cache', 'node_modules', '@namewta', 'skills-hub')), true);
+  assert.equal(isNpmInstallation(path.join('code', 'skills-hub')), false);
+});
+
+test('skipping prompts again next launch and accepting launches the selected version', async t => {
+  const project = temporary(t, 'skills-hub update ');
+  const ctx = context(['dev-spec'], false);
+  let prompts = 0;
+  ctx.ui.select = async () => ++prompts === 2;
+  const launches = [];
+  const options = {
+    project, ...ctx, checkUpdate: async () => '9.0.0',
+    update(version, { project: target, argv }) {
+      launches.push({ version, target, argv });
+      return 0;
+    },
+  };
+  assert.equal(await interactive(options), 0);
+  assert.equal(await interactive({ ...options, argv: ['install'] }), 0);
+  assert.equal(await interactive({ ...options, argv: ['install', '--dry-run'] }), 0);
+  assert.equal(prompts, 2);
+  assert.deepEqual(launches, [{ version: '9.0.0', target: project, argv: ['install'] }]);
+  assert.equal(fs.existsSync(path.join(project, '.agents')), false);
+});
 
 test('tree skill install, repeat and preview preserve core behavior', async t => {
   const project = temporary(t, 'skills-hub cli ');

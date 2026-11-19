@@ -30,7 +30,9 @@ export function validatePack(info, root = ROOT) {
   if (info.name !== pkg.name || info.version !== pkg.version) throw new Error('npm 包身份与 package.json 不一致');
   const paths = new Set(info.files.map(file => file.path));
   const allowedRoot = new Set(['install.mjs', 'package.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']);
-  if (pkg.dependencies?.['@clack/prompts']) allowedRoot.add('cli.mjs');
+  if (pkg.dependencies?.['@clack/prompts']) {
+    for (const file of ['cli.mjs', 'scripts/npm-cli.mjs', 'scripts/update-cli.mjs']) allowedRoot.add(file);
+  }
   if (pkg.dependencies?.['@clack/core']) allowedRoot.add('tree-select.mjs');
   const installerResources = persistenceResources(root);
   for (const resource of installerResources) allowedRoot.add(resource);
