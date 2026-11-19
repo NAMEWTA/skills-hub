@@ -18,8 +18,9 @@ export function matchesSkillSearch(search, option) {
   });
 }
 
-export function createSkillTree(skills) {
-  const selected = new Set();
+export function createSkillTree(skills, initialNames = []) {
+  const installed = new Set(initialNames);
+  const selected = new Set(skills.filter(skill => installed.has(skill.name)).map(skill => skill.name));
   const root = { value: '@all', label: '全部技能', depth: 0, names: skills.map(skill => skill.name) };
   const nodes = [root];
   for (const domain of [...new Set(skills.map(skill => skill.domain))]) {
@@ -55,63 +56,81 @@ export function createSkillTree(skills) {
   };
 }
 
-// 每页只属于一个分组；分组行始终置顶且可勾选，不与子项一起滚出屏幕。
-export function createTreePager(tree, pageSize = 8) {
-  let query = '', size = Math.max(1, pageSize), page = 0, cursor = 0;
-  function pages() {
-    const result = [];
-    for (const domain of tree.nodes.filter(node => node.depth === 1)) {
-      const children = tree.nodes.filter(node => node.domain === domain.value && tree.matches(query, node));
-      for (let start = 0; start < children.length; start += size) {
-        result.push({ domain, children: children.slice(start, start + size),
-          domainPage: Math.floor(start / size) + 1, domainPages: Math.ceil(children.length / size) });
-      }
-    }
-    return result;
-  }
+const maxPageSize = 20;
+const frameOverhead = 5;
+
+export function createTreePager(tree, pageSize = maxPageSize) {
+  const [root] = tree.nodes;
+  const domains = tree.nodes.filter(node => node.depth === 1);
+  let query = '', size = Math.max(1, pageSize), page = 0, focus = root.value, expanded;
+  const matchingDomains = () => domains.filter(node => tree.matches(query, node));
+  const matchingChildren = () => expanded
+    ? tree.nodes.filter(node => node.domain === expanded && tree.matches(query, node)) : [];
   function view() {
-    const all = pages();
-    page = Math.max(0, Math.min(page, all.length - 1));
-    const current = all[page];
-    const rows = current ? [tree.nodes[0], current.domain, ...current.children] : [];
-    cursor = Math.max(0, Math.min(cursor, rows.length - 1));
-    return { ...current, rows, cursor, page, totalPages: all.length, query, pageSize: size };
+    const groups = matchingDomains();
+    const matching = matchingChildren();
+    const children = matching.slice(page * size, (page + 1) * size);
+    const rows = groups.length ? [root, ...groups.flatMap(domain =>
+      domain.value === expanded ? [domain, ...children] : [domain])] : [];
+    const cursor = rows.findIndex(node => node.value === focus);
+    return { rows, cursor, page, totalPages: Math.ceil(matching.length / size), query,
+      pageSize: size, expanded, groups, children };
+  }
+  function clearSearch() {
+    query = '';
+    page = 0;
+    focus = root.value;
+    expanded = undefined;
   }
   return {
     view,
+    clearSearch,
     search(value) {
       if (value === query) return;
-      query = value; page = 0; cursor = 0;
-      const current = view();
-      if (query.trim() && current.rows.length) {
-        cursor = matchesSkillSearch(query, tree.nodes[0]) ? 0
-          : matchesSkillSearch(query, current.domain) ? 1 : 2;
+      if (!value.trim()) {
+        clearSearch();
+        return;
+      }
+      query = value;
+      page = 0;
+      focus = root.value;
+      const domain = matchingDomains()[0];
+      expanded = domain?.value;
+      if (domain && !matchesSkillSearch(query, root)) {
+        focus = matchesSkillSearch(query, domain) ? domain.value : matchingChildren()[0]?.value ?? domain.value;
       }
     },
     resize(value) {
-      if (size === value) return;
-      const before = view();
-      const focused = before.rows[cursor]?.value;
-      size = Math.max(1, value);
-      const all = pages();
-      const target = all.findIndex(item => item.children.some(node => node.value === focused)
-        || ((focused === '@all' || focused === before.domain?.value) && item.domain.value === before.domain?.value));
-      if (target !== -1) page = target;
-      const current = view();
-      const index = current.rows.findIndex(node => node.value === focused);
-      if (index !== -1) cursor = index;
+      const nextSize = Math.max(1, value);
+      if (size === nextSize) return;
+      const index = matchingChildren().findIndex(node => node.value === focus);
+      page = Math.floor((index === -1 ? page * size : index) / nextSize);
+      size = nextSize;
     },
     move(direction) {
       const current = view();
-      cursor = Math.max(0, Math.min(cursor + direction, current.rows.length - 1));
+      const index = Math.max(0, Math.min(current.cursor + direction, current.rows.length - 1));
+      focus = current.rows[index]?.value ?? focus;
     },
     turn(direction) {
+      const { totalPages } = view();
+      const next = Math.max(0, Math.min(page + direction, totalPages - 1));
+      if (next === page) return;
+      page = next;
+      focus = view().children[0].value;
+    },
+    toggleExpanded() {
       const current = view();
-      const next = Math.max(0, Math.min(page + direction, current.totalPages - 1));
-      if (next !== page) { page = next; cursor = 2; }
+      const node = current.rows[current.cursor];
+      const domain = node?.depth === 1 ? node.value : node?.domain;
+      if (!domain) return;
+      expanded = domain === expanded ? undefined : domain;
+      focus = domain;
+      page = 0;
     },
     toggle() {
-      const focused = view().rows[cursor];
+      const current = view();
+      const focused = current.rows[current.cursor];
       if (focused) tree.toggle(focused.value);
     },
   };
@@ -130,67 +149,85 @@ export function fitTreeText(value, width) {
   return `${result}…`;
 }
 
-export function renderTreePage(tree, pager, { columns = 80, colors = pc, error = '' } = {}) {
-  const c = colors, view = pager.view(), width = Math.max(12, columns - 1);
+export function renderTreePage(tree, pager, { columns = 80, rows = Infinity, colors = pc, error = '', editing = false } = {}) {
+  const c = colors, view = pager.view(), width = Math.max(1, columns - 1);
   const line = (text, style = value => value) => style(fitTreeText(text, width));
-  const lines = [line('◆ 搜索并选择分组 / 技能', c.green), line(`│ 搜索：${view.query || '输入名称 / 用途'} ▌`), '│'];
-  for (const [index, node] of view.rows.entries()) {
+  const lines = [line('◆ 选择安装技能', c.green), line(editing
+    ? `│ 搜索：${view.query} ▌` : `│ / 搜索${view.query ? ` · ${view.query}` : ''}`)];
+  const available = Math.max(1, rows - frameOverhead);
+  const start = Math.max(0, Math.min(view.cursor - available + 1, view.rows.length - available));
+  const selected = new Set(tree.names());
+  for (const [offset, node] of view.rows.slice(start, start + available).entries()) {
+    const index = start + offset;
     const active = index === view.cursor;
     const state = tree.state(node.value);
     const marker = { none: '□', all: '■', partial: '◩' }[state];
-    const branch = node.depth === 0 ? '◆ ' : node.depth === 1 ? '└─ ▸ '
-      : index === view.rows.length - 1 ? '   └─ ' : '   ├─ ';
+    const branch = node.depth === 0 ? '◆ '
+      : node.depth === 1 ? `${node === view.groups.at(-1) ? '└─' : '├─'} ${node.value === view.expanded ? '▾' : '▸'} `
+        : node === view.children.at(-1) ? '   └─ ' : '   ├─ ';
     const prefix = `│ ${active ? '›' : ' '} ${branch}${marker} `;
-    const suffix = node.depth < 2 ? `  ${node.names.filter(name => tree.names().includes(name)).length}/${node.names.length}` : '';
+    const suffix = node.depth < 2 ? `  ${node.names.filter(name => selected.has(name)).length}/${node.names.length}` : '';
     const name = node.depth < 2 ? `${node.label}${node.depth === 1 ? `  ${node.groupType}` : ''}` : node.label;
+    if (stringWidth(prefix) >= width) {
+      lines.push(line(`${prefix}${name}`, active ? c.green : c.dim));
+      continue;
+    }
     const label = fitTreeText(`${prefix}${name}${suffix}`, width).slice(prefix.length);
     // 行首保留非空树枝，避免折行工具裁掉缩进；目录与技能有不同图标和颜色。
     lines.push(c.gray(prefix.slice(0, -2)) + (state === 'none' ? c.dim(`${marker} `) : c.green(`${marker} `))
       + (node.depth < 2 ? c.bold(active ? c.green(label) : c.cyan(label)) : active ? c.green(label) : label));
   }
-  if (!view.rows.length) lines.push(line('│ 无匹配；退格修改或 Ctrl+U 清空搜索。', c.yellow));
   const focused = view.rows[view.cursor];
-  const detail = focused?.depth === 2 ? focused.hint
-    : focused ? '勾选将操作全部子技能，包括其他页和搜索隐藏项。' : '输入其他关键词以继续选择。';
-  lines.push('│', line(`│ ${focused?.label ?? '搜索提示'} · ${view.domain?.label ?? '—'}`, c.dim),
-    line(`│ ${detail}`, c.dim),
-    line(`│ 第 ${view.totalPages ? view.page + 1 : 0}/${view.totalPages} 页 · ${view.domain?.label ?? '—'} ${view.domainPage ?? 0}/${view.domainPages ?? 0} · 已选 ${tree.names().length} 个`, c.green),
-    line(error ? `│ ${error}` : '│ ←/→ 整页翻页 · ↑/↓ 页内移动', error ? c.red : c.dim),
-    line('└ Tab 勾选 · Enter 确认 · Ctrl+C 取消', c.dim));
+  const detail = focused?.depth === 2 ? focused.hint : '空格勾选整组，包括其他页和筛选隐藏项。';
+  const page = view.totalPages ? ` · 第 ${view.page + 1}/${view.totalPages} 页` : '';
+  lines.push(line(error ? `│ ${error}` : focused ? `│ ${detail}` : '│ 无匹配，按 / 修改或 Ctrl+U 清空。', error ? c.red : focused ? c.dim : c.yellow),
+    line(`│ 已选 ${selected.size} 个${page}${editing ? ' · 输入关键词，空格分隔' : ' · ↑/↓ 移动 · ←/→ 翻页'}`, c.green),
+    line(editing ? '└ Enter 返回树 · Ctrl+U 清空 · Ctrl+C 取消'
+      : '└ Tab 展开/收拢 · 空格勾选 · Enter 确认 · Ctrl+U 清空 · Ctrl+C 取消', c.dim));
   return lines.join('\n');
 }
 
-export function treeSelect({ skills, input = process.stdin, output = process.stdout }) {
-  const tree = createSkillTree(skills);
-  const pageSize = () => Math.max(1, Math.min(8, (output.rows || 24) - 13));
-  const pager = createTreePager(tree, pageSize());
+export function treeSelect({ skills, initialNames = [], input = process.stdin, output = process.stdout }) {
+  const tree = createSkillTree(skills, initialNames);
+  const pager = createTreePager(tree);
   class TreePrompt extends Prompt {
     constructor() {
       super({ input, output,
         render() {
           if (this.state === 'submit') return pc.green(`◇ 已选择 ${tree.names().length} 个技能`);
           if (this.state === 'cancel') return pc.yellow('◇ 已取消树形选择');
-          pager.resize(pageSize());
-          return renderTreePage(tree, pager, { columns: output.columns || 80, error: this.state === 'error' ? this.error : '' });
+          const rows = output.rows || 24;
+          pager.resize(Math.min(maxPageSize, rows - frameOverhead - 1 - pager.view().groups.length));
+          return renderTreePage(tree, pager, { rows, columns: output.columns || 80,
+            error: this.state === 'error' ? this.error : '', editing: this.editing });
         },
       });
-      this.value = [];
-      this.on('userInput', value => pager.search(value));
+      this.editing = false;
+      this.value = tree.names();
+      this.on('userInput', value => {
+        if (this.editing) pager.search(value);
+      });
       this.on('key', (character, key) => {
-        if (key.name === 'up' || key.name === 'down') pager.move(key.name === 'up' ? -1 : 1);
-        if (key.name === 'left' || key.name === 'right') {
-          pager.turn(key.name === 'left' ? -1 : 1);
-          // 左右键被分页占用，不让 readline 光标移动后将搜索文字插到中间。
-          if (this.rl) this.rl.cursor = this.rl.line.length;
+        if (key.ctrl && key.name === 'u') pager.clearSearch();
+        if (this.editing) return;
+        if (character === '/') {
+          const { query } = pager.view();
+          this._clearUserInput();
+          this.editing = true;
+          this._setUserInput(query, true);
         }
-        if (key.name === 'tab' || (key.name === 'space' && !pager.view().query.trim())) pager.toggle();
+        if (key.name === 'up' || key.name === 'down') pager.move(key.name === 'up' ? -1 : 1);
+        if (key.name === 'left' || key.name === 'right') pager.turn(key.name === 'left' ? -1 : 1);
+        if (key.name === 'tab') pager.toggleExpanded();
+        if (key.name === 'space') pager.toggle();
         this.value = tree.names();
       });
     }
-    _isActionKey(character, key) {
-      return key.name === 'tab' || (key.name === 'space' && !pager.view().query.trim());
-    }
     _shouldSubmit() {
+      if (this.editing) {
+        this.editing = false;
+        return false;
+      }
       if (this.value.length) return true;
       this.error = '请至少勾选一个技能。';
       this.state = 'error';

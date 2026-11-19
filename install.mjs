@@ -132,6 +132,16 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     }
   }
 
+  function installedNames(skills, project) {
+    const agents = path.join(project, '.agents');
+    const target = path.join(agents, 'skills');
+    if (!exists(agents)?.isDirectory() || !exists(target)?.isDirectory()) return [];
+    return skills.filter(({ name }) => {
+      const directory = path.join(target, name);
+      return exists(directory)?.isDirectory() && exists(path.join(directory, 'SKILL.md'))?.isFile();
+    }).map(({ name }) => name);
+  }
+
   function plan(skills, project, replace = true) {
     const actualProject = fsOps.realpathSync(project);
     for (const source of [skillRoot, upstreamRoot, licenseRoot]) {
@@ -236,7 +246,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
       for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
     }
   }
-  return { catalog, plan, apply, persistencePlan };
+  return { catalog, installedNames, plan, apply, persistencePlan };
 }
 
 export function catalog(repository = repositoryRoot) { return createInstaller({ repository }).catalog(); }

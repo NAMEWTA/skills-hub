@@ -62,22 +62,24 @@ async function searchKeys(t, keys, catalog = skills) {
   }
   return { values: await result, rendered };
 }
-const down = '\x1b[B';
-
 test('real tree prompt mixes a domain with a leaf, excludes a child and retains selections across searches', { timeout: 5000 }, async t => {
-  const { values, rendered } = await searchKeys(t, ['dev', '\t', '\x15', 'spec', down, '\t', '\x15', '代理', down, '\t', '\r']);
+  const { values, rendered } = await searchKeys(t, [
+    '/', 'dev', '\r', ' ', '/', '\x15', 'spec', '\r', ' ',
+    '/', '\x15', 'sys', ' ', '代理', '\r', ' ', '\r',
+  ]);
   assert.deepEqual(values, ['dev-build', 'system-proxy']);
   assert.ok(rendered.includes('◩'));
+  assert.ok(rendered.includes('sys 代理'));
 });
 
 test('real tree prompt handles all, deselect child, no matches and full reset', { timeout: 5000 }, async t => {
-  const { values, rendered } = await searchKeys(t, ['\t', '不存在', '\t', '\x15', 'build', down, '\t', '\r']);
+  const { values, rendered } = await searchKeys(t, [' ', '/', '不存在', '\r', ' ', '\x15', '/', 'build', '\r', ' ', '\r']);
   assert.deepEqual(values, ['dev-spec', 'system-proxy']);
   assert.ok(rendered.includes('无匹配'));
 });
 
 test('real tree prompt rejects empty confirmation and supports cancellation', { timeout: 5000 }, async t => {
-  const { values, rendered } = await searchKeys(t, ['\r', '规格', '\x03']);
+  const { values, rendered } = await searchKeys(t, ['\r', '/', '规格', '\x03']);
   assert.ok(isCancel(values));
   assert.ok(rendered.includes('请至少勾选一个技能'));
 });

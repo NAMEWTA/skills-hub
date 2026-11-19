@@ -24,9 +24,11 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
   try {
     ui.intro(pc.cyan('skills-hub · 按需安装中文技能'));
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
-    const skills = createInstaller().catalog();
-    ui.note('↑/↓ 页内移动，←/→ 整页翻页，Tab 勾选，Enter 确认。\n直接输入搜索；勾选分组包含其他页和隐藏子项，可再取消个别技能。\n■ 全选 · ◩ 部分选中 · □ 未选；Ctrl+U 清空搜索。', '树形搜索多选');
-    const names = await ask(choose({ skills }));
+    const installer = createInstaller();
+    const skills = installer.catalog();
+    const initialNames = installer.installedNames(skills, project);
+    if (initialNames.length) ui.note(`已预选 ${initialNames.length} 个已安装技能。`, '当前项目');
+    const names = await ask(choose({ skills, initialNames }));
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
@@ -34,7 +36,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
     const dryRun = argv.includes('--dry-run');
-    if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装以上技能？', initialValue: true }))) {
+    if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装或更新以上技能？（有差异的现有技能会先备份）', initialValue: true }))) {
       ui.cancel('已取消，未修改文件。'); return 0;
     }
     const command = ['install', '--skill', ...selected.map(skill => skill.name)];

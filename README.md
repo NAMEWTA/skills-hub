@@ -29,7 +29,7 @@ node /path/to/skills-hub/install.mjs install --skill system-herdr-core
 npx @namewta/skills-hub install --domain upstream-skills --dry-run
 ```
 
-交互界面支持按名称、分组或中文用途搜索，整组选择和跨组混选。使用 ↑/↓ 移动、←/→ 翻页、Tab 勾选、Enter 确认；搜索和翻页保留已选项。非交互环境使用带 `--domain`、`--skill` 或 `--all` 的安装命令。
+交互界面默认勾选当前项目已安装的技能。使用 ↑/↓ 移动、Tab 展开或收拢领域、空格勾选、←/→ 翻页，按 Enter 查看安装确认。按 `/` 可搜索名称、分组或中文用途。非交互环境使用带 `--domain`、`--skill` 或 `--all` 的安装命令。
 
 技能安装到当前项目的 `.agents/skills/<技能名>/`。重复安装时，相同内容保持不变，有差异的同名技能先备份再替换。安装器只复制文件，不执行技能中的工具；技能是否自动加载由所用 Agent 决定，也可以直接读取对应的 `SKILL.md`。
 

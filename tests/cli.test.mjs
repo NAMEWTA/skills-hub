@@ -21,7 +21,13 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
   for (let i = 0; i < 2; i++) {
     if (i === 1) fs.appendFileSync(path.join(project, '.agents/skills/dev-spec/SKILL.md'), '\n旧版本内容\n');
-    const ctx = context(['dev-spec']);
+    const ctx = context([]);
+    ctx.choose = async ({ skills, initialNames }) => {
+      assert.deepEqual(initialNames, i ? ['dev-spec'] : []);
+      const tree = createSkillTree(skills, initialNames);
+      if (!i) tree.toggle('dev-spec');
+      return tree.names();
+    };
     assert.equal(await interactive({ project, ...ctx }), 0);
     assert.ok(ctx.ui.notes.join('\n').includes(i ? 'replace' : 'install'));
   }
@@ -58,6 +64,25 @@ test('interactive upstream installation uses the shared installer without domain
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/zh-archify/SKILL.md')));
   assert.deepEqual(fs.readdirSync(path.join(project, '.agents')), ['skills']);
   assert.ok(!ctx.ui.notes.some(note => note.includes('将补齐所选领域')));
+  const root = path.join(project, '.agents', 'skills');
+  const installed = path.join(root, 'zh-archify', 'SKILL.md');
+  fs.appendFileSync(installed, '\n本地修改\n');
+  fs.mkdirSync(path.join(root, 'dev-spec'));
+  fs.symlinkSync(path.join(root, 'zh-archify'), path.join(root, 'system-proxy'), 'junction');
+  fs.mkdirSync(path.join(root, 'unknown-skill'));
+  fs.writeFileSync(path.join(root, 'unknown-skill', 'SKILL.md'), '# Unknown');
+  const preview = context([]);
+  preview.choose = async ({ skills, initialNames }) => {
+    assert.deepEqual(initialNames, ['zh-archify']);
+    assert.equal(createSkillTree(skills, initialNames).state('@domain:upstream-skills'), 'partial');
+    return initialNames;
+  };
+  assert.equal(await interactive({ project, argv: ['install', '--dry-run'], ...preview }), 0);
+  assert.match(preview.ui.notes.join('\n'), /would replace\s+zh-archify/);
+  assert.match(fs.readFileSync(installed, 'utf8'), /本地修改/);
+  assert.equal(await interactive({ project, ...context(['ops-inspect']) }), 0);
+  assert.match(fs.readFileSync(installed, 'utf8'), /本地修改/);
+  assert.equal(fs.existsSync(path.join(project, '.agents', '.skills-hub-backups')), false);
 });
 
 test('tree cancellation and declined confirmation do not write', async t => {

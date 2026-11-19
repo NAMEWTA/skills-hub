@@ -7,37 +7,42 @@ import stringWidth from 'string-width';
 import { createSkillTree, createTreePager, renderTreePage, fitTreeText, treeSelect } from '../tree-select.mjs';
 
 const skills = [
-  ...Array.from({ length: 17 }, (_, index) => ({ domain: 'dev', name: `dev-item-${index + 1}`, description: '中文用途😀，用于分析与验证。'.repeat(20) })),
+  ...Array.from({ length: 41 }, (_, index) => ({ domain: 'dev', name: `dev-item-${index + 1}`, description: '中文用途😀，用于分析与验证。'.repeat(20) })),
   { domain: 'system', name: 'system-proxy', description: '网络代理' },
 ];
 
-function fixture(size = 8) {
+function fixture(size) {
   const tree = createSkillTree(skills);
   return { tree, pager: createTreePager(tree, size) };
 }
 
-test('up/down stay on a fixed page; left/right jump whole pages with sticky domains', () => {
+test('shows collapsed domains first and pages 20 skills within the expanded domain', () => {
   const { pager } = fixture();
+  assert.deepEqual(pager.view().rows.map(node => node.value), ['@all', '@domain:dev', '@domain:system']);
+  pager.move(1);
+  pager.toggleExpanded();
   const first = pager.view().rows.map(node => node.value);
+  assert.equal(pager.view().children.length, 20);
   for (let i = 0; i < 30; i++) pager.move(1);
   assert.equal(pager.view().page, 0);
   assert.deepEqual(pager.view().rows.map(node => node.value), first);
-  assert.equal(pager.view().cursor, 9);
+  assert.equal(pager.view().rows[pager.view().cursor].value, '@domain:system');
   pager.turn(1);
   assert.equal(pager.view().page, 1);
   assert.equal(pager.view().rows[1].label, 'dev/');
-  assert.equal(pager.view().rows[2].value, 'dev-item-9');
+  assert.equal(pager.view().rows[2].value, 'dev-item-21');
   assert.equal(pager.view().cursor, 2);
   pager.turn(1);
-  assert.equal(pager.view().domainPage, 3);
-  assert.equal(pager.view().rows[2].value, 'dev-item-17');
+  assert.equal(pager.view().rows[2].value, 'dev-item-41');
   pager.turn(1);
-  assert.equal(pager.view().rows[1].label, 'system/');
-  assert.equal(pager.view().domainPage, 1);
-  pager.turn(1);
-  assert.equal(pager.view().page, 3);
-  for (let i = 0; i < 10; i++) pager.turn(-1);
+  assert.equal(pager.view().page, 2);
+  pager.move(1); pager.toggleExpanded();
   assert.equal(pager.view().page, 0);
+  assert.equal(pager.view().expanded, '@domain:system');
+  assert.deepEqual(pager.view().children.map(node => node.value), ['system-proxy']);
+  pager.move(1); pager.toggleExpanded();
+  assert.equal(pager.view().rows[pager.view().cursor].value, '@domain:system');
+  assert.equal(pager.view().expanded, undefined);
 });
 
 test('search resets paging, focuses the matching skill and preserves selections', () => {
@@ -52,11 +57,11 @@ test('search resets paging, focuses the matching skill and preserves selections'
   pager.search('system');
   assert.equal(pager.view().cursor, 1);
   pager.toggle();
-  assert.equal(tree.names().length, 17);
+  assert.equal(tree.names().length, 41);
   pager.search('不存在');
   pager.turn(1); pager.move(1); pager.toggle();
   assert.equal(pager.view().rows.length, 0);
-  assert.equal(tree.names().length, 17);
+  assert.equal(tree.names().length, 41);
   pager.search('');
   assert.equal(pager.view().cursor, 0);
   assert.equal(pager.view().page, 0);
@@ -73,7 +78,7 @@ test('upstream group keeps its Chinese label, search aliases and selection state
   const group = '@domain:upstream-skills';
   pager.search('上游独立技能');
   assert.equal(pager.view().rows[pager.view().cursor].value, group);
-  assert.equal(pager.view().domainPages, 2);
+  assert.equal(pager.view().totalPages, 2);
   pager.toggle();
   assert.equal(tree.state(group), 'all');
   pager.turn(1); pager.toggle(); // 排除第二页的 chrome 技能。
@@ -82,7 +87,7 @@ test('upstream group keeps its Chinese label, search aliases and selection state
     pager.search(query);
     assert.equal(pager.view().rows[pager.view().cursor].value, 'zh-archify');
     const frame = stripVTControlCharacters(renderTreePage(tree, pager, { columns: 100 }));
-    assert.match(frame, /◩ upstream-skills\/（上游独立技能）  分组/);
+    assert.match(frame, /▾ ◩ upstream-skills\/（上游独立技能）  分组/);
   }
   pager.search('upstream-skills');
   assert.equal(pager.view().rows[pager.view().cursor].value, group);
@@ -95,31 +100,33 @@ test('upstream group keeps its Chinese label, search aliases and selection state
 });
 
 test('resizing preserves the focused skill and recomputes page boundaries', () => {
-  const { pager } = fixture();
+  const { pager } = fixture(8);
+  pager.move(1); pager.toggleExpanded();
   pager.turn(1); pager.move(3);
   const focused = pager.view().rows[pager.view().cursor].value;
   pager.resize(3);
   assert.equal(pager.view().rows[pager.view().cursor].value, focused);
   assert.equal(pager.view().pageSize, 3);
-  assert.equal(pager.view().totalPages, 7);
+  assert.equal(pager.view().totalPages, 14);
 });
 
 test('rendering has green checkbox styling, explicit branches and a pinned folder on every page', () => {
-  const { tree, pager } = fixture();
+  const { tree, pager } = fixture(8);
+  pager.move(1); pager.toggleExpanded();
   tree.toggle('dev-item-9'); pager.turn(1);
   const frame = renderTreePage(tree, pager, { colors: pc.createColors(true) });
   const plain = stripVTControlCharacters(frame);
   assert.match(frame, /\u001b\[32m/);
-  assert.match(plain, /└─ ▸ ◩ dev\/  领域/);
+  assert.match(plain, /├─ ▾ ◩ dev\/  领域/);
   assert.match(plain, /├─ ■ dev-item-9/);
   assert.ok(plain.indexOf('dev/  领域') < plain.indexOf('dev-item-9'));
-  assert.match(plain, /第 2\/4 页 · dev\/ 2\/3/);
+  assert.match(plain, /第 2\/6 页/);
   assert.equal(plain.split('\n').filter(line => line.includes('中文用途')).length, 1); // only focused row has a description
 });
 
 test('narrow frames, long Chinese text and emoji do not overflow or lose tree prefixes', () => {
   const { tree, pager } = fixture(3);
-  pager.move(2);
+  pager.move(1); pager.toggleExpanded(); pager.move(1);
   for (const columns of [24, 40, 80, 120]) {
     const plain = stripVTControlCharacters(renderTreePage(tree, pager, { columns }));
     for (const line of plain.split('\n')) assert.ok(stringWidth(line) < columns, `${columns}: ${line}`);
@@ -129,7 +136,7 @@ test('narrow frames, long Chinese text and emoji do not overflow or lose tree pr
   assert.equal(fitTreeText('\x1b[31mhello\x1b[0m\nworld', 40), 'hello world');
 });
 
-test('real keys page as blocks, preserve search text and carry selection across domains', { timeout: 5000 }, async t => {
+test('real keys reach system from collapsed tree, paginate and preserve selections', { timeout: 5000 }, async t => {
   // 夹具模拟可交互终端，不继承 CI 的 TERM=dumb（readline 会禁用编辑键）。
   const previousTerm = process.env.TERM;
   process.env.TERM = 'xterm-256color';
@@ -138,16 +145,15 @@ test('real keys page as blocks, preserve search text and carry selection across 
     else process.env.TERM = previousTerm;
   });
   const input = new PassThrough(), output = new PassThrough();
+  output.rows = 16; // 5 frame rows, 3 group/root rows, 8 skills.
   let rendered = '';
   output.on('data', chunk => { rendered += chunk; });
   t.after(() => { input.destroy(); output.destroy(); });
-  const answer = treeSelect({ skills, input, output });
-  // 搜索 dev，右翻至第2页选择第9项；左右翻页后继续输入，再跨领域勾选。
-  for (const key of ['dev', '\x1b[C', '\t', '\x1b[D', '-item-9', '\x15', 'system', '\t', '\x15', 'proxy', '\r']) {
+  const answer = treeSelect({ skills, initialNames: ['dev-item-1'], input, output });
+  const down = '\x1b[B', up = '\x1b[A';
+  for (const key of [down, down, '\t', down, ' ', '\t', up, '\t', '\x1b[C', ' ', '\r']) {
     input.write(key); await new Promise(resolve => setTimeout(resolve, 10));
   }
-  assert.deepEqual(await answer, ['dev-item-9', 'system-proxy']);
-  assert.ok(rendered.includes('第 2/3 页')); // search dev has 3 pages
-  assert.ok(rendered.includes('搜索：dev-item-9'));
-  assert.ok(rendered.includes('搜索：proxy'));
+  assert.deepEqual(await answer, ['dev-item-1', 'dev-item-9', 'system-proxy']);
+  assert.ok(rendered.includes('第 2/6 页'));
 });
