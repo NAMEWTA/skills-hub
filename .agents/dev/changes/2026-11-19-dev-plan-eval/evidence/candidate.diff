@@ -1,0 +1,120 @@
+diff --git a/skills/dev/dev-plan/SKILL.md b/skills/dev/dev-plan/SKILL.md
+index 99f162f..5c8b72d 100644
+--- a/skills/dev/dev-plan/SKILL.md
++++ b/skills/dev/dev-plan/SKILL.md
+@@ -17,6 +17,8 @@ description: 把规格拆成可独立接手与验收的垂直切片，或为已
+ | 已有规格，需要拆分交付行为 | [完整切片方法](references/vertical-slicing.md) | 垂直切片、验收与真实阻塞 |
+ | 已有切片，需要跨阶段或多 PR 安排 | [多阶段计划](references/multiphase-plan.md) | 每个交付单元的构建、可见结果、验证与交付安排 |
+ 
++只看路线时给出阶段、取舍和依赖。要求实施计划时，第一轮把已明确的范围拆到前置产物就绪后即可实施和验收；只要求先审计划时也交付这些切片。未决事项标明影响范围与解除条件。同一会话可以按依赖连续实施多片。
++
+ 按当前缺口选择，不把三行当成必经阶段。已有决定、规格和切片直接沿用；明确的小改动使用[最小计划](references/plan-template.md#最小计划)，不加载完整多阶段模板。核对已有计划时读取它对应的方法，不重新从需求访谈开始。
+ 
+ ## 从完整上下文开始
+@@ -59,7 +61,7 @@ description: 把规格拆成可独立接手与验收的垂直切片，或为已
+ 使用 [计划与切片模板](references/plan-template.md)。已授权的 tracker 继续按实际能力使用；新增本地计划与切片资料统一放在 `.agents/dev/changes/`，已有计划按真实位置引用：
+ 
+ - `.agents/dev/changes/<YYYY-MM-DD-slug>/plan.md` 保存目标、切片索引、依赖与执行顺序。
+-- 内容足够大或需要分工时使用 `tasks/<NN>-<slug>.md`，每个文件描述一个切片；已有任务保留其标识和引用。
++- 按[切片记录方式](references/vertical-slicing.md#选择切片的记录位置)逐片选择计划内联、已有任务或独立正文。明确要求本地 task 文件时本轮交付文件及索引。
+ - 当前进度只在选定的任务文件或 `progress.md` 维护，包含证据入口和下一步，其他位置链接它。计划中的目标与执行结果分开，具体记录见[本地工作记录](references/local-work-records.md)。
+ 
+ 任务正文写交付行为和验收，不写逐行修改教程。交给新会话或独立实施者时，使用[单个切片](references/plan-template.md#单个切片)补足来源与必要背景、本项规格范围、已定约束、前置产物和验证入口；已有任务原处补足，不另建一份正文。资料指针必须能被接手者实际读取，不能共享时提供必要原文。
+diff --git a/skills/dev/dev-plan/agents/openai.yaml b/skills/dev/dev-plan/agents/openai.yaml
+index ae1b9e1..340b1da 100644
+--- a/skills/dev/dev-plan/agents/openai.yaml
++++ b/skills/dev/dev-plan/agents/openai.yaml
+@@ -1,4 +1,4 @@
+ interface:
+   display_name: "切片与实施计划"
+   short_description: "拆分可接手与验收的切片，核对规格覆盖、真实依赖与验证证据"
+-  default_prompt: "请使用 $dev-plan 沿用已有规格和决定，按任务规模选择完整方法，形成或核对可独立接手与验收的切片、真实依赖及实施与证据计划，并反查规格覆盖；小改动保持最小计划。"
++  default_prompt: "请使用 $dev-plan 沿用已有规格和决定，按所需交付区分总体路线和可直接实施的计划，形成或核对可独立接手与验收的切片、真实依赖及实施与证据计划，并反查规格覆盖；小改动保持最小计划。"
+diff --git a/skills/dev/dev-plan/references/local-work-records.md b/skills/dev/dev-plan/references/local-work-records.md
+index 15a36b8..0ee5529 100644
+--- a/skills/dev/dev-plan/references/local-work-records.md
++++ b/skills/dev/dev-plan/references/local-work-records.md
+@@ -6,7 +6,7 @@
+ 
+ - 每个功能一个目录：`.agents/dev/changes/<YYYY-MM-DD-slug>/`
+ - 每个变更只有一份权威行为契约，沿用已有 brief、spec、事项或设计章节；缺少合适记录且确需独立规格时，默认使用 `.agents/dev/changes/<YYYY-MM-DD-slug>/spec.md`。文件名不决定是否已具备实施条件，不重复维护 brief/spec 正文。
+-- 较大或需要分工的实现任务可各一个文件，位于 `.agents/dev/changes/<YYYY-MM-DD-slug>/tasks/<NN>-<slug>.md`，从 `01` 开始编号；小需求可在 plan.md 中使用一张切片表，不强制拆文件。
++- 按[切片记录方式](vertical-slicing.md#选择切片的记录位置)确定需要单列的任务，每项一个文件，位于 `.agents/dev/changes/<YYYY-MM-DD-slug>/tasks/<NN>-<slug>.md`，从 `01` 开始编号；小需求可在 plan.md 中使用一张切片表，不强制拆文件。
+ - 当前进展选择一个权威位置：小任务可写在任务文件顶部，多任务可集中在 progress.md。其他位置链接它，不重复维护同一状态；无需固定状态枚举或额外配置文件。
+ - 进展说明实际已完成与已验证的范围、证据和版本、剩余部分、当前阻塞与下一步。前置产物可用才写可实施；本机实现、整合通过和发布完成按实际证据分别说明，不预填通过。
+ - 评论和对话历史追加在文件底部的 `## 讨论记录` 标题下；过期结论留作历史并注明被什么替代，不与顶部当前状态并列。恢复时核对实际代码和证据，沿用仍有效结果，不重做已有工作。
+diff --git a/skills/dev/dev-plan/references/multiphase-plan.md b/skills/dev/dev-plan/references/multiphase-plan.md
+index c3a0a0a..9ae03c0 100644
+--- a/skills/dev/dev-plan/references/multiphase-plan.md
++++ b/skills/dev/dev-plan/references/multiphase-plan.md
+@@ -16,7 +16,7 @@
+ 3. 调查与本次计划相关的模块。已选用独立探索时分开核对各自的范围。返回文件指针、约定、已有验证命令和入口点，避免把整段源码复制进计划。按实际能力与任务复杂度分工，不依赖指定模型或宿主。
+ 4. 把下方骨架复制进计划文件，保留适用标题与子块的顺序，填完保留部分的占位符。除非用户本次明确指定其他路径，否则统一写入 `.agents/dev/changes/<YYYY-MM-DD-slug>/plan.md`。没有 PR、并行或人审的工作不生成这些操作；不适用的验证维度说明原因，不为凑栏目虚构工作。每个实际交付单元一节；使用 PR 时，一个 PR 就是一个拥有独立证据的改动，在这个边界产出可核对结果。在**如何阅读**中指出执行方式：本地交付、已授权自动合并、交给用户合并的堆叠 PR，或持续项目的分阶段交付；并明确终点与授权。实施由 `dev-build` 负责，持续协调由 `dev-workflow` 负责，PR 与合并操作由 `dev-deploy` 负责。已有切片直接沿用，需要拆分时先用[完整切片方法](vertical-slicing.md)。
+ 5. 正文写成可执行操作指南，解释与参考放附录。每个标题说明任务或发现；使用具体动词、证据与清楚依赖，删掉套话，不建立额外写作工具依赖。
+-6. 按[计划核对](plan-review.md)对照下方模板：每项有交付、真实依赖、唯一负责人和证据；已有文件与命令已在当前项目核实，拟新增的文件、测试和命令明确标注创建，不冒充已存在。检查构建、可见结果与验证逐项对应，再从规格及用户明确数量反查覆盖与整合归属，修正悬空占位符或无依据的通过结论。独立交接按[单个切片及风险说明](plan-template.md#独立接手与按风险补充)补足必要背景与约束，不要求每个交付单元另建任务文件。项目已有计划检查命令时运行它并修复实际问题；没有时如实报告内容核对，不虚构脚本结果。
++6. 按[计划核对](plan-review.md)对照下方模板：每项有交付、真实依赖、唯一负责人和证据；已有文件与命令已在当前项目核实，拟新增的文件、测试和命令明确标注创建，不冒充已存在。检查构建、可见结果与验证逐项对应，再从规格及用户明确数量反查覆盖与整合归属，修正悬空占位符或无依据的通过结论。独立交接按[单个切片及风险说明](plan-template.md#独立接手与按风险补充)补足必要背景与约束，按[切片记录方式](vertical-slicing.md#选择切片的记录位置)复用已有 PR 章节或链接任务正文。项目已有计划检查命令时运行它并修复实际问题；没有时如实报告内容核对，不虚构脚本结果。
+ 7. 给出计划位置、核对结果与剩余决定。用户只要求计划时在这里交付；已有实施授权且相关体验确认有效时按计划继续，不重复要求开始指令。需要可视化对齐却缺少或失效的确认交 `dev-prototype`，只限制依赖该决定的实施。
+ 
+ ## 验证选择
+diff --git a/skills/dev/dev-plan/references/plan-review.md b/skills/dev/dev-plan/references/plan-review.md
+index 1a9e35a..81b7444 100644
+--- a/skills/dev/dev-plan/references/plan-review.md
++++ b/skills/dev/dev-plan/references/plan-review.md
+@@ -2,6 +2,8 @@
+ 
+ 在[切片方法](vertical-slicing.md)的粒度与阻塞核对，以及[多阶段计划](multiphase-plan.md)的计划检查步骤中使用。核对现有计划与模板，不增加审批阶段、固定字段或另一份任务清单。小计划可直接逐项检查，复杂计划按任务检查并修正原文。
+ 
++要求实施计划时，逐片从接手者角度核对：前置产物就绪后，凭现有记录能否说出要实现的行为、验证入口与通过判据？缺正文就补到对应位置，缺产品决定就标出受阻范围。
++
+ ## 切片与阻塞
+ 
+ 1. **交付与粒度。** 每项说明用户或调用者完成的一个行为，能在前置产物可用后独立演示或验证，大小适合一个全新上下文。一个工作包若包含多个可分别验收的行为，继续拆分；公共契约任务应有调用者和自己的验证入口。
+diff --git a/skills/dev/dev-plan/references/plan-template.md b/skills/dev/dev-plan/references/plan-template.md
+index 35960aa..30845e8 100644
+--- a/skills/dev/dev-plan/references/plan-template.md
++++ b/skills/dev/dev-plan/references/plan-template.md
+@@ -38,7 +38,7 @@
+ <最终整合验证、交付状态、已知限制>
+ ```
+ 
+-只有切片足够大或需要独立交接时才建立任务文件。明确的一项小改动可以只用一句行为说明、范围和验证办法；表格只保留真实切片，不为填满模板增加任务或标题。
++各片按[切片记录方式](vertical-slicing.md#选择切片的记录位置)选择正文位置。明确的一项小改动可以只用一句行为说明、范围和验证办法；表格只保留真实切片，不为填满模板增加任务或标题。
+ 
+ ## 单个切片
+ 
+diff --git a/skills/dev/dev-plan/references/task-examples.md b/skills/dev/dev-plan/references/task-examples.md
+index eb315d3..9840c07 100644
+--- a/skills/dev/dev-plan/references/task-examples.md
++++ b/skills/dev/dev-plan/references/task-examples.md
+@@ -17,6 +17,10 @@
+ 
+ **合适的最小计划：** 一个切片修改两处提示，范围仅限文案；核对差异及原有文案检查，确认交互和数据逻辑未改。用户只要求计划就在此交付，不创建独立任务文件或实施代码。
+ 
++## 同一会话实施多个切片
++
++假设邮件规格已确定草稿恢复与投递规则。计划内可直接写“离线保存草稿，重启后标题和正文与保存时一致”；投递切片链接独立任务，写明前置投递回执及逐收件人状态。任务验收包含 A 已接受、B 被拒收时只重试 B，以及最终回执丢失后重启仍显示未知且提交计数不增加。同一个会话可先验草稿，再按依赖完成投递。只列“完成发件箱”会让实施者重新决定未知结果能否重发。
++
+ ## 独立任务写成交接契约
+ 
+ **示例前提：** 假想项目已确认“从 CLI 创建任务，重启后仍可读；空标题不得写入”。已有 `cli.mjs`、`src/tasks.mjs` 的 `createTask` 与 `listTasks`，以及 `test/smoke.test.mjs`；计划新增的行为测试尚不存在。此例沿用[单个切片](plan-template.md#单个切片)，不是第三套模板。
+diff --git a/skills/dev/dev-plan/references/vertical-slicing.md b/skills/dev/dev-plan/references/vertical-slicing.md
+index 3086947..148d059 100644
+--- a/skills/dev/dev-plan/references/vertical-slicing.md
++++ b/skills/dev/dev-plan/references/vertical-slicing.md
+@@ -64,7 +64,15 @@
+ 
+ 保存已确定的任务。**如何保存**取决于项目已有跟踪方式；任务本身相同，只是阻塞依赖的表达形态不同。外部发布、建立子事项和改标签必须已有相应授权：
+ 
+-- **本地文件** → 较大或需要独立交接的任务各写一个文件，位于 `.agents/dev/changes/<YYYY-MM-DD-slug>/tasks/<NN>-<slug>.md`，从 `01` 开始按依赖顺序编号，阻塞者在前。每个文件的“被谁阻塞”列出依赖编号或标题。小需求可将同样信息放在 plan.md 的一张表中，不强制拆文件。
++#### 选择切片的记录位置
++
++先确定每片的行为、所需前置产物和通过判据，再为每片选择记录位置。
++
++1. 已有任务、issue 或完整 PR 章节时，保留标识并原处补足。用户指定独立文件时，把正文放到指定位置，原处保留链接。
++2. 在计划的一行或一小节内能说清交付、前置产物和验证动作及预期结果时，直接内联。已有规格中的精确条款可用可读链接引用。
++3. 需要独立交接，或索引会遗漏影响实施的条件时，给该片写独立正文。例如不同故障需要不同恢复动作、另一模块要消费特定契约，或验收依赖专用环境。先检查已有记录能否承载这些条件。同一计划可以同时包含内联切片与任务链接。
++
++- **本地任务文件**位于 `.agents/dev/changes/<YYYY-MM-DD-slug>/tasks/<NN>-<slug>.md`，从 `01` 开始按依赖顺序编号，阻塞者在前。每个文件的“被谁阻塞”列出依赖编号或标题。同一实施者可依次完成这些任务。
+ - **外部事项跟踪器** → 按依赖顺序发布，每个任务一个事项，阻塞者在前，让依赖能引用真实标识。平台有原生阻塞关系时使用它，否则把阻塞事项列入“被谁阻塞”。如果来源是已有事项，把各任务设为其子事项，遵循跟踪器文档中的操作。除非另有要求，复用已有的就绪描述或标签，无需创建 `ready-for-agent`；这些任务设计出来就可由智能体接手。
+ 
+ 推进**前沿**：任何所有阻塞者均已完成的任务。纯线性链就是从上到下。
