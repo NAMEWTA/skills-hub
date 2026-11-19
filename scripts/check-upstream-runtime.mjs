@@ -17,7 +17,7 @@ export function checkUpstreamRuntime(root = repositoryRoot) {
     const cli = path.join(installed, 'bin/archify.mjs');
     const env = { ...process.env, ARCHIFY_UPDATE_CHECK_DISABLED: '1' };
     const run = args => {
-      const result = spawnSync(process.execPath, [cli, ...args], { cwd: target, env, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+      const result = spawnSync(process.execPath, [cli, ...args], { cwd: target, env, windowsHide: true, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
       if (result.error) throw result.error;
       if (result.status !== 0) throw new Error(`Archify ${args[0]} 失败（exit ${result.status}）：\n${result.stdout}\n${result.stderr}`);
       return result.stdout;

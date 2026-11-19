@@ -71,7 +71,7 @@ export function packPackage(root, destination) {
 }
 
 function runNode(file, args, cwd) {
-  const result = spawnSync(process.execPath, [file, ...args], { cwd, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
+  const result = spawnSync(process.execPath, [file, ...args], { cwd, windowsHide: true, encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(`包内 CLI 失败：${result.stdout}\n${result.stderr}`);
   return result;

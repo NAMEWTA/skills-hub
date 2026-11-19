@@ -16,7 +16,7 @@ const utf8 = new TextDecoder('utf-8', { fatal: true });
 export class CheckError extends Error {}
 
 export function git(root, args, input) {
-  const result = spawnSync('git', ['-C', root, ...args], { input, maxBuffer: 256 * 1024 * 1024 });
+  const result = spawnSync('git', ['-C', root, ...args], { input, windowsHide: true, maxBuffer: 256 * 1024 * 1024 });
   if (result.error) throw new CheckError(`无法执行 Git：${result.error.message}`);
   if (result.status !== 0) throw new CheckError(`Git 无法读取待检查快照：${result.stderr.toString('utf8').trim() || result.signal || result.status}`);
   return result.stdout;
@@ -108,7 +108,7 @@ export function checkTree(root, { full = false } = {}) {
   for (const [label, args] of commands) {
     if (args[0] !== '--test' && !fs.statSync(path.join(root, args[0]), { throwIfNoEntry: false })?.isFile()) throw new CheckError(`快照缺少检查入口：${args[0]}`);
     console.log(`检查：${label}`);
-    const result = spawnSync(process.execPath, args, { cwd: root, env: validationEnvironment(), stdio: 'inherit' });
+    const result = spawnSync(process.execPath, args, { cwd: root, windowsHide: true, env: validationEnvironment(), stdio: 'inherit' });
     if (result.error) throw new CheckError(`无法执行 ${label}：${result.error.message}`);
     if (result.status !== 0) return 1;
   }

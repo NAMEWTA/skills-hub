@@ -56,7 +56,7 @@ export async function main({ materialsRoot = ROOT, runtimeRoot = ROOT } = {}) {
     const replay = path.join(base, "replay-java.mjs");
     fs.writeFileSync(replay, REPLAY_JAVA);
     const adapter = path.join(base, "adapter.mjs");
-    fs.writeFileSync(adapter, `import childProcess from "node:child_process";\nimport { syncBuiltinESMExports } from "node:module";\nconst file = ${JSON.stringify(replay)};\nfor (const method of ["spawn", "execFile"]) {\n  const original = childProcess[method];\n  childProcess[method] = (command, args, ...rest) => command === "captured-output-replay" ? original(process.execPath, [file, ...args], ...rest) : original(command, args, ...rest);\n}\nsyncBuiltinESMExports();\n`);
+    fs.writeFileSync(adapter, `import childProcess from "node:child_process";\nimport { syncBuiltinESMExports } from "node:module";\nconst file = ${JSON.stringify(replay)};\nfor (const method of ["spawn", "execFile"]) {\n  const original = childProcess[method];\n  childProcess[method] = (command, args, ...rest) => command === "captured-output-replay" ? original(process.execPath, [file, ...args], { ...rest[0], windowsHide: true }, ...rest.slice(1)) : original(command, args, ...rest);\n}\nsyncBuiltinESMExports();\n`);
     const placeholder = path.join(base, "not-a-real-tlc.jar");
     fs.writeFileSync(placeholder, "");
     const entry = path.join(runtimeRoot, "skills/dev/dev-statechart/scripts/statechart.mjs");
@@ -79,7 +79,7 @@ export async function main({ materialsRoot = ROOT, runtimeRoot = ROOT } = {}) {
           if (fs.existsSync(path.join(directory, "view.mjs"))) args.push("--view", path.join(directory, "view.mjs"));
           const env = { ...process.env, JAVA: "captured-output-replay", TLA2TOOLS: placeholder, STATECHART_REPLAY: directory };
           let result;
-          try { result = { ...(await run(process.execPath, args, { env, encoding: "utf8", timeout: CASE_TIMEOUT_MS, maxBuffer: 8 * 1024 * 1024 })), code: 0 }; }
+          try { result = { ...(await run(process.execPath, args, { env, windowsHide: true, encoding: "utf8", timeout: CASE_TIMEOUT_MS, maxBuffer: 8 * 1024 * 1024 })), code: 0 }; }
           catch (error) { if (typeof error.code !== "number") throw error; result = error; }
           const savedExit = path.join(directory, "verdict-1.exit");
           const code = fs.existsSync(savedExit) ? Number(fs.readFileSync(savedExit, "utf8")) : 0;

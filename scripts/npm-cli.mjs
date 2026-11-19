@@ -22,6 +22,7 @@ export function findNpmCli(environment = process.env) {
 
 export function runNpm(arguments_, options = {}) {
   const result = spawnSync(process.execPath, [findNpmCli(options.env), ...arguments_], {
+    windowsHide: true,
     encoding: 'utf8', maxBuffer: 32 * 1024 * 1024, ...options,
   });
   if (result.error) throw result.error;
