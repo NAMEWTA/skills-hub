@@ -51,6 +51,12 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     if (selected.some(skill => ['dev', 'system', 'ops'].includes(skill.domain))) {
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
+    if (selected.some(skill => skill.domain === 'system')) {
+      ui.note('如缺少规则，将在项目根 .gitignore 追加 /.agents/system/ignore/。', '系统附件');
+    }
+    if (selected.some(skill => skill.domain === 'dev')) {
+      ui.note('如缺少规则，将在项目根 .gitignore 追加 /.agents/dev/worktree/。', '开发工作树');
+    }
     if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装或更新以上技能？（有差异的现有技能会先备份）', initialValue: true }))) {
       ui.cancel('已取消，未修改文件。'); return 0;
     }

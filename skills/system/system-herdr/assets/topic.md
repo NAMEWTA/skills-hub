@@ -14,7 +14,7 @@
 - Herdr 服务端连接：<实际使用的本地调用方连接，或已验证的远程连接选择器及固定命令前缀>
 - 共享根：<.agents/system/herdr/YYYY-MM-DD-topic_name 的绝对路径>
 - pane 目录规则：<原样 pane_id；或全 topic 统一使用 encodeURIComponent(pane_id)>
-- 共享可达性：<Lead 与各 worker 读取任务、写回报告的实际位置和确认结果>
+- 共享可达性：<Lead 与各 worker 读取任务、写回报告及所需附件的实际位置和确认结果>
 
 ## 必要结论与交接
 

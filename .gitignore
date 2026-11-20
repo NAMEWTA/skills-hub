@@ -1,6 +1,7 @@
 node_modules/
 .DS_Store
 .agents/skills/
+/.agents/dev/worktree/
 .agents/skills-hub-licenses/
 .agents/.skills-hub-*/
 # Retain ignores for installations made before the project rename.

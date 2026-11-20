@@ -240,7 +240,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
       if (recoveryErrors.length) {
         throw new InstallError(`Installation failed: ${error.message}. Some files need manual recovery.${backup ? ` Keep ${backup}.` : ''} ${recoveryErrors.join('; ')}`);
       }
-      throw new InstallError(`Installation failed; changed skill directories and newly created domain navigation were rolled back: ${error.message}`);
+      throw new InstallError(`Installation failed; changes to skill directories and project initialization files were rolled back: ${error.message}`);
     } finally {
       if (staging !== null) fsOps.rmSync(staging, { recursive: true, force: true });
       for (const lock of locks.reverse()) fsOps.rmdirSync(lock);

@@ -112,6 +112,7 @@ export function checkPackage(root = ROOT) {
     runNode(cli, ['list'], temporary);
     runNode(cli, ['install', '--all', '--dry-run'], prefix);
     if (existsSync(join(prefix, '.agents'))) throw new Error('安装预览不应创建项目目录');
+    if (existsSync(join(prefix, '.gitignore'))) throw new Error('安装预览不应创建 .gitignore');
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
     const domains = new Set();
@@ -145,6 +146,10 @@ export function checkPackage(root = ROOT) {
       if (!readFileSync(join(root, resource)).equals(readFileSync(join(installed, resource)))) throw new Error(`安装初始化资源不同：${resource}`);
     }
     runNode(cli, ['install', '--all'], prefix);
+    const ignores = [domains.has('dev') && '/.agents/dev/worktree/', domains.has('system') && '/.agents/system/ignore/'].filter(Boolean);
+    if (ignores.length && readFileSync(join(prefix, '.gitignore'), 'utf8') !== ignores.join('\n') + '\n') {
+      throw new Error('安装及重复安装应为所选领域分别写入一条忽略规则');
+    }
     if (existsSync(join(prefix, '.agents', 'upstream-skills'))) throw new Error('上游独立技能分组不应创建业务持久化目录');
     if (existsSync(join(prefix, '.agents', 'skills-hub-licenses'))) throw new Error('安装器不应创建项目许可目录');
     console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);

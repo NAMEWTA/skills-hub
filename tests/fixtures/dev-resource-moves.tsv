@@ -84,7 +84,7 @@ skills/dev/dev-build/references/verification-authoring.md	skills/dev/dev-verify/
 skills/dev/dev-build/references/verification-maintenance.md	skills/dev/dev-verify/references/verification-maintenance.md
 skills/dev/dev-build/references/verified-landing.md	skills/dev/dev-deploy/references/verified-landing.md
 skills/dev/dev-build/references/visual-equivalence.md	skills/dev/dev-verify/references/visual-equivalence.md
-skills/dev/dev-build/references/worktree-cleanup.md	skills/dev/dev-deploy/references/worktree-cleanup.md
+skills/dev/dev-build/references/worktree-cleanup.md	skills/dev/dev-worktree/references/worktree-cleanup.md
 skills/dev/dev-debug/references/adversarial-review.md	skills/dev/dev-review/references/adversarial-review.md
 skills/dev/dev-debug/references/alternative-designs.md	skills/dev/dev-architecture/references/alternative-designs.md
 skills/dev/dev-debug/references/architecture-method.md	skills/dev/dev-architecture/references/architecture-method.md
@@ -343,7 +343,7 @@ skills/dev/dev-help/references/workflow/references/verification-maintenance.md	s
 skills/dev/dev-help/references/workflow/references/verified-landing.md	skills/dev/dev-deploy/references/verified-landing.md
 skills/dev/dev-help/references/workflow/references/visual-equivalence.md	skills/dev/dev-verify/references/visual-equivalence.md
 skills/dev/dev-help/references/workflow/references/workflow-routing.md	skills/dev/dev-workflow/references/workflow-routing.md
-skills/dev/dev-help/references/workflow/references/worktree-cleanup.md	skills/dev/dev-deploy/references/worktree-cleanup.md
+skills/dev/dev-help/references/workflow/references/worktree-cleanup.md	skills/dev/dev-worktree/references/worktree-cleanup.md
 skills/dev/dev-help/references/workflow/scripts/append-decision-tsv.mjs	skills/dev/dev-workflow/scripts/append-decision-tsv.mjs
 skills/dev/dev-intake/references/decision-format.md	skills/dev/dev-archive/references/decision-format.md
 skills/dev/dev-intake/references/decision-interview.md	skills/dev/dev-grill/references/decision-interview.md
@@ -799,7 +799,7 @@ skills/dev/dev-workflow/references/verification-authoring.md	skills/dev/dev-veri
 skills/dev/dev-workflow/references/verification-maintenance.md	skills/dev/dev-verify/references/verification-maintenance.md
 skills/dev/dev-workflow/references/verified-landing.md	skills/dev/dev-deploy/references/verified-landing.md
 skills/dev/dev-workflow/references/visual-equivalence.md	skills/dev/dev-verify/references/visual-equivalence.md
-skills/dev/dev-workflow/references/worktree-cleanup.md	skills/dev/dev-deploy/references/worktree-cleanup.md
+skills/dev/dev-workflow/references/worktree-cleanup.md	skills/dev/dev-worktree/references/worktree-cleanup.md
 skills/dev/dev-issue-fix/references/source-adapter.md	skills/dev/dev-issue-setup/references/source-adapter.md
 skills/dev/dev-issue-triage/references/source-adapter.md	skills/dev/dev-issue-setup/references/source-adapter.md
 skills/dev/dev-workflow/assets/handoff.md	skills/dev/dev-handoff/assets/handoff.md

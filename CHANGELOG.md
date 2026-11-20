@@ -2,6 +2,11 @@
 
 ## 未发布
 
+## 0.1.21 — 2026-11-20
+
+- 新增 `dev-worktree` 与 `dev-merge-conflict`，提供按需检出、逐个双亲合并回直接父分支、冲突验证及回收。安装任一 dev 技能时补齐 `/.agents/dev/worktree/` 忽略规则。
+- Herdr Core 与 TUI 默认在 Markdown 报告中记录验收，按需将原始附件放入 `.agents/system/ignore/` 下与任务对应的目录。安装任一 system 技能会自动补齐项目的 Git 忽略规则。
+
 ## 0.1.20 — 2026-11-20
 
 - `system-herdr` 和 `system-herdr-core` 在验收后主动回收本次创建、已无待办且无需复用的临时 worker。使用文件协作时，关闭前核对当前主题清单中的 `done` 状态。

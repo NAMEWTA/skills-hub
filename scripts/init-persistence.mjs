@@ -3,6 +3,10 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const templates = fileURLToPath(new URL('./persistence/', import.meta.url));
+const domainIgnoreRules = [
+  ['dev', '/.agents/dev/worktree/'],
+  ['system', '/.agents/system/ignore/'],
+];
 const targets = [
   ['dev', 'dev', '.agents/dev'],
   ['dev', 'changes', '.agents/dev/changes'],
@@ -26,39 +30,58 @@ function inspect(project, relative, fsOps) {
     if (!stat) continue;
     if (stat.isSymbolicLink()) throw new Error('拒绝符号链接：' + current);
     if (index === parts.length - 1) {
-      if (!stat.isFile()) throw new Error('说明文件不是普通文件：' + current);
+      if (!stat.isFile()) throw new Error('安装目标不是普通文件：' + current);
       exists = true;
     } else if (!stat.isDirectory()) throw new Error('目录路径冲突：' + current);
   }
   return exists;
 }
 
-// 固定领域骨架归安装器所有；不从技能包中发现或执行初始化代码。
+function appendIgnoreRules(previous, rules) {
+  const original = previous.toString('utf8').replace(/^\uFEFF/, '');
+  const patterns = new Set(original.split(/\r?\n/).map(line => line.replace(/ +$/, '')));
+  const missing = rules.filter(rule => !patterns.has(rule) && !patterns.has(rule.slice(1)));
+  if (missing.length === 0) return previous;
+
+  const eol = original.match(/\r?\n/)?.[0] ?? '\n';
+  const separator = original && !original.endsWith('\n') ? eol : '';
+  return Buffer.concat([previous, Buffer.from(separator + missing.join(eol) + eol)]);
+}
+
+// 安装器维护固定导航和领域忽略规则。
 export function planPersistence(skills, project, fsOps = fs) {
   const domains = new Set(skills.map(skill => skill.domain));
-  return targets.filter(([domain]) => domains.has(domain)).map(([, template, directory]) => {
-    const relative = directory + '/AGENTS.md';
+  const entries = targets.filter(([domain]) => domains.has(domain)).map(([, template, directory]) => [
+    directory + '/AGENTS.md',
+    () => fsOps.readFileSync(path.join(templates, template + '.md')),
+  ]);
+  const ignoreRules = domainIgnoreRules.filter(([domain]) => domains.has(domain)).map(([, rule]) => rule);
+  if (ignoreRules.length) {
+    entries.push(['.gitignore', previous => appendIgnoreRules(previous ?? Buffer.alloc(0), ignoreRules)]);
+  }
+  return entries.map(([relative, contentFor]) => {
     const exists = inspect(project, relative, fsOps);
-    const content = fsOps.readFileSync(path.join(templates, template + '.md'), 'utf8');
-    const previous = exists ? fsOps.readFileSync(path.join(project, relative)) : null;
+    const destination = path.join(project, relative);
+    const previous = exists ? fsOps.readFileSync(destination) : null;
+    const content = contentFor(previous);
     return {
       path: relative,
-      destination: path.join(project, relative),
-      action: !exists ? 'create' : previous.equals(Buffer.from(content)) ? 'preserve' : 'update',
+      destination,
+      action: !exists ? 'create' : previous.equals(content) ? 'preserve' : 'update',
       content,
       previous,
     };
   });
 }
 
-// journal 保存本次创建项及被更新模板的原字节，失败时恢复；不处理业务记录。
+// journal 保存本次创建项及被更新文件的原字节，失败时恢复。
 export function applyPersistence(plan, project, fsOps = fs, journal = []) {
   for (const item of plan) {
     if (item.action === 'preserve') continue;
     const exists = inspect(project, item.path, fsOps);
     if ((item.action === 'create' && exists) || (item.action === 'update' &&
         (!exists || !fsOps.readFileSync(item.destination).equals(item.previous)))) {
-      throw new Error('说明文件在安装期间变化，请重新检查：' + item.destination);
+      throw new Error('安装目标在安装期间变化，请重新检查：' + item.destination);
     }
     const parts = item.path.split('/').slice(0, -1);
     for (let index = 0; index < parts.length; index += 1) {
@@ -71,8 +94,8 @@ export function applyPersistence(plan, project, fsOps = fs, journal = []) {
     const descriptor = fsOps.openSync(item.destination, item.action === 'update' ? 'r+' : 'wx');
     journal.push({ path: item.destination, directory: false, previous: item.previous });
     try {
-      fsOps.writeFileSync(descriptor, item.content, 'utf8');
-      fsOps.ftruncateSync(descriptor, Buffer.byteLength(item.content));
+      fsOps.writeFileSync(descriptor, item.content);
+      fsOps.ftruncateSync(descriptor, item.content.length);
     }
     finally { fsOps.closeSync(descriptor); }
   }

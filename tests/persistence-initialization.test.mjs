@@ -11,6 +11,8 @@ const dev = ['dev', 'dev/changes', 'dev/notes', 'dev/deploy', 'dev/archive',
   'dev/archive/changes/implemented', 'dev/archive/changes/rejected', 'dev/project', 'dev/context']
   .map(directory => `.agents/${directory}/AGENTS.md`).sort();
 const system = '.agents/system/AGENTS.md';
+const ignoreRule = '/.agents/system/ignore/';
+const worktreeRule = '/.agents/dev/worktree/';
 function project(t) {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'skills-hub-init-')));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
@@ -26,11 +28,11 @@ function run(root, ...args) {
 function success(result) { assert.equal(result.status, 0, result.stdout + result.stderr); return result; }
 
 for (const [label, args, expected] of [
-  ['one dev skill', ['--skill', 'dev-intake'], dev],
-  ['dev domain', ['--domain', 'dev'], dev],
-  ['system only', ['--skill', 'system-inspect'], [system]],
-  ['mixed domains', ['--skill', 'dev-intake', 'system-inspect'], [...dev, system].sort()],
-  ['all domains', ['--all'], [...dev, system, '.agents/ops/AGENTS.md'].sort()],
+  ['one dev skill', ['--skill', 'dev-intake'], [...dev, '.gitignore']],
+  ['dev domain', ['--domain', 'dev'], [...dev, '.gitignore']],
+  ['system only', ['--skill', 'system-inspect'], [system, '.gitignore'].sort()],
+  ['mixed domains', ['--skill', 'dev-intake', 'system-inspect'], [...dev, system, '.gitignore'].sort()],
+  ['all domains', ['--all'], [...dev, system, '.agents/ops/AGENTS.md', '.gitignore'].sort()],
 ]) test(`installing ${label} bootstraps exactly the selected domain records`, t => {
   const root = project(t);
   const preview = success(run(root, 'install', ...args, '--dry-run'));
@@ -40,9 +42,88 @@ for (const [label, args, expected] of [
   assert.deepEqual(records(root), expected);
   for (const file of expected) {
     const content = fs.readFileSync(path.join(root, file), 'utf8');
+    if (file === '.gitignore') {
+      const rules = [expected.includes(dev[0]) ? worktreeRule : '', expected.includes(system) ? ignoreRule : ''].filter(Boolean);
+      assert.equal(content, rules.join('\n') + '\n');
+      continue;
+    }
     assert.match(content, /^# /);
     assert.ok(Array.from(content.replace(/\s/gu, '')).length <= 400, file);
   }
+});
+
+test('system installation appends the ignore rule and preserves original bytes on reinstall', t => {
+  const root = project(t);
+  const ignore = path.join(root, '.gitignore');
+  const original = '\uFEFF# 项目规则\r\n/generated/';
+  fs.writeFileSync(ignore, original);
+  const args = ['install', '--skill', 'system-inspect'];
+  assert.match(success(run(root, ...args, '--dry-run')).stdout, /would update\s+\.gitignore/);
+  assert.equal(fs.readFileSync(ignore, 'utf8'), original);
+  success(run(root, ...args));
+  const expected = original + '\r\n' + ignoreRule + '\r\n';
+  assert.equal(fs.readFileSync(ignore, 'utf8'), expected);
+  const mtime = fs.statSync(ignore, { bigint: true }).mtimeNs;
+  assert.match(success(run(root, ...args)).stdout, /preserve\s+\.gitignore/);
+  assert.equal(fs.readFileSync(ignore, 'utf8'), expected);
+  assert.equal(fs.statSync(ignore, { bigint: true }).mtimeNs, mtime);
+  assert.equal(fs.existsSync(path.join(root, '.agents/system/ignore')), false);
+  const mixed = [...args, 'dev-intake'];
+  assert.match(success(run(root, ...mixed)).stdout, /update\s+\.gitignore/);
+  assert.match(success(run(root, ...mixed)).stdout, /preserve\s+\.gitignore/);
+  assert.equal(fs.readFileSync(ignore, 'utf8'), expected + worktreeRule + '\r\n');
+  assert.equal(fs.existsSync(path.join(root, '.agents/dev/worktree')), false);
+});
+
+test('working checkouts and Herdr attachments are ignored while coordination and change records remain eligible for Git', t => {
+  const root = project(t);
+  assert.equal(spawnSync('git', ['init', '--quiet'], { cwd: root }).status, 0);
+  success(run(root, 'install', '--skill', 'system-herdr', 'system-herdr-core', 'dev-worktree'));
+  const ignored = ['herdr', 'herdr-core'].flatMap(host =>
+    ['task01/install.log', 'task01/diagnostics.json', 'task02/screenshot.png'].map(file =>
+      `.agents/system/ignore/${host}/2026-11-20-test/build%2Ft7/${file}`));
+  ignored.push('.agents/dev/worktree/test/src/index.mjs');
+  const eligible = ['herdr', 'herdr-core'].flatMap(host =>
+    ['manifest.tsv', 'build%2Ft7/task01.md', 'build%2Ft7/report01.md'].map(file => `.agents/system/${host}/2026-11-20-test/${file}`));
+  eligible.push('.agents/dev/changes/test/verification.md');
+  const checked = spawnSync('git', ['-c', 'core.excludesFile=', 'check-ignore', '--', ...ignored, ...eligible], { cwd: root, encoding: 'utf8' });
+  assert.equal(checked.status, 0, checked.stderr);
+  assert.deepEqual(checked.stdout.trim().split(/\r?\n/), ignored);
+});
+
+test('invalid .gitignore target stops system initialization before writes', t => {
+  const root = project(t);
+  fs.mkdirSync(path.join(root, '.gitignore'));
+  const result = run(root, 'install', '--skill', 'system-inspect');
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /\.gitignore/);
+  assert.equal(fs.existsSync(path.join(root, '.agents')), false);
+});
+
+test('a partial .gitignore write restores original bytes and rolls back mixed domain initialization', t => {
+  const root = project(t);
+  const ignore = path.join(root, '.gitignore');
+  const original = Buffer.from('# 本地规则\r\n/temp/\r\n');
+  fs.writeFileSync(ignore, original);
+  let ignoreDescriptor;
+  const installer = createInstaller({ fsOps: { ...fs,
+    openSync(filename, ...args) {
+      const fd = fs.openSync(filename, ...args);
+      if (filename === ignore) ignoreDescriptor = fd;
+      return fd;
+    },
+    writeFileSync(file, data, ...args) {
+      if (file === ignoreDescriptor && ignoreDescriptor !== undefined) {
+        fs.writeFileSync(file, data.subarray(0, 8));
+        throw new Error('fixture .gitignore write failed');
+      }
+      return fs.writeFileSync(file, data, ...args);
+    },
+  } });
+  const selected = installer.catalog().filter(skill => ['dev-intake', 'system-inspect'].includes(skill.name));
+  assert.throws(() => installer.apply(selected, root), /rolled back.*\.gitignore write failed/);
+  assert.deepEqual(files(root), ['.gitignore']);
+  assert.deepEqual(fs.readFileSync(ignore), original);
 });
 
 test('list, help, cancellation-equivalent empty selection and invalid selection do not initialize anything', t => {
@@ -68,7 +149,7 @@ test('reinstall updates managed instructions and fills missing files while prese
   success(run(root, 'install', '--skill', 'dev-intake'));
   const mtime = fs.statSync(custom, { bigint: true }).mtimeNs;
   success(run(root, 'install', '--skill', 'dev-intake', '--replace'));
-  assert.deepEqual(records(root), [...dev, 'AGENTS.md'].sort());
+  assert.deepEqual(records(root), [...dev, 'AGENTS.md', '.gitignore'].sort());
   assert.equal(fs.readFileSync(custom, 'utf8'), template);
   assert.equal(fs.statSync(custom, { bigint: true }).mtimeNs, mtime);
   assert.equal(fs.statSync(skillFile, { bigint: true }).mtimeNs, skillMtime);

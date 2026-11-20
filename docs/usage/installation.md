@@ -74,7 +74,9 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 安装器自动发现 `SKILL.md`，完整复制包内 references、assets、scripts、agents 及其他运行资源。目录名与 frontmatter 的 `name` 必须相同，两处源码的安装名全局唯一。安装后没有领域或来源中间目录；`materials/` 不参与安装器的发现和复制，安装器也不执行材料内容。
 
-选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。system 技能触发系统根导航，ops 技能触发 ops 根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。list、help、取消和 dry-run 不初始化目录。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 技能触发 ops 根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+
+选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐对应规则 `/.agents/dev/worktree/` 或 `/.agents/system/ignore/`。system 技能同时补齐系统根导航。混选时在同一次写入补齐两条规则。缺少文件时创建，已有条目时保留原文件。工作树和附件目录由任务按需创建。交互和显式命令使用同一规则，`--dry-run` 显示计划。list、help、取消和 dry-run 都保持零写入。
 
 根 `licenses/` 和 [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md)随源码及 npm 包分发，独立技能内的原生法律文件随包保留。安装器不创建、维护或删除项目的 `.agents/skills-hub-licenses/`。
 
@@ -96,9 +98,9 @@ CLI 的 `--skill` 使用完整 `zh-` 安装名；交互搜索可输入原名。�
 
 备份位于 `.agents/.skills-hub-backups/<UTC时间-随机后缀>/<技能名>/`，处于技能扫描目录之外。安装前的自行修改保存在备份中，不会自动合并回新版。需要长期项目特化时，在项目自己的技能源码或规则文件维护，再按宿主机制使用。
 
-安装器先统一检查技能和领域导航路径，再取得 `.agents/.skills-wta-install.lock/` 与 `.agents/.skills-hub-install.lock/` 两把锁。旧锁名用于与早期安装器互斥。取得锁后重新检查计划，把所选文件复制到同一文件系统的临时目录，切换技能，最后写入导航。
+安装器先检查技能、领域导航及适用的 `.gitignore` 路径，再取得 `.agents/.skills-wta-install.lock/` 与 `.agents/.skills-hub-install.lock/` 两把锁。旧锁名用于与早期安装器互斥。取得锁后重新检查计划，把所选文件复制到同一文件系统的临时目录，切换技能，再写入导航及所需忽略规则。
 
-普通复制、切换或导航写入异常会尝试恢复本次替换前的技能和模板原字节，清理本次新建导航与空目录；安装前已有业务资料不会被回删。恢复失败会报告需要人工处理的路径。断电、强制结束及外部程序并发修改不在完整事务保证内。
+普通复制、切换或初始化写入异常会尝试恢复本次替换前的技能、导航和 `.gitignore` 原字节，清理本次新建的初始化文件与空目录。安装前已有业务资料保留。恢复失败会报告需要人工处理的路径。断电、强制结束及外部程序并发修改不在完整事务保证内。
 
 异常终止留下锁时，先确认没有新旧安装进程，再移除遗留锁并检查备份。运行中的锁不能删除。即使技能全部 `unchanged`，补齐或更新导航也会取得相同锁。
 

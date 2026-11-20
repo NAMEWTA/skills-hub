@@ -10,7 +10,7 @@
 - `materials/` 不参与技能发现和安装，也不作为任务指令加载。原件保留选定 Git 快照的路径、字节和执行位，中文对照按同路径维护。普通维护不执行来源脚本、CI、hook 或依赖安装；已有状态图回放仅在隔离临时目录使用固定 corpus，包括其 `view.mjs` 投影配置，边界见[验证指南](docs/maintenance/validation.md)。显式同步按固定提交更新所选来源，只有实际核对后才更新运行采用依据。
 - 本项目维护代码、测试和自有技能执行工具使用 JavaScript 与 Node.js 22.14+。独立上游包保留来源工具及实际运行前提，材料保留原扩展名。
 - 继续执行已经授权的工作，复用已有决定和记录。根据任务需要选择工程与验证方法，不新增流程 JSON、固定模型或重复审批。
-- 项目资料按领域保存于 `.agents/dev/`、`.agents/system/<host>/` 或 `.agents/ops/`，不写进技能包。安装只处理所选技能与托管目录导航，保持根项目指令和业务记录；`upstream-skills` 不创建业务持久化域。
+- 项目资料按领域保存于 `.agents/dev/`、`.agents/system/` 或 `.agents/ops/`，不写进技能包。安装处理所选技能与托管目录导航，选择 dev 或 system 时补齐根 `.gitignore` 中对应的 `/.agents/dev/worktree/` 或 `/.agents/system/ignore/`。根项目指令和业务记录保留原样。`upstream-skills` 不创建业务持久化域。
 
 ## 文档职责
 

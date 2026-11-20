@@ -157,7 +157,11 @@ test('strict shared TSV parsing validates zero-row headers and sync reuses share
 test('raw Git objects ignore export attributes and preserve binary/empty/executable; symlink refused',async t=>{
  const f=await fixture(t); await fs.writeFile(path.join(f.repo,'.gitattributes'),'secret.bin export-ignore\na.md export-subst\n');await fs.writeFile(path.join(f.repo,'secret.bin'),Buffer.from([0,255,13,10]));await fs.writeFile(path.join(f.repo,'empty'),'');await fs.writeFile(path.join(f.repo,'program.js'),'throw Error("DO NOT EXECUTE")');await fs.chmod(path.join(f.repo,'program.js'),0o755);git(f.repo,'add','.');git(f.repo,'update-index','--chmod=+x','program.js');f.commit();
  const a=path.join(f.tmp,'raw');await f.run('prepare',a);assert.deepEqual(await fs.readFile(path.join(a,'speculo','upstream','secret.bin')),Buffer.from([0,255,13,10]));assert.equal(parseTsv(await fs.readFile(path.join(a,'speculo','manifest.tsv'),'utf8')).find(r=>r.path==='program.js').source_git_mode,'100755');if(process.platform!=='win32')assert.equal((await fs.stat(path.join(a,'speculo','upstream','program.js'))).mode&0o111,0o111);
- await fs.symlink('a.md',path.join(f.repo,'link'));f.commit();await assert.rejects(f.run('dry-run'),/Unsupported Git entry/);
+ // The synchronizer reads Git objects, so the fixture can stage a symlink without OS symlink privileges.
+ const linkBlob=execFileSync('git',['hash-object','-w','--stdin'],{cwd:f.repo,input:'a.md',encoding:'utf8'}).trim();
+ git(f.repo,'update-index','--add','--cacheinfo',`120000,${linkBlob},link`);
+ git(f.repo,'commit','-m','add symlink entry');
+ await assert.rejects(f.run('dry-run'),/Unsupported Git entry/);
 });
 
 test('apply rejects the same metadata, bytes and runtime defects as unified validation',async t=>{

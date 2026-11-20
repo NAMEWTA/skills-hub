@@ -1,6 +1,6 @@
 # 领域持久化目录与迁移
 
-技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 dev、system、ops 分开维护；安装器只管理约定的导航模板。
+技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 dev、system、ops 分开维护。安装器管理约定的导航模板及开发工作树和系统附件的忽略规则。
 
 ## 约定
 
@@ -17,8 +17,10 @@
 | `.agents/dev/archive/notes/` | 退役知识，按原分类保留 |
 | `.agents/dev/project/` | 项目专用非秘密配置 |
 | `.agents/dev/context/` | 实际模型角色和执行背景 |
+| `.agents/dev/worktree/<任务名>/` | 主检出下按需创建的 Git 工作树，根 `.gitignore` 排除 |
 | `.agents/system/<host>/` | 对应主机的诊断、清理、代理和配置记录 |
 | `.agents/system/herdr/`、`.agents/system/herdr-core/` | Herdr TUI 与 Core 各自的协作主题、任务和报告，按实际派发建立 |
+| `.agents/system/ignore/` | 系统任务的临时附件。Herdr 按工具、主题、执行者目录和任务文件名（去掉 `.md`）定位 |
 | `.agents/ops/registry/` | 运行关系、稳定身份、来源和观察时间 |
 | `.agents/ops/projects/` | 项目运维知识或既有权威资料的位置 |
 | `.agents/ops/runs/` | 原始操作事实、步骤与可重建摘要 |
@@ -35,12 +37,12 @@ Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作
 
 | 选择包含 | 创建或更新的导航 |
 | --- | --- |
-| 任意 dev 技能 | dev 根、changes、notes、deploy、archive、project、context，以及 implemented/rejected 两个归档结果目录的九份 `AGENTS.md` |
-| 任意 system 技能 | `.agents/system/AGENTS.md` |
+| 任意 dev 技能 | dev 领域的九份 `AGENTS.md`，以及根 `.gitignore` 的 `/.agents/dev/worktree/` 规则 |
+| 任意 system 技能 | `.agents/system/AGENTS.md` 和项目根 `.gitignore` 的 `/.agents/system/ignore/` 规则 |
 | 任意 ops 技能 | `.agents/ops/AGENTS.md` |
 | 仅独立上游技能 | 无领域导航 |
 
-模板源码归 `scripts/persistence/`，不放在技能内，也不由技能脚本执行。固定位置的 `AGENTS.md` 自动更新，字节相同不重写；自定义规则放根 `AGENTS.md` 或其他非托管文件。安装器不编辑根规则、不生成业务事实、不搬迁已有记录。
+模板源码归 `scripts/persistence/`，不放在技能内，也不由技能脚本执行。固定位置的 `AGENTS.md` 自动更新，字节相同不重写。自定义规则放根 `AGENTS.md` 或其他非托管文件，已有业务记录按原位置保留。
 
 list、help、取消和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
 

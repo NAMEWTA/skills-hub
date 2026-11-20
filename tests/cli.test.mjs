@@ -84,6 +84,8 @@ test('one tree mixes a domain, a child exclusion and another domain leaf', async
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/system-proxy/SKILL.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/system/AGENTS.md')));
+  assert.match(ctx.ui.notes.join('\n'), /\.gitignore/);
+  assert.equal(fs.readFileSync(path.join(project, '.gitignore'), 'utf8'), '/.agents/dev/worktree/\n/.agents/system/ignore/\n');
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/dev-spec')), false);
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/system-clean')), false);
 });
@@ -121,8 +123,9 @@ test('interactive upstream installation uses the shared installer without domain
 test('tree cancellation and declined confirmation do not write', async t => {
   const project = temporary(t, 'skills-hub tree cancel ');
   assert.equal(await interactive({ project, ...context(Symbol('cancel')) }), 0);
-  assert.equal(await interactive({ project, ...context(['dev-spec'], false) }), 0);
+  assert.equal(await interactive({ project, ...context(['system-inspect'], false) }), 0);
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
+  assert.equal(fs.existsSync(path.join(project, '.gitignore')), false);
 });
 
 test('search matches names, abbreviations, domains and Chinese descriptions', () => {

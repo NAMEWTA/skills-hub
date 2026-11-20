@@ -14,7 +14,7 @@ const absolute = (file) => path.join(root, file);
 const checker = "skills/dev/dev-formal-verify/scripts/check-model.mjs";
 const example = "skills/dev/dev-formal-verify/assets/example/model.mjs";
 const inspect = "skills/system/system-inspect/scripts/inspect.mjs";
-const audit = "skills/dev/dev-deploy/scripts/local-tools/worktree-audit.mjs";
+const audit = "skills/dev/dev-worktree/scripts/worktree-audit.mjs";
 const chart = "skills/dev/dev-statechart/scripts/statechart.mjs";
 
 function run(file, args = [], options = {}) {
