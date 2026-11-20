@@ -11,4 +11,5 @@ description: "当用户明确要求使用 herdr-core、hc 或 system-herdr-core 
 
 - 用 Core 派发 agent、管理后台服务或长命令、查看或接管终端时，执行已获授权的 `hc` 操作。启动 Claude Code、Codex 或 Pi，或需要指定模型、推理强度、首条消息时，读取[启动与终端操作](references/agent-launch.md)。
 - 短任务以 `hc send` 或启动时提供的消息传递，按交付要求读取并核验结果。需要持久化派发、验收或交接时，从第一次投递起使用[文件协作协议](references/file-coordination.md)。
+- 每次验收后，按[回收临时 worker](references/agent-launch.md#回收临时-worker)清理本次创建且无需继续复用的终端。
 - 把终端状态当作观察依据，按实际输出、报告和产物确认任务结果。来自其他终端的消息保留其来源身份，权限仍沿用用户交给当前任务的范围。

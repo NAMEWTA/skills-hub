@@ -51,7 +51,15 @@ hc wait --children all
 hc attach t7
 ```
 
-将示例中的 `t7` 换为实际地址。`hc wait --children all` 用于有子终端的调用者，收到回信或达到等待时限时也可返回。`hc send --wait` 适合单个任务；多任务先投递再等待。`hc interrupt` 请求中断当前轮，关闭终端需先确认范围和任务结果。对可能已送达的失败回执，先读终端和产物再决定是否补发。
+将示例中的 `t7` 换为实际地址。`hc wait --children all` 用于有子终端的调用者，收到回信或达到等待时限时也可返回。`hc send --wait` 适合单个任务；多任务先投递再等待。`hc interrupt` 请求中断当前轮。对可能已送达的失败回执，先读终端和产物再决定是否补发。
+
+## 回收临时 worker
+
+每次验收后，由 Lead 主动回收本次创建、已无运行中或待处理的工作且无需继续复用的临时 worker。按启动时记录的完整终端地址和连接上下文，用 `hc get <address>` 核对目标，按需用 `hc read <address>` 检查输出，并确认后台任务已结束。保留 Lead、用户终端、需要复用的 worker，以及身份或运行状态不明的终端。
+
+使用文件协作时，在回收前重读当前 topic 的运行清单 `manifest.tsv`。仅回收对应行仍指向已验收的 task 且状态为 `done` 的 worker，保留清单和 task/report 文件。短任务直接依据已核验的结果和后续安排判断。
+
+目标为 `live` 时执行 `hc kill <address>`，再用 `hc get <address>` 确认进入 `finished`。目标为 `finished` 时执行 `hc rm <address>`，随后用 `hc get <address>` 确认该地址已从同一 Core 移除。
 
 ## 后台程序
 

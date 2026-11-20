@@ -108,6 +108,8 @@ herdr --machine <label-or-id> agent prompt <remote-agent-name> "Reply with your 
 
 默认使用当前标签页中的相邻窗格和当前工作目录。除非用户明确要求相应拓扑或位置，否则不要创建工作区、标签页、worktree，也不要换用其他工作目录。
 
+记录本次创建的临时 worker 的真实 pane ID。每次验收后，按[回收临时 worker](#回收临时-worker)收尾。
+
 遵循用户指定的拆分方向。如果未指定，先检查调用方窗格：
 
 ```bash
@@ -213,6 +215,14 @@ herdr pane read <returned-pane-id> --source recent-unwrapped --lines 120
 - 绝不要杀死 Herdr 主进程。需要隔离服务端的实验应使用具名测试会话。
 - CLI 服务端错误以 JSON 输出到 stderr，退出状态为 1。CLI 语法错误退出状态为 2。
 
+## 回收临时 worker
+
+每次验收后，由 Lead 主动关闭本次创建、已无运行中或待处理的工作且无需继续复用的临时 worker。按创建时记录的真实 pane ID 和连接上下文核对目标，用 `herdr pane list` 查看窗格，按需用 `herdr agent get`、`herdr pane read` 检查进程状态与输出，并确认后台任务已结束。保留 Lead、用户窗格、需要复用的 worker，以及身份、运行状态或关闭影响不明的窗格。
+
+使用文件协作时，在关闭前重读当前 topic 的运行清单 `manifest.tsv`。仅回收对应行仍指向已验收的 task 且状态为 `done` 的 worker，保留清单和 task/report 文件。短任务直接依据已核验的结果和后续安排判断。
+
+在同一连接上下文执行 `herdr pane close <pane_id>`，随后用 `herdr pane list` 确认目标已关闭。
+
 ## Claude Code & Codex & Pi 的默认启动方式命令
 
 在已有可用 shell 窗格中启动；`<name>` 为唯一名称，`<returned-pane-id>` 为实际返回的窗格 ID，`<models_name>`/`<effort>` 为模型/推理强度，未指定则删除对应参数：
@@ -263,6 +273,8 @@ herdr agent start <name> --kind pi --pane <returned-pane-id> -- --model <models_
 Lead 读取同号报告与实际产物，核对任务的验收要求和验证证据，必要时独立检查。只有验收通过才把 manifest 标为 `done`；阻塞时标为 `blocked`，说明缺什么条件。
 
 worker 交回终稿后不再写报告。Lead 可在末尾追加验收决定、依据和后续安排，不改执行部分。需要补充、返工、解除阻塞或换任务时，建立下一编号 task，引用原任务和报告；确认原执行者已停止后才更新清单并派发。可以提前准备后续 task，但 worker 不能自行扫描领取。
+
+验收通过且无需继续复用时，按[回收临时 worker](#回收临时-worker)关闭本次创建的窗格。
 
 ### 观察、恢复与交接
 
