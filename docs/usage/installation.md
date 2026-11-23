@@ -78,7 +78,9 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 技能触发 ops 根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
 
-选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐对应规则 `/.agents/dev/worktree/` 或 `/.agents/system/ignore/`。system 技能同时补齐系统根导航。混选时在同一次写入补齐两条规则。缺少文件时创建，已有条目时保留原文件。工作树和附件目录由任务按需创建。交互和显式命令使用同一规则，`--dry-run` 显示计划。list、help、取消和 dry-run 都保持零写入。
+选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐 `/temp/`。dev 另补 `/.agents/dev/worktree/`，system 同时补系统根导航。混装只加一条 `/temp/`；仅 ops 或独立上游包不加。缺少 `.gitignore` 时创建，已有等效条目不重复写；新增 `/temp/` 放在既有项目规则之前，保留 `!/temp/` 等根级例外。实际忽略结果以 Git 判定为准。任务按需建立工作树和附件目录。交互和显式命令使用同一规则；`--dry-run` 只预览。list、help、取消和 dry-run 均不写入。
+
+忽略规则不取消跟踪。安装器不扫描、迁移或兼容旧证据，也不写入业务 Change；旧资料由使用者处理。实际取证和报告路径见[运行原件与验收](../reference/persistence-roots.md#运行原件与验收)。
 
 根 `licenses/` 和 [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md)随源码及 npm 包分发，独立技能内的原生法律文件随包保留。安装器不创建、维护或删除项目的 `.agents/skills-hub-licenses/`。
 

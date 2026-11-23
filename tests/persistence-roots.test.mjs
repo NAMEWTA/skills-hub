@@ -9,6 +9,7 @@ test('dev and system records use separate domain roots', () => {
   assert.deepEqual(persistenceIssues('skills/dev/dev-spec/SKILL.md', '.agents/dev/changes/demo/'), []);
   assert.deepEqual(persistenceIssues('skills/system/system-config/SKILL.md', '.agents/system/workstation/config.md'), []);
   assert.deepEqual(persistenceIssues('skills/dev/dev-spec/SKILL.md', '.agents/skills/dev-spec/SKILL.md'), []);
+  assert.deepEqual(persistenceIssues('skills/system/system-herdr/SKILL.md', 'temp/system/herdr/topic/t7/task01/'), []);
 });
 
 test('legacy root and nested system folder fail with line and filename', () => {
@@ -16,6 +17,12 @@ test('legacy root and nested system folder fail with line and filename', () => {
   assert.equal(errors.length, 2);
   assert.match(errors[0], /SKILL\.md:2:.*wtadev/);
   assert.match(errors[1], /SKILL\.md:3:.*\.agents\/system/);
+});
+
+test('runtime templates cannot direct raw evidence to the retired system attachment directory', () => {
+  const errors = persistenceIssues('skills/system/system-herdr/assets/task.md', '# Task\n.agents/system/ignore/herdr/\n');
+  assert.equal(errors.length, 1);
+  assert.match(errors[0], /task\.md:2:.*temp\/system\//);
 });
 
 test('scan all runtime reference documents but not immutable source archives', (t) => {

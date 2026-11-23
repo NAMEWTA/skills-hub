@@ -53,8 +53,8 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     if (selected.some(skill => ['dev', 'system', 'ops'].includes(skill.domain))) {
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
-    if (selected.some(skill => skill.domain === 'system')) {
-      ui.note('如缺少规则，将在项目根 .gitignore 追加 /.agents/system/ignore/。', '系统附件');
+    if (selected.some(skill => skill.domain === 'dev' || skill.domain === 'system')) {
+      ui.note('如缺少规则，将补项目根 .gitignore 的 /temp/ 默认规则，保留项目例外；运行附件目录按需创建。', '临时取证');
     }
     if (selected.some(skill => skill.domain === 'dev')) {
       ui.note('如缺少规则，将在项目根 .gitignore 追加 /.agents/dev/worktree/。', '开发工作树');

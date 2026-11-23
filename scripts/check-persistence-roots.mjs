@@ -17,6 +17,9 @@ export function persistenceIssues(filename, content) {
     if (text.includes('.agents/dev/system/')) {
       errors.push(filename + ':' + (index + 1) + ': 系统领域资料不能嵌入 dev；应使用 .agents/system/<host>/');
     }
+    if (text.includes('.agents/system/ignore/')) {
+      errors.push(filename + ':' + (index + 1) + ': 系统运行取证应使用项目根 temp/system/');
+    }
   }
   return errors;
 }
@@ -45,7 +48,7 @@ export function main(args = process.argv.slice(2)) {
   else if (args.length) { console.error('Usage: node scripts/check-persistence-roots.mjs [--root DIRECTORY]'); return 2; }
   const problems = check(root);
   if (problems.length) { for (const problem of problems) console.error(problem); return 1; }
-  console.log('Domain persistence paths passed: dev → .agents/dev/, system → .agents/system/; .agents/skills/ unchanged.');
+  console.log('Domain persistence paths passed: records in .agents/dev/ or .agents/system/, raw evidence in temp/dev/ or temp/system/.');
   return 0;
 }
 

@@ -6,12 +6,13 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { repositoryRoot, createInstaller } from '../install.mjs';
 import { planPersistence } from '../scripts/init-persistence.mjs';
+import { isolatedGitEnvironment } from './helpers.mjs';
 
 const dev = ['dev', 'dev/changes', 'dev/notes', 'dev/deploy', 'dev/archive',
   'dev/archive/changes/implemented', 'dev/archive/changes/rejected', 'dev/project', 'dev/context']
   .map(directory => `.agents/${directory}/AGENTS.md`).sort();
 const system = '.agents/system/AGENTS.md';
-const ignoreRule = '/.agents/system/ignore/';
+const tempRule = '/temp/';
 const worktreeRule = '/.agents/dev/worktree/';
 function project(t) {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'skills-hub-init-')));
@@ -31,19 +32,24 @@ for (const [label, args, expected] of [
   ['one dev skill', ['--skill', 'dev-intake'], [...dev, '.gitignore']],
   ['dev domain', ['--domain', 'dev'], [...dev, '.gitignore']],
   ['system only', ['--skill', 'system-inspect'], [system, '.gitignore'].sort()],
+  ['ops only', ['--domain', 'ops'], ['.agents/ops/AGENTS.md']],
+  ['independent skill only', ['--skill', 'zh-archify'], []],
   ['mixed domains', ['--skill', 'dev-intake', 'system-inspect'], [...dev, system, '.gitignore'].sort()],
   ['all domains', ['--all'], [...dev, system, '.agents/ops/AGENTS.md', '.gitignore'].sort()],
 ]) test(`installing ${label} bootstraps exactly the selected domain records`, t => {
   const root = project(t);
   const preview = success(run(root, 'install', ...args, '--dry-run'));
-  assert.match(preview.stdout, /would create/);
+  assert.match(preview.stdout, /would install/);
+  if (expected.length) assert.match(preview.stdout, /would create/);
+  else assert.doesNotMatch(preview.stdout, /would create|\.gitignore/);
   assert.deepEqual(files(root), []);
   success(run(root, 'install', ...args));
   assert.deepEqual(records(root), expected);
+  assert.equal(fs.existsSync(path.join(root, 'temp')), false);
   for (const file of expected) {
     const content = fs.readFileSync(path.join(root, file), 'utf8');
     if (file === '.gitignore') {
-      const rules = [expected.includes(dev[0]) ? worktreeRule : '', expected.includes(system) ? ignoreRule : ''].filter(Boolean);
+      const rules = [expected.includes(dev[0]) ? worktreeRule : '', tempRule].filter(Boolean);
       assert.equal(content, rules.join('\n') + '\n');
       continue;
     }
@@ -52,7 +58,7 @@ for (const [label, args, expected] of [
   }
 });
 
-test('system installation appends the ignore rule and preserves original bytes on reinstall', t => {
+test('system installation adds a default without rewriting user bytes on reinstall', t => {
   const root = project(t);
   const ignore = path.join(root, '.gitignore');
   const original = '\uFEFF# 项目规则\r\n/generated/';
@@ -61,34 +67,87 @@ test('system installation appends the ignore rule and preserves original bytes o
   assert.match(success(run(root, ...args, '--dry-run')).stdout, /would update\s+\.gitignore/);
   assert.equal(fs.readFileSync(ignore, 'utf8'), original);
   success(run(root, ...args));
-  const expected = original + '\r\n' + ignoreRule + '\r\n';
+  const expected = '\uFEFF' + tempRule + '\r\n' + original.slice(1);
   assert.equal(fs.readFileSync(ignore, 'utf8'), expected);
   const mtime = fs.statSync(ignore, { bigint: true }).mtimeNs;
   assert.match(success(run(root, ...args)).stdout, /preserve\s+\.gitignore/);
   assert.equal(fs.readFileSync(ignore, 'utf8'), expected);
   assert.equal(fs.statSync(ignore, { bigint: true }).mtimeNs, mtime);
-  assert.equal(fs.existsSync(path.join(root, '.agents/system/ignore')), false);
+  assert.equal(fs.existsSync(path.join(root, 'temp')), false);
   const mixed = [...args, 'dev-intake'];
   assert.match(success(run(root, ...mixed)).stdout, /update\s+\.gitignore/);
   assert.match(success(run(root, ...mixed)).stdout, /preserve\s+\.gitignore/);
-  assert.equal(fs.readFileSync(ignore, 'utf8'), expected + worktreeRule + '\r\n');
+  assert.equal(fs.readFileSync(ignore, 'utf8'), expected + '\r\n' + worktreeRule + '\r\n');
   assert.equal(fs.existsSync(path.join(root, '.agents/dev/worktree')), false);
 });
 
-test('working checkouts and Herdr attachments are ignored while coordination and change records remain eligible for Git', t => {
+test('an existing temp rule and project business records are left untouched', t => {
   const root = project(t);
-  assert.equal(spawnSync('git', ['init', '--quiet'], { cwd: root }).status, 0);
+  const ignore = path.join(root, '.gitignore');
+  const original = '# My rules\r\n/custom/\r\ntemp/\r\n';
+  fs.writeFileSync(ignore, original);
+  const record = path.join(root, '.agents', 'system', 'host', 'configuration.md');
+  fs.mkdirSync(path.dirname(record), { recursive: true });
+  fs.writeFileSync(record, '# 手写配置记录\r\n');
+  assert.match(success(run(root, 'install', '--skill', 'system-herdr')).stdout, /preserve\s+\.gitignore/);
+  assert.equal(fs.readFileSync(ignore, 'utf8'), original);
+  assert.equal(fs.readFileSync(record, 'utf8'), '# 手写配置记录\r\n');
+  assert.equal(fs.existsSync(path.join(root, 'temp')), false);
+});
+
+test('existing project exceptions, legacy rules and tracked files survive a system upgrade', t => {
+  const root = project(t);
+  const env = isolatedGitEnvironment(project(t));
+  const git = (...args) => spawnSync('git', args, { cwd: root, env, encoding: 'utf8' });
+  success(git('init', '--quiet'));
+  const ignore = path.join(root, '.gitignore');
+  const original = '/.agents/system/ignore/\n!/temp/\n';
+  fs.writeFileSync(ignore, original);
+  const tracked = 'temp/previously-tracked.log';
+  fs.mkdirSync(path.join(root, 'temp'));
+  fs.writeFileSync(path.join(root, tracked), 'owner retained this file\n');
+  success(git('add', '--', tracked));
+  success(run(root, 'install', '--skill', 'system-herdr', 'dev-intake'));
+  assert.equal(fs.readFileSync(ignore, 'utf8'), tempRule + '\n' + original + worktreeRule + '\n');
+  assert.equal(git('check-ignore', '-q', '--', 'temp/not-ignored.log').status, 1);
+  assert.equal(git('check-ignore', '-q', '--', '.agents/system/ignore/old.log').status, 0);
+  assert.equal(success(git('ls-files', '--', tracked)).stdout.trim(), tracked);
+  assert.equal(fs.readFileSync(path.join(root, tracked), 'utf8'), 'owner retained this file\n');
+});
+
+test('working checkouts and raw evidence are ignored while coordination and change reports remain eligible for Git', t => {
+  const root = project(t);
+  const env = isolatedGitEnvironment(project(t));
+  const git = (...args) => spawnSync('git', args, { cwd: root, env, encoding: 'utf8' });
+  success(git('init', '--quiet'));
+  const tracked = 'temp/preexisting.log';
+  fs.mkdirSync(path.join(root, 'temp'));
+  fs.writeFileSync(path.join(root, tracked), 'already tracked\n');
+  success(git('add', '--', tracked));
   success(run(root, 'install', '--skill', 'system-herdr', 'system-herdr-core', 'dev-worktree'));
+  assert.equal(git('check-ignore', '-q', '--', tracked).status, 1);
+  assert.equal(git('check-ignore', '-q', '--no-index', '--', tracked).status, 0);
   const ignored = ['herdr', 'herdr-core'].flatMap(host =>
-    ['task01/install.log', 'task01/diagnostics.json', 'task02/screenshot.png'].map(file =>
-      `.agents/system/ignore/${host}/2026-11-20-test/build%2Ft7/${file}`));
-  ignored.push('.agents/dev/worktree/test/src/index.mjs');
+    ['task01/run-01/install.log', 'task01/run-01/diagnostics.json', 'task02/run-02/screenshot.png'].map(file =>
+      `temp/system/${host}/2026-11-20-test/build%2Ft7/${file}`));
+  ignored.push('temp/dev/test/tasks/01-run/attempt-01/report.md', 'temp/dev/test/integration/attempt-01/trace.json',
+    'temp/system/hosts/host/inspect/attempt-01/diagnostics.log', '.agents/dev/worktree/test/src/index.mjs');
   const eligible = ['herdr', 'herdr-core'].flatMap(host =>
     ['manifest.tsv', 'build%2Ft7/task01.md', 'build%2Ft7/report01.md'].map(file => `.agents/system/${host}/2026-11-20-test/${file}`));
-  eligible.push('.agents/dev/changes/test/verification.md');
-  const checked = spawnSync('git', ['-c', 'core.excludesFile=', 'check-ignore', '--', ...ignored, ...eligible], { cwd: root, encoding: 'utf8' });
-  assert.equal(checked.status, 0, checked.stderr);
-  assert.deepEqual(checked.stdout.trim().split(/\r?\n/), ignored);
+  eligible.push('.agents/dev/changes/test/tasks/01-run.md', '.agents/dev/changes/test/evidences/01-run.md',
+    '.agents/dev/changes/test/evidence.md', '.agents/system/host/audit.md',
+    '.agents/dev/changes/test/prototype/index.html', 'tests/input.mjs', 'src/temp/input.json');
+  for (const relative of [...ignored, ...eligible]) {
+    const file = path.join(root, relative);
+    fs.mkdirSync(path.dirname(file), { recursive: true });
+    fs.writeFileSync(file, 'fixture\n');
+  }
+  const checked = success(git('check-ignore', '-v', '--', ...ignored, ...eligible));
+  assert.deepEqual(checked.stdout.trim().split(/\r?\n/).map(line => line.split('\t')[1]), ignored);
+  assert.match(checked.stdout, /\.gitignore:\d+:\/temp\/\ttemp\/dev\//);
+  success(git('add', '--', ...eligible));
+  const index = success(git('ls-files', '-z'));
+  assert.deepEqual(index.stdout.split('\0').filter(Boolean).sort(), [...eligible, tracked].sort());
 });
 
 test('invalid .gitignore target stops system initialization before writes', t => {
@@ -103,7 +162,7 @@ test('invalid .gitignore target stops system initialization before writes', t =>
 test('a partial .gitignore write restores original bytes and rolls back mixed domain initialization', t => {
   const root = project(t);
   const ignore = path.join(root, '.gitignore');
-  const original = Buffer.from('# 本地规则\r\n/temp/\r\n');
+  const original = Buffer.from('\uFEFF# 本地规则\r\n/.agents/system/ignore/');
   fs.writeFileSync(ignore, original);
   let ignoreDescriptor;
   const installer = createInstaller({ fsOps: { ...fs,

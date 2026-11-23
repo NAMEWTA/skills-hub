@@ -3,10 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const templates = fileURLToPath(new URL('./persistence/', import.meta.url));
-const domainIgnoreRules = [
-  ['dev', '/.agents/dev/worktree/'],
-  ['system', '/.agents/system/ignore/'],
-];
 const targets = [
   ['dev', 'dev', '.agents/dev'],
   ['dev', 'changes', '.agents/dev/changes'],
@@ -37,15 +33,24 @@ function inspect(project, relative, fsOps) {
   return exists;
 }
 
-function appendIgnoreRules(previous, rules) {
-  const original = previous.toString('utf8').replace(/^\uFEFF/, '');
+function ensureIgnoreRules(previous, rules) {
+  const text = previous.toString('utf8');
+  const original = text.replace(/^\uFEFF/, '');
   const patterns = new Set(original.split(/\r?\n/).map(line => line.replace(/ +$/, '')));
   const missing = rules.filter(rule => !patterns.has(rule) && !patterns.has(rule.slice(1)));
   if (missing.length === 0) return previous;
 
   const eol = original.match(/\r?\n/)?.[0] ?? '\n';
+  let content = previous;
+  if (original && missing.includes('/temp/')) {
+    // 默认规则先于用户规则，不覆盖项目已有的重新纳入规则。
+    const bom = text.startsWith('\uFEFF') ? 3 : 0;
+    content = Buffer.concat([previous.subarray(0, bom), Buffer.from('/temp/' + eol), previous.subarray(bom)]);
+    missing.splice(missing.indexOf('/temp/'), 1);
+  }
+  if (!missing.length) return content;
   const separator = original && !original.endsWith('\n') ? eol : '';
-  return Buffer.concat([previous, Buffer.from(separator + missing.join(eol) + eol)]);
+  return Buffer.concat([content, Buffer.from(separator + missing.join(eol) + eol)]);
 }
 
 // 安装器维护固定导航和领域忽略规则。
@@ -55,9 +60,11 @@ export function planPersistence(skills, project, fsOps = fs) {
     directory + '/AGENTS.md',
     () => fsOps.readFileSync(path.join(templates, template + '.md')),
   ]);
-  const ignoreRules = domainIgnoreRules.filter(([domain]) => domains.has(domain)).map(([, rule]) => rule);
+  const ignoreRules = [];
+  if (domains.has('dev')) ignoreRules.push('/.agents/dev/worktree/');
+  if (domains.has('dev') || domains.has('system')) ignoreRules.push('/temp/');
   if (ignoreRules.length) {
-    entries.push(['.gitignore', previous => appendIgnoreRules(previous ?? Buffer.alloc(0), ignoreRules)]);
+    entries.push(['.gitignore', previous => ensureIgnoreRules(previous ?? Buffer.alloc(0), ignoreRules)]);
   }
   return entries.map(([relative, contentFor]) => {
     const exists = inspect(project, relative, fsOps);

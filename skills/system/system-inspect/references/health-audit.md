@@ -17,7 +17,7 @@ node "$SKILL_DIR/scripts/inspect.mjs"
 node "$SKILL_DIR/scripts/inspect.mjs" --path /path/on/target/volume
 ```
 
-PowerShell 使用 `node "$SKILL_DIR\scripts\inspect.mjs" --path 'C:\'`，先确认 Node.js 版本。路径包含空格必须引用。输出隐藏用户名和路径，只说明所选文件系统；CPU 数量和磁盘余量不是性能评分。
+PowerShell 使用 `node "$SKILL_DIR\scripts\inspect.mjs" --path 'C:\'`，先确认 Node.js 版本。路径包含空格必须引用。输出隐藏用户名和路径，只说明所选文件系统；CPU 数量和磁盘余量不是性能评分。需要留原件时先确定并创建项目根 `temp/system/hosts/<host>/<主题>/<run-id>/` 下的本轮目录，再把标准输出重定向到该目录的 `inspect.md`；这个工具输出不是持久验收报告。
 
 按系统读取 [平台工作流](platforms.md)，采集与症状相关的短时证据。复用已有结果，避免反复全盘扫描。记录版本、架构、权限、工具存在性、采样时间/负载、磁盘可用量以及失败/未知项。默认不导出完整环境、进程命令行、凭据或日志。
 

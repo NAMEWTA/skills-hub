@@ -256,7 +256,8 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
 
 Install complete skills into the current project's .agents/skills/. No destination option.
 --domain upstream-skills selects the independent Chinese upstream skills; it creates no domain navigation.
-Selected dev/system/ops domains also initialize missing domain AGENTS.md navigation; managed templates are updated; business records are preserved.
+Selected dev/system/ops domains initialize domain AGENTS.md navigation; managed templates are updated and business records are preserved.
+Dev or system selections add /temp/ to the project .gitignore when missing; dev also adds /.agents/dev/worktree/.
 --dry-run  Preview without writing files.
 Differing selected skills are backed up and replaced automatically.
 --replace  Accepted for compatibility; replacement is already the default.

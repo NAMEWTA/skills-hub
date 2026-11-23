@@ -1,6 +1,6 @@
 # 领域持久化目录与迁移
 
-技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 dev、system、ops 分开维护。安装器管理约定的导航模板及开发工作树和系统附件的忽略规则。
+技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 dev、system、ops 分开维护。安装器管理导航模板、项目根 `temp/` 和开发工作树的忽略规则。
 
 ## 约定
 
@@ -9,7 +9,7 @@
 | 目录 | 职责 |
 | --- | --- |
 | `.agents/skills/<技能名>/` | 安装的完整技能，不存业务记录 |
-| `.agents/dev/changes/<日期-主题>/` | 当前需求、规格、计划、进展、原型与验证证据 |
+| `.agents/dev/changes/<日期-主题>/` | 当前需求、规格、计划、进度、确认原型和 Markdown 验收 |
 | `.agents/dev/notes/` | 术语、架构取舍、背景、错误经验与学习导读 |
 | `.agents/dev/deploy/` | 环境操作说明与每次发布结果 |
 | `.agents/dev/archive/changes/implemented/` | 已完成交付的历史 change |
@@ -18,9 +18,9 @@
 | `.agents/dev/project/` | 项目专用非秘密配置 |
 | `.agents/dev/context/` | 实际模型角色和执行背景 |
 | `.agents/dev/worktree/<任务名>/` | 主检出下按需创建的 Git 工作树，根 `.gitignore` 排除 |
-| `.agents/system/<host>/` | 对应主机的诊断、清理、代理和配置记录 |
-| `.agents/system/herdr/`、`.agents/system/herdr-core/` | Herdr TUI 与 Core 各自的协作主题、任务和报告，按实际派发建立 |
-| `.agents/system/ignore/` | 系统任务的临时附件。Herdr 按工具、主题、执行者目录和任务文件名（去掉 `.md`）定位 |
+| `.agents/system/<host>/` | 主机配置、操作知识及 `changes/<change-id>/` 下的系统 Change |
+| `.agents/system/herdr/`、`.agents/system/herdr-core/` | Herdr 的主题、派发单和回执，不重复写业务验收 |
+| `temp/dev/`、`temp/system/` | 两域运行原件，位于目标项目根，由 `/temp/` 忽略 |
 | `.agents/ops/registry/` | 运行关系、稳定身份、来源和观察时间；已命名主机按 `<别名>.md` 登记 |
 | `.agents/ops/projects/` | 项目运维知识或既有权威资料的位置 |
 | `.agents/ops/runs/` | 原始操作事实、步骤与可重建摘要 |
@@ -29,7 +29,15 @@
 
 Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作](../usage/herdr-coordination.md)
 
-跨领域引用已有事实，避免复制第二份现行知识。开发资料不放进系统或运维记录，系统主机记录不放 `.agents/dev/system/`。用户明确指定其他位置时沿用要求，并在导航中记录实际路径。
+跨领域引用已有事实，避免复制第二份现行知识。开发资料不放进系统或运维记录，系统主机记录不嵌入 dev。
+
+## 运行原件与验收
+
+日志、截图、录像、JSON、状态库、工具生成的报告和其他运行原件不进 Git。开发 task 用目标项目根 `temp/dev/<change-id>/tasks/<task-stem>/<run-id>/`，其中 `task-stem` 是票据去掉 `.md` 的名称；组合验证用 `temp/dev/<change-id>/integration/<run-id>/`。主机诊断用 `temp/system/hosts/<host>/<change-id-or-topic>/<run-id>/`，Herdr 自身取证按其协调协议。重跑和并发用新目录，只有确需保留才创建。源码、可复用测试、模型、确认原型、发布制品和恢复备份沿用各自位置。
+
+Change 新建 `tasks/<名称>.md` 时同时建 `evidences/<名称>.md`，尚未执行标「未验证」。`evidences/` 只含与 `tasks/` 普通 `.md` 完全同名的普通 Markdown，包括大小写和后缀；没有索引、额外报告、子目录、符号链接或附件。失败、阻塞、交接和复验均更新原报告。整体验收通过且达到指定交付点后才写 Change 根的 `evidence.md`，引用各票报告。纯查询不为附件建任务。
+
+Git 忽略不是权限隔离，也不取消跟踪。留原件前核对目标确实被忽略且未跟踪；不强制添加或复制到版本控制。安装器不处理旧证据。详细报告和只读目录检查见 [dev-verify 取证方法](../../skills/dev/dev-verify/references/evidence-storage.md)。
 
 ## 安装时初始化
 
@@ -37,8 +45,8 @@ Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作
 
 | 选择包含 | 创建或更新的导航 |
 | --- | --- |
-| 任意 dev 技能 | dev 领域的九份 `AGENTS.md`，以及根 `.gitignore` 的 `/.agents/dev/worktree/` 规则 |
-| 任意 system 技能 | `.agents/system/AGENTS.md` 和项目根 `.gitignore` 的 `/.agents/system/ignore/` 规则 |
+| 任意 dev 技能 | dev 领域的九份 `AGENTS.md`；根 `.gitignore` 的 `/.agents/dev/worktree/` 和 `/temp/` |
+| 任意 system 技能 | `.agents/system/AGENTS.md`；根 `.gitignore` 的 `/temp/` |
 | 任意 ops 技能 | `.agents/ops/AGENTS.md` |
 | 仅独立上游技能 | 无领域导航 |
 

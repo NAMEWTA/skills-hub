@@ -11,14 +11,16 @@
 
 ## 验收记录与附件
 
-常规验收写在同号报告内，记录实际版本、工作目录、检查命令、结果和限制。只有验收或接手需要原始日志、诊断或截图时，Lead 才在 task 中指定附件。已有授权的工件位置可直接引用。默认附件目录与协作目录对应：
+`reportNN.md` 是派发回执，不是业务验收报告。Lead 用实际版本、命令、观察和限制更新所属 Change 的 `evidences/` 内与业务 task 完全同名的 `.md`。新建业务 task 时同步创建报告，未验证就标明；`evidences/` 不得包含其他文件。返工用新派发编号，但继续写原业务报告。只有整个 Change 完成验收后才写根 `evidence.md`。
+
+有附件时，Lead 在派发单指定 worker 可写及 Lead 可读的位置。协调项目的默认布局如下。代码在不同 worktree 时，不把附件放到 worker 随手选的目录：
 
 ```text
-.agents/system/herdr-core/<topic>/t122/report01.md
-.agents/system/ignore/herdr-core/<topic>/t122/task01/install.log
+.agents/system/herdr-core/<topic>/build%2Ft7/report01.md
+temp/system/herdr-core/<topic>/build%2Ft7/task01/run-01/install.log
 ```
 
-TUI 使用 `herdr/` 和该主题的实际 pane 目录名。报告从自身位置引用附件，例如 `[运行日志](../../../ignore/herdr-core/<topic>/t122/task01/install.log)`。挂载布局不同时记录 Lead 侧可达位置。临时附件按需写入，长期复查所需原件引用项目的持久工件。安装任一 system 技能时，安装器会给项目根 `.gitignore` 补齐 `/.agents/system/ignore/`，使尚未跟踪的附件留在 Git 之外。旧报告沿用原路径。
+TUI 使用 `herdr/` 和该主题的实际 pane 目录名。开发测试原件用目标项目 `temp/dev/`，Herdr 自身日志和诊断用 `temp/system/`。同根布局下，从回执到示例附件的相对 URI 为 `../../../../../temp/system/herdr-core/<topic>/build%252Ft7/task01/run-01/install.log`；链接中的空格使用 `%20`。跨挂载用核对过的实际可读位置。安装器补 `/temp/`，原件不随 Git 提交。不能读取必需附件就报告未验证，不提前通过。
 
 ## Herdr Core
 
@@ -75,7 +77,7 @@ herdr agent list
 
 普通终端交互先使用 prompt、等待和输出读取。只有扩大读取范围后仍无法取得已完成响应时，才让执行者把结果写入临时 Markdown 并返回路径。
 
-需要持久化派发与回复时，从首次投递就使用 task/report 文件。派发方称为 Lead，执行者称为 worker；Herdr 控制消息只传文件位置，任务正文、执行结果和恢复依据保存在共享目录中。有多个已确定的并行任务时，先全部投递，再观察和等待，避免逐个 `prompt --wait` 把工作串行化。
+需要持久化派发与回复时，从首次投递就用派发单及同号回执。派发方称为 Lead，执行者称为 worker；控制消息只传文件位置，业务验收另由原 task 的同名报告承载。有多个已确定的并行任务时，先全部投递，再观察和等待，避免逐个 `prompt --wait` 把工作串行化。
 
 ### 共享目录与任务身份
 
@@ -86,7 +88,7 @@ herdr agent list
 | [topic.md](../../skills/system/system-herdr/assets/topic.md) | Lead 维护连接上下文、Lead pane、共享根、目标、验收、约束和必要结论 |
 | [manifest.tsv](../../skills/system/system-herdr/assets/manifest.tsv) | Lead 维护每个已派发 pane 的当前任务和状态 |
 | [task01.md](../../skills/system/system-herdr/assets/task.md) | Lead 写清目标、输入、工作目录、读写边界、产物和验证要求，发布后保持不变 |
-| [report01.md](../../skills/system/system-herdr/assets/report.md) | worker 记录执行结果，交回终稿后由 Lead 追加验收 |
+| [report01.md](../../skills/system/system-herdr/assets/report.md) | worker 发布同号回执，Lead 追加清单决定和验收报告指针 |
 
 每个已派发 pane 使用独立目录，任务和报告采用相同编号，至少两位并逐次递增，不复用。完整任务身份包括共享根、真实 pane ID 和 task 文件名，报告必须写全。
 
@@ -104,9 +106,9 @@ pane 目录默认使用真实 ID。宿主无法原样表示时，整个主题在
 
 Lead 先写完整、自包含的 task，确认 pane 没有仍在执行的任务，再更新清单并通过 Herdr 投递绝对 task 和 report 路径。worker 读取 task、topic 和 manifest，核对服务端、pane、当前指针及完整身份，只执行这一个任务。无须安装本技能也应能理解任务文件。
 
-worker 写授权的业务产物、自己的报告执行部分和任务指定的附件。先写完附件，再将报告写入同目录临时文件，核对身份与内容后重命名为同号终稿，不覆盖已有终稿。提交后停止写报告并返回绝对路径。无法写报告时说明失败和已有产物。
+worker 写授权的业务产物和指定附件，交回实际观察，再完整发布自己的同号回执。核对身份，不覆盖已有终稿。提交后停止写回执并返回绝对路径；无法发布时说明失败和已有产物。
 
-Lead 读取报告和真实产物，打开必需的附件，按任务要求验收后才把清单改为 `done`。worker 报告中的完成判断或终端生命周期不能代替验收。补充、返工、解除阻碍或换任务时，确认原执行者停止，再创建下一编号任务并引用前次结果；worker 不自行领取下一项。
+Lead 读取回执和真实产物，打开必需附件，核对结果并更新原业务票的同名报告，然后才改变清单状态。worker 完成判断或终端生命周期不能代替验收。补充、返工、解除阻碍或换任务时，确认原执行者停止，再用下一编号派发单引用前次结果；业务报告仍是同一份。
 
 ### 观察、中断与恢复
 

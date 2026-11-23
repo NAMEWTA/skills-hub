@@ -159,7 +159,8 @@ test('one tree mixes a domain, a child exclusion and another domain leaf', async
   assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/system/AGENTS.md')));
   assert.match(ctx.ui.notes.join('\n'), /\.gitignore/);
-  assert.equal(fs.readFileSync(path.join(project, '.gitignore'), 'utf8'), '/.agents/dev/worktree/\n/.agents/system/ignore/\n');
+  assert.match(ctx.ui.notes.join('\n'), /\/temp\//);
+  assert.equal(fs.readFileSync(path.join(project, '.gitignore'), 'utf8'), '/.agents/dev/worktree/\n/temp/\n');
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/dev-spec')), false);
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/system-clean')), false);
 });

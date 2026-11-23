@@ -30,7 +30,7 @@ node "$SKILL_DIR/scripts/inspect.mjs" --path "/path/on/target/volume"
 
 ## 交付与记录
 
-给出症状、目标、基线、支持结论的证据、仍待排除的原因和下一步。需要新增长期记录时，在 `.agents/system/<host>/` 写一份简短 Markdown；纯查询无需强制落盘。
+给出症状、目标、基线、证据、待排除原因和下一步。纯查询直接返回；需留的原始命令输出和诊断采样写项目根 `temp/system/hosts/<host>/<主题>/<run-id>/`，不提交。已有系统 Change 时，实测结论更新 `evidences/` 内与原 task 同名的一份 `.md`；长期主机知识仍写 `.agents/system/<host>/`。
 
 报告不带密钥、完整环境变量、进程参数或私有日志。不要把单次快照、空闲磁盘或脚本成功退出说成“系统已优化”。
 

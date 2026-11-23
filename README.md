@@ -98,7 +98,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 安装器直接扫描两个运行根，完整复制所选技能的 `SKILL.md`、`references/`、`assets/`、`scripts/` 和其他配套资源。安装后所有技能位于 `.agents/skills/` 同一层级。`materials/` 供维护时对照，不参与技能发现或安装。
 
-使用技能产生的项目资料按领域保存：开发资料位于 `.agents/dev/`，系统维护资料位于 `.agents/system/<主机标识>/`，运维资料位于 `.agents/ops/`。选择相关技能时，安装器维护对应的简短目录导航，业务记录按任务创建。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/reference/persistence-roots.md)。
+项目资料按领域保存：开发在 `.agents/dev/`，系统维护在 `.agents/system/`，运维在 `.agents/ops/`。安装 dev 或 system 技能时，安装器补根 `.gitignore` 的 `/temp/`；日志和截图等原件按需写到 `temp/dev/` 或 `temp/system/`。Change 的 `evidences/` 只放与 `tasks/` 完全同名的 `.md`，完成整体验收后才写 Change 根 `evidence.md`。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/reference/persistence-roots.md)。
 
 ## 文档导航
 
