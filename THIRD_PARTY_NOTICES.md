@@ -106,6 +106,23 @@ Lucide 与 Unsplash 补充法律文件的来源 URL、取得时间、摘要和�
 | [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[技能评测](https://developers.openai.com/blog/eval-skills)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices) | 可接手的计划、可观察验收和风险适配 |
 | [MetaCubeX 文档固定版本](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b) | 代理配置字段与相关技术语义 |
 
+### Issue 撰写与维护
+
+`dev-issue` 将以下资料作为正文完整性、仓库上下文和远程写入语义的对照，自行组织面向 GitHub 的创建、更新与评论流程。完整规格和本地切片方法继续分别由 `dev-spec`、`dev-plan` 维护，不复制其正文或增加第二个材料归属。以下网页和较新源码未整篇翻译收录，也不改变材料父清单的固定版本。
+
+| 参考（2026-11-23 核对） | 采用与适配 |
+| --- | --- |
+| GitHub [任务说明](https://docs.github.com/en/copilot/tutorials/cloud-agent/get-the-best-results)、[Issue Forms](https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms)、[创建 Issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/creating-an-issue) | 目标、相关代码、验收与模板；创建前查重。沿用目标仓库字段，不硬编码标签或负责人。 |
+| [Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices) | 写明代码无法推断的业务选择、具体症状和完成标准，以真实验证支持结论。 |
+| [OpenAI ExecPlans 固定源码](https://github.com/openai/openai-cookbook/blob/857eb0b0a3419b7868ea768f1de3ee906cf176e4/articles/codex_exec_plans.md) | 接手者不依赖聊天历史；正文包含必要结论、行动及可观察验收。没有移植其全部专用章节。 |
+| Gemini CLI [项目上下文](https://geminicli.com/docs/cli/gemini-md/)、[规划模式](https://geminicli.com/docs/cli/plan-mode/) | 先读适用项目指导再研究方案。按实际宿主使用已有文件，不新建另一套配置。 |
+| [Google Conductor new-track](https://github.com/gemini-cli-extensions/conductor/blob/6e8f9a860bcdd6a2c423473c12e745200688c633/skills/conductor-new-track/SKILL.md) | 对照需求类型、规格和计划的分工；保留既有授权，不引入固定多轮确认、自动安装和自动实施。 |
+| GitHub Spec Kit [规格](https://github.com/github/spec-kit/blob/a4d571229e164e440f8950cac034607bae7b7518/templates/spec-template.md)、[计划](https://github.com/github/spec-kit/blob/a4d571229e164e440f8950cac034607bae7b7518/templates/plan-template.md)、[任务](https://github.com/github/spec-kit/blob/a4d571229e164e440f8950cac034607bae7b7518/templates/tasks-template.md)、[任务发布](https://github.com/github/spec-kit/blob/a4d571229e164e440f8950cac034607bae7b7518/extensions/github/commands/speckit.github.taskstoissues.md) | 对照需求、任务、验收映射和真实依赖；按目标项目选择验证方式；查重结合仓库和来源语义，不只匹配跨任务重复的编号。 |
+| Matt Pocock [to-spec](https://github.com/mattpocock/skills/blob/abeeaf95660ba9e8b7c753eb38f441ca707a8823/skills/engineering/to-spec/SKILL.md)、[to-tickets](https://github.com/mattpocock/skills/blob/abeeaf95660ba9e8b7c753eb38f441ca707a8823/skills/engineering/to-tickets/SKILL.md) | 核对完整上下文和独立接手要求；沿用现有负责技能，不新增重复方法。源码定位作为带版本的证据，不把猜测路径固定成需求。 |
+| [OpenSpec 规格驱动 schema](https://github.com/Fission-AI/OpenSpec/blob/0c737dc1b543249b38b0f4716816fcf493d894dd/schemas/spec-driven/schema.yaml)、[设计模板](https://github.com/Fission-AI/OpenSpec/blob/0c737dc1b543249b38b0f4716816fcf493d894dd/schemas/spec-driven/templates/design.md) | 分清问题、行为、设计和任务；只为真实复杂度展开设计，任务附完成验证，阻塞选择如实保留。 |
+
+本次来源核对、当前技能复用关系及裁剪理由见[开发记录](.agents/dev/changes/2026-11-23-dev-issue/source-adaptations.md)。上游没有共同制定这份 Issue 流程；已发布的正文与本地契约如何同步是本项目的维护约定。
+
 ### 上下文交接
 
 [Anthropic 长任务实践](https://www.anthropic.com/engineering/effective-harnesses-for-long-running-agents)、[上下文工程](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents)和[后续 harness 实践](https://www.anthropic.com/engineering/harness-design-long-running-apps)用于对照进度、决定、证据与会话接续；[OpenAI Agents SDK handoffs](https://openai.github.io/openai-agents-python/handoffs/) 和 [context](https://openai.github.io/openai-agents-python/context/)用于区分交接目标、输入上下文与本地状态。项目未引入对应 SDK 或演示 harness。

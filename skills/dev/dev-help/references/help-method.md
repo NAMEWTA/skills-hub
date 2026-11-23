@@ -55,12 +55,13 @@
 
 ## 选择技能
 
-跨阶段目标或当前阶段不明时使用 `$dev-workflow`；已有明确阶段时直接推荐对应入口，例如按规格与有效体验基线实施用 `$dev-build`、将完整文档转成交互 HTML 让用户确认用 `$dev-prototype`、普通故障用 `$dev-debug`。推荐前先读取该技能，并给一个示例提示词。
+跨阶段目标或当前阶段不明时使用 `$dev-workflow`；已有明确阶段时直接推荐对应入口，例如写可认领 Issue 用 `$dev-issue`、按规格与有效体验基线实施用 `$dev-build`、将完整文档转成交互 HTML 让用户确认用 `$dev-prototype`、复现或修复普通故障用 `$dev-debug`。推荐前先读取该技能，并给一个示例提示词。
 
 | 用户想做什么 | 技能 |
 |---|---|
 | 协调跨阶段目标、接续后阶段未明的任务或完成约定交付 | `dev-workflow`（`$dev-workflow`） |
 | 保存开发上下文、交给新会话、接手具体旧任务或明确暂停 | [`$dev-handoff`](capabilities.md) |
+| 将想法、Bug 或优化写成可认领 Issue，更新正文或追加评论 | [`$dev-issue`](capabilities.md)；按授权发布或交付草稿 |
 | 把聊天、Issue、截图或日志整理成目标、事实、范围与缺口 | [`$dev-intake`](capabilities.md)（需求整理） |
 | 产品规则尚未决定，需要按依赖逐层做选择 | [`$dev-grill`](capabilities.md)（决策访谈） |
 | 共识已明确，补齐可实施、可验收的行为约定 | [`$dev-spec`](capabilities.md)（行为规格） |
@@ -107,7 +108,7 @@
 容易混淆的选择：
 
 - `$dev-intake` 整理需求材料，`$dev-grill` 解决未决产品选择，`$dev-spec` 补全行为契约，`$dev-sharpen` 改写请求表达。按真实缺口调用，已有充分结果直接复用。
-- `$dev-intake` 与 `$dev-issue-triage` 以输出区分，不以材料是否来自 Issue 区分；后者只做分类、查重与分流，复现和修复交 `$dev-debug` 或满足报告流程前提的 `$dev-issue-fix`。
+- 按预期产物区分 Issue 相关请求：完整正文的撰写与维护、增量评论由 `$dev-issue` 负责，来源、目标与缺口整理用 `$dev-intake`，分类、查重与分流用 `$dev-issue-triage`。要求复现或修复时才交 `$dev-debug` 或满足报告流程前提的 `$dev-issue-fix`；材料来自 Issue 不决定路线。
 - `$dev-deploy` 可单独完成 PR 交付，无需环境部署；`$dev-personalize` 可单独编写项目技能，无需个人历史。
 - `$dev-formal-verify` 按属性选择工具；只有 TLA+/TLC 模型与结果交 `$dev-statechart`，JS 模型采用兼容展示。应用验证生成 `dev-verify-<app>`，形式属性验证生成 `dev-formal-verify-<area>`。
 - `$dev-learn` 解释当前机制与修改入口，教学中按需要补充已有历史依据；独立追查历史决定由 `$dev-why` 负责。

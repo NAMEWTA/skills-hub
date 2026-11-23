@@ -1,0 +1,20 @@
+{
+  "repository": "example/memodesk",
+  "number": 55,
+  "url": "https://example.invalid/example/memodesk/issues/55",
+  "title": "搜索偶发报错",
+  "state": "open",
+  "author": "other-contributor",
+  "body": "导入外部 JSON 后，搜索时报 TypeError，尚未记录输入。",
+  "comments": [
+    {
+      "id": 20,
+      "author": "maintainer",
+      "body": "还没有确定输入和根因；请补最小复现。"
+    }
+  ],
+  "attachment": {
+    "filename": "user-log.txt",
+    "content": "TypeError: Cannot read properties of null (reading 'toLowerCase')\nReported version: 1.0.0\nNo imported JSON attached."
+  }
+}

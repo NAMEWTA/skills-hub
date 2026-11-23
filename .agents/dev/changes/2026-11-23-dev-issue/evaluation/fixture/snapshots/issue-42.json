@@ -1,0 +1,10 @@
+{
+  "repository": "example/memodesk",
+  "number": 42,
+  "url": "https://example.invalid/example/memodesk/issues/42",
+  "title": "导出笔记为 CSV",
+  "state": "open",
+  "author": "product-owner",
+  "updated_at": "2026-11-21T10:00:00Z",
+  "body": "## 目标\n将当前未归档笔记导出为 CSV。\n\n## 任务\n- [x] 记住用户选择的导出目录（完成记录：附件 export-location.log）\n- [ ] 生成 CSV 文件\n- [ ] 处理写文件失败\n\n## 附件\n[原始截图](https://example.invalid/attachments/export.png)\n"
+}
