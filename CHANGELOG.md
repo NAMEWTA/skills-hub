@@ -2,6 +2,11 @@
 
 ## 未发布
 
+## 0.1.26 — 2026-11-23
+
+- `system-herdr-core` 将 Agent 终端名称及角色模板统一为 `<cli>-<topic>`，例如 `codex-error-review`；同主题多个 worker 使用序号区分。
+- 角色模板避开 `claude`、`codex`、`pi` 等实际程序名，降低模板同名导致启动命令参数被误解析的风险。保留三种 CLI 既有启动和权限参数。
+
 ## 0.1.25 — 2026-11-23
 
 - dev 和 system 的运行原件统一放目标项目根 `temp/dev/`、`temp/system/`。安装任一 dev 或 system 技能会补根 `.gitignore` 的 `/temp/`，不创建附件目录，也不迁移旧资料。
