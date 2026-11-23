@@ -16,6 +16,9 @@ npx @namewta/skills-hub list
 # 安装整个开发分组
 npx @namewta/skills-hub install --domain dev
 
+# 单独安装 Issue 撰写与维护技能
+npx @namewta/skills-hub install --skill dev-issue
+
 # 混选开发技能和独立中文技能
 npx @namewta/skills-hub install --skill dev-prototype zh-archify
 
@@ -50,6 +53,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 | 需要的结果 | 技能 |
 | --- | --- |
+| 把想法、Bug 或优化写成可认领 Issue，更新正文或追加评论 | `dev-issue`：Issue 撰写与维护 |
 | 把散落材料整理成目标、事实、范围与缺口 | `dev-intake`：需求整理 |
 | 逐层解决尚未确定的产品取舍 | `dev-grill`：决策访谈 |
 | 补齐可独立实施、审查与验收的行为约定 | `dev-spec`：行为规格 |
@@ -61,6 +65,9 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 这些入口按需调用。当前负责人沿用同一份权威行为契约、决定记录和有效证据，已有充分结果直接继续；可视化原型仍独立作为体验依据。完整边界见[开发流程](docs/development/workflow.md)。
 
 ```text
+使用 dev-issue：研究目标仓库，把这个想法写成可直接认领的完整 Issue 并发布。
+给出现状证据、需求、实施任务、验收标准和完整参考地址。
+
 使用 dev-prototype：读取这个需求的规格和设计，沿用项目风格，
 把完整用户旅程做成可操作的 HTML，让我体验并确认。
 
@@ -100,6 +107,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | 浏览完整文档、理解项目结构 | [文档导航](docs/README.md)、[架构设计](docs/reference/architecture.md) |
 | 安装、升级、恢复备份或迁移旧包 | [安装说明](docs/usage/installation.md) |
 | 组合开发技能，处理原型与交接 | [开发流程](docs/development/workflow.md)、[可交互原型](docs/development/prototype.md)、[开发交接](docs/development/handoff.md) |
+| 新建完整 Issue、更新正文或追加评论 | [Issue 撰写与维护](docs/development/issues.md) |
 | 维护服务器和项目运行关系 | [运维说明](docs/operations/overview.md) |
 | 用 Herdr TUI 或 Core 启动 agent、派发任务和收取结果 | [Herdr 协作](docs/usage/herdr-coordination.md) |
 | 使用和更新独立中文技能 | [上游独立技能](docs/usage/upstream-skills.md) |

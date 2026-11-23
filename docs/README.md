@@ -18,6 +18,7 @@
 | 查明完整方法由哪个技能维护 | [开发方法归属](development/method-ownership.md) |
 | 确认可交互原型并把确认结果交给实施 | [交互原型](development/prototype.md) |
 | 保存开发现场、暂停或从交接继续 | [开发交接](development/handoff.md) |
+| 将想法写成可认领 Issue，完善正文或追加评论 | [Issue 撰写与维护](development/issues.md) |
 | 接入问题报告、分诊或持续任务 | [报告来源](development/issue-sources.md) |
 
 ## 运行运维

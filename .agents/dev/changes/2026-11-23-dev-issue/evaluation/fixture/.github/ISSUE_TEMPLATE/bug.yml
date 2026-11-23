@@ -1,0 +1,15 @@
+name: Bug report
+description: Report unexpected behavior
+body:
+  - type: textarea
+    id: environment
+    attributes:
+      label: Version and environment
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps and expected versus actual result
+    validations:
+      required: true

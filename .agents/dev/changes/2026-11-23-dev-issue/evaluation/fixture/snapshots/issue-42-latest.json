@@ -1,0 +1,32 @@
+{
+  "repository": "example/memodesk",
+  "number": 42,
+  "url": "https://example.invalid/example/memodesk/issues/42",
+  "title": "导出笔记为 CSV",
+  "state": "open",
+  "author": "product-owner",
+  "updated_at": "2026-11-23T04:40:00Z",
+  "labels": [
+    "enhancement"
+  ],
+  "body": "## 目标\n将当前未归档笔记导出为 CSV。\n\n## 任务\n- [x] 记住用户选择的导出目录（完成记录：附件 export-location.log）\n- [x] 排除归档条目（已合并 PR #9）\n- [ ] 生成 CSV 文件\n- [ ] 处理写文件失败\n\n## 附件\n[原始截图](https://example.invalid/attachments/export.png)\n[过滤验证](https://example.invalid/example/memodesk/pull/9)\n",
+  "comments": [
+    {
+      "id": 10,
+      "author": "contributor",
+      "body": "可以同时支持 CSV 和 JSON 吗？",
+      "url": "https://example.invalid/example/memodesk/issues/42#issuecomment-10"
+    },
+    {
+      "id": 11,
+      "author": "product-owner",
+      "body": "本次决定只支持 JSON 数组，字段保留 id/title/body/updatedAt；不做 CSV。文件名由用户选择，取消不写入；写入失败显示原因，重试由用户触发。",
+      "url": "https://example.invalid/example/memodesk/issues/42#issuecomment-11"
+    },
+    {
+      "id": 12,
+      "author": "maintainer",
+      "body": "已有导出目录选择和归档过滤可以沿用。"
+    }
+  ]
+}

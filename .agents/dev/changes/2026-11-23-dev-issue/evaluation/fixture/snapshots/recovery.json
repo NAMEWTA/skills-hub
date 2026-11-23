@@ -1,0 +1,27 @@
+{
+  "operation": {
+    "kind": "create",
+    "repository": "example/memodesk",
+    "response": "timeout",
+    "intendedTitle": "调查十万条笔记搜索耗时",
+    "intendedBody": "用户报告十万条笔记搜索卡顿。先在固定数据集、设备与查询集上取得基线，再定位瓶颈；未提供实测数字。来源：request-2026-11-23-search。"
+  },
+  "search": {
+    "complete": true,
+    "items": []
+  },
+  "recentIssues": {
+    "complete": true,
+    "items": [
+      {
+        "number": 61,
+        "repository": "example/memodesk",
+        "title": "调查十万条笔记搜索耗时",
+        "body": "用户报告十万条笔记搜索卡顿。先在固定数据集、设备与查询集上取得基线，再定位瓶颈；未提供实测数字。来源：request-2026-11-23-search。",
+        "author": "product-owner",
+        "created_at": "2026-11-23T05:10:00Z",
+        "url": "https://example.invalid/example/memodesk/issues/61"
+      }
+    ]
+  }
+}
