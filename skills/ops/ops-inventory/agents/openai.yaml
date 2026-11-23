@@ -1,4 +1,4 @@
 interface:
   display_name: "运行资产与关系"
-  short_description: "核验服务器、服务和项目的多对多运行关系"
-  default_prompt: "使用 $ops-inventory 核验指定服务器或项目的运行对象、共享关系和影响范围。"
+  short_description: "登记主机别名并核验服务器、服务和项目关系"
+  default_prompt: "使用 $ops-inventory 按指定别名登记或查找主机，或核验运行对象、共享关系和影响范围。"

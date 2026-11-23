@@ -7,7 +7,7 @@ ops 围绕既有运行对象组织方法。workflow 负责协调，专门技能�
 | 方法 | 负责技能与主要资源 | 输入和结果 |
 | --- | --- | --- |
 | 意图、任务协调与接续 | `ops-workflow`：routing、coordination、continuation | 目标、授权和已有 run；返回所选方法、完成结果及剩余事项 |
-| 稳定身份与运行关系 | `ops-inventory`：runtime-model、discovery、queries | 已有线索和范围；返回核验关系、来源和未知对象 |
+| 主机别名、稳定身份与运行关系 | `ops-inventory`：host-alias、runtime-model、discovery、queries | 已有线索和范围；返回现行路径、核验关系、来源和未知对象 |
 | 执行条件与记录 | `ops-execute`：execution-method、record-contract、interruption、backends | 实际动作、入口和授权；返回步骤、后端引用与逐目标状态 |
 | 只读检查 | `ops-inspect`：inspection-method、ssh-runtime-checks、error-observability | 目标、时间和基线；返回观测、差异与覆盖范围 |
 | 故障调查 | `ops-diagnose`：investigation-method、failure-classes | 症状、事实和历史；返回假设、反证、结论与项目交接 |

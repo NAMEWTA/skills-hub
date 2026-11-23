@@ -28,7 +28,7 @@ TUI 使用 `herdr/` 和该主题的实际 pane 目录名。报告从自身位置
 node /path/to/skills-hub/install.mjs install --skill system-herdr-core
 ```
 
-目标环境需要已有 `hc`。仅在用户明确选用 Core 时启用，先读 `hc --skill`。Core 可以直接创建终端并启动程序，以返回的完整 terminal address 定位任务，例如 `t7` 或 `build/t7`。文件协作使用 `.agents/system/herdr-core/YYYY-MM-DD-topic_name/`，清单键为 `terminal_address`。Herdr App 的窗口、标签页和布局任务读取本机 `herdr-app --skill`。 [Core 启动命令](../../skills/system/system-herdr-core/references/agent-launch.md) · [Core 文件协作](../../skills/system/system-herdr-core/references/file-coordination.md)
+目标环境需要已有 `hc`。仅在用户明确选用 Core 时启用，先读 `hc --skill`。Core 可以直接创建终端并启动程序，以返回的完整 terminal address 定位任务，例如 `t7` 或 `build/t7`。文件协作使用 `.agents/system/herdr-core/YYYY-MM-DD-topic_name/`，清单键为 `terminal_address`。Herdr App 的窗口、标签页和布局任务读取本机 `herdr-app --skill`。Core 的[启动命令](../../skills/system/system-herdr-core/SKILL.md#启动-agent)和[文件协作](../../skills/system/system-herdr-core/SKILL.md#文件协作)均在技能入口中。
 
 ## Herdr TUI
 

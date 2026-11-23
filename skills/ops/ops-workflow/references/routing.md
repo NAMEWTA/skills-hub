@@ -12,7 +12,9 @@
 
 | 例子 | 入口 | 何时需要追加其他方法 |
 | --- | --- | --- |
+| “把这台主机登记为 `01`” | inventory | 按用户给出的别名写入登记；不因此取得现场操作授权 |
 | “host-b 上有哪些服务” | inventory | 已有登记与现场有冲突时继续核验来源；没有变更动作 |
+| “检查 `01`” | inspect | inventory 先按当前工作根解析主别名；解析失败不猜主机或连接 |
 | “检查 shop/prod” | inspect | 组成不明时补 inventory；用户要求调查异常时交 diagnose |
 | “shop API 超时，定位并处理” | diagnose | 需要背景时 history；边界内已授权的具体处置交 maintain/recover |
 | “更新 host-b 的指定内核包” | maintain | inventory 提供共机影响，专门方法核对包集合与重启要求 |

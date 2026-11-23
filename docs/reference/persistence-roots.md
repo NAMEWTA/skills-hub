@@ -21,7 +21,7 @@
 | `.agents/system/<host>/` | 对应主机的诊断、清理、代理和配置记录 |
 | `.agents/system/herdr/`、`.agents/system/herdr-core/` | Herdr TUI 与 Core 各自的协作主题、任务和报告，按实际派发建立 |
 | `.agents/system/ignore/` | 系统任务的临时附件。Herdr 按工具、主题、执行者目录和任务文件名（去掉 `.md`）定位 |
-| `.agents/ops/registry/` | 运行关系、稳定身份、来源和观察时间 |
+| `.agents/ops/registry/` | 运行关系、稳定身份、来源和观察时间；已命名主机按 `<别名>.md` 登记 |
 | `.agents/ops/projects/` | 项目运维知识或既有权威资料的位置 |
 | `.agents/ops/runs/` | 原始操作事实、步骤与可重建摘要 |
 
@@ -46,7 +46,7 @@ Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作
 
 list、help、取消和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
 
-目录说明提供职责与导航，不保证宿主递归加载。使用相关技能时显式读取所需导航，已有 docs、ADR 和部署手册继续引用真实位置。秘密留在实际安全存储中，Markdown 只保存用途和安全引用。
+目录说明提供职责与导航，不保证宿主递归加载。使用相关技能时显式读取所需导航，已有 docs、ADR 和部署手册继续引用真实位置。普通 Markdown 只保存凭据用途和安全引用。项目明确指定的本地凭据文件（例如项目选用的 `env.md`）可由原部署流程保存实际值，不随技能、操作记录或发布制品分发。
 
 ## 开发任务的收尾
 

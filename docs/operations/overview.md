@@ -38,7 +38,9 @@ npx @namewta/skills-hub@latest install --domain ops
 只访问我明确给出的连接范围，不扫描其他网段，不修改现场。
 ```
 
-Agent 先按 execute 的方法建立无远端目标的本地 run，再逐步补充核验后的目标；不会要求先有完整 registry 才能记录，也不会把登记资产理解为取得变更权限。连接凭据留在 SSH agent、现有凭据库或平台权限系统，文档仅引用。
+Agent 先按 execute 的方法建立无远端目标的本地 run，再逐步补充核验后的目标；不会要求先有完整 registry 才能记录，也不会把登记资产理解为取得变更权限。普通运维文档只留凭据引用；项目明确选用本地 `env.md` 查阅明文登录资料时，由其部署流程更新，不是 ops 的发布入口。
+
+希望以后直接说「检查 `01`」时，先让 `ops-inventory` 将已核实的主机登记为 `01`。它会持久使用当前运维根的 `.agents/ops/registry/01.md`，从文件正文取得真实身份和连接引用。改别名时直接改文件名，同一主机只换 IP 或主机名时可保留 `01.md`。详见[主机别名](../../skills/ops/ops-inventory/references/host-alias.md)。
 
 ## 九个技能怎样协作
 
@@ -118,7 +120,7 @@ erDiagram
 | 位置 | 用途 |
 | --- | --- |
 | `AGENTS.md` | 安装器管理的短导航，自定义规则另存 |
-| `registry/` | 关系、来源、观察时间和未知对象 |
+| `registry/` | 运行关系和来源；指定主别名的主机使用 `<别名>.md` |
 | `projects/<project-id>/` | 项目运维知识，或引用既有私有权威位置 |
 | `runs/<run-id>/run.md` | 原请求、当前写入者和目标/授权快照 |
 | `runs/<run-id>/steps/<step-id>.md` | 不覆盖的步骤事实、attempt、目标结果和证据 |
