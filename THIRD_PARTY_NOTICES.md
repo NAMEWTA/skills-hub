@@ -27,6 +27,7 @@
 自有领域的运行内容在完整方法基础上作中文翻译，并调整技能名称、项目路径、宿主能力与职责归属。来源语境保存在 `materials/`，本地差异记录在子清单的 `adaptation` 字段。
 
 - `dev-program` 的批次推进方法参考 Speculo 的目标计划与接续，跨 Change 交付点和 Goal 文本按本项目记录方式组织。pstack 的持续项目协调由 `dev-parallel` 承接，独立与堆叠 PR 队列由 `dev-deploy` 承接。
+- `dev-plan` 采用 Matt Pocock 的 [to-tickets](https://github.com/mattpocock/skills/blob/4ae2317ddb22b046e26455e4f9c9b3aaaf62212d/skills/engineering/to-tickets/SKILL.md) 垂直切片和显式阻塞方法，以及 Speculo 的 [实施切片与 Tickets](https://github.com/NAMEWTA/Speculo/blob/994a64427a6784053dd092a86713870062cfde2f/template/workflows/specdev/specdev-t-tickets/SKILL.md) 中的原型引用、覆盖检查、独立接手与进展记录约定。本项目的实施规划先保存本地票据，再汇总 DAG，外部事项可按授权链接到共享版本。
 - `dev-build` 保留 Matt Pocock 的任务图实施方法，工作树创建、组合验证与集成转由 `dev-worktree` 承接。pstack 的工作树与额外磁盘清理方法及只读审计工具归 `dev-worktree`。本项目采用独立集成树生成双亲提交，并按 Git 的索引状态处理冲突。
 - 工作树和冲突处理的行为参考包括 [Git 工作树](https://git-scm.com/docs/git-worktree)、[Git 合并](https://git-scm.com/docs/git-merge)、[GitHub 合并方式](https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/configuring-pull-request-merges/about-merge-methods-on-github)、[Codex](https://learn.chatgpt.com/docs/environments/git-worktrees)、[Claude Code](https://code.claude.com/docs/en/worktrees)、[Gemini CLI](https://github.com/google-gemini/gemini-cli/blob/main/docs/cli/git-worktrees.md)、[Antigravity](https://antigravity.google/docs/projects)与 [Cursor](https://cursor.com/docs/configuration/worktrees)。宿主资料用来核对其路径、基线与保留边界，仓库内检出及交付约定由本项目定义。
 - `dev-handoff` 采用 Matt handoff 及 pstack session-pickup、pause-safely 方法，把临时交接改为项目持久资料，并适配技能调用、既有授权和恢复核对。

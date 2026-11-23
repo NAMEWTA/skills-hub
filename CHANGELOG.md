@@ -2,6 +2,8 @@
 
 ## 未发布
 
+- `dev-plan` 先保存一票一文件的 Markdown 实施票，再生成含直接依赖、共享上下文与整合验收的 `plan.md`。单票规划也交付两个文件。`dev-build` 按实际前置产物接续就绪票据。
+
 ## 0.1.21 — 2026-11-20
 
 - 新增 `dev-worktree` 与 `dev-merge-conflict`，提供按需检出、逐个双亲合并回直接父分支、冲突验证及回收。安装任一 dev 技能时补齐 `/.agents/dev/worktree/` 忽略规则。
