@@ -12,21 +12,34 @@ export function isNpmInstallation(root) {
     && basename(dirname(dirname(root))) === 'node_modules';
 }
 
-export async function latestUpdate(version, request = fetch) {
-  const current = stable.exec(version.split(/[+-]/, 1)[0]);
+export async function checkLatestVersion(version, request = fetch) {
+  const [base, prerelease] = version.split('+', 1)[0].split('-', 2);
+  const current = stable.exec(base);
   if (!current) return;
-  try {
-    const response = await request(`${registry}/@namewta%2Fskills-hub/latest`, {
-      signal: AbortSignal.timeout(1800),
-    });
+  const controller = new AbortController();
+  const readLatest = async () => {
+    const response = await request(`${registry}/@namewta%2Fskills-hub/latest`, { signal: controller.signal });
     if (!response.ok) return;
     const metadata = await response.json();
     const latest = typeof metadata?.version === 'string' && stable.exec(metadata.version);
     if (!latest || metadata.name !== packageName) return;
     const difference = latest.slice(1).map((part, i) => BigInt(part) - BigInt(current[i + 1])).find(part => part !== 0n);
-    if (difference > 0n || (difference === undefined && version.includes('-'))) return metadata.version;
+    return { latest: metadata.version, hasUpdate: difference === undefined ? Boolean(prerelease) : difference > 0n };
+  };
+  let timer;
+  try {
+    // 即使请求或读取响应体未响应取消，3 秒后也继续启动。
+    const deadline = new Promise(resolve => {
+      timer = setTimeout(() => {
+        resolve();
+        controller.abort();
+      }, 3_000);
+    });
+    return await Promise.race([deadline, readLatest()]);
   } catch {
-    // 离线、超时或注册表响应不可用时继续安装技能。
+    // 离线或注册表响应不可用时继续安装技能。
+  } finally {
+    clearTimeout(timer);
   }
 }
 

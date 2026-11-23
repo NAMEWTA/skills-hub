@@ -4,7 +4,7 @@ import stringWidth from 'string-width';
 import wrapAnsi from 'wrap-ansi';
 import { join } from 'node:path';
 import { createInstaller, select, main, readUtf8, repositoryRoot } from './install.mjs';
-import { isNpmInstallation, latestUpdate, installUpdate } from './scripts/update-cli.mjs';
+import { isNpmInstallation, checkLatestVersion, installUpdate } from './scripts/update-cli.mjs';
 import { treeSelect } from './tree-select.mjs';
 export { matchesSkillSearch } from './tree-select.mjs';
 
@@ -15,7 +15,7 @@ export function formatSummary(names, columns = process.stdout.columns ?? 80) {
 }
 
 export async function interactive({ argv = [], project = process.cwd(), ui = prompts, choose = treeSelect,
-  checkUpdate = isNpmInstallation(repositoryRoot) ? latestUpdate : undefined, update = installUpdate } = {}) {
+  requestVersion = isNpmInstallation(repositoryRoot) ? fetch : undefined, update = installUpdate } = {}) {
   if (argv.some(value => !['install', '--replace', '--dry-run'].includes(value))) {
     throw new Error('交互安装只接受 install、--replace 和 --dry-run。');
   }
@@ -27,15 +27,17 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
   try {
     ui.intro(pc.cyan('skills-hub · 按需安装中文技能'));
     const dryRun = argv.includes('--dry-run');
-    if (checkUpdate && !dryRun) {
-      const { version } = JSON.parse(readUtf8(join(repositoryRoot, 'package.json')));
-      const latest = await checkUpdate(version);
-      if (latest && await ask(ui.select({
-        message: `skills-hub ${latest} 已发布，当前版本为 ${version}`,
-        options: [{ value: true, label: '更新' }, { value: false, label: '跳过本次' }],
+    const { version } = JSON.parse(readUtf8(join(repositoryRoot, 'package.json')));
+    ui.note(version, '当前版本号');
+    if (requestVersion && !dryRun) {
+      const result = await checkLatestVersion(version, requestVersion);
+      ui.note(result?.latest ?? '未检测到最新版本号', '最新版本号');
+      if (result?.hasUpdate && await ask(ui.select({
+        message: '是否现在更新？',
+        options: [{ value: true, label: '是，立即更新' }, { value: false, label: '否，直接进入' }],
         initialValue: false,
       }))) {
-        try { return update(latest, { root: repositoryRoot, project, argv }); }
+        try { return update(result.latest, { root: repositoryRoot, project, argv }); }
         catch (error) { ui.note(error.message, '更新失败，可以继续使用当前版本'); }
       }
     }

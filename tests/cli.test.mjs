@@ -7,7 +7,12 @@ import { interactive, formatSummary, matchesSkillSearch } from '../cli.mjs';
 import { createSkillTree } from '../tree-select.mjs';
 import { repositoryRoot } from '../install.mjs';
 import { temporary } from './helpers.mjs';
-import { latestUpdate, isNpmInstallation } from '../scripts/update-cli.mjs';
+import { checkLatestVersion, isNpmInstallation } from '../scripts/update-cli.mjs';
+
+const { version: currentVersion } = JSON.parse(fs.readFileSync(path.join(repositoryRoot, 'package.json'), 'utf8'));
+const newerVersion = `${BigInt(currentVersion.split('.')[0]) + 1n}.0.0`;
+const reply = version => async () => ({ ok: true, json: async () => ({ name: '@namewta/skills-hub', version }) });
+const offline = async () => { throw new Error('offline'); };
 
 function context(names, confirm = true) {
   const notes = [];
@@ -17,34 +22,102 @@ function context(names, confirm = true) {
 }
 
 test('update checks compare stable npm versions numerically and tolerate unavailable metadata', async () => {
-  const reply = version => async () => ({ ok: true, json: async () => ({ name: '@namewta/skills-hub', version }) });
-  assert.equal(await latestUpdate('0.1.9', reply('0.1.18')), '0.1.18');
-  assert.equal(await latestUpdate('0.1.18', reply('0.1.18')), undefined);
-  assert.equal(await latestUpdate('0.2.0', reply('0.1.18')), undefined);
-  assert.equal(await latestUpdate('0.1.9', reply('0.1.18-beta.1')), undefined);
-  assert.equal(await latestUpdate('0.1.9', async () => { throw new Error('offline'); }), undefined);
+  for (const [version, hasUpdate] of [
+    ['0.1.9', true], ['0.1.18-rc.1', true], ['0.1.18', false], ['0.1.18+build-id', false], ['0.2.0', false],
+  ]) {
+    assert.deepEqual(await checkLatestVersion(version, reply('0.1.18')), { latest: '0.1.18', hasUpdate }, version);
+  }
+  assert.equal(await checkLatestVersion('0.1.9', reply('0.1.18-beta.1')), undefined);
+  assert.equal(await checkLatestVersion('0.1.9', offline), undefined);
   assert.equal(isNpmInstallation(path.join('cache', 'node_modules', '@namewta', 'skills-hub')), true);
   assert.equal(isNpmInstallation(path.join('code', 'skills-hub')), false);
 });
 
-test('skipping prompts again next launch and accepting launches the selected version', async t => {
+test('startup displays both versions when no update is needed and reports lookup failures', async t => {
+  const project = temporary(t, 'skills-hub version ');
+  for (const [lookup, status] of [
+    [reply(currentVersion), currentVersion], [reply('0.0.0'), '0.0.0'], [offline, '未检测到最新版本号'],
+  ]) {
+    const ctx = context(Symbol('cancel'));
+    let beforeLookup;
+    ctx.choose = async () => {
+      assert.deepEqual(ctx.ui.notes.slice(0, 2), [currentVersion, status]);
+      return Symbol('cancel');
+    };
+    assert.equal(await interactive({ project, ...ctx, requestVersion(...args) {
+      beforeLookup = [...ctx.ui.notes];
+      return lookup(...args);
+    } }), 0);
+    assert.deepEqual(beforeLookup, [currentVersion]);
+  }
+});
+
+test('startup stops waiting at 3 seconds even if a late response body ignores abort', async t => {
+  t.mock.timers.enable({ apis: ['setTimeout'] });
+  const project = temporary(t, 'skills-hub version timeout ');
+  const ctx = context(Symbol('cancel'));
+  ctx.choose = async () => {
+    assert.deepEqual(ctx.ui.notes.slice(0, 2), [currentVersion, '未检测到最新版本号']);
+    return Symbol('cancel');
+  };
+  const headers = Promise.withResolvers();
+  const body = Promise.withResolvers();
+  const readingBody = Promise.withResolvers();
+  let signal;
+  const launch = interactive({ project, ...ctx, requestVersion(_url, options) {
+    signal = options.signal;
+    return headers.promise;
+  } });
+  assert.deepEqual(ctx.ui.notes, [currentVersion]);
+  t.mock.timers.tick(2_000);
+  headers.resolve({ ok: true, json() { readingBody.resolve(); return body.promise; } });
+  await readingBody.promise;
+  t.mock.timers.tick(999);
+  assert.equal(signal.aborted, false);
+  assert.deepEqual(ctx.ui.notes, [currentVersion]);
+  t.mock.timers.tick(1);
+  assert.equal(await launch, 0);
+  assert.equal(signal.aborted, true);
+  const notes = [...ctx.ui.notes];
+  body.resolve({ name: '@namewta/skills-hub', version: newerVersion });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(ctx.ui.notes, notes);
+});
+
+test('declining enters the picker, next launch asks again, and accepting launches the selected version', async t => {
   const project = temporary(t, 'skills-hub update ');
-  const ctx = context(['dev-spec'], false);
+  const ctx = context(Symbol('cancel'));
+  let requests = 0;
   let prompts = 0;
-  ctx.ui.select = async () => ++prompts === 2;
+  let picks = 0;
+  ctx.ui.select = async ({ message, options, initialValue }) => {
+    assert.equal(message, '是否现在更新？');
+    assert.deepEqual(options.map(option => option.label), ['是，立即更新', '否，直接进入']);
+    assert.equal(initialValue, false);
+    assert.deepEqual(ctx.ui.notes, [currentVersion, newerVersion]);
+    return ++prompts === 2;
+  };
+  ctx.choose = async () => { picks++; return Symbol('cancel'); };
   const launches = [];
   const options = {
-    project, ...ctx, checkUpdate: async () => '9.0.0',
+    project, ...ctx, requestVersion: () => { requests++; return reply(newerVersion)(); },
     update(version, { project: target, argv }) {
       launches.push({ version, target, argv });
       return 0;
     },
   };
   assert.equal(await interactive(options), 0);
+  assert.equal(picks, 1);
+  ctx.ui.notes.length = 0;
   assert.equal(await interactive({ ...options, argv: ['install'] }), 0);
+  assert.equal(picks, 1);
+  assert.deepEqual(launches, [{ version: newerVersion, target: project, argv: ['install'] }]);
+  ctx.ui.notes.length = 0;
   assert.equal(await interactive({ ...options, argv: ['install', '--dry-run'] }), 0);
+  assert.equal(ctx.ui.notes[0], currentVersion);
+  assert.equal(picks, 2);
+  assert.equal(requests, 2);
   assert.equal(prompts, 2);
-  assert.deepEqual(launches, [{ version: '9.0.0', target: project, argv: ['install'] }]);
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
 });
 
@@ -62,6 +135,7 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
       return tree.names();
     };
     assert.equal(await interactive({ project, ...ctx }), 0);
+    assert.equal(ctx.ui.notes[0], currentVersion);
     assert.ok(ctx.ui.notes.join('\n').includes(i ? 'replace' : 'install'));
   }
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-spec/SKILL.md')));
