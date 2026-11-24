@@ -24,7 +24,8 @@
 | 任务历史 | `.agents/dev/archive/changes/<result>/<type>_<YYYY-MM-DD>-<slug>/` | result 为 implemented 或 rejected；归档时分类重命名，沿用创建日期，旧历史不自动迁移 |
 | 退役知识 | `.agents/dev/archive/notes/` | 保留原分类，明确历史用途并修复引用 |
 | 项目配置 | `.agents/dev/project/` | 保存项目专用的非秘密配置、自动化功能图和分流规则 |
-| 角色配置 | `.agents/dev/context/model-roles.md` | 按当前可用工具、模型和用户选择更新 |
+| 开发环境与资源 | `.agents/dev/context/environment.md` | 按执行主机保存采样、峰值预算和预留，条件变化时重新核验 |
+| 按需团队配置 | `.agents/dev/context/team/<team_name>.md` | 用户明确要求时创建或更新，由用户在任务中显式引用 |
 | 系统维护 | `.agents/system/<主机标识>/` | 记录对应主机的实际操作与验证，秘密只留安全引用 |
 
 开发领域的导航由安装器管理，业务目录和记录在真实内容出现时建立。目录 `AGENTS.md` 说明职责，不代替主题笔记，也不保证宿主自动加载。已有 `docs/adr`、`docs/architecture` 或运维手册时，在 `.agents/dev/notes/` 的有关主题或入口记录其真实路径，引用有效内容；不复制一套重复正文。用户明确指定其他资料位置时遵循该要求，并在导航中记录。

@@ -106,6 +106,23 @@ Lucide 与 Unsplash 补充法律文件的来源 URL、取得时间、摘要和�
 | [OpenAI ExecPlans](https://developers.openai.com/cookbook/articles/codex_exec_plans)、[技能评测](https://developers.openai.com/blog/eval-skills)、[Claude Code 最佳实践](https://code.claude.com/docs/en/best-practices) | 可接手的计划、可观察验收和风险适配 |
 | [MetaCubeX 文档固定版本](https://github.com/MetaCubeX/Meta-Docs/tree/2a6ba6b04a9eecdbe5c88c4e4a09776659c0878b) | 代理配置字段与相关技术语义 |
 
+### 开发环境与资源准入
+
+`dev-setup` 在既有 pstack 角色能力核对方法上，按本项目要求将团队约定改为显式引用的独立文件，环境预算与团队文件分开维护。资源容量方法采用以下成熟机制并适配到现有 dev 技能；新增参考没有整篇转载或复制工具实现，不新增材料树，也不改变材料父清单的固定版本。
+
+| 参考（2026-11-24 核对） | 采用与适配 |
+| --- | --- |
+| OpenAI [原生并发配置](https://learn.chatgpt.com/docs/config-file/config-reference.md)、[工作树](https://learn.chatgpt.com/docs/environments/git-worktrees)、[本地环境](https://learn.chatgpt.com/docs/environments/local-environment) | 区分单会话并发与整机容量；逐 worktree 初始化并计算依赖/缓存空间；活动和保留对象受到保护。不把产品默认数量复制为硬件预算。 |
+| Anthropic [子代理](https://code.claude.com/docs/en/sub-agents)、[Agent teams](https://code.claude.com/docs/en/agent-teams)、[工作树](https://code.claude.com/docs/en/worktrees) | 委派传递必要上下文；先核实版本与限制作用域；正常退出、活动会话/锁与所有权核对用于现有清理流程。 |
+| Google Gemini CLI [配置](https://geminicli.com/docs/reference/configuration/)、[工作树](https://geminicli.com/docs/cli/git-worktrees/)、[沙箱](https://geminicli.com/docs/cli/sandbox/) | 单进程堆设置不代表整机预算；退出后可能仍保留工作树；环境初始化、隔离和资源限制分别核验。 |
+| Kubernetes [Node Allocatable](https://kubernetes.io/docs/tasks/administer-cluster/reserve-compute-resources/)、[资源请求与限制](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) | 容量扣除系统保护与已承诺工作，准入与运行时限制分开；本项目不引入 Kubernetes 调度器。 |
+| Google SRE [Handling Overload](https://sre.google/sre-book/handling-overload/)、[Cascading Failures](https://sre.google/sre-book/addressing-cascading-failures/) | 按真实负载测量容量，过载时停止追加与重试放大，保留恢复条件。 |
+| [Linux cgroup v2](https://docs.kernel.org/admin-guide/cgroup-v2.html)、[Docker 资源限制](https://docs.docker.com/engine/containers/resource_constraints/) | 核对父层/容器有效配额、内存剩余、CPU 承诺和包含线程的 PID 计数；隔离不等于已设置限制。 |
+| [Git worktree](https://git-scm.com/docs/git-worktree) | 保留 remove、锁、未保存内容和 prune 的真实语义，复用现有只读审计与清理。 |
+| obra/superpowers [using-git-worktrees](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/using-git-worktrees/SKILL.md)、[finishing-a-development-branch](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/finishing-a-development-branch/SKILL.md) | 先识别现有隔离与管理归属，初始化后验证，从目标检出外按归属收尾；不复制额外确认菜单或与本次任务无关的固定流程。 |
+
+逐主机共享预算、未兑现峰值增长、允许新增量为零和 `.agents/dev/context/team/<team_name>.md` 是上述机制在本项目的适配，不是各来源共同制定的标准。来源证据与未采用事项见[研究记录](.agents/dev/changes/2026-11-24-resource-aware-setup/research.md)。
+
 ### Issue 撰写与维护
 
 `dev-issue` 将以下资料作为正文完整性、仓库上下文和远程写入语义的对照，自行组织面向 GitHub 的创建、更新与评论流程。完整规格和本地切片方法继续分别由 `dev-spec`、`dev-plan` 维护，不复制其正文或增加第二个材料归属。以下网页和较新源码未整篇翻译收录，也不改变材料父清单的固定版本。

@@ -16,7 +16,8 @@
 | `.agents/dev/archive/changes/rejected/` | 有明确依据决定不实施的历史 change |
 | `.agents/dev/archive/notes/` | 退役知识，按原分类保留 |
 | `.agents/dev/project/` | 项目专用非秘密配置 |
-| `.agents/dev/context/` | 实际模型角色和执行背景 |
+| `.agents/dev/context/environment.md` | 当前及用户指定主机的开发环境、资源快照、峰值预算和预留 |
+| `.agents/dev/context/team/<team_name>.md` | 按需保存的团队配置，由用户在任务中显式引用 |
 | `.agents/dev/worktree/<任务名>/` | 主检出下按需创建的 Git 工作树，根 `.gitignore` 排除 |
 | `.agents/system/<host>/` | 主机配置、操作知识及 `changes/<change-id>/` 下的系统 Change |
 | `.agents/system/herdr/`、`.agents/system/herdr-core/` | Herdr 的主题、派发单和回执，不重复写业务验收 |
@@ -30,6 +31,8 @@
 Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作](../usage/herdr-coordination.md)
 
 跨领域引用已有事实，避免复制第二份现行知识。开发资料不放进系统或运维记录，系统主机记录不嵌入 dev。
+
+`dev-setup` 按真实检查建立环境记录；采样原件仍留 `temp/dev/`，已有协调器维护预留时只记录引用。团队配置仅按用户明确请求创建，未指定名称时按主题生成，不预建默认团队或改写根项目指令。其他开发技能沿用本次任务上下文。
 
 ## 运行原件与验收
 

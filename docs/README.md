@@ -15,6 +15,7 @@
 | 需要做什么 | 阅读 |
 | --- | --- |
 | 判断开发阶段，组合需要的技能 | [开发流程](development/workflow.md) |
+| 核验主机资源、限制并发和管理按需团队配置 | [环境与资源](development/environment.md) |
 | 查明完整方法由哪个技能维护 | [开发方法归属](development/method-ownership.md) |
 | 确认可交互原型并把确认结果交给实施 | [交互原型](development/prototype.md) |
 | 保存开发现场、暂停或从交接继续 | [开发交接](development/handoff.md) |
