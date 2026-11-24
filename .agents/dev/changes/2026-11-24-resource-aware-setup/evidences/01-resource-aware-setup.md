@@ -2,7 +2,7 @@
 
 票据：[01-resource-aware-setup.md](../tasks/01-resource-aware-setup.md)。
 
-状态：本地组合检查、独立场景与实现提交的全仓 CI 通过；0.1.27 发布待验证。
+状态：通过。实现、跨平台 CI、main 推送与 v0.1.27 公开发布全部完成。
 
 ## 已有证据
 
@@ -30,6 +30,11 @@
 - Ubuntu 日志确认 384 项测试通过，0 失败/跳过；33 个状态图回放通过；实际包包含 55 个技能、1045 个分发文件，命令入口、完整资源、许可和重复安装通过；已安装 Archify 的 doctor、validate、deliver、strict check 及真实 browser-check 通过。
 - 未修改或绕过 CI。版本仍为 0.1.26 的实现推送未触发重复上传；随后将包版本、锁文件及更新说明同步为 0.1.27。
 
-## 待完成
+## 发布提交与公开结果
 
-发布提交的再次验证、npm 公开版本完整性与 GitHub Release/附件回读结果待补。
+- 发布提交：[a0b65f525dc31d19bc59a3ccd026b5f61a72a371](https://github.com/NAMEWTA/skills-hub/commit/a0b65f525dc31d19bc59a3ccd026b5f61a72a371)，包元数据、锁文件和更新说明一致为 0.1.27。
+- [发布工作流 45319162331](https://github.com/NAMEWTA/skills-hub/actions/runs/45319162331) 成功，固定该提交的三个平台验证均通过。Ubuntu 日志再次确认 384 项测试、33 个回放、55 个技能和 1045 个分发文件的真实安装检查；完整源码结构检查为 55 个技能、738 份 Markdown、1411 条本地链接。
+- 发布器只上传一次，随后只读等待公开 registry；读取公开包名、版本并核对完整 SHA-512 SRI 成功后，正式发布 [v0.1.27](https://github.com/NAMEWTA/skills-hub/releases/tag/v0.1.27)。没有重传、移动标签或绕过审批。
+- GitHub API 回读：Release 非草稿、非预发布，公开时间为 2026-11-24 11:31:30（Asia/Taipei）；标签精确指向上述发布提交。
+- 附件 `namewta-skills-hub-0.1.27.tgz` 为 6382479 字节，`SHA256SUMS` 为 96 字节，均为 uploaded。压缩包服务端 SHA-256 与发布日志一致：`7d76fc247851af0e21639e270440017be614765792424097083328c04284d17b`。
+- 完整发布记录见 [0.1.27](../../../deploy/npm/releases/0.1.27.md)。目标项目真实主机与远端的压力/删除操作未在本次维护中执行；这不属于已验证范围。
