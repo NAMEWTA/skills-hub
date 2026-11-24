@@ -2,7 +2,7 @@
 
 票据：[01-resource-aware-setup.md](../tasks/01-resource-aware-setup.md)。
 
-状态：本地组合检查与独立场景通过，全仓 CI 和发布未验证。
+状态：本地组合检查、独立场景与实现提交的全仓 CI 通过；0.1.27 发布待验证。
 
 ## 已有证据
 
@@ -23,6 +23,13 @@
 - `node --test --test-concurrency=1 tests/skill-composition.test.mjs tests/worktree-integration.test.mjs tests/persistence-roots.test.mjs`：9 项通过，0 失败/跳过，包含真实临时 Git 工作树合并、父分支前移保护与清理。
 - `node scripts/check.mjs` 在本地部分源码副本因未下载 licenses 目录而停止；不将此结果记为全仓通过。完整源码与跨平台、包安装、来源材料回归交仓库既有 CI 执行，未修改或绕过任何校验门禁。
 
+## 实现提交与全仓 CI
+
+- 实现提交：[638b1fb95f1fa737df0a52652c170e0d98ce8371](https://github.com/NAMEWTA/skills-hub/commit/638b1fb95f1fa737df0a52652c170e0d98ce8371)，已推送 main。
+- [完整验证 45318787716](https://github.com/NAMEWTA/skills-hub/actions/runs/45318787716)：成功。Ubuntu / Node 22.14.0、Windows / Node 24、macOS / Node 24 全部通过既有完整维护检查、状态图回放和真实包安装验证。
+- Ubuntu 日志确认 384 项测试通过，0 失败/跳过；33 个状态图回放通过；实际包包含 55 个技能、1045 个分发文件，命令入口、完整资源、许可和重复安装通过；已安装 Archify 的 doctor、validate、deliver、strict check 及真实 browser-check 通过。
+- 未修改或绕过 CI。版本仍为 0.1.26 的实现推送未触发重复上传；随后将包版本、锁文件及更新说明同步为 0.1.27。
+
 ## 待完成
 
-main 推送、全量 CI 和 0.1.27 发布结果待补。
+发布提交的再次验证、npm 公开版本完整性与 GitHub Release/附件回读结果待补。
