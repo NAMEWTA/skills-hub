@@ -121,7 +121,7 @@ Lucide 与 Unsplash 补充法律文件的来源 URL、取得时间、摘要和�
 | [Git worktree](https://git-scm.com/docs/git-worktree) | 保留 remove、锁、未保存内容和 prune 的真实语义，复用现有只读审计与清理。 |
 | obra/superpowers [using-git-worktrees](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/using-git-worktrees/SKILL.md)、[finishing-a-development-branch](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/finishing-a-development-branch/SKILL.md) | 先识别现有隔离与管理归属，初始化后验证，从目标检出外按归属收尾；不复制额外确认菜单或与本次任务无关的固定流程。 |
 
-逐主机共享预算、未兑现峰值增长、允许新增量为零和 `.agents/dev/context/team/<team_name>.md` 是上述机制在本项目的适配，不是各来源共同制定的标准。来源证据与未采用事项见[研究记录](.agents/dev/changes/2026-11-24-resource-aware-setup/research.md)。
+逐主机共享预算、未兑现峰值增长、允许新增量为零和 `.agents/dev/context/team/<team_name>.md` 是上述机制在本项目的适配，不是各来源共同制定的标准。v0.1.28 按用户纠正，删除其他阶段方法和帮助中的团队/模型配置转介、默认继承与通用模型选择提醒；保留独立判断、盲评覆盖和资源准入机制。来源证据与未采用事项见[研究记录](.agents/dev/changes/2026-11-24-resource-aware-setup/research.md)。
 
 ### Issue 撰写与维护
 
