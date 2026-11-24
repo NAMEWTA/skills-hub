@@ -1,6 +1,6 @@
 # 01 修正环境引用并发布验收
 
-状态：本地验收通过；完整 CI 与发布尚待验证。
+状态：通过，main 推送与 `v0.1.29` 正式发布均完成。
 
 ## 范围与旧版事实
 
@@ -26,6 +26,18 @@
 
 另一独立会话只接收技能和场景：没有环境文件，需要独立调查四个模块，工具最多三个子代理、已有其他任务占用一个，主机与共享池只允许新增一个只读会话。结果按一个名额分四批，使用实际观测，不创建环境文件或要求初始化，不停止其他任务，确认退出释放后补位，保留四模块独立覆盖与动态验证限制。仅核对执行安排，没有实际启动四项业务调查。
 
-## 发布验证边界
+## 固定提交的完整 CI
 
-当前本地只物化 dev 域与必要维护文件，没有完整上游运行包、许可和材料正文。完整仓库、跨平台和真实 npm tarball 消费端检查须由既有 CI 在本次固定提交执行；正式发布后再补标签、公共 npm 完整性、Release 与附件证据。
+实现与版本提交为 [`64eb5c4997251e19e8cdd2f9b9804bdf81b0fb96`](https://github.com/NAMEWTA/skills-hub/commit/64eb5c4997251e19e8cdd2f9b9804bdf81b0fb96)，已推送 main。其[独立验证流水线](https://github.com/NAMEWTA/skills-hub/actions/runs/45341215734)及[发布流水线](https://github.com/NAMEWTA/skills-hub/actions/runs/45341215728)的 Ubuntu Node 22.14.0、Windows Node 24、macOS Node 24 验证任务全部成功。
+
+Linux 发布验证日志核实 55 个技能、738 个 Markdown、1406 个本地链接，384 项测试通过、0 失败、0 跳过，33 项捕获状态图回放完成。真实 `@namewta/skills-hub@0.1.29` tarball 含 55 个技能、1045 个分发文件，消费者安装、命令入口、完整资源逐字节核对、许可与重复安装全部通过；已安装 Archify 的实际浏览器检查通过。
+
+当前本地只物化 dev 域与必要维护文件，完整仓库与真实 npm tarball 的上述结论来自本次固定提交的现有 CI。
+
+## 正式发布
+
+[发布流水线](https://github.com/NAMEWTA/skills-hub/actions/runs/45341215728)成功。发布器只上传一次，在公开 npm metadata 的包名、版本和 SHA-512 完整性与本次 tarball 相符后，公开 [v0.1.29 Release](https://github.com/NAMEWTA/skills-hub/releases/tag/v0.1.29)。公开时间为 2026-11-24 14:42:10（Asia/Taipei）。
+
+GitHub API 回读标签 `refs/tags/v0.1.29` 直接指向实现与版本提交 `64eb5c4997251e19e8cdd2f9b9804bdf81b0fb96`，Release 为正式公开状态，非 draft、非 prerelease。两个附件均已上传：`namewta-skills-hub-0.1.29.tgz` 为 6380482 字节，`SHA256SUMS` 为 96 字节。包的服务端 SHA-256 与发布日志计算值一致：`a05baf5ae1ee1ee8568ef48aa9ea39a84709b4c057c4bc418c217cd80b039dbb`。
+
+完整元数据见[发布记录](../../../deploy/npm/releases/0.1.29.md)。当前仓库与分发已更新；用户其他项目的已安装技能需从对应项目运行本版本安装命令，安装结果不从发布动作本身推断。
