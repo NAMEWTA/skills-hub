@@ -2,7 +2,9 @@
 
 本表逐项对应 [Issue #2](https://github.com/NAMEWTA/skills-hub/issues/2) 第 18 节 A01–A66，契约版本为 `2026-11-25T05:53:23Z`。记录日期为 2026-11-25。方法、自动化和真实运行分别标明；最终跨平台与外部交付状态见T10，不把未选择的CLI分支写成实测。
 
-已提交实现为 [139b3e87328aa490d239632f3a1065a939ead696](https://github.com/NAMEWTA/skills-hub/commit/139b3e87328aa490d239632f3a1065a939ead696)，交付入口为[草稿 PR #17](https://github.com/NAMEWTA/skills-hub/pull/17)。原契约基线是 `f782755b780646e09ae3fcb56598d89df090eb98`；实施期间纳入独立 PR #16 后，变更比较基线为 `2988ae4ad6390b5c9fa53039666284070b33e697`。Windows路径修复已在5e4e4128465ef93e8d0ccd6cfa9537b4a552068a的真实Linux/Windows CI通过（E13），运营、新上下文和实际中断接续已补齐E12/E14/E15。macOS runner选择及最终提交结果见T10。
+最终交付已完成。[PR #17](https://github.com/NAMEWTA/skills-hub/pull/17) 的最终 head 为 `0cf764de44954ba309266b4e9c40f9782880fd7b`，于 `2026-11-25T08:13:15Z` squash 合并为 `c157ee38c54d524b11eddc31603697ac45343590`，树为 `791c6e03a192d3a526a8f775a5857d1d7f4c6a80`。PR 与 Issue #2 均已关闭，v0.1.30 于 `2026-11-25T08:25:56Z` 正式发布。最终三平台与公开交付见 E17、[T10](evidences/T10-delivery.md)和[整体验收](evidence.md)。
+
+原契约基线为 `f782755b780646e09ae3fcb56598d89df090eb98`；纳入独立 PR #16 后，变更比较基线为 `2988ae4ad6390b5c9fa53039666284070b33e697`。初期实现 `139b3e87328aa490d239632f3a1065a939ead696`、Windows 修复 `5e4e4128465ef93e8d0ccd6cfa9537b4a552068a` 及其原始结果分别保留在 E01–E13。运营、新上下文和实际中断接续见 E12/E14/E15，首次 macOS 失败与修复见 E16；旧结果不改写为最终提交的数量。
 
 ## 证据类型与状态
 
@@ -13,7 +15,7 @@
 | 实际运行 | 实际派遣的 Agent 完成任务、当地知识查询、项目负责人联合验收，或实际 npm/Claude/浏览器宿主的运行证据。不同对象的运行证明不互相替代。 |
 | 条件不适用 | 此次没有选择的条件分支，例如 `system-herdr-core` 的终端地址与 manifest 协议。保留方法依据，不计作该分支运行通过。 |
 
-“通过”只指同一行注明的对象与范围。“方法已覆盖”不等于现场演练。“进行中”及“未演练”保留待补证据，不按总行数汇总为 66 项真实运行通过。
+“通过”只指同一行注明的对象与范围。“方法已覆盖”不等于现场演练；“未演练”保留未选择或未覆盖分支的边界。不按总行数汇总为 66 项真实运行通过。
 
 ## 可复查证据
 
@@ -37,6 +39,7 @@
 | E14 | 全新fork_turns=none的/root/home_fresh_session没有被提供随机ID/规则值/旧理由；实际35条只读命令与Markdown重读准确答出当前/历史、候选/归档、原owner与forget范围。根与独立答案表逐项核对。原件Home/temp/fresh-session-evidence/，回执coordination/fresh-session-report.md，见[独立结果](runtime-evidence.md#全新上下文与真实中断接续结果)。 |
 | E15 | 父实际interrupt运行中的Home新Agent和ProjectA负责人，两个返回previous_status=running，再同id followup。两层先重读本地checkpoint/原owner记录再查现状，Home23份权威Markdown与A HEAD/provider/task/report保持，未重复实现/测试/派遣/提交。A等待直接观察aborted after22.3s。原件路径与准确边界见[接续结果](runtime-evidence.md#全新上下文与真实中断接续结果)。 |
 | E16 | [Mac首轮实际失败](https://github.com/NAMEWTA/skills-hub/actions/runs/45567944978/job/139047243255)：469通过/3失败。安装夹具真实路径修复经Linux真链接反例复现（旧2/2失败→新4/4通过），完整安装73/73；五个Home CLI真链接入口修复后，独立复制包、help/只读/错误退出和导入回归纳入Home68/68专项，均无skip。见[Mac回归](runtime-evidence.md#macos真实失败与回归)。最终平台复验另归T10。 |
+| E17 | 最终 PR head `0cf764de44954ba309266b4e9c40f9782880fd7b` 已合并为 `c157ee38c54d524b11eddc31603697ac45343590`。[main CI](https://github.com/NAMEWTA/skills-hub/actions/runs/45574387098)和[正式发布 run](https://github.com/NAMEWTA/skills-hub/actions/runs/45574387211)全部成功；发布验证 Linux、macOS 26 Intel 均 481/481，Windows 481 项中 477 通过、4 平台跳过、0 失败，三平台各 33 回放与 63 技能/1092 文件真实包通过。Linux 官方 Claude SDK 0.3.332 / CLI 2.1.332 发现 63、读取 121、零用户回合。最终 PR 首轮 Windows CounterAction 120 秒超时及同 SHA 单 job 重跑成功保留在 T10；没有放宽门禁。v0.1.30 Release ID 457828372 于 2026-11-25T08:25:56Z 公开，标签指向合并 SHA，GitHub latest 同版本；发布器实际严格核验 npm 精确版 name/version/SRI 后公开 Release，未另存独立 npm raw metadata 或 latest 值。完整来源、job、摘要与取证边界见 [T10](evidences/T10-delivery.md)、[整体验收](evidence.md)和 [发布回执](../../deploy/npm/releases/0.1.30.md)。 |
 
 E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是实际运行环境；没有将其改称 hc、Claude 或独立 Codex CLI。独立 `codex 0.172.0-alpha.2` 的 app-server 初始化遇只读文件系统，未成功启动。`system-herdr-core` 未被此次组合选择，其协议依据为未修改的[现有技能](../../../../skills/system/system-herdr-core/SKILL.md)，属于条件分支。
 
@@ -63,7 +66,7 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | A12 | workflow 仅管理直接负责人；项目内修订回到项目 owner | 方法/静态；实际运行 | E07 查询交给原 A 负责人，E08 由 B 负责人验收自己的实现子 Agent | 本次直接负责人边界通过。Home 未越级重启或清理后代。 |
 | A13 | `home-setup/references/configuration.md` 的选择顺序与作用范围 | 方法/静态；实际运行 | E05 不设长期 CLI 默认；E06/E08 各自当地规则；delegation 明确下层自治 | 方法与本次原生组合通过。异种 CLI 组合未演练，不作该兼容声明。 |
 | A14 | `home-doctor/scripts/doctor.mjs` 所需本地入口检查；workflow 缺项分支 | 方法/静态；自动化 | [doctor 测试](../../../../tests/home-doctor.test.mjs)的所需本体缺失、链接父目录/文件拒绝；E02 | 自动化通过。未选工具不报故障；明确缺包不从别仓借用或自动安装。 |
-| A15 | `home-workflow/references/coordination.md`、delegation 的接续分支 | 方法/静态 ；实际运行 | E07 为同一 A 负责人继续查询；E12 新上下文验收待完成 | 本次原生方法的两层中断后同id接续通过（E15）。Home/项目分别读本层checkpoint；独立厂商CLI或Core恢复没有被冒称验证。 |
+| A15 | `home-workflow/references/coordination.md`、delegation 的接续分支 | 方法/静态 ；实际运行 | E07 为同一 A 负责人继续查询；E14 独立新上下文重读；E15 两层实际中断后同身份接续 | 本次原生方法的两层中断后同id接续通过（E15）。Home/项目分别读本层checkpoint；独立厂商CLI或Core恢复没有被冒称验证。 |
 | A16 | delegation 的直接交付验收与异常分支 | 方法/静态；实际运行；条件不适用 | E06/E08 负责人独立 58/34 项验收；E06 保留上层目录缺失及修复过程 | 真实独立交付验收与等待中断/查回有证据（E06/E08/E15），没有把running/idle当业务完成。空shell、厂商CLI输入等待等未选分支保留方法边界。 |
 | A17 | workflow、integrate、history 的资料 owner 边界 | 实际运行 | E06–E08 三份 Home 摘要仅引用项目 task/report、测试与知识原件 | 本次分层归档通过。A/B 技术原件仍在项目，Home 未建立项目知识镜像。 |
 
@@ -72,8 +75,8 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | 编号 | 实现落点 | 证据类型 | 准确证据 | 当前状态与边界 |
 | --- | --- | --- | --- | --- |
 | A18 | setup registry；route 的 `selectRepos/inspectCheckout/routeRepo` | 自动化；实际运行 | E03；route 的别名冲突、fork/parent、不同 host、未知 SSH 用户回归；E05 原地登记与解析 | Linux 通过。普通核查未 fetch、切分支或改变 dirty 内容；Windows 路径比较另列 A19。 |
-| A19 | route 实际路径、Git root/common-dir、worktree；doctor 引用检查 | 自动化 | E03 的 Unicode、空格、内嵌 `.git` 文件型 worktree；E11 的 Windows 实际失败及修复 | Linux/Windows通过，包含实际8.3原生路径复验（E13）。Mac结果随最终CI记录；不把早期失败写成通过。 |
-| A20 | setup 的 `repos.json/repos.md`；knowledge 的项目管理背景方法 | 方法/静态；实际运行 | E05 两项目实际用途；E06–E08 管理回执；E12 背景运营演练 | 项目基本用途已实证。完整管理背景与配置的运营演练进行中，不要求必须跨两个项目才保存。 |
+| A19 | route 实际路径、Git root/common-dir、worktree；doctor 引用检查 | 自动化 | E03 的 Unicode、空格、内嵌 `.git` 文件型 worktree；E11 的 Windows 实际失败及修复 | 三平台适用检查通过（E17），包含 Windows 实际 8.3 原生路径复验和 macOS 真实路径/CLI 入口复验。E13/E16 保留各自首次失败与修复边界。 |
+| A20 | setup 的 `repos.json/repos.md`；knowledge 的项目管理背景方法 | 方法/静态；实际运行 | E05 两项目实际用途；E06–E08 管理回执；E12 背景运营演练 | 项目用途、管理回执与配置运营已在隔离 fixture 中完成（E05–E08、E12/E14），按主题保留来源与 owner；不要求必须跨两个项目才保存。 |
 | A21 | workflow 委派查询；knowledge 保留结论及原件指针 | 实际运行 | E07：A 当地读取定价知识及随机 ID、blob、SHA-256，Home 未预先读取 | 本次真实项目内部知识查询通过。来源原文不复制到本矩阵或 Home 知识库。 |
 | A22 | 任务简报、知识来源字段、integrate 组合版本与范围 | 实际运行 | E06 最终产物哈希；E07 查询版本与假设范围；E08 A/B 最终版本、实际结果及未覆盖项 | 本例通过。历史查询时间、当前提交、演示假设和生产未知分开记录。 |
 | A23 | `home-knowledge/references/maintenance.md`、知识/历史工具 | 方法/静态；自动化 | E03 的原件修订、候选/退役过滤与索引；E12 跨 owner 更正演练 | 真实配置更正、知识指针与前后历史互链通过（E12/E14）；索引重建保持正文与时间。无长期价值可不落新主题属方法审查。 |
@@ -100,7 +103,7 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | A39 | 链接、技能、导航、忽略规则的同一 journal 与回滚 | 自动化 | E04 的 EPERM、第二链接失败、清理失败、父目录被替换等场景；持久化混域恢复原字节测试 | 普通异常及注入边界通过。未声明断电或非配合外部程序并发下的完整事务。 |
 | A40 | 显式 CLI、交互预览与取消共用计划 | 自动化 | E04 的 dry-run、list/help/version、取消、权限探测禁止与锁后重算场景 | 通过。预览不建目录、锁或权限探测链接。 |
 | A41 | `symlinkSync(..., 'dir')` 及错误回滚，无 junction/copy fallback | 自动化；实际运行 | E11 Windows 首轮真实安装 symlink 已通过；E04 权限拒绝注入 | Windows真实dir symlink和完整适用门禁通过（E13）；EPERM失败回滚有注入证据。未声称现场覆盖所有Windows权限组合。 |
-| A42 | npm files 清单、`check-package.mjs`、交互与显式安装器 | 自动化；实际运行 | E02 正常联网 0.1.30 实际 tarball；E10 离线锁定消费；E04 交互入口测试 | Linux/Windows正常联网真实tarball通过（E13），63技能1092文件与完整链接。Mac结果随最终CI记录。 |
+| A42 | npm files 清单、`check-package.mjs`、交互与显式安装器 | 自动化；实际运行 | E02 正常联网 0.1.30 实际 tarball；E10 离线锁定消费；E04 交互入口测试 | 最终三平台正常联网真实 tarball 通过（E17），63 技能、1092 文件及完整链接；正式 0.1.30 制品身份与公开核验见 T10。E13 保留实施期结果。 |
 | A43 | `scripts/check-claude-discovery.mjs`；`docs/home/validation.md` | 实际运行 | E09 官方 SDK 0.3.332 / Claude 2.1.332，63 初始化/重载发现、121 readFile 读取 | 宿主发现与资源读取通过。零用户回合，未验证模型实际执行技能。 |
 
 ## A44–A48 完整交付
@@ -111,7 +114,7 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | A45 | 各入口缺包分支、doctor 所需技能检查；安装器不自动补依赖 | 方法/静态；自动化 | E02/E04 单选准确集合；doctor 必需本体缺失、未选工具不报错测试 | 方法与安装检查通过。没有把缺失兄弟技能说成已执行。 |
 | A46 | workflow 的本层直接任务与项目自治方法 | 实际运行 | E05–E08：Home→A/B，A→provider_implementation，B→consumer_impl；当地记录与独立验收 | 本次真实多级组合通过。不是图示或伪造 fixture 回执。 |
 | A47 | workflow/knowledge 的当地查询；integrate 的真实执行者 | 实际运行 | E07 的随机知识标识查询与 E08 的真实 HTTP 组合 | 两项必要真实场景均通过。本例未验证独立厂商 CLI。 |
-| A48 | 来源清单、许可、Home 文档、安装提示与分层证据报告 | 方法/静态；自动化；实际运行 | E01/E02；[Home 来源](../../../../docs/home/sources.md)、[第三方声明](../../../../THIRD_PARTY_NOTICES.md)、runtime-evidence | 来源、文档及已取得运行边界已对齐（E12–E15）；最终CI/PR/Release状态按T10记录，未提前声称发布。 |
+| A48 | 来源清单、许可、Home 文档、安装提示与分层证据报告 | 方法/静态；自动化；实际运行 | E01/E02；[Home 来源](../../../../docs/home/sources.md)、[第三方声明](../../../../THIRD_PARTY_NOTICES.md)、runtime-evidence | 来源、文档及运行边界已对齐（E12–E17）；最终三平台、PR 合并和正式发布完成，精确源码、制品与公开取证边界见 T10 和根 evidence。 |
 
 ## A49–A66 用户配置、知识与历史运营
 
@@ -119,7 +122,7 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | --- | --- | --- | --- | --- |
 | A49 | `skills/home/`、持久化导航、动态 domain 安装与 docs/home | 方法/静态；自动化 | E01/E02；八包含 setup/history，安装 home domain 的准确文件集合 | 通过。没有 workspace 运行别名、home-init 或 home-dispatch。 |
 | A50 | setup 独立入口与 workflow 分流；configuration 的按需保存 | 方法/静态；自动化；实际运行 | E05 初始 Home 明确无长期 CLI 默认；registry 只读不初始化测试；E12 | 无默认、按需保存及显式具名配置在真实fixture验证（E12/E14）；未制造默认团队或探测全部账号。 |
-| A51 | configuration 的本次要求→明确配置→Home 默认→工具默认及作用范围 | 方法/静态 | E05 明确原生工具仅本次选择；E12 计划覆盖临时覆盖与长期默认 | 作用范围方法与本次具名配置通过（E12/E14）；配置仅fixture管理层，不改A/B或既有会话。所有CLI默认组合未逐一现场演练。 |
+| A51 | configuration 的本次要求→明确配置→Home 默认→工具默认及作用范围 | 方法/静态；实际运行 | E05 明确原生工具仅本次选择；E12/E14 实际保存与重读具名配置，核对唯一 owner 和作用范围 | 作用范围方法与本次具名配置通过（E12/E14）；配置仅fixture管理层，不改A/B或既有会话。所有CLI默认组合未逐一现场演练。 |
 | A52 | configuration/environment 的意图、能力与实际生效分离 | 方法/静态；实际运行 | E05 的工具选择；独立 codex 启动失败如实保留；E09 明确模型执行未验证；E12 | 意图、观察、生效与未知区分通过（E12/E14）；实际原生工具、失败的独立codex和零模型回合的Claude各有准确边界。 |
 | A53 | setup 的 environment 与 configuration 资源 owner 规则 | 方法/静态 | `home-setup/references/environment.md`“资源与生效范围”；configuration 的角色与预算表 | 方法/静态通过。未运行跨主机额度调度实验；Home 没有实现新的容量管理器。 |
 | A54 | setup 唯一配置 owner；history 接续与 workflow 最小入口 | 方法/静态 ；实际运行 | E12/E14/E15；原件与结果见对应证据入口 | 全新实际Agent无答案继承，重读唯一配置owner并准确回报随机ID/规则/来源（E14）；不依赖原生auto memory。 |
@@ -127,7 +130,7 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 | A56 | knowledge 的候选核验、配置 owner 与外部来源边界 | 方法/静态；自动化 | E03 的 `whole-note candidates stay out of current navigation...`；knowledge/configuration 不从第三方输入推断偏好 | 真实候选默认0、显式inactive与inbox各1，未变成current（E12/E14）。外部消息/推断的授权判断仍归方法，不从时间或重复摘要自动晋升。 |
 | A57 | history 显式事件 status；workflow 验收与历史写入分开 | 自动化；实际运行 | E03 的取消/部分/unknown 事件测试；E06/E08 分开实现者报告与负责人验收 | 所测状态表达通过。记录历史不自动证明已部署或当前仍运行。 |
 | A58 | `history.mjs` 按 scope+event_key 查重，归档参与身份检查 | 自动化 | E03 同源重导、后续新事件、相似标题、不同 scope、归档及两个真实 CLI 写入进程测试 | 通过。去重只覆盖可读且有身份的记录，重复摘要不增加证据来源。 |
-| A59 | route 的 host/owner/SSH 命名空间；文件工具显式 `--home` 与 scope | 方法/静态；自动化；实际运行 | E03 不同 host、fork、alice/bob 回归；E06/E08 当地记录与 Home 回执分开 | Linux/Windows身份与owner边界通过（E13），含SSH命名空间与本层记录分离；Mac结果随最终CI记录。 |
+| A59 | route 的 host/owner/SSH 命名空间；文件工具显式 `--home` 与 scope | 方法/静态；自动化；实际运行 | E03 不同 host、fork、alice/bob 回归；E06/E08 当地记录与 Home 回执分开 | 最终三平台身份检查通过（E17），含 SSH 命名空间和真实路径回归；本层 owner 分离由 E06/E08 的实际协作证明。E13 保留实施期 Windows 复验。 |
 | A60 | registry 写锁/双 revision；knowledge/history 共用写锁与 SHA-256 预期值 | 自动化 | E02/E03 的 stale write、真实并发写者、锁内地图源重验、事件 ID 冲突与旧稿保留测试 | 通过工具协作写入边界。非配合编辑器不受此锁保证，冲突需重读合并。 |
 | A61 | query 直接扫正文；index 预算/稳定排序；afterWrite partial | 自动化 | E03 的缺索引回退、预算截断、幂等重建、索引失败保留正文与 verified_at 不变测试 | 通过。不安全来源正文跳过并返回 `complete:false` 与警告，不静默当作有效资料。 |
 | A62 | history 的 occurred_at/recorded_at/updated_at；知识 observed/verified 时间 | 方法/静态；自动化；实际运行 | E03 时区、仅日期、unknown、历史排序测试；E07 查询时间、来源版本与限定范围 | 日期与来源字段边界通过。原件已丢失时仅可确认摘要的处理规则属方法覆盖，未另造原件丢失场景。 |
@@ -138,6 +141,6 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 
 ## 最终交付与验证边界
 
-必要的真实多级派遣、项目内部知识查询、两个项目HTTP联合验证、官方Claude发现读取、Home运营、独立新上下文重读及两层原生中断接续均已有证据。Linux/Windows修复后结果绑定5e4e4128；最终CI和公开交付点在[T10](evidences/T10-delivery.md)收口。
+必要的真实多级派遣、项目内部知识查询、两个项目 HTTP 联合验证、官方 Claude 发现读取、Home 运营、独立新上下文重读及两层原生中断接续均已有证据。最终合并 SHA 的三平台验证和正式 0.1.30 发布完成，详见 E17、[T10](evidences/T10-delivery.md)和[整体验收](evidence.md)。实施期结果、首次失败和同 SHA 重跑保留各自来源。
 
-Core完整地址、终端、manifest与各厂商CLI组合此次未选，保持既有方法而不宣称现场覆盖。投递超时/空shell等具体CLI异常、生产部署、长期容量、所有技能版本或硬件架构组合不在本次实际运行声明内。macOS最终门禁使用官方标准Intel runner，实际结果随T10记录，不将其视为Arm64结果。
+Core完整地址、终端、manifest与各厂商CLI组合此次未选，保持既有方法而不宣称现场覆盖。投递超时/空shell等具体CLI异常、生产部署、长期容量、所有技能版本或硬件架构组合不在本次实际运行声明内。macOS 最终门禁在官方标准 Intel runner 实际通过，见 E17/T10；该结果不扩展为 Arm64 验证。
