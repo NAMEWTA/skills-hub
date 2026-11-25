@@ -139,7 +139,7 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
     assert.equal(await interactive({ project, ...ctx }), 0);
     assert.equal(ctx.ui.notes[0], currentVersion);
     assert.ok(ctx.ui.notes.join('\n').includes(i ? 'replace' : 'install'));
-    assert.match(ctx.ui.notes.join('\n'), /目录 symlink 权限/);
+    assert.match(ctx.ui.notes.join('\n'), /Windows 创建链接遇到 EPERM 时仍会安装技能/);
     assert.match(ctx.ui.notes.join('\n'), i ? /preserved\s+\.claude\/skills\/dev-spec/ : /link\s+\.claude\/skills\/dev-spec/);
     const alias = path.join(project, '.claude/skills/dev-spec');
     assert.ok(fs.lstatSync(alias).isSymbolicLink());
@@ -227,6 +227,22 @@ test('interactive link conflicts return failure and preserve the complete projec
   assert.match(ctx.ui.notes.join('\n'), /Claude skill entry conflict/);
   assert.match(ctx.ui.outros.join('\n'), /安装失败/);
   assert.doesNotMatch(ctx.ui.outros.join('\n'), /安装完成/);
+});
+
+test('interactive Windows EPERM reports the missing Claude link as a warning', { skip: process.platform !== 'win32' }, async t => {
+  const project = temporary(t, 'skills-hub Claude permission ');
+  t.mock.method(fs, 'symlinkSync', () => {
+    throw Object.assign(new Error('fixture symlink permission denied'), { code: 'EPERM' });
+  });
+  const ctx = context(['home-doctor']);
+  assert.equal(await interactive({ project, ...ctx }), 0);
+  const output = ctx.ui.notes.join('\n');
+  assert.match(output, /skipped\s+\.claude\/skills\/home-doctor/);
+  assert.match(output, /警告.*EPERM.*管理员.*开发人员模式/);
+  assert.match(ctx.ui.outros.join('\n'), /安装完成/);
+  assert.ok(fs.existsSync(path.join(project, '.agents/skills/home-doctor/SKILL.md')));
+  assert.ok(fs.existsSync(path.join(project, '.agents/home/AGENTS.md')));
+  assert.equal(fs.lstatSync(path.join(project, '.claude/skills/home-doctor'), { throwIfNoEntry: false }), undefined);
 });
 
 test('interactive Home selection reports its local mapping rule and creates the same skill link', async t => {

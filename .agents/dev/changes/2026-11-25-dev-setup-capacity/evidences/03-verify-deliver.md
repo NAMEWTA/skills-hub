@@ -68,4 +68,8 @@ F1只增加三处输出语义说明，最终 `npm run check` 退出0（63技能�
 
 ## PR 与最终交付
 
-用户授权终点为创建PR、合并main、关闭PR和Issue #18；当前远端功能分支为 `feat/dev-setup-capacity-issue-18`。待记录实际PR、提交、对应CI与合并/关闭回读结果，不把分支创建或检查排队写成交付完成。
+用户授权终点为创建 PR、合并 main、关闭 PR 和 Issue #18。[PR #19](https://github.com/NAMEWTA/skills-hub/pull/19) 已创建，功能分支为 `feat/dev-setup-capacity-issue-18`。
+
+首次实现 head `2dd51dfa986f7d9a251060fe5686a7b4f2e24821` 的 [PR CI](https://github.com/NAMEWTA/skills-hub/actions/runs/45578737402) 在首次 attempt 全部成功，基准为 `79d58fd5b517ed1dc30ed91925e53a01fb0d7898`，实际 checkout 为 PR 测试合并提交 `fd0c35bb76b52a6722079960f2499e9dd105b177`。Linux 与 macOS Intel 各 481/481、零跳过；Windows 477 通过、4 平台跳过、零失败。三平台各完成 33 项捕获状态回放、实际 63 技能/1092 文件的包消费验证。Linux 另完成 Archify 真实 browser-check 和官方 Claude 63 技能发现/121 资源读取；后者没有模型用户回合。
+
+合并前 main 新增 `70a60a45d1d0e2e93920c2c47b5b69d3769fcf4c` 的 Windows EPERM 安装器修复。本分支保留其完整改动，仅手工合并 CHANGELOG 的双方新增条目；dev-setup 方法、模板和配套指南未因整合修改。首次 CI 不作为这一新组合的验证结果。最终提交仍需通过对应的完整 CI，再记录合并与关闭的实际回读结果。

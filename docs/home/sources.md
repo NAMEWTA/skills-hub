@@ -27,7 +27,7 @@ Matt 的新增 Home 采用关系附加到[已有清单](../../materials/mattpoco
 | [Grok Build memory](https://x.ai/news/grok-build-memory)、[固定实现](https://github.com/xai-org/grok-build/tree/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8) | 当前要求优先、来源/观察时间、读后修改、有界索引和防重新摄取；不复制 Rust 运行时，不把 durable state DB 当作索引缓存，不采用剥离 Git host 的身份算法 |
 | [Orca 月度 journal](https://github.com/stablyai/orca/blob/8f97cb210f601d8381a59589a3a97bc43b539a7e/src/main/bots/bot-memory-journal.ts) | 区分当时业务事件、知识修改审计和原生会话；不复制 Bot 控制面或中央技能聚合 |
 | [OpenClaw provenance](https://github.com/openclaw/openclaw/blob/79e42e0877d9e3641e365b17517b9f19e0c4320a/docs/concepts/memory-provenance.md) | 清理已有派生内容与阻止未来摄取分别处理；忘记报告列出实际范围，不宣称清除未触达原件或备份 |
-| [devrig index](https://github.com/lakpriya1s/devrig/blob/414eb1cfaeab86628f1cf4c2461ce8c79b893525/scripts/build-knowledge-index.mjs)、[Node.js fs.symlink](https://nodejs.org/docs/v22.14.0/api/fs.html#fssymlinktarget-path-type-callback) | 索引可重建、根显式传入；安装使用 Node 标准库真实目录 symlink，受限平台失败并回滚 |
+| [devrig index](https://github.com/lakpriya1s/devrig/blob/414eb1cfaeab86628f1cf4c2461ce8c79b893525/scripts/build-knowledge-index.mjs)、[Node.js fs.symlink](https://nodejs.org/docs/v22.14.0/api/fs.html#fssymlinktarget-path-type-callback) | 可重建的索引显式接收根目录。安装器使用 Node 标准库创建目录符号链接。错误处理见 [安装契约](../usage/installation.md#平台与工具)。 |
 
 网站文章的许可不由关联代码仓推定。研究参考没有被当作整仓代码收录；后续若复制新的 source unit，先固定版本、保留原件与必要中文对照，再补运行映射和法律归属。不得因 Home 新增方法而刷新其他领域的共享快照。
 
