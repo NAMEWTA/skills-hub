@@ -1,7 +1,7 @@
 # T09-distribution 验收
 
-状态：来源、许可、材料映射、文档与本地实际包检查通过；远端平台门禁待执行。
+状态：来源、许可、材料、文档、包及Linux/Windows发布门禁通过；macOS和正式发布待完成。
 
-新增nanobot memory固定557776261547ce4872a119dd094b314b8f721b1b原件、完整中文对照及MIT原文；只采用明确记忆/历史方法。matt chief-of-staff及handoff保持原版本和既有dev关系，追加Home实际使用路径。研究资料和实际采用分开见docs/home/sources.md。
+nanobot memory固定557776261547ce4872a119dd094b314b8f721b1b原件、完整中文对照与MIT原文；matt chief-of-staff/handoff保留原版本/旧dev关系，仅加明确Home采用路径。研究与实际复用分开，运行包资源自包含。
 
-包0.1.29→0.1.30，package/lock/CHANGELOG一致。实际tarball安装验证63技能1092文件、所有相对目录链接、许可字节和CLI/UI依赖解析；无维护脚本/材料/测试混入发布包。npm run check:statechart通过。check:upstream本地Chromium包装器存在但二进制缺失，未算browser-check通过；CI继续执行完整浏览器门禁。
+包/lock/CHANGELOG均0.1.29→0.1.30，依赖图不变。正常CI实际tarball消费者核对63技能1092文件、所有相对目录链接、许可和CLI/UI依赖。维护脚本/材料/测试不入包；ClaudeSDK仅CI独立临时安装。statechart与Archify真实浏览器门禁通过，未用本地缺浏览器/缓存失败削弱CI。

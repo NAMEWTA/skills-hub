@@ -1,7 +1,7 @@
 # T02-routing 验收
 
-状态：实现与隔离真实 Git 检查通过。
+状态：登记、解析、只读诊断实现及Linux/Windows验证通过。
 
-registry/route/doctor 自动化验证普通目录和文件型 worktree、中文空格路径、冲突、锁内修订、当前 cwd/identity、只读诊断和检索预算。独立审查发现 SSH 用户命名空间误合并，已修复：未知 SSH 保留 user 与 absolute/home-relative；仅 github.com/git/default-port 适用已知跨协议等价。新增 alice/bob 真实 checkout 反例。
+registry/route/doctor覆盖中文空格、平级/内嵌、.git文件型worktree、别名/身份冲突、锁内双revision、有限诊断和不读内部资料。SSH真实反例促成保留未知服务器用户与absolute/home-relative语义；仅GitHub标准git用户归一已知SSH/HTTPS形式。Windows首轮观察到8.3路径与Git长名差异，产品统一fs.realpathSync.native，并补root/子目录判定，未仅放宽测试。
 
-node --test tests/home-route.test.mjs tests/home-knowledge.test.mjs tests/home-history.test.mjs：47/47通过，无跳过。Home真实场景已用安装目录 registry/route 保存两项目登记并解析；未扫描项目内部资料。
+[第二轮Windows](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544686)在5e4e4128通过全部适用检查，route两项原失败转为通过；[Linux](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544568)472/472。实际Home通过安装目录工具登记/定位A/B，contextRead=false。

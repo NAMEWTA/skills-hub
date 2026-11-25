@@ -1,9 +1,7 @@
 # T08-installation 验收
 
-状态：Linux安装事务、专项与真实tarball检查通过；Windows/Claude宿主待远端CI。
+状态：Linux/Windows安装事务与真实包、实际Claude发现读取通过；macOS仍等CI。
 
-63个所选技能各有唯一.agents/skills本体与相对.claude/skills目录符号链接。覆盖混选、unchanged补链、正确断链/错向冲突、父目录与本体保护、锁后重算、更新备份、注入链接失败回滚、搬迁和dry-run零写入；显式入口与交互共用事务。修复local.json忽略规则保留用户否定规则及rollback父路径再检查。
+单一本体+逐技能目录symlink覆盖混选、unchanged补链、正确/错向断链、父目录/本体保护、锁后重算、更新备份、注入失败回滚、搬迁及dry-run零写入。local.json默认忽略保留用户否定规则，rollback重查替换路径。
 
-安装负责人专项115/115通过。npm run check:full最终472项，471通过、0失败、1环境跳过（容器不能创建Unix套接字）。真实npm tarball通过锁定依赖缓存的npm ci安装后核对63技能、1092文件与全部链接；一般check:package本地因离线缓存缺registry metadata受限，保持原门禁由CI正常联网运行。Windows必须是真实dir symlink，不能用Linux或注入结果冒充。
-
-新增maintenance-only check:claude，CI独立安装官方SDK并启动真实Claude过程，发现和readFile链接资源；零用户回合，不冒称模型执行。此时尚未运行，待CI证据。
+[Windows5e4e4128](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544686)真实dir symlink及0.1.30正常tarball63技能1092文件通过；472测试中468通过/0失败/4平台不适用skip（3POSIX位及Unix socket）。[Linux同提交](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544568)472/472，无skip，实际包与浏览器通过。官方SDK0.3.332实际Claude2.1.332发现63技能并readFile读取121资源；requested=.claude/effective=.agents，零用户回合，未声称模型执行。

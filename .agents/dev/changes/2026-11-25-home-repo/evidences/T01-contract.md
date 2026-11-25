@@ -2,6 +2,6 @@
 
 状态：实现与静态核对通过。
 
-唯一合同为 Issue #2（2026-11-25T05:53:23Z）。基线由 f782755b 快进至 2988ae4a，保留 PR #16。对比该基线，skills/dev、skills/ops、skills/system 及既有原件/中文材料没有改动；mattpocock 仅追加 home 采用指针与本次适配说明。八包名称与唯一 owner、完整方法入口见 docs/home/method-ownership.md。
+唯一合同为Issue #2（2026-11-25T05:53:23Z）。基线从f782755b快进至2988ae4a，保留PR #16。比较该基线，skills/dev、skills/ops、skills/system及既有原件/中文材料零改动；mattpocock仅追加Home采用关系和本次适配说明。八包与唯一方法owner见docs/home/method-ownership.md，无home-init/home-dispatch、统一CLI adapter或第二派遣总账。
 
-运行 node scripts/check.mjs：63 包、785 Markdown、1496 本地链接、15 材料项目/1816 原件通过；59 个自有技能入口预算全部通过。无 home-init/home-dispatch 包、统一 CLI adapter 或新的派遣总账。
+最终代码5e4e4128的staged快照检查通过：63包、779 Markdown、1497本地链接、59自有入口预算；15材料项目/1816原件的集合、哈希、Git blob和运行采用路径通过。

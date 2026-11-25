@@ -54,7 +54,7 @@
 
 ## 检查与凭据
 
-[跨平台验证](../../.github/workflows/validate.yml)覆盖 Ubuntu 的最低 Node.js 22.14.0，以及 Windows、macOS 的 Node.js 24。各平台执行完整维护检查、捕获轨迹回放和真实 npm 包验证；Linux 另检查已安装 Archify 的完整 finalize 与浏览器检查，以及官方 Claude Code 进程实际发现和读取技能链接。Claude SDK 独立装在临时目录，不进入产品依赖；该项不发送模型回合，详见 [Home 验证](../home/validation.md)。发布任务等待这些任务全部成功，同仓库发布串行执行。
+[跨平台验证](../../.github/workflows/validate.yml)覆盖 Ubuntu 的最低 Node.js 22.14.0，以及 Windows、macOS 26 Intel 的 Node.js 24。macOS 使用标准 `macos-26-intel` runner；本轮不把它写成 Arm64 运行证据。各平台执行完整维护检查、捕获轨迹回放和真实 npm 包验证；Linux 另检查已安装 Archify 的完整 finalize 与浏览器检查，以及官方 Claude Code 进程实际发现和读取技能链接。Claude SDK 独立装在临时目录，不进入产品依赖；该项不发送模型回合，详见 [Home 验证](../home/validation.md)。发布任务等待这些任务全部成功，同仓库发布串行执行。
 
 工作流把仓库 Secret `NPM_TOKEN` 映射为 `NODE_AUTH_TOKEN`，需要对实际 scoped 包具备所需发布和只读 stage 权限。凭据不写入源码、压缩包、技能、发布说明或日志。包侧若要求 stage-only 上传，普通 `npm publish` 会被拒绝；本发布器调用普通 publish，只读取并接续已经存在的 stage，不自动改成暂存上传。
 

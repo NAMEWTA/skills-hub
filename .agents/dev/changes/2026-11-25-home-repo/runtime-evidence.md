@@ -67,8 +67,34 @@ B 的调用方异常响应校验另使用明确标注的本地夹具，与真实
 
 同一任务独立安装官方 SDK `0.3.332`，实际 Claude Code 返回版本 `2.1.332`。维护脚本通过真实进程的 `supportedCommands`、`reloadSkills` 核查全部 63 技能，再通过其 `readFile` 读取 121 个入口/参考资源；每个 requestedPath 在 `.claude/skills/`，有效 realpath 回到同仓 `.agents/skills/`，正文 SHA-256 与本体一致。没有发送用户回合，结果明确 `modelInferenceVerified=false`：这是宿主发现/读取验收，不是模型执行任务证明。没有把 fs.realpath 的单独检查当作宿主证据。
 
-原始日志摘录和完整远端日志地址留 `temp/dev/home-issue-2/ci-linux-139b3e8-excerpt.log`。Windows 首轮已真实创建技能目录 symlink，但 route 测试发现 8.3 短路径和 Git 长路径比较差异，正在修复并等待复验；不将该轮整体写成通过。macOS 及最终提交复验结果在 T10 收口。
+原始日志摘录和完整远端日志地址留 `temp/dev/home-issue-2/ci-linux-139b3e8-excerpt.log`。Windows 首轮发现8.3短路径与Git长路径比较差异，已统一native realpath并增加root判定断言。[第二轮Windows job](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544686)绑定5e4e4128465ef93e8d0ccd6cfa9537b4a552068a：472项中468通过、0失败、4个平台不适用项跳过（三项POSIX权限位与Unix套接字）；正常0.1.30 tarball和全部真实目录symlink通过。[同轮Linux](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544568)472/472、正常包、真实浏览器与Claude63技能/121资源全部通过。macOS及最终提交结果在T10收口。
 
 ## 运营与新上下文
 
-配置/现行/历史一致性、跨 owner 忘记和新 Agent 重新读取正在实际执行；结果尚未写为完成。不得以本文件的准备计划替代这些后续验收。最终结果归对应 T03/T05/T06 验收及本节的追加记录。
+运营负责人 /root/home_operations 已在实际安装目录完成110步留痕、22项有效结果检查；原始argv/cwd/退出码与JSON返回在Home的temp/home-operations-evidence/commands.jsonl及result.json，管理回执为coordination/operations-report.md。新上下文与受控中断的独立结果见后文，不从这22项推断。
+
+本次资料明确标为隔离fixture，不把测试偏好写成真实用户偏好。现行格式唯一owner为context/preferences.md；knowledge只保存指针。随机决定ID为9fd1d36a-9174-48ab-a127-a7e4aa1e393e，现行决定时间2026-11-25T07:30:30.145+00:00。初始事件22300b40-081c-4a3a-90fc-e45a651cd9de与后续f608d65a-9d07-4e05-b82c-4c96f1083209分开保存实际发生时间、首次记录时间和理由，重导返回unchanged。
+
+实测覆盖候选默认排除、部分更正保留独立内容、knowledge/history旧SHA返回STALE、知识退役及归档默认排除、历史归档参与去重、删除索引后直接查正文、两次重建字节相同且不刷新事实时间。
+
+忘记fixture原先在3份context、notes、inbox、history、两类archive与两索引共10处有载荷。各owner定点清理后，业务正文与本轮临时输入/日志的载荷命中为0，无关独立内容保留；knowledge的exclusions只保留获准source_ref/scope/basis_ref。knowledge/history通过sources和derived_from四次重导均返回EXCLUDED；查询与重建不复活。没有声称删除Git历史、备份、远端、原始对话、原生记忆或未触达项目原件。
+
+首轮Python时钟的六位小数ISO输入实际返回DATE并未保存历史正文；仅两份本轮setup半成品按hash清理，失败证据保留。后续使用新的实际时钟观测与毫秒精度重新执行一次主链，未伪称无损转换或混用发生/整理时间。产品文档和错误信息已明确支持秒及1–3位小数的边界，未偷偷截断高精度来源。
+
+Home关系owner依据A/B直接回执建立实际生产/消费关系，安装目录route复核两仓身份、版本和clean状态，contextRead=false，未扫描技术知识。
+
+## 全新上下文与真实中断接续结果
+
+全新 /root/home_fresh_session 由fork_turns=none创建，其初始提示仅有路径和问题，没有随机ID、规则值或旧理由。它实际读取已安装方法和Home Markdown、执行35条查询/核查命令，准确回报当前随机ID9fd1d36a-9174-48ab-a127-a7e4aa1e393e、唯一preferences owner、两条历史事件的当时理由/occurred_at/recorded_at、候选未确认、归档默认排除和忘记的最小依据。根负责人逐项与独立保存的答案表核对一致。项目路由只确认入口/HEAD/dirty，contextRead=false；它没有扫描项目内部知识。
+
+父实际调用interrupt_agent对正在运行的Home新Agent和原ProjectA负责人分别中断，两个工具返回previous_status=running。之后父使用同一Agent身份followup，而不是另起实现者。ProjectA等待直接观察到aborted by user after 22.3s；两层恢复都首先实际回读各自checkpoint与原owner记录，再核对当前状态。
+
+Home checkpoint SHA-256为09805f61116812b86e0f0069f4a5ee2ac15782f6e7d08033d3694fe0c82ba786，恢复时Home业务HEAD为c63f74f036a23b734d86d9c150c2be2cb67808a2；23份权威Markdown字节未变，原35命令未重复。A恢复后HEAD仍为01a65d39917cee923a10e65acf35a4391a87b65b、dirty为空、provider SHA仍为5fd3af45c20b2180c4701ae47ab255a393ea2632d00274e21fe34c5f91769063，原task/report哈希不变。没有重复编码、测试、新派子Agent或Git提交。
+
+新Agent明确区分原A/B已完成交付与后来临时A15任务的running状态；活跃表没列出B也不被解读为可重派。当前原生协作工具同id恢复不扩展为独立CLI、独立进程或跨工具resume能力。
+
+原件：Home的coordination/fresh-session-report.md、temp/fresh-session-evidence/{answers-and-findings.md,commands.jsonl,checkpoint.json,resume-record.md,controlled-interrupt-result.json}；A的temp/home-resumption/{checkpoint.json,resumption-evidence.json,resumption-report.md}及Home指定project-a-resumption-report.md。父实际控制回执留外层temp/dev/home-issue-2/controlled-resumption-parent.json。
+
+## CI runner记录
+
+macos-latest的Arm64任务持续排队，既有main在06:51 UTC的验证及更早06:42的PR验证也未启动该平台。2026-11-25核对GitHub官方runner清单后，将本次macOS门禁固定到同版标准macos-26-intel / Node24，完整check:full、statechart、正常npm包门禁保持。依据：https://docs.github.com/en/actions/reference/runners/github-hosted-runners 。这是实际运行环境选择，不把Intel结果冒称Arm64结果；结果等待本轮真实job。

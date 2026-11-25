@@ -23,7 +23,9 @@ jobs:
             node: '22.14.0'
           - os: windows-latest
             node: '24'
-          - os: macos-latest
+          # Pin the standard Intel pool while macos-latest (Arm64) is queued;
+          # retain the same native macOS 26 / Node 24 validation gates.
+          - os: macos-26-intel
             node: '24'
     runs-on: ${{ matrix.os }}
     steps:
