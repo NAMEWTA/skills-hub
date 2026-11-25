@@ -42,6 +42,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
       }
     }
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
+    ui.note('每个所选技能在 .claude/skills/ 建立指向同仓 .agents/skills/ 的目录符号链接。需要目录 symlink 权限；同名真实目录、文件或外来链接会阻止安装。', '技能入口');
     const installer = createInstaller();
     const skills = installer.catalog();
     const initialNames = installer.installedNames(skills, project);
@@ -50,7 +51,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
-    if (selected.some(skill => ['dev', 'system', 'ops'].includes(skill.domain))) {
+    if (selected.some(skill => ['dev', 'system', 'ops', 'home'].includes(skill.domain))) {
       ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
     }
     if (selected.some(skill => skill.domain === 'dev' || skill.domain === 'system')) {
@@ -58,6 +59,9 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     }
     if (selected.some(skill => skill.domain === 'dev')) {
       ui.note('如缺少规则，将在项目根 .gitignore 追加 /.agents/dev/worktree/。', '开发工作树');
+    }
+    if (selected.some(skill => skill.domain === 'home')) {
+      ui.note('如缺少规则，将补项目根 .gitignore 的 /.agents/home/local.json 默认规则，保留项目例外；Home 业务资料由相应技能按需创建。', 'Home 本机映射');
     }
     if (!await ask(ui.confirm({ message: dryRun ? '检查安装计划？（不写入文件）' : '安装或更新以上技能？（有差异的现有技能会先备份）', initialValue: true }))) {
       ui.cancel('已取消，未修改文件。'); return 0;

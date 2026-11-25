@@ -45,3 +45,10 @@ jobs:
       - name: Render and browser-check the installed Chinese Archify skill
         if: runner.os == 'Linux'
         run: npm run check:upstream
+      - name: Verify skill discovery and reads in actual Claude Code
+        if: runner.os == 'Linux'
+        env:
+          CLAUDE_AGENT_SDK_PREFIX: ${{ runner.temp }}/skills-hub-claude-sdk
+        run: |
+          npm install --prefix "$CLAUDE_AGENT_SDK_PREFIX" --ignore-scripts --no-audit --no-fund @anthropic-ai/claude-agent-sdk@0.3.332
+          npm run check:claude

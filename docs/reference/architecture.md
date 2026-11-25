@@ -6,7 +6,7 @@ skills-hub 是技能源码、来源对照和安装工具的仓库。安装器把
 
 | 位置 | 职责 | 是否进入目标项目 |
 | --- | --- | --- |
-| `skills/<domain>/<domain>-xxx/` | 按 dev、ops、system 等领域整合的中文方法 | 选中后完整安装 |
+| `skills/<domain>/<domain>-xxx/` | 按 home、dev、ops、system 等领域整合的中文方法 | 选中后完整安装 |
 | `upstream-skills/zh-<原名>/` | 保留独立结构与工具语义的上游中文运行包 | 选中后完整安装 |
 | `materials/<source>/upstream/`、`zh/` | 固定来源快照与同路径中文对照 | 不安装；维护检查按明确入口使用 |
 | `materials/manifest.tsv` 与各来源 `manifest.tsv` | 来源身份、逐文件映射和运行核对依据 | 不安装 |
@@ -25,7 +25,7 @@ skills-hub 是技能源码、来源对照和安装工具的仓库。安装器把
 
 独立上游技能可以只解决一个任务，也可以由一个来源仓库提供多个入口。它们使用 `zh-<原名>` 安装名，在 CLI/TUI 中归入 `upstream-skills`。这个分组没有自己的工作流或持久化根；技术主题和 GitHub 语言统计不决定 domain。
 
-两类包最终都位于 `.agents/skills/<技能名>/`，安装名全局唯一。安装器不自动解析兄弟技能依赖。调用者需要某方法时读取实际安装的入口；缺少所需包时报告具体缺口。需要整套协作能力时按领域安装，独立任务可以只选所需入口。
+两类包的完整本体都位于 `.agents/skills/<技能名>/`，安装名全局唯一；同仓 `.claude/skills/<技能名>` 是指向本体的目录符号链接，不保存另一份内容。安装器不自动解析兄弟技能依赖。调用者需要某方法时读取实际安装的入口；缺少所需包时报告具体缺口。需要整套协作能力时按领域安装，独立任务可以只选所需入口。
 
 ## 从来源到运行包
 
@@ -50,8 +50,8 @@ flowchart TD
 | --- | --- | --- |
 | `install.mjs` 的 `catalog()` | 从两个运行根读取目录和 `SKILL.md`，返回领域、安装名、路径和描述 | 动态发现、命名和唯一性检查 |
 | `select()` | 目录、领域名、技能名及全选选项 | 选择取并集、去重，拒绝未知名称 |
-| `createInstaller().plan()` | 已选技能与真实项目根 | 检查目标和冲突，计算 install/replace/unchanged |
-| `createInstaller().apply()` | 同一选择和项目根 | 加锁、暂存、备份、切换、导航更新及普通异常恢复 |
+| `createInstaller().plan()` | 已选技能与真实项目根 | 检查本体、逐技能别名及冲突，分别计算本体和链接动作 |
+| `createInstaller().apply()` | 同一选择和项目根 | 加锁、重算、暂存、备份、切换、同仓补链、导航更新及普通异常恢复 |
 | `cli.mjs` 与 `tree-select.mjs` | 终端输入与目录数据 | 搜索、分页、跨组选择及确认，再调用同一安装核心 |
 | `scripts/init-persistence.mjs` | 最终选择的领域 | 规划和写入固定导航，保留业务记录 |
 
@@ -61,9 +61,15 @@ flowchart TD
 
 ## 技能、项目资料与宿主能力
 
-技能保存可复用的方法。目标项目的 `.agents/dev/`、`.agents/system/`、`.agents/ops/` 保存该项目的事实与过程；安装目录不承载这些记录。安装器维护领域导航、工作树和根 `/temp/` 忽略规则。任务按需建立运行目录，把持久验收写在 Change 的 Markdown 报告中。完整职责见[持久化目录](persistence-roots.md)。
+技能保存可复用的方法。目标项目的 `.agents/home/`、`.agents/dev/`、`.agents/system/`、`.agents/ops/` 保存该项目的事实与过程；安装目录不承载这些记录。安装器维护领域导航、工作树和根 `/temp/` 忽略规则。任务按需建立运行目录，把持久验收写在 Change 的 Markdown 报告中。完整职责见[持久化目录](persistence-roots.md)。
 
 宿主负责发现技能、提供模型、文件访问、子代理和外部工具。技能中的调用名称不等于每个宿主都存在同名 API；自动发现、并行或后台执行都需要实际能力支持。独立包保留原有工具前提，外部工具的最新响应也不因本地翻译而自动变成中文。
+
+## Home 的协调边界
+
+Home 以 `repos.json` 保存项目登记，以 Markdown 保存用户背景、管理知识、历史和有范围的协调摘要。派生地图与索引可重建；本机 `local.json` 仅覆盖位置。setup、route、map、knowledge、history、integrate、doctor 与 workflow 各维护自己的完整方法，具体职责见 [Home 方法归属](../home/method-ownership.md)。
+
+Home 不建立统一 Agent CLI adapter、任务数据库或后台服务。每层执行者在实际项目读取当地指令与技能，按当地有效规则调用用户选择的派遣方法。Home 只验收直接交付和有关项目证据；配置保存、能力观察、实际运行及联合验证是不同事实。
 
 ## 验证和分发边界
 

@@ -6,21 +6,32 @@ import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { repositoryRoot, createInstaller } from '../install.mjs';
 import { planPersistence } from '../scripts/init-persistence.mjs';
-import { isolatedGitEnvironment } from './helpers.mjs';
+import { isolatedGitEnvironment, snapshot } from './helpers.mjs';
 
 const dev = ['dev', 'dev/changes', 'dev/notes', 'dev/deploy', 'dev/archive',
   'dev/archive/changes/implemented', 'dev/archive/changes/rejected', 'dev/project', 'dev/context']
   .map(directory => `.agents/${directory}/AGENTS.md`).sort();
 const system = '.agents/system/AGENTS.md';
+const home = '.agents/home/AGENTS.md';
 const tempRule = '/temp/';
 const worktreeRule = '/.agents/dev/worktree/';
+const homeRule = '/.agents/home/local.json';
 function project(t) {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'skills-hub-init-')));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   return root;
 }
 function files(root) {
-  return fs.readdirSync(root, { recursive: true }).filter(file => fs.lstatSync(path.join(root, file)).isFile()).map(file => file.split(path.sep).join('/')).sort();
+  const result = [];
+  function visit(directory) {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const filename = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(filename);
+      else if (entry.isFile()) result.push(path.relative(root, filename).split(path.sep).join('/'));
+    }
+  }
+  visit(root);
+  return result.sort();
 }
 function records(root) { return files(root).filter(file => !file.startsWith('.agents/skills/')); }
 function run(root, ...args) {
@@ -33,9 +44,11 @@ for (const [label, args, expected] of [
   ['dev domain', ['--domain', 'dev'], [...dev, '.gitignore']],
   ['system only', ['--skill', 'system-inspect'], [system, '.gitignore'].sort()],
   ['ops only', ['--domain', 'ops'], ['.agents/ops/AGENTS.md']],
+  ['one home skill', ['--skill', 'home-setup'], [home, '.gitignore'].sort()],
+  ['home domain', ['--domain', 'home'], [home, '.gitignore'].sort()],
   ['independent skill only', ['--skill', 'zh-archify'], []],
   ['mixed domains', ['--skill', 'dev-intake', 'system-inspect'], [...dev, system, '.gitignore'].sort()],
-  ['all domains', ['--all'], [...dev, system, '.agents/ops/AGENTS.md', '.gitignore'].sort()],
+  ['all domains', ['--all'], [...dev, system, home, '.agents/ops/AGENTS.md', '.gitignore'].sort()],
 ]) test(`installing ${label} bootstraps exactly the selected domain records`, t => {
   const root = project(t);
   const preview = success(run(root, 'install', ...args, '--dry-run'));
@@ -49,13 +62,95 @@ for (const [label, args, expected] of [
   for (const file of expected) {
     const content = fs.readFileSync(path.join(root, file), 'utf8');
     if (file === '.gitignore') {
-      const rules = [expected.includes(dev[0]) ? worktreeRule : '', tempRule].filter(Boolean);
+      const rules = [expected.includes(dev[0]) && worktreeRule, (expected.includes(dev[0]) || expected.includes(system)) && tempRule,
+        expected.includes(home) && homeRule].filter(Boolean);
       assert.equal(content, rules.join('\n') + '\n');
       continue;
     }
     assert.match(content, /^# /);
     assert.ok(Array.from(content.replace(/\s/gu, '')).length <= 400, file);
   }
+});
+
+test('a second Claude link failure restores mixed domain navigation, ignore bytes and skill backups in one transaction', t => {
+  const root = project(t);
+  const regular = createInstaller();
+  const selected = regular.catalog().filter(skill => ['dev-intake', 'home-setup', 'system-inspect'].includes(skill.name));
+  assert.equal(selected.length, 3);
+  const installed = path.join(root, '.agents/skills/dev-intake');
+  fs.mkdirSync(path.dirname(installed), { recursive: true });
+  fs.cpSync(selected.find(skill => skill.name === 'dev-intake').source, installed, { recursive: true });
+  fs.writeFileSync(path.join(installed, 'local.txt'), 'Original skill content.\n');
+  fs.mkdirSync(path.join(root, '.agents/dev/notes'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.agents/dev/notes/user.md'), 'Existing project knowledge.\n');
+  fs.writeFileSync(path.join(root, '.agents/dev/AGENTS.md'), '# Previous managed navigation\n');
+  fs.writeFileSync(path.join(root, '.gitignore'), '\uFEFF# 本地规则\r\n/generated/');
+  const previous = snapshot(root);
+  let attempts = 0;
+  const installer = createInstaller({ fsOps: { ...fs, symlinkSync(target, destination, type) {
+    assert.equal(type, 'dir');
+    assert.match(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), /\/\.agents\/home\/local\.json/);
+    assert.ok(fs.existsSync(path.join(root, home)));
+    if (++attempts === 2) throw Object.assign(new Error('fixture second alias failed'), { code: 'EPERM' });
+    return fs.symlinkSync(target, destination, type);
+  } } });
+  assert.throws(() => installer.apply(selected, root), /rolled back.*second alias failed/);
+  assert.equal(attempts, 2);
+  assert.deepEqual(snapshot(root), previous);
+  assert.equal(fs.existsSync(path.join(root, '.claude')), false);
+});
+
+test('home local defaults preserve explicit Git exceptions and leave business records unchanged', t => {
+  const root = project(t);
+  const env = isolatedGitEnvironment(project(t));
+  const git = (...args) => spawnSync('git', args, { cwd: root, encoding: 'utf8', env });
+  assert.equal(git('init', '--quiet').status, 0);
+  fs.mkdirSync(path.join(root, '.agents/home/context'), { recursive: true });
+  const local = path.join(root, '.agents/home/local.json');
+  const preferences = path.join(root, '.agents/home/context/preferences.md');
+  fs.writeFileSync(local, '{"formatVersion":1,"paths":{}}\n');
+  fs.writeFileSync(preferences, '# 用户明确保存的设置\n');
+  const original = '\uFEFF# Keep the explicitly selected mapping\r\n!/.agents/home/local.json\r\n';
+  fs.writeFileSync(path.join(root, '.gitignore'), original);
+  success(run(root, 'install', '--skill', 'home-setup'));
+  const expected = '\uFEFF/.agents/home/local.json\r\n' + original.slice(1);
+  assert.equal(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), expected);
+  assert.equal(git('check-ignore', '--quiet', '.agents/home/local.json').status, 1);
+  assert.equal(fs.readFileSync(local, 'utf8'), '{"formatVersion":1,"paths":{}}\n');
+  assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
+  for (const file of ['repos.json', 'repos.md', 'relations.md', 'context/team', 'notes', 'inbox', 'history', 'coordination']) {
+    assert.equal(fs.existsSync(path.join(root, '.agents/home', file)), false, file);
+  }
+  success(run(root, 'install', '--skill', 'home-setup'));
+  assert.equal(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), expected);
+});
+
+for (const redirected of ['parent', 'file']) test(`link failure rollback does not follow a replaced persistence ${redirected}`, t => {
+  const root = project(t);
+  const outside = project(t);
+  const original = '# Previous managed Home navigation\n';
+  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
+  fs.writeFileSync(path.join(root, '.agents/home/AGENTS.md'), original);
+  fs.writeFileSync(path.join(outside, 'AGENTS.md'), '# Outside content must survive\n');
+  const previous = snapshot(outside);
+  const regular = createInstaller();
+  const selected = regular.catalog().filter(skill => skill.name === 'home-setup');
+  const installer = createInstaller({ fsOps: { ...fs, symlinkSync() {
+    const redirectedPath = path.join(root, '.agents/home', redirected === 'file' ? 'AGENTS.md' : '');
+    const moved = path.join(root, 'moved-home-' + redirected);
+    fs.renameSync(redirectedPath, moved);
+    fs.symlinkSync(redirected === 'file' ? path.join(outside, 'AGENTS.md') : outside, redirectedPath,
+      redirected === 'file' ? 'file' : 'dir');
+    throw Object.assign(new Error('fixture required alias failure after path replacement'), { code: 'EPERM' });
+  } } });
+  assert.throws(() => installer.apply(selected, root), error => {
+    assert.match(error.message, /manual recovery/);
+    assert.match(error.message, /回滚拒绝符号链接/);
+    return true;
+  });
+  assert.deepEqual(snapshot(outside), previous);
+  assert.equal(fs.readFileSync(path.join(root, 'moved-home-' + redirected, redirected === 'file' ? '' : 'AGENTS.md'), 'utf8'),
+    fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md'), 'utf8'));
 });
 
 test('system installation adds a default without rewriting user bytes on reinstall', t => {

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 import { createHash } from 'node:crypto';
-import { existsSync, lstatSync, mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { existsSync, lstatSync, mkdtempSync, readFileSync, readlinkSync, readdirSync, realpathSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { basename, join, resolve } from 'node:path';
+import { basename, isAbsolute, join, normalize, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { runNpm } from './npm-cli.mjs';
@@ -86,6 +86,22 @@ export function installedPackagePath(prefix, name) {
   return join(prefix, 'node_modules', ...name.split('/'));
 }
 
+function verifySkillLink(project, name) {
+  const canonical = join(project, '.agents', 'skills', name);
+  const alias = join(project, '.claude', 'skills', name);
+  for (const directory of [join(project, '.claude'), join(project, '.claude', 'skills'), canonical]) {
+    if (!lstatSync(directory).isDirectory() || lstatSync(directory).isSymbolicLink()) {
+      throw new Error(`npm 安装后预期普通目录：${directory}`);
+    }
+  }
+  if (!lstatSync(alias).isSymbolicLink()) throw new Error(`npm 安装后缺少逐技能符号链接：${name}`);
+  const target = readlinkSync(alias);
+  if (isAbsolute(target) || normalize(target) !== join('..', '..', '.agents', 'skills', name) ||
+      realpathSync(alias) !== realpathSync(canonical)) {
+    throw new Error(`npm 安装后的技能链接未指向同仓唯一技能本体：${name} -> ${target}`);
+  }
+}
+
 export function checkPackage(root = ROOT) {
   const temporary = mkdtempSync(join(tmpdir(), 'skills-hub npm package '));
   try {
@@ -112,12 +128,15 @@ export function checkPackage(root = ROOT) {
     runNode(cli, ['list'], temporary);
     runNode(cli, ['install', '--all', '--dry-run'], prefix);
     if (existsSync(join(prefix, '.agents'))) throw new Error('安装预览不应创建项目目录');
+    if (existsSync(join(prefix, '.claude'))) throw new Error('安装预览不应创建技能链接目录');
     if (existsSync(join(prefix, '.gitignore'))) throw new Error('安装预览不应创建 .gitignore');
     runNode(cli, ['install', '--all'], prefix);
     let skills = 0;
+    const names = [];
     const domains = new Set();
     for (const { domain, name, source } of catalog(root)) {
       const target = join(prefix, '.agents', 'skills', name);
+      verifySkillLink(prefix, name);
       for (const relative of regularFiles(source)) {
         if (!readFileSync(join(source, relative)).equals(readFileSync(join(target, relative)))) {
           throw new Error(`npm 安装后资源内容不同：${name}/${relative}`);
@@ -130,6 +149,7 @@ export function checkPackage(root = ROOT) {
         }
       }
       domains.add(domain);
+      names.push(name);
       skills += 1;
     }
     for (const relative of regularFiles(join(root, 'licenses'))) {
@@ -138,7 +158,7 @@ export function checkPackage(root = ROOT) {
       }
     }
     for (const domain of domains) {
-      if (['dev', 'system', 'ops'].includes(domain) && !existsSync(join(prefix, '.agents', domain, 'AGENTS.md'))) {
+      if (['dev', 'system', 'ops', 'home'].includes(domain) && !existsSync(join(prefix, '.agents', domain, 'AGENTS.md'))) {
         throw new Error(`安装所选领域后缺少持久化导航：${domain}`);
       }
     }
@@ -146,15 +166,16 @@ export function checkPackage(root = ROOT) {
       if (!readFileSync(join(root, resource)).equals(readFileSync(join(installed, resource)))) throw new Error(`安装初始化资源不同：${resource}`);
     }
     runNode(cli, ['install', '--all'], prefix);
-    const ignores = [domains.has('dev') && '/.agents/dev/worktree/', (domains.has('dev') || domains.has('system')) && '/temp/'].filter(Boolean);
+    for (const name of names) verifySkillLink(prefix, name);
+    const ignores = [domains.has('dev') && '/.agents/dev/worktree/', (domains.has('dev') || domains.has('system')) && '/temp/', domains.has('home') && '/.agents/home/local.json'].filter(Boolean);
     if (ignores.length && readFileSync(join(prefix, '.gitignore'), 'utf8') !== ignores.join('\n') + '\n') {
       throw new Error('安装和重复安装应只写入所选领域需要的忽略规则');
     }
     if (existsSync(join(prefix, 'temp'))) throw new Error('安装器不应创建临时证据目录');
     if (existsSync(join(prefix, '.agents', 'upstream-skills'))) throw new Error('上游独立技能分组不应创建业务持久化目录');
     if (existsSync(join(prefix, '.agents', 'skills-hub-licenses'))) throw new Error('安装器不应创建项目许可目录');
-    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);
-    return { name: packed.name, version: packed.version, filename: packed.filename, skills, files: packed.files.length, integrity: packed.integrity };
+    console.log(`实际 npm 包验证通过：${packed.name}@${packed.version}，${skills} 个技能及同仓链接，${packed.files.length} 个分发文件；包安装、命令入口、完整资源、许可与重复安装通过。`);
+    return { name: packed.name, version: packed.version, filename: packed.filename, skills, links: names.length, files: packed.files.length, integrity: packed.integrity };
   } finally {
     rmSync(temporary, { recursive: true, force: true });
   }

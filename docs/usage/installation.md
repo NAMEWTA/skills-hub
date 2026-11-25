@@ -1,6 +1,6 @@
 # 安装契约
 
-在需要使用技能的项目根目录运行安装命令。安装目标固定为当前目录下的 `.agents/skills/`；安装器不修改 Agent 的全局配置，也不替你选择工作目录。
+在需要使用技能的项目根目录运行安装命令。完整本体固定安装到当前项目的 `.agents/skills/`，每个所选技能另在同仓 `.claude/skills/` 建立目录符号链接。需要可创建目录 symlink 的文件系统与权限；安装器不修改 Agent 的全局配置，也不替你选择工作目录。
 
 ## npm 与源码入口
 
@@ -57,6 +57,7 @@ node /path/to/skills-hub/install.mjs install --domain dev
 | `list --domain dev` | 列出指定领域 |
 | `list --domain upstream-skills` | 列出独立上游中文技能 |
 | `install --domain dev system` | 安装所列领域的全部技能 |
+| `install --domain home` | 安装完整八个 Home 技能，建立同仓入口与 Home 最小导航 |
 | `install --domain upstream-skills` | 安装全部独立上游中文技能 |
 | `install --skill dev-spec system-proxy zh-archify` | 按完整安装名选择，允许跨组混选 |
 | `install --domain system --skill dev-learn` | 领域与技能选择取并集并去重 |
@@ -76,9 +77,11 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 安装器自动发现 `SKILL.md`，完整复制包内 references、assets、scripts、agents 及其他运行资源。目录名与 frontmatter 的 `name` 必须相同，两处源码的安装名全局唯一。安装后没有领域或来源中间目录；`materials/` 不参与安装器的发现和复制，安装器也不执行材料内容。
 
-选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 技能触发 ops 根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+每个本次选中的技能均建立对应 `.claude/skills/<name>`，新链接的目标为 `../../.agents/skills/<name>`，链接整个技能目录。`.claude/skills/` 本身仍是普通目录，未选中的技能和用户自有入口保持原样。Home 与各项目分别安装、分别更新，链接不指向其他仓库、npm 缓存、staging 或备份；没有第二套正文或双向同步。移动整个项目后，新建的相对链接仍指向随项目一起移动的本体。
 
-选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐 `/temp/`。dev 另补 `/.agents/dev/worktree/`，system 同时补系统根导航。混装只加一条 `/temp/`；仅 ops 或独立上游包不加。缺少 `.gitignore` 时创建，已有等效条目不重复写；新增 `/temp/` 放在既有项目规则之前，保留 `!/temp/` 等根级例外。实际忽略结果以 Git 判定为准。任务按需建立工作树和附件目录。交互和显式命令使用同一规则；`--dry-run` 只预览。list、help、取消和 dry-run 均不写入。
+选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 和 home 技能分别触发本领域根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+
+选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐 `/temp/`。dev 另补 `/.agents/dev/worktree/`，system 同时补系统根导航。home 补 `/.agents/home/local.json`；仅装 home 不加 `/temp/`。混装只加一条 `/temp/`；仅 ops 或独立上游包不加忽略项。缺少 `.gitignore` 时创建，已有等效条目不重复写；新增 `/temp/` 和 Home 本机映射默认规则放在既有项目规则之前，保留 `!/temp/`、`!/.agents/home/local.json` 等明确例外。实际忽略结果以 Git 判定为准。任务按需建立工作树和附件目录。交互和显式命令使用同一规则；`--dry-run` 只预览。list、help、取消和 dry-run 均不写入，也不创建链接探测或安装锁。
 
 忽略规则不取消跟踪。安装器不扫描、迁移或兼容旧证据，也不写入业务 Change；旧资料由使用者处理。实际取证和报告路径见[运行原件与验收](../reference/persistence-roots.md#运行原件与验收)。
 
@@ -102,11 +105,35 @@ CLI 的 `--skill` 使用完整 `zh-` 安装名；交互搜索可输入原名。�
 
 备份位于 `.agents/.skills-hub-backups/<UTC时间-随机后缀>/<技能名>/`，处于技能扫描目录之外。安装前的自行修改保存在备份中，不会自动合并回新版。需要长期项目特化时，在项目自己的技能源码或规则文件维护，再按宿主机制使用。
 
-安装器先检查技能、领域导航及适用的 `.gitignore` 路径，再取得 `.agents/.skills-wta-install.lock/` 与 `.agents/.skills-hub-install.lock/` 两把锁。旧锁名用于与早期安装器互斥。取得锁后重新检查计划，把所选文件复制到同一文件系统的临时目录，切换技能，再写入导航及所需忽略规则。
+安装器先检查技能本体、逐技能 Claude 入口、领域导航及适用的 `.gitignore` 路径，再取得 `.agents/.skills-wta-install.lock/` 与 `.agents/.skills-hub-install.lock/` 两把锁。旧锁名用于与早期安装器互斥。取得锁后重新检查计划，把需要更新的本体复制到同一文件系统的临时目录，切换技能，写入导航和忽略规则，再补齐链接。全部内容与链接核对通过后才报告成功。
 
-普通复制、切换或初始化写入异常会尝试恢复本次替换前的技能、导航和 `.gitignore` 原字节，清理本次新建的初始化文件与空目录。安装前已有业务资料保留。恢复失败会报告需要人工处理的路径。断电、强制结束及外部程序并发修改不在完整事务保证内。
+普通复制、切换、初始化或必需链接创建异常会尝试恢复本次替换前的技能、导航和 `.gitignore` 原字节，撤销本轮创建的链接，并清理本轮创建且仍为空的目录。已有正确链接保持原样；回滚不跟随被替换成链接的父目录写入外部目标。安装前已有业务资料保留。恢复失败会报告需要人工处理的路径与可用备份。断电、强制结束及外部程序并发修改不在完整事务保证内。
 
-异常终止留下锁时，先确认没有新旧安装进程，再移除遗留锁并检查备份。运行中的锁不能删除。即使技能全部 `unchanged`，补齐或更新导航也会取得相同锁。
+异常终止留下锁时，先确认没有新旧安装进程，再移除遗留锁并检查备份。运行中的锁不能删除。即使技能全部 `unchanged`，补齐缺失链接、补齐或更新导航也会取得相同锁。输出分别列出本体的 `install` / `replace` / `unchanged` 与链接的 `link` / `preserved`，完全重复安装不重写正确入口。
+
+### Claude 入口冲突
+
+| 安装前状态 | 处理 |
+| --- | --- |
+| 对应入口缺失 | 建立指向同仓本体的相对目录 symlink |
+| 目录 symlink 已正确指向同一本体 | 保留，包括经真实路径核对正确的绝对链接；绝对链接不保证搬迁后仍有效 |
+| 断链的目标恰为预期本体 | 保留入口，本次安装本体后恢复可达性 |
+| 同名普通文件、普通目录或指向其他目标的链接 | 写入前报告冲突；`--replace` 不授权覆盖这些入口 |
+| 错向断链 | 仍报冲突，不当成空路径替换 |
+| `.claude` 或 `.claude/skills` 是链接或非目录 | 报告冲突，不跟随它写入 |
+
+预检使用 `lstat` 和 `readlink`，已有本体时核对真实路径。需要处理自己的同名入口时，先明确其来源并另行保留或移动，再重试。普通安装不迁移旧 Claude 技能，不创建 `CLAUDE.md`、`GEMINI.md`、settings 或 hooks，也不改变项目已存在的这些文件。
+
+## 独立 home 领域
+
+```sh
+npx @namewta/skills-hub@latest install --domain home --dry-run
+npx @namewta/skills-hub@latest install --domain home
+```
+
+安装只处理选中技能本体、同仓 Claude 入口、`.agents/home/AGENTS.md` 与本机映射默认忽略项。不创建 repos.json、用户背景与偏好、团队配置、知识、候选、历史、协调记录、clone 或 worktree，也不遍历子项目安装其他领域。
+
+安装后按实际任务使用 `home-setup` 或 `home-workflow` 初始化用户选定的 Home Repo。根 `AGENTS.md` 的薄导航由 setup 在已有授权内合并，用户资料按需建立。更新 Home 技能保留业务资料；具体构建、配置、运营和多级派遣方法见 [Home 说明](../home/overview.md)。
 
 ## 独立 ops 领域
 
@@ -169,14 +196,14 @@ npx @namewta/skills-hub@latest install --skill dev-build dev-prototype
 
 ## 恢复与卸载
 
-恢复前停止正在读写对应技能的工具，核对备份，另行保留现有目录，再把选定备份移回 `.agents/skills/<技能名>/`。按包恢复，不用整个 `.agents` 覆盖项目资料。
+恢复前停止正在读写对应技能的工具，核对备份，另行保留现有目录，再把选定备份移回 `.agents/skills/<技能名>/`。已有正确 Claude 链接继续指向该位置，回读核对即可；不要将备份目录直接作为新的技能入口。按包恢复，不用整个 `.agents` 覆盖项目资料。
 
-卸载时移走对应技能目录即可。安装器没有递归清空项目的命令，也不删除 dev、system、ops 的业务记录。旧许可目录由使用者自行管理；再次分发仍须保留适用法律文件，范围见[统一第三方声明](../../THIRD_PARTY_NOTICES.md)。
+卸载时先核对 `.claude/skills/<技能名>` 确实是对应本体的链接，移除这个链接入口，再移走 `.agents/skills/<技能名>/`。保留其他入口与业务资料；同名用户目录或外来链接应单独核查。安装器没有递归清空项目的命令，也不删除 home、dev、system、ops 的业务记录。旧许可目录由使用者自行管理；再次分发仍须保留适用法律文件，范围见[统一第三方声明](../../THIRD_PARTY_NOTICES.md)。
 
 ## 平台与工具
 
-Windows、macOS、Linux 使用同一组 Node 命令。路径含空格时按所用 shell 加引号。显式参数安装核心使用 Node 标准库；交互模块使用 npm 声明的终端 UI 依赖。
+Windows、macOS、Linux 使用同一组 Node 命令。路径含空格时按所用 shell 加引号。显式参数安装核心使用 Node 标准库；交互模块使用 npm 声明的终端 UI 依赖。新双入口安装在三种平台都需要真实目录 symlink；Windows 环境须允许相应操作。权限或文件系统不支持时返回非零并回滚，不自动降级为 junction，也不复制第二套内容。旧版本仅复制文件安装成功，不能证明当前环境具备新前提。
 
-源码和目标中的符号链接、设备与管道会被拒绝。文件相等判断比较路径和内容，POSIX 还比较执行位；不把空目录、修改时间或其余权限当作包内容。在仓库的 `skills/`、`upstream-skills/`、`licenses/` 及其子目录中安装会被拒绝，避免递归写入自身。
+源码、canonical 本体和受保护持久化路径中的符号链接、设备与管道继续被拒绝；允许的新增链接仅是经过核对的逐技能 Claude 入口。源码和 npm tarball 仍分发完整普通文件，不把目标项目的链接打进包。文件相等判断比较路径和内容，POSIX 还比较执行位；不把空目录、修改时间或其余权限当作包内容。在仓库的 `skills/`、`upstream-skills/`、`licenses/` 及其子目录中安装会被拒绝，避免递归写入自身。
 
-安装器不执行技能脚本、不下载技能运行工具、不连接外部账号。支持 `.agents/skills/` 的 Agent 按自身发现规则读取，其他宿主可以显式加载入口。执行某技能还需具备该任务声明的工具、环境与授权。
+安装器不执行技能脚本、不下载技能运行工具、不连接外部账号。支持 `.agents/skills/` 的 Agent 按自身发现规则读取；Claude 可通过项目 `.claude/skills/` 的技能链接读取相同本体，具体版本的发现与调用需要真实宿主验证。文件系统链接验证和 tarball 消费验证不等于已经完成宿主调用。执行某技能还需具备该任务声明的工具、环境与授权。

@@ -132,6 +132,16 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     }
   }
 
+  function checkDirectoryPath(project, directory) {
+    if (!isWithin(directory, project)) throw new InstallError(`Destination is outside the current project: ${directory}`);
+    let current = project;
+    checkDirectory(current);
+    for (const part of path.relative(project, directory).split(path.sep).filter(Boolean)) {
+      current = path.join(current, part);
+      checkDirectory(current);
+    }
+  }
+
   function installedNames(skills, project) {
     const agents = path.join(project, '.agents');
     const target = path.join(agents, 'skills');
@@ -142,6 +152,53 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     }).map(({ name }) => name);
   }
 
+  function planLink(name, project, canonical) {
+    const relative = `.claude/skills/${name}`;
+    const destination = path.join(project, '.claude', 'skills', name);
+    const target = path.relative(path.dirname(destination), canonical);
+    const stat = exists(destination);
+    if (!stat) return { path: relative, destination, target, kind: 'link' };
+    if (!stat.isSymbolicLink()) {
+      throw new InstallError(`Claude skill entry conflict: ${destination} is not a symlink. Expected a directory symlink to ${canonical}; existing content was not changed.`);
+    }
+    const previous = fsOps.readlinkSync(destination);
+    const resolved = path.resolve(path.dirname(destination), previous);
+    // 预期本体尚未安装时，准确指向它的断链仍是可保留的入口。
+    let matches = path.relative(resolved, canonical) === '';
+    if (exists(canonical)) {
+      try {
+        matches = path.relative(fsOps.realpathSync(destination), fsOps.realpathSync(canonical)) === '' &&
+          fsOps.statSync(destination).isDirectory();
+      }
+      catch (error) {
+        if (!['ENOENT', 'ENOTDIR', 'ELOOP'].includes(error.code)) throw error;
+        matches = false;
+      }
+    }
+    if (!matches) {
+      throw new InstallError(`Claude skill entry conflict: ${destination} -> ${previous}. Expected ${canonical}; the existing link and its target were not changed.`);
+    }
+    return { path: relative, destination, target: previous, kind: 'preserved' };
+  }
+
+  function checkLinkParents(project) {
+    for (const relative of ['.agents', '.agents/skills', '.claude', '.claude/skills']) {
+      checkDirectory(path.join(project, relative));
+    }
+  }
+
+  function verifyLink(action, project) {
+    checkLinkParents(project);
+    checkDirectory(action.destination);
+    const actual = planLink(action.name, project, action.destination);
+    if (actual.kind !== 'preserved' || actual.target !== action.link.target ||
+        path.relative(fsOps.realpathSync(actual.destination), fsOps.realpathSync(action.destination)) !== '') {
+      throw new InstallError(`Claude skill link verification failed: ${action.link.destination}`);
+    }
+    const manifest = path.join(actual.destination, 'SKILL.md');
+    if (!exists(manifest)?.isFile()) throw new InstallError(`Expected a regular skill entry: ${manifest}`);
+  }
+
   function plan(skills, project, replace = true) {
     const actualProject = fsOps.realpathSync(project);
     for (const source of [skillRoot, upstreamRoot, licenseRoot]) {
@@ -149,41 +206,60 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         throw new InstallError("Run from the target project, outside this repository's source skills and licenses directories (including upstream-skills).");
       }
     }
+    project = actualProject;
     const agents = path.join(project, '.agents');
     const target = path.join(agents, 'skills');
     for (const filename of [agents, target, path.join(agents, '.skills-hub-backups')]) checkDirectory(filename);
+    checkLinkParents(project);
     const actions = [];
     const conflicts = [];
     const packages = skills.map((skill) => ({ source: skill.source, name: skill.name, destination: path.join(target, skill.name) }));
     for (const item of packages) {
-      checkDirectory(item.destination);
-      let kind;
-      if (!exists(item.destination)) kind = 'install';
-      else if (treeDigest(item.source, fsOps) === treeDigest(item.destination, fsOps)) kind = 'unchanged';
-      else if (replace) kind = 'replace';
-      else { conflicts.push(item.name); continue; }
-      actions.push({ ...item, kind });
+      try {
+        checkDirectory(item.destination);
+        let kind;
+        if (!exists(item.destination)) kind = 'install';
+        else if (treeDigest(item.source, fsOps) === treeDigest(item.destination, fsOps)) kind = 'unchanged';
+        else if (replace) kind = 'replace';
+        else throw new InstallError(`Existing packages differ: ${item.name}. Inspect them first; --replace saves backups before replacement.`);
+        actions.push({ ...item, kind, link: planLink(item.name, project, item.destination) });
+      } catch (error) { conflicts.push(error.message); }
     }
+    try { planPersistence(skills, project, fsOps); }
+    catch (error) { conflicts.push(error.message); }
     if (conflicts.length) {
-      throw new InstallError(`Existing packages differ: ${conflicts.join(', ')}. No skills were changed. Inspect them first; --replace saves backups before replacement.`);
+      throw new InstallError(`Installation conflicts; no files were changed:\n${conflicts.join('\n')}`);
     }
-    planPersistence(skills, project, fsOps);
     return actions;
   }
 
   function persistencePlan(skills, project) { return planPersistence(skills, project, fsOps); }
 
   function apply(skills, project, replace = true) {
+    project = fsOps.realpathSync(project);
     let actions = plan(skills, project, replace);
     let persistence = persistencePlan(skills, project);
-    if (actions.every((action) => action.kind === 'unchanged') && persistence.every(item => item.action === 'preserve')) {
+    if (actions.every((action) => action.kind === 'unchanged' && action.link.kind === 'preserved') && persistence.every(item => item.action === 'preserve')) {
+      for (const action of actions) verifyLink(action, project);
       return { actions, backup: null, persistence };
     }
     const agents = path.join(project, '.agents');
-    fsOps.mkdirSync(agents, { recursive: true });
     const locks = [];
+    let staging = null;
+    let backup = null;
+    const journal = { skills: [], persistence: [], links: [], directories: [] };
+    const recoveryErrors = [];
+    let failure = null;
+    function ensureDirectory(directory) {
+      checkDirectoryPath(project, directory);
+      if (!exists(directory)) {
+        fsOps.mkdirSync(directory);
+        journal.directories.push(directory);
+      }
+    }
     try {
-      // 先取得旧版共用锁，使改名前后的安装器不会同时写入 .agents/skills。
+      ensureDirectory(agents);
+      // 先取得旧版共用锁；链接补建也与现有安装事务互斥。
       for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
         const lock = path.join(agents, name);
         try { fsOps.mkdirSync(lock); }
@@ -193,28 +269,21 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         }
         locks.push(lock);
       }
-    } catch (error) {
-      for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
-      throw error;
-    }
-    let staging = null;
-    let backup = null;
-    const completed = [];
-    const persistenceJournal = [];
-    try {
       actions = plan(skills, project, replace);
       persistence = persistencePlan(skills, project);
-      staging = fsOps.mkdtempSync(path.join(agents, '.skills-hub-stage-'));
+      if (actions.some(action => action.kind !== 'unchanged')) staging = fsOps.mkdtempSync(path.join(agents, '.skills-hub-stage-'));
       for (const action of actions) {
         if (action.kind !== 'unchanged') {
           fsOps.cpSync(action.source, path.join(staging, action.name), { recursive: true, errorOnExist: true, force: false });
         }
       }
-      fsOps.mkdirSync(path.join(agents, 'skills'), { recursive: true });
+      ensureDirectory(path.join(agents, 'skills'));
       if (actions.some((action) => action.kind === 'replace')) {
         const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}Z$/, 'Z');
-        backup = path.join(agents, '.skills-hub-backups', `${stamp}-${randomUUID().replaceAll('-', '').slice(0, 8)}`);
-        fsOps.mkdirSync(backup, { recursive: true });
+        const backups = path.join(agents, '.skills-hub-backups');
+        ensureDirectory(backups);
+        backup = path.join(backups, `${stamp}-${randomUUID().replaceAll('-', '').slice(0, 8)}`);
+        ensureDirectory(backup);
       }
       for (const action of actions) {
         if (action.kind === 'unchanged') continue;
@@ -222,29 +291,89 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         if (action.kind === 'replace') {
           previous = path.join(backup, action.name);
           fsOps.renameSync(action.destination, previous);
-          completed.push({ destination: action.destination, previous });
+          journal.skills.push({ destination: action.destination, previous });
         }
         fsOps.renameSync(path.join(staging, action.name), action.destination);
-        if (previous === null) completed.push({ destination: action.destination, previous });
+        if (previous === null) journal.skills.push({ destination: action.destination, previous });
       }
-      applyPersistence(persistence, project, fsOps, persistenceJournal);
-      return { actions, backup, persistence };
+      applyPersistence(persistence, project, fsOps, journal.persistence);
+      ensureDirectory(path.join(project, '.claude'));
+      ensureDirectory(path.join(project, '.claude', 'skills'));
+      for (const action of actions) {
+        checkLinkParents(project);
+        checkDirectory(action.destination);
+        const current = planLink(action.name, project, action.destination);
+        if (current.kind !== action.link.kind || current.target !== action.link.target) {
+          throw new InstallError(`Claude skill entry changed during installation: ${action.link.destination}`);
+        }
+        if (action.link.kind === 'link') {
+          try { fsOps.symlinkSync(action.link.target, action.link.destination, 'dir'); }
+          catch (error) {
+            throw new InstallError(`Cannot create directory symlink ${action.link.destination} -> ${action.link.target}: ${error.code ?? ''} ${error.message}. Directory symlink support is required; no junction or copy fallback is used.`);
+          }
+          journal.links.push(action.link);
+        }
+        verifyLink(action, project);
+      }
+      for (const action of actions) {
+        verifyLink(action, project);
+        if (treeDigest(action.source, fsOps) !== treeDigest(action.destination, fsOps)) {
+          throw new InstallError(`Installed skill verification failed: ${action.destination}`);
+        }
+      }
+      if (persistencePlan(skills, project).some(item => item.action !== 'preserve')) {
+        throw new InstallError('Project initialization verification failed; check the reported paths and retry.');
+      }
     } catch (error) {
-      const recoveryErrors = rollbackPersistence(persistenceJournal, fsOps);
-      for (const item of completed.reverse()) {
+      failure = error;
+      for (const link of [...journal.links].reverse()) {
         try {
+          checkLinkParents(project);
+          const stat = exists(link.destination);
+          if (!stat) continue;
+          if (!stat.isSymbolicLink() || fsOps.readlinkSync(link.destination) !== link.target) {
+            throw new InstallError('The created link changed; preserving the current entry for manual recovery.');
+          }
+          fsOps.unlinkSync(link.destination);
+        } catch (recoveryError) { recoveryErrors.push(`${link.destination}: ${recoveryError.message}`); }
+      }
+      recoveryErrors.push(...rollbackPersistence(journal.persistence, fsOps));
+      for (const item of [...journal.skills].reverse()) {
+        try {
+          checkDirectoryPath(project, path.dirname(item.destination));
+          if (item.previous !== null) checkDirectoryPath(project, path.dirname(item.previous));
           if (exists(item.destination)) fsOps.rmSync(item.destination, { recursive: true });
           if (item.previous !== null) fsOps.renameSync(item.previous, item.destination);
         } catch (recoveryError) { recoveryErrors.push(`${item.destination}: ${recoveryError.message}`); }
       }
-      if (recoveryErrors.length) {
-        throw new InstallError(`Installation failed: ${error.message}. Some files need manual recovery.${backup ? ` Keep ${backup}.` : ''} ${recoveryErrors.join('; ')}`);
-      }
-      throw new InstallError(`Installation failed; changes to skill directories and project initialization files were rolled back: ${error.message}`);
     } finally {
-      if (staging !== null) fsOps.rmSync(staging, { recursive: true, force: true });
-      for (const lock of locks.reverse()) fsOps.rmdirSync(lock);
+      if (staging !== null) {
+        try { checkDirectoryPath(project, path.dirname(staging)); fsOps.rmSync(staging, { recursive: true, force: true }); }
+        catch (error) { recoveryErrors.push(`${staging}: ${error.message}`); }
+      }
+      for (const lock of locks.reverse()) {
+        try { checkDirectoryPath(project, lock); fsOps.rmdirSync(lock); }
+        catch (error) { recoveryErrors.push(`${lock}: ${error.message}`); }
+      }
+      if (failure) {
+        for (const directory of [...journal.directories].reverse()) {
+          try { checkDirectoryPath(project, directory); fsOps.rmdirSync(directory); }
+          catch (error) {
+            if (!['ENOENT', 'ENOTEMPTY', 'EEXIST'].includes(error.code)) recoveryErrors.push(`${directory}: ${error.message}`);
+          }
+        }
+      }
     }
+    if (failure) {
+      if (recoveryErrors.length) {
+        throw new InstallError(`Installation failed: ${failure.message}. Some files need manual recovery.${backup ? ` Keep ${backup}.` : ''} ${recoveryErrors.join('; ')}`);
+      }
+      throw new InstallError(`Installation failed; changes to skill directories, Claude links and project initialization files were rolled back: ${failure.message}`);
+    }
+    if (recoveryErrors.length) {
+      throw new InstallError(`Installation files were updated, but temporary artifacts need manual cleanup: ${recoveryErrors.join('; ')}`);
+    }
+    return { actions, backup, persistence };
   }
   return { catalog, installedNames, plan, apply, persistencePlan };
 }
@@ -254,10 +383,12 @@ export function catalog(repository = repositoryRoot) { return createInstaller({ 
 const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill NAME ...] [--all]
        skills-hub install <selection> [--dry-run] [--replace]
 
-Install complete skills into the current project's .agents/skills/. No destination option.
+Install complete skills into the current project's .agents/skills/ and link each selected .claude/skills/<name> to that same skill. No destination option.
+Directory symlink support is required, including on Windows; conflicting Claude entries are never replaced.
 --domain upstream-skills selects the independent Chinese upstream skills; it creates no domain navigation.
-Selected dev/system/ops domains initialize domain AGENTS.md navigation; managed templates are updated and business records are preserved.
+Selected dev/system/ops/home domains initialize domain AGENTS.md navigation; managed templates are updated and business records are preserved.
 Dev or system selections add /temp/ to the project .gitignore when missing; dev also adds /.agents/dev/worktree/.
+Home selections add /.agents/home/local.json to .gitignore; Home business records are created on demand by their owning skills.
 --dry-run  Preview without writing files.
 Differing selected skills are backed up and replaced automatically.
 --replace  Accepted for compatibility; replacement is already the default.
@@ -311,8 +442,10 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
       ? { actions: installer.plan(selected, actualProject, args.replace), backup: null, persistence: installer.persistencePlan(selected, actualProject) }
       : installer.apply(selected, actualProject, args.replace);
     stdout(`Destination: ${path.join(actualProject, '.agents', 'skills')}`);
+    stdout(`Claude entries: ${path.join(actualProject, '.claude', 'skills')}`);
     for (const action of actions) {
-      stdout(`${args.dryRun ? 'would ' : ''}${action.kind.padEnd(9)} ${action.name}`);
+      const prefix = args.dryRun ? 'would ' : '';
+      stdout(`${prefix}${action.kind.padEnd(9)} ${action.name} | ${prefix}${action.link.kind.padEnd(9)} ${action.link.path} -> ${action.link.target}`);
     }
     for (const item of persistence) stdout(`${args.dryRun ? 'would ' : ''}${item.action.padEnd(9)} ${item.path}`);
     if (backup !== null) stdout(`Backups: ${backup}`);

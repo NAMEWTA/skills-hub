@@ -50,6 +50,23 @@ class InstallFixture {
     return result;
   }
   names() { return new Set(fs.readdirSync(this.target)); }
+  alias(name) { return path.join(this.project, '.claude', 'skills', name); }
+  assertAlias(name, relative = true) {
+    const canonical = path.join(this.target, name);
+    const alias = this.alias(name);
+    for (const directory of [this.target, canonical, path.dirname(path.dirname(alias)), path.dirname(alias)]) {
+      assert.ok(fs.lstatSync(directory).isDirectory(), directory);
+      assert.ok(!fs.lstatSync(directory).isSymbolicLink(), directory);
+    }
+    assert.ok(fs.lstatSync(alias).isSymbolicLink(), alias);
+    assert.ok(fs.statSync(alias).isDirectory(), alias);
+    if (relative) {
+      assert.ok(!path.isAbsolute(fs.readlinkSync(alias)));
+      assert.equal(path.normalize(fs.readlinkSync(alias)), path.join('..', '..', '.agents', 'skills', name));
+    }
+    assert.equal(fs.realpathSync(alias), fs.realpathSync(canonical));
+    assert.deepEqual(snapshot(alias), snapshot(canonical));
+  }
   installer(overrides = {}) { return createInstaller({ repository: this.repository, fsOps: { ...fs, ...overrides } }); }
   selected(...names) { return select(this.installer().catalog(), [], names); }
   seed(name, differing = false) {
@@ -99,6 +116,8 @@ contract('list can filter a domain', (f) => {
 contract('domain installs flat into the current project', (f) => {
   f.success(f.cli('install', '--domain', 'dev'));
   assert.deepEqual(f.names(), new Set(['dev-alpha', 'dev-beta']));
+  for (const name of f.names()) f.assertAlias(name);
+  assert.deepEqual(fs.readdirSync(path.join(f.project, '.claude/skills')), ['dev-alpha', 'dev-beta']);
   assert.ok(!fs.existsSync(path.join(f.target, 'dev')));
   assert.ok(!fs.existsSync(path.join(f.repository, '.agents')));
   f.noTemporaryArtifacts();
@@ -123,6 +142,7 @@ contract('mixed and repeated selections form a union', (f) => {
   const result = f.success(f.cli('install', '--domain', 'dev', '--domain', 'dev', '--skill', 'system-clean', 'dev-alpha', '--skill', 'dev-alpha'));
   assert.deepEqual(f.names(), new Set(Object.keys(f.sources)));
   assert.equal(result.stdout.split('\n').filter((line) => line.includes('dev-alpha')).length, 1);
+  for (const name of f.names()) f.assertAlias(name);
 });
 contract('all selects every domain', (f) => {
   f.success(f.cli('install', '--all'));
@@ -142,6 +162,7 @@ contract('upstream group lists and installs complete Chinese packages without do
   f.success(f.cli('install', '--domain', 'upstream-skills'));
   assert.deepEqual(f.names(), new Set(names));
   assert.deepEqual(snapshot(path.join(f.target, 'zh-archify')), snapshot(source));
+  for (const name of names) f.assertAlias(name);
   assert.deepEqual(fs.readdirSync(path.join(f.project, '.agents')), ['skills']);
   assert.match(f.success(f.cli('install', '--skill', 'zh-archify')).stdout, /unchanged/);
   f.noTemporaryArtifacts();
@@ -189,9 +210,12 @@ contract('replacement applies a source executable-bit-only change', (f) => {
 }, posixOnly);
 contract('dry run creates no directories or files', (f) => {
   const before = snapshot(f.project);
-  assert.match(f.success(f.cli('install', '--domain', 'dev', '--dry-run')).stdout, /would install/);
+  const output = f.success(f.cli('install', '--domain', 'dev', '--dry-run')).stdout;
+  assert.match(output, /would install/);
+  assert.match(output, /would link\s+\.claude\/skills\/dev-alpha -> /);
   assert.deepEqual(snapshot(f.project), before);
   assert.ok(!fs.existsSync(path.join(f.project, '.agents')));
+  assert.ok(!fs.existsSync(path.join(f.project, '.claude')));
 });
 contract('dry run of a replacement does not create a backup', (f) => {
   f.seed('dev-alpha', true);
@@ -199,15 +223,29 @@ contract('dry run of a replacement does not create a backup', (f) => {
   assert.match(f.success(f.cli('install', '--skill', 'dev-alpha', '--replace', '--dry-run')).stdout, /would replace/);
   assert.deepEqual(snapshot(f.project), before);
 });
+contract('planning never probes symlink permissions or creates locks', (f) => {
+  const installer = f.installer({
+    mkdirSync() { assert.fail('Planning must not create directories or locks'); },
+    symlinkSync() { assert.fail('Planning must not probe symlink permissions'); },
+  });
+  const previous = snapshot(f.project);
+  const actions = installer.plan(f.selected('dev-alpha'), f.project);
+  assert.equal(actions[0].link.kind, 'link');
+  assert.deepEqual(snapshot(f.project), previous);
+});
 contract('repeated installation is idempotent', (f) => {
   f.success(f.cli('install', '--all'));
   const before = snapshot(f.project);
   const sample = path.join(f.target, 'dev-alpha/SKILL.md');
   const mtime = fs.statSync(sample, { bigint: true }).mtimeNs;
+  const aliasStat = fs.lstatSync(f.alias('dev-alpha'), { bigint: true });
   const result = f.success(f.cli('install', '--all'));
   assert.equal(result.stdout.match(/unchanged/g)?.length, Object.keys(f.sources).length);
   assert.deepEqual(snapshot(f.project), before);
   assert.equal(fs.statSync(sample, { bigint: true }).mtimeNs, mtime);
+  assert.equal(fs.lstatSync(f.alias('dev-alpha'), { bigint: true }).mtimeNs, aliasStat.mtimeNs);
+  assert.equal(fs.lstatSync(f.alias('dev-alpha'), { bigint: true }).ino, aliasStat.ino);
+  assert.match(result.stdout, /preserved\s+\.claude\/skills\/dev-alpha/);
   f.noTemporaryArtifacts();
 });
 contract('unknown domains or names make no changes', (f) => {
@@ -419,4 +457,239 @@ contract('help and package version do not install anything', (f) => {
   assert.match(f.success(f.cli('--help')).stdout, /Usage: skills-hub/);
   assert.equal(f.success(f.cli('--version')).stdout.trim(), '0.0.2');
   assert.ok(!fs.existsSync(path.join(f.project, '.agents')));
+  assert.ok(!fs.existsSync(path.join(f.project, '.claude')));
+});
+
+contract('unchanged canonical skills acquire both locks to supplement only missing links', (f) => {
+  f.success(f.cli('install', '--domain', 'dev'));
+  fs.unlinkSync(f.alias('dev-alpha'));
+  const sample = path.join(f.target, 'dev-alpha/SKILL.md');
+  const mtime = fs.statSync(sample, { bigint: true }).mtimeNs;
+  const preserved = fs.lstatSync(f.alias('dev-beta'), { bigint: true });
+  const created = [];
+  const installer = f.installer({
+    cpSync() { assert.fail('Unchanged skill bodies must not be copied'); },
+    symlinkSync(target, destination, type) {
+      assert.equal(type, 'dir');
+      assert.equal(destination, f.alias('dev-alpha'));
+      for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
+        assert.ok(fs.lstatSync(path.join(f.project, '.agents', name)).isDirectory());
+      }
+      created.push(destination);
+      fs.symlinkSync(target, destination, type);
+    },
+  });
+  const result = installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project);
+  assert.deepEqual(result.actions.map(action => [action.kind, action.link.kind]), [['unchanged', 'link'], ['unchanged', 'preserved']]);
+  assert.equal(result.backup, null);
+  assert.deepEqual(created, [f.alias('dev-alpha')]);
+  assert.equal(fs.statSync(sample, { bigint: true }).mtimeNs, mtime);
+  assert.equal(fs.lstatSync(f.alias('dev-beta'), { bigint: true }).mtimeNs, preserved.mtimeNs);
+  assert.equal(fs.lstatSync(f.alias('dev-beta'), { bigint: true }).ino, preserved.ino);
+  for (const name of ['dev-alpha', 'dev-beta']) f.assertAlias(name);
+  f.noTemporaryArtifacts();
+});
+
+contract('updates replace only the canonical body and preserve an equivalent absolute symlink', (f) => {
+  f.seed('dev-alpha');
+  const alias = f.alias('dev-alpha');
+  fs.mkdirSync(path.dirname(alias), { recursive: true });
+  const canonical = path.join(f.target, 'dev-alpha');
+  fs.symlinkSync(canonical, alias, 'dir');
+  const initial = fs.lstatSync(alias, { bigint: true });
+  f.success(f.cli('install', '--skill', 'dev-alpha'));
+  write(path.join(f.sources['dev-alpha'], 'references/details.md'), 'Updated shared content.\n');
+  const output = f.success(f.cli('install', '--skill', 'dev-alpha', '--replace')).stdout;
+  assert.match(output, /replace\s+dev-alpha \| preserved/);
+  assert.equal(fs.readFileSync(path.join(alias, 'references/details.md'), 'utf8'), 'Updated shared content.\n');
+  assert.equal(fs.readlinkSync(alias), canonical);
+  assert.equal(fs.lstatSync(alias, { bigint: true }).mtimeNs, initial.mtimeNs);
+  assert.equal(fs.lstatSync(alias, { bigint: true }).ino, initial.ino);
+  f.assertAlias('dev-alpha', false);
+  assert.equal(f.backups('dev-alpha').length, 1);
+});
+
+contract('a dangling link to the expected canonical is preserved and becomes reachable', (f) => {
+  const alias = f.alias('dev-alpha');
+  fs.mkdirSync(path.dirname(alias), { recursive: true });
+  const target = path.join('..', '..', '.agents', 'skills', 'dev-alpha');
+  fs.symlinkSync(target, alias, 'dir');
+  assert.equal(fs.existsSync(alias), false);
+  const inode = fs.lstatSync(alias, { bigint: true }).ino;
+  const result = f.success(f.cli('install', '--skill', 'dev-alpha'));
+  assert.match(result.stdout, /install\s+dev-alpha \| preserved/);
+  assert.equal(fs.lstatSync(alias, { bigint: true }).ino, inode);
+  f.assertAlias('dev-alpha');
+});
+
+for (const kind of ['file', 'directory', 'foreign link', 'wrong dangling link']) {
+  contract(`a ${kind} at the selected Claude entry fails before writes even with --replace`, (f) => {
+    f.seed('dev-beta', true);
+    const alias = f.alias('dev-alpha');
+    fs.mkdirSync(path.dirname(alias), { recursive: true });
+    const outside = path.join(f.root, 'foreign content');
+    write(path.join(outside, 'keep.md'), 'Do not touch this target.\n');
+    const before = snapshot(outside);
+    if (kind === 'file') fs.writeFileSync(alias, 'user entry');
+    else if (kind === 'directory') write(path.join(alias, 'SKILL.md'), 'user skill');
+    else fs.symlinkSync(kind === 'foreign link' ? outside : path.join(f.root, 'missing'), alias, 'dir');
+    for (const options of [[], ['--dry-run'], ['--replace']]) {
+      const result = f.failure('install', '--domain', 'dev', ...options);
+      assert.match(result.stderr, /Claude skill entry conflict/);
+      assert.ok(result.stderr.includes(alias));
+    }
+    assert.deepEqual(snapshot(outside), before);
+    assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha')));
+    assert.ok(!fs.existsSync(path.join(f.project, '.agents/.skills-hub-backups')));
+  });
+}
+
+for (const parent of ['.claude', '.claude/skills']) {
+  for (const kind of ['file', 'symlink']) {
+    contract(`a ${kind} at ${parent} is never followed or replaced`, (f) => {
+      const entry = path.join(f.project, parent);
+      fs.mkdirSync(path.dirname(entry), { recursive: true });
+      const outside = path.join(f.root, 'outside');
+      fs.mkdirSync(outside);
+      if (kind === 'file') fs.writeFileSync(entry, 'preserve');
+      else fs.symlinkSync(outside, entry, 'dir');
+      const result = f.failure('install', '--all', '--replace');
+      assert.ok(result.stderr.includes(entry));
+      assert.deepEqual(snapshot(outside), {});
+      assert.ok(!fs.existsSync(path.join(f.project, '.agents')));
+    });
+  }
+}
+
+contract('unselected skill entries, personal Claude skills and child projects are untouched', (f) => {
+  f.success(f.cli('install', '--skill', 'dev-beta'));
+  const oldBody = snapshot(path.join(f.target, 'dev-beta'));
+  const oldLink = fs.readlinkSync(f.alias('dev-beta'));
+  write(path.join(f.sources['dev-beta'], 'references/details.md'), 'Unselected update.\n');
+  const personal = path.join(f.project, '.claude/skills/personal');
+  write(path.join(personal, 'SKILL.md'), 'User-owned skill.\n');
+  const child = path.join(f.project, 'child project');
+  write(path.join(child, '.agents/skills/dev-alpha/SKILL.md'), 'Independent child version.\n');
+  write(path.join(child, '.claude/skills/dev-alpha/SKILL.md'), 'Independent child Claude version.\n');
+  const previousChild = snapshot(child);
+  f.success(f.cli('install', '--skill', 'dev-alpha'));
+  assert.deepEqual(snapshot(path.join(f.target, 'dev-beta')), oldBody);
+  assert.equal(fs.readlinkSync(f.alias('dev-beta')), oldLink);
+  assert.equal(fs.readFileSync(path.join(personal, 'SKILL.md'), 'utf8'), 'User-owned skill.\n');
+  assert.deepEqual(snapshot(child), previousChild);
+  assert.deepEqual(fs.readdirSync(path.join(f.project, '.claude/skills')), ['dev-alpha', 'dev-beta', 'personal']);
+  for (const name of ['CLAUDE.md', 'GEMINI.md', 'settings.json', 'settings.local.json']) {
+    assert.ok(!fs.existsSync(path.join(f.project, name)));
+    assert.ok(!fs.existsSync(path.join(f.project, '.claude', name)));
+  }
+});
+
+contract('the link plan is recomputed after both locks before committing any skill', (f) => {
+  const canonical = f.seed('dev-alpha', true);
+  const previous = snapshot(canonical);
+  const alias = f.alias('dev-alpha');
+  const installer = f.installer({
+    mkdirSync(directory, ...args) {
+      const result = fs.mkdirSync(directory, ...args);
+      if (path.basename(directory) === '.skills-hub-install.lock') write(alias, 'new user conflict');
+      return result;
+    },
+    cpSync() { assert.fail('A conflict discovered under the locks must precede staging'); },
+  });
+  assert.throws(() => installer.apply(f.selected('dev-alpha'), f.project), /Claude skill entry conflict/);
+  assert.deepEqual(snapshot(canonical), previous);
+  assert.equal(fs.readFileSync(alias, 'utf8'), 'new user conflict');
+  assert.ok(!fs.existsSync(path.join(f.project, '.agents/dev')));
+  f.noTemporaryArtifacts();
+});
+
+contract('directory symlink permission failure has no fallback and rolls back all newly created paths', (f) => {
+  const previous = snapshot(f.project);
+  const attempts = [];
+  const installer = f.installer({ symlinkSync(target, destination, type) {
+    attempts.push({ target, destination, type });
+    throw Object.assign(new Error('fixture symlink permission denied'), { code: 'EPERM' });
+  } });
+  assert.throws(() => installer.apply(f.selected('dev-alpha'), f.project), /rolled back.*EPERM.*no junction or copy fallback/);
+  assert.equal(attempts.length, 1);
+  assert.equal(attempts[0].type, 'dir');
+  assert.ok(!path.isAbsolute(attempts[0].target));
+  assert.deepEqual(snapshot(f.project), previous);
+});
+
+contract('failure on the second link restores replacements, previous dangling links and removes only new links', (f) => {
+  f.seed('dev-beta', true);
+  const systemAlias = f.alias('system-clean');
+  fs.mkdirSync(path.dirname(systemAlias), { recursive: true });
+  fs.symlinkSync(path.join('..', '..', '.agents', 'skills', 'system-clean'), systemAlias, 'dir');
+  const previous = snapshot(f.project);
+  let created = 0;
+  const installer = f.installer({ symlinkSync(target, destination, type) {
+    if (++created === 2) throw Object.assign(new Error('fixture second link failed'), { code: 'EACCES' });
+    return fs.symlinkSync(target, destination, type);
+  } });
+  assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta', 'system-clean'), f.project), /rolled back.*second link failed/);
+  assert.equal(created, 2);
+  assert.deepEqual(snapshot(f.project), previous);
+  assert.ok(fs.lstatSync(systemAlias).isSymbolicLink());
+  assert.equal(fs.existsSync(systemAlias), false);
+  f.noTemporaryArtifacts();
+});
+
+contract('a failed link cleanup reports the remaining entry instead of claiming complete rollback', (f) => {
+  const installer = f.installer({
+    symlinkSync(target, destination, type) {
+      if (path.basename(destination) === 'dev-beta') throw new Error('fixture link failed');
+      return fs.symlinkSync(target, destination, type);
+    },
+    unlinkSync(filename) {
+      if (filename === f.alias('dev-alpha')) throw new Error('fixture cleanup denied');
+      return fs.unlinkSync(filename);
+    },
+  });
+  assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project), error => {
+    assert.match(error.message, /manual recovery/);
+    assert.ok(error.message.includes(f.alias('dev-alpha')));
+    return true;
+  });
+  assert.ok(fs.lstatSync(f.alias('dev-alpha')).isSymbolicLink());
+  assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha')));
+  f.noTemporaryArtifacts();
+});
+
+contract('rollback never follows a Claude parent that changed into an outside symlink', (f) => {
+  const outside = path.join(f.root, 'outside');
+  fs.mkdirSync(path.join(outside, 'skills'), { recursive: true });
+  const before = snapshot(outside);
+  const claude = path.join(f.project, '.claude');
+  const installer = f.installer({ symlinkSync(target, destination, type) {
+    if (path.basename(destination) === 'dev-beta') {
+      fs.renameSync(claude, path.join(f.root, 'moved Claude directory'));
+      fs.symlinkSync(outside, claude, 'dir');
+      throw new Error('fixture parent changed during installation');
+    }
+    return fs.symlinkSync(target, destination, type);
+  } });
+  assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project), /manual recovery/);
+  assert.deepEqual(snapshot(outside), before);
+  assert.ok(fs.lstatSync(claude).isSymbolicLink());
+  f.noTemporaryArtifacts();
+});
+
+contract('relative links survive moving a project with spaces and Chinese characters', (f) => {
+  const original = path.join(f.root, '中文 空格 project');
+  fs.renameSync(f.project, original);
+  f.project = original;
+  f.target = path.join(f.project, '.agents/skills');
+  f.success(f.cli('install', '--skill', 'dev-alpha'));
+  f.assertAlias('dev-alpha');
+  const moved = path.join(f.root, 'moved 中文 workspace');
+  fs.renameSync(f.project, moved);
+  f.project = moved;
+  f.target = path.join(f.project, '.agents/skills');
+  f.assertAlias('dev-alpha');
+  const before = snapshot(f.project);
+  const result = f.success(f.cli('install', '--skill', 'dev-alpha'));
+  assert.match(result.stdout, /unchanged\s+dev-alpha \| preserved/);
+  assert.deepEqual(snapshot(f.project), before);
 });

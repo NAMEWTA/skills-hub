@@ -6,7 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { interactive, formatSummary, matchesSkillSearch } from '../cli.mjs';
 import { createSkillTree } from '../tree-select.mjs';
 import { repositoryRoot } from '../install.mjs';
-import { temporary } from './helpers.mjs';
+import { temporary, snapshot } from './helpers.mjs';
 import { checkLatestVersion, isNpmInstallation } from '../scripts/update-cli.mjs';
 
 const { version: currentVersion } = JSON.parse(fs.readFileSync(path.join(repositoryRoot, 'package.json'), 'utf8'));
@@ -16,7 +16,8 @@ const offline = async () => { throw new Error('offline'); };
 
 function context(names, confirm = true) {
   const notes = [];
-  return { ui: { notes, intro() {}, outro() {}, cancel() {}, note(text) { notes.push(text); },
+  const outros = [];
+  return { ui: { notes, outros, intro() {}, outro(text) { outros.push(text); }, cancel() {}, note(text) { notes.push(text); },
     confirm: async () => confirm, isCancel: value => typeof value === 'symbol',
     spinner: () => ({ start() {}, stop() {} }) }, choose: async () => names };
 }
@@ -125,6 +126,7 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
   const project = temporary(t, 'skills-hub cli ');
   assert.equal(await interactive({ project, argv: ['install', '--dry-run'], ...context(['dev-spec']) }), 0);
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
+  assert.equal(fs.existsSync(path.join(project, '.claude')), false);
   for (let i = 0; i < 2; i++) {
     if (i === 1) fs.appendFileSync(path.join(project, '.agents/skills/dev-spec/SKILL.md'), '\n旧版本内容\n');
     const ctx = context([]);
@@ -137,6 +139,11 @@ test('tree skill install, repeat and preview preserve core behavior', async t =>
     assert.equal(await interactive({ project, ...ctx }), 0);
     assert.equal(ctx.ui.notes[0], currentVersion);
     assert.ok(ctx.ui.notes.join('\n').includes(i ? 'replace' : 'install'));
+    assert.match(ctx.ui.notes.join('\n'), /目录 symlink 权限/);
+    assert.match(ctx.ui.notes.join('\n'), i ? /preserved\s+\.claude\/skills\/dev-spec/ : /link\s+\.claude\/skills\/dev-spec/);
+    const alias = path.join(project, '.claude/skills/dev-spec');
+    assert.ok(fs.lstatSync(alias).isSymbolicLink());
+    assert.equal(fs.realpathSync(alias), fs.realpathSync(path.join(project, '.agents/skills/dev-spec')));
   }
   assert.ok(fs.existsSync(path.join(project, '.agents/skills/dev-spec/SKILL.md')));
   assert.ok(fs.existsSync(path.join(project, '.agents/dev/AGENTS.md')));
@@ -163,6 +170,8 @@ test('one tree mixes a domain, a child exclusion and another domain leaf', async
   assert.equal(fs.readFileSync(path.join(project, '.gitignore'), 'utf8'), '/.agents/dev/worktree/\n/temp/\n');
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/dev-spec')), false);
   assert.equal(fs.existsSync(path.join(project, '.agents/skills/system-clean')), false);
+  assert.equal(fs.existsSync(path.join(project, '.claude/skills/dev-spec')), false);
+  assert.ok(fs.lstatSync(path.join(project, '.claude/skills/system-proxy')).isSymbolicLink());
 });
 
 test('interactive upstream installation uses the shared installer without domain initialization', async t => {
@@ -181,6 +190,8 @@ test('interactive upstream installation uses the shared installer without domain
   fs.symlinkSync(path.join(root, 'zh-archify'), path.join(root, 'system-proxy'), 'junction');
   fs.mkdirSync(path.join(root, 'unknown-skill'));
   fs.writeFileSync(path.join(root, 'unknown-skill', 'SKILL.md'), '# Unknown');
+  fs.mkdirSync(path.join(project, '.claude/skills/dev-intake'));
+  fs.writeFileSync(path.join(project, '.claude/skills/dev-intake/SKILL.md'), '# Personal Claude entry');
   const preview = context([]);
   preview.choose = async ({ skills, initialNames }) => {
     assert.deepEqual(initialNames, ['zh-archify']);
@@ -201,6 +212,31 @@ test('tree cancellation and declined confirmation do not write', async t => {
   assert.equal(await interactive({ project, ...context(['system-inspect'], false) }), 0);
   assert.equal(fs.existsSync(path.join(project, '.agents')), false);
   assert.equal(fs.existsSync(path.join(project, '.gitignore')), false);
+  assert.equal(fs.existsSync(path.join(project, '.claude')), false);
+});
+
+test('interactive link conflicts return failure and preserve the complete project', async t => {
+  const project = temporary(t, 'skills-hub Claude conflict ');
+  const entry = path.join(project, '.claude/skills/dev-spec');
+  fs.mkdirSync(entry, { recursive: true });
+  fs.writeFileSync(path.join(entry, 'SKILL.md'), 'User-owned Claude skill.\n');
+  const before = snapshot(project);
+  const ctx = context(['dev-spec']);
+  assert.equal(await interactive({ project, argv: ['install', '--replace'], ...ctx }), 1);
+  assert.deepEqual(snapshot(project), before);
+  assert.match(ctx.ui.notes.join('\n'), /Claude skill entry conflict/);
+  assert.match(ctx.ui.outros.join('\n'), /安装失败/);
+  assert.doesNotMatch(ctx.ui.outros.join('\n'), /安装完成/);
+});
+
+test('interactive Home selection reports its local mapping rule and creates the same skill link', async t => {
+  const project = temporary(t, 'skills-hub Home tree ');
+  const ctx = context(['home-setup']);
+  assert.equal(await interactive({ project, ...ctx }), 0);
+  assert.match(ctx.ui.notes.join('\n'), /\/\.agents\/home\/local\.json/);
+  assert.equal(fs.readFileSync(path.join(project, '.gitignore'), 'utf8'), '/.agents/home/local.json\n');
+  assert.ok(fs.lstatSync(path.join(project, '.claude/skills/home-setup')).isSymbolicLink());
+  assert.deepEqual(fs.readdirSync(path.join(project, '.agents/home')), ['AGENTS.md']);
 });
 
 test('search matches names, abbreviations, domains and Chinese descriptions', () => {

@@ -18,7 +18,24 @@ function command(root, ...args) {
 }
 function success(result) { assert.equal(result.status, 0, result.stdout + result.stderr); }
 function files(root) {
-  return fs.readdirSync(root, { recursive: true }).filter(file => fs.lstatSync(path.join(root, file)).isFile()).map(file => file.split(path.sep).join('/')).sort();
+  const result = [];
+  function visit(directory, prefix = '') {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      const relative = prefix ? `${prefix}/${entry.name}` : entry.name;
+      if (entry.isDirectory()) visit(path.join(directory, entry.name), relative);
+      else if (entry.isFile()) result.push(relative);
+    }
+  }
+  visit(root);
+  return result.sort();
+}
+function skillLinks(root, selected) {
+  assert.deepEqual(fs.readdirSync(path.join(root, '.claude/skills')).sort(), selected);
+  for (const name of selected) {
+    const alias = path.join(root, '.claude/skills', name);
+    assert.equal(fs.lstatSync(alias).isSymbolicLink(), true);
+    assert.equal(fs.realpathSync(alias), fs.realpathSync(path.join(root, '.agents/skills', name)));
+  }
 }
 
 test('ops domain is discovered and installs complete resources with only its navigation', t => {
@@ -29,6 +46,7 @@ test('ops domain is discovered and installs complete resources with only its nav
   assert.deepEqual(files(root), []);
   success(command(root, 'install', '--domain', 'ops'));
   assert.deepEqual(fs.readdirSync(path.join(root, '.agents/skills')).sort(), names);
+  skillLinks(root, names);
   assert.deepEqual(files(root).filter(file => !file.startsWith('.agents/skills/')), [navigation]);
   for (const skill of skills) {
     const installed = path.join(root, '.agents/skills', skill.name);
@@ -40,6 +58,7 @@ test('one ops skill does not install workflow or its other method owners', t => 
   const root = temporary(t);
   success(command(root, 'install', '--skill', 'ops-history'));
   assert.deepEqual(fs.readdirSync(path.join(root, '.agents/skills')), ['ops-history']);
+  skillLinks(root, ['ops-history']);
   assert.deepEqual(files(root).filter(file => !file.startsWith('.agents/skills/')), [navigation]);
 });
 

@@ -1,6 +1,6 @@
 # 领域持久化目录与迁移
 
-技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 dev、system、ops 分开维护。安装器管理导航模板、项目根 `temp/` 和开发工作树的忽略规则。
+技能包保存可复用的方法，领域目录保存目标项目的事实与过程。安装后的技能统一在 `.agents/skills/`，实际记录按 home、dev、system、ops 分开维护。安装器管理导航模板、项目根 `temp/` 和开发工作树的忽略规则。
 
 ## 约定
 
@@ -9,6 +9,8 @@
 | 目录 | 职责 |
 | --- | --- |
 | `.agents/skills/<技能名>/` | 安装的完整技能，不存业务记录 |
+| `.claude/skills/<技能名>` | 同仓本体的目录符号链接，不保存独立知识或配置 |
+| `.agents/home/` | Home 的项目登记、用户配置、关系、管理知识、历史和协调摘要；细分 owner 见 [Home 说明](../home/overview.md) |
 | `.agents/dev/changes/<日期-主题>/` | 当前需求、规格、计划、进度、确认原型和 Markdown 验收 |
 | `.agents/dev/notes/` | 术语、架构取舍、背景、错误经验与学习导读 |
 | `.agents/dev/deploy/` | 环境操作说明与每次发布结果 |
@@ -51,11 +53,12 @@ Git 忽略不是权限隔离，也不取消跟踪。留原件前核对目标确�
 | 任意 dev 技能 | dev 领域的九份 `AGENTS.md`；根 `.gitignore` 的 `/.agents/dev/worktree/` 和 `/temp/` |
 | 任意 system 技能 | `.agents/system/AGENTS.md`；根 `.gitignore` 的 `/temp/` |
 | 任意 ops 技能 | `.agents/ops/AGENTS.md` |
+| 任意 home 技能 | `.agents/home/AGENTS.md`；根 `.gitignore` 的 `/.agents/home/local.json` |
 | 仅独立上游技能 | 无领域导航 |
 
 模板源码归 `scripts/persistence/`，不放在技能内，也不由技能脚本执行。固定位置的 `AGENTS.md` 自动更新，字节相同不重写。自定义规则放根 `AGENTS.md` 或其他非托管文件，已有业务记录按原位置保留。
 
-list、help、取消和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
+list、help、取消和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机，选择 home 不先造 registry、默认团队、知识、历史或任务目录。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
 
 目录说明提供职责与导航，不保证宿主递归加载。使用相关技能时显式读取所需导航，已有 docs、ADR 和部署手册继续引用真实位置。普通 Markdown 只保存凭据用途和安全引用。项目明确指定的本地凭据文件（例如项目选用的 `env.md`）可由原部署流程保存实际值，不随技能、操作记录或发布制品分发。
 
@@ -72,6 +75,12 @@ registry、projects、runs、incidents、lessons 和可重建 index 按真实内
 `ops-execute` 创建或接续主 run，内部协作留下步骤；按服务器、服务和项目查询都引用同一记录集。run 请求、不可覆盖步骤及真实后端 execution 是事实依据，摘要和索引可重建。writer 与本地锁约束协作写入，不代表远端授权或跨控制端互斥，详见[运行记录](../operations/overview.md#一次操作怎样留记录)。
 
 项目专属运维技能源码放在实际项目或指定私有仓库，再按宿主机制加载。通用包不保存项目秘密、IP 清单和事故历史。
+
+## Home 的知识与协调资料
+
+Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、派生 `repos.md`、`local.json` 与 `context/`；map 写 `relations.md`；knowledge 写现行 `notes/`、候选 `inbox/`、`archive/notes/` 和持久排除依据 `exclusions.md`；history 写事件 `history/` 与 `archive/history/`；workflow 写 `coordination/` 的管理摘要和直接交付指针。没有统一 Home 派遣账本，也没有新的 `temp/home/` 协议。
+
+项目内部知识由当地 Agent 读取维护。派遣技能的任务、回执、日志与当前执行状态留在相应协调仓库；它们不因上层是 Home 而改写原有目录或方法。跨 owner 的忘记请求明确范围、分别处理源资料和派生入口，不宣称 Git 历史、备份或宿主私有存储已一并删除。完整规则见 [Home 方法归属](../home/method-ownership.md)。
 
 ## 从早期 `.agents/wtadev/` 迁移
 

@@ -15,6 +15,7 @@ const targets = [
   ['dev', 'context', '.agents/dev/context'],
   ['system', 'system', '.agents/system'],
   ['ops', 'ops', '.agents/ops'],
+  ['home', 'home', '.agents/home'],
 ];
 
 function inspect(project, relative, fsOps) {
@@ -42,11 +43,12 @@ function ensureIgnoreRules(previous, rules) {
 
   const eol = original.match(/\r?\n/)?.[0] ?? '\n';
   let content = previous;
-  if (original && missing.includes('/temp/')) {
-    // 默认规则先于用户规则，不覆盖项目已有的重新纳入规则。
+  const defaults = missing.filter(rule => ['/temp/', '/.agents/home/local.json'].includes(rule));
+  if (original && defaults.length) {
+    // 新默认规则先于用户规则，保留用户对运行原件和本机映射的明确例外。
     const bom = text.startsWith('\uFEFF') ? 3 : 0;
-    content = Buffer.concat([previous.subarray(0, bom), Buffer.from('/temp/' + eol), previous.subarray(bom)]);
-    missing.splice(missing.indexOf('/temp/'), 1);
+    content = Buffer.concat([previous.subarray(0, bom), Buffer.from(defaults.join(eol) + eol), previous.subarray(bom)]);
+    for (const rule of defaults) missing.splice(missing.indexOf(rule), 1);
   }
   if (!missing.length) return content;
   const separator = original && !original.endsWith('\n') ? eol : '';
@@ -63,6 +65,7 @@ export function planPersistence(skills, project, fsOps = fs) {
   const ignoreRules = [];
   if (domains.has('dev')) ignoreRules.push('/.agents/dev/worktree/');
   if (domains.has('dev') || domains.has('system')) ignoreRules.push('/temp/');
+  if (domains.has('home')) ignoreRules.push('/.agents/home/local.json');
   if (ignoreRules.length) {
     entries.push(['.gitignore', previous => ensureIgnoreRules(previous ?? Buffer.alloc(0), ignoreRules)]);
   }
@@ -95,11 +98,11 @@ export function applyPersistence(plan, project, fsOps = fs, journal = []) {
       const directory = path.join(project, ...parts.slice(0, index + 1));
       if (!fsOps.lstatSync(directory, { throwIfNoEntry: false })) {
         fsOps.mkdirSync(directory);
-        journal.push({ path: directory, directory: true });
+        journal.push({ project, path: directory, directory: true });
       }
     }
     const descriptor = fsOps.openSync(item.destination, item.action === 'update' ? 'r+' : 'wx');
-    journal.push({ path: item.destination, directory: false, previous: item.previous });
+    journal.push({ project, path: item.destination, directory: false, previous: item.previous });
     try {
       fsOps.writeFileSync(descriptor, item.content);
       fsOps.ftruncateSync(descriptor, item.content.length);
@@ -112,6 +115,23 @@ export function rollbackPersistence(journal, fsOps = fs) {
   const errors = [];
   for (const item of [...journal].reverse()) {
     try {
+      // 回滚也不跟随安装期间被替换的父目录或文件链接。
+      const relative = path.relative(item.project, item.path);
+      if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative)) {
+        throw new Error('回滚路径不在原项目内：' + item.path);
+      }
+      let current = item.project;
+      const parts = relative.split(path.sep);
+      for (let index = -1; index < parts.length; index += 1) {
+        if (index >= 0) current = path.join(current, parts[index]);
+        const stat = fsOps.lstatSync(current, { throwIfNoEntry: false });
+        if (!stat) continue;
+        if (stat.isSymbolicLink()) throw new Error('回滚拒绝符号链接：' + current);
+        const directory = index < parts.length - 1 || item.directory;
+        if (directory ? !stat.isDirectory() : !stat.isFile()) {
+          throw new Error('回滚路径类型已变化：' + current);
+        }
+      }
       if (item.previous) fsOps.writeFileSync(item.path, item.previous);
       else if (item.directory) fsOps.rmdirSync(item.path);
       else fsOps.unlinkSync(item.path);
