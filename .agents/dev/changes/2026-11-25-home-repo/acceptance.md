@@ -31,11 +31,12 @@
 | E08 | Home 的 `.agents/home/coordination/project-b-report.md`：B 负责人 `/root/real_project_b` 实际派出 `consumer_impl`，独立 34/34、无跳过，最终提交 `45aec563d2719bdf3868b55f4e8aa3ab11698dcf`。B 对 A 最终版本在 `127.0.0.1:44991` 执行真实 HTTP 联调，并核验关闭后 ECONNREFUSED；异常响应夹具与真实链路分别说明。原件留 B 的 `owner-report.md`、`execution.json`、`test-output.log` 等，见 [B 联合验收](runtime-evidence.md#projectb-真实联合验收)。 |
 | E09 | E02 的真实 Claude 进程：官方 SDK `0.3.332`、Claude Code `2.1.332`；`supportedCommands` 和 `reloadSkills` 均发现 63 技能，`readFile` 读取 121 个入口/参考资源，requestedPath 为 `.claude/skills/`，有效路径回到同仓 `.agents/skills/`。发送用户回合为 0，`modelInferenceVerified=false`。见[宿主证据](runtime-evidence.md#claude-宿主和发布包)与[检查实现](../../../../scripts/check-claude-discovery.mjs)。 |
 | E10 | 本地实际 tarball 的补充证据在 `temp/dev/home-issue-2/package/result.json`：0.1.30、63 技能、1092 文件，以精确 consumer lock 和已有缓存执行 npm ci 后核对。它不代替正常联网门禁，后者由 E02 提供。 |
-| E11 | Windows首轮发现并修复8.3短名与Git长名比较；E13提供真实复验。macos-latest（Arm64）与既有main任务持续排队，现按官方标准runner清单改为同版macos-26-intel/Node24，完整门禁保持；不冒称Arm64运行。结果见[T10](evidences/T10-delivery.md)。 |
+| E11 | Windows首轮发现并修复8.3短名与Git长名比较；E13提供真实复验。macos-latest（Arm64）与既有main任务曾持续排队，现按官方标准runner清单改为同版macos-26-intel/Node24，完整门禁保持。旧Mac任务恢复后的真实失败和修复见E16；最终结果见[T10](evidences/T10-delivery.md)。 |
 | E12 | /root/home_operations在实际安装Home完成110步/22项有效检查：配置唯一owner、两次有来源决定、候选隔离、部分更正/退役、旧hash拒绝、归档去重、索引删除回退/幂等重建、10处跨owner忘记和4次重导EXCLUDED。Home业务提交c63f74f036a23b734d86d9c150c2be2cb67808a2；原件在Home的coordination/operations-report.md与temp/home-operations-evidence/，见[运营记录](runtime-evidence.md#运营与新上下文)。 |
 | E13 | [Linux第二轮](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544568)绑定5e4e4128，472/472、真实包/浏览器/Claude全部通过；[Windows第二轮](https://github.com/NAMEWTA/skills-hub/actions/runs/45568945020/job/139050544686)同提交472测试中468通过、0失败、4纯平台skip，真实0.1.30 tarball及所有目录symlink通过。 |
 | E14 | 全新fork_turns=none的/root/home_fresh_session没有被提供随机ID/规则值/旧理由；实际35条只读命令与Markdown重读准确答出当前/历史、候选/归档、原owner与forget范围。根与独立答案表逐项核对。原件Home/temp/fresh-session-evidence/，回执coordination/fresh-session-report.md，见[独立结果](runtime-evidence.md#全新上下文与真实中断接续结果)。 |
 | E15 | 父实际interrupt运行中的Home新Agent和ProjectA负责人，两个返回previous_status=running，再同id followup。两层先重读本地checkpoint/原owner记录再查现状，Home23份权威Markdown与A HEAD/provider/task/report保持，未重复实现/测试/派遣/提交。A等待直接观察aborted after22.3s。原件路径与准确边界见[接续结果](runtime-evidence.md#全新上下文与真实中断接续结果)。 |
+| E16 | [Mac首轮实际失败](https://github.com/NAMEWTA/skills-hub/actions/runs/45567944978/job/139047243255)：469通过/3失败。安装夹具真实路径修复经Linux真链接反例复现（旧2/2失败→新4/4通过），完整安装73/73；五个Home CLI真链接入口修复后，独立复制包、help/只读/错误退出和导入回归纳入Home68/68专项，均无skip。见[Mac回归](runtime-evidence.md#macos真实失败与回归)。最终平台复验另归T10。 |
 
 E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是实际运行环境；没有将其改称 hc、Claude 或独立 Codex CLI。独立 `codex 0.172.0-alpha.2` 的 app-server 初始化遇只读文件系统，未成功启动。`system-herdr-core` 未被此次组合选择，其协议依据为未修改的[现有技能](../../../../skills/system/system-herdr-core/SKILL.md)，属于条件分支。
 
@@ -139,4 +140,4 @@ E06–E08 的三个 Home 回执均已实际读取。本轮原生 Agent 工具是
 
 必要的真实多级派遣、项目内部知识查询、两个项目HTTP联合验证、官方Claude发现读取、Home运营、独立新上下文重读及两层原生中断接续均已有证据。Linux/Windows修复后结果绑定5e4e4128；最终CI和公开交付点在[T10](evidences/T10-delivery.md)收口。
 
-Core完整地址、终端、manifest与各厂商CLI组合此次未选，保持既有方法而不宣称现场覆盖。投递超时/空shell等具体CLI异常、生产部署、长期容量、所有技能版本或硬件架构组合不在本次实际运行声明内。macOS使用官方标准Intel runner取得同平台完整证据，不将其视为Arm64结果。
+Core完整地址、终端、manifest与各厂商CLI组合此次未选，保持既有方法而不宣称现场覆盖。投递超时/空shell等具体CLI异常、生产部署、长期容量、所有技能版本或硬件架构组合不在本次实际运行声明内。macOS最终门禁使用官方标准Intel runner，实际结果随T10记录，不将其视为Arm64结果。

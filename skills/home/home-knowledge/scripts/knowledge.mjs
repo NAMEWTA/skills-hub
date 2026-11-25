@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 import fs from 'node:fs';
-import path from 'node:path';
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath } from 'node:url';
 import { appendExclusion, argumentsMap, compare, excluded, fail, indexText, integer, openFiles, parseDocument, parseExclusions, provenance } from './files.mjs';
 
 const documentPath = (relative) => /^(?:notes|inbox|archive\/notes)\/.+\.md$/.test(relative) && !relative.endsWith('/index.md');
@@ -142,4 +141,10 @@ export function main(argv = process.argv.slice(2)) {
     process.stderr.write(`${JSON.stringify({ error: error.code ?? 'IO', message: error.message, sourceSaved: error.sourceSaved ?? false })}\n`); return 1;
   }
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) process.exitCode = main();
+function isDirectInvocation() {
+  if (!process.argv[1]) return false;
+  try { return fs.realpathSync.native(process.argv[1]) === fs.realpathSync.native(fileURLToPath(import.meta.url)); }
+  catch { return false; }
+}
+
+if (isDirectInvocation()) process.exitCode = main();

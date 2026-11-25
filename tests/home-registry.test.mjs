@@ -19,7 +19,7 @@ function run(argv) {
   return new Promise((resolve, reject) => {
     const child = spawn(process.execPath, argv, { stdio: ['ignore', 'pipe', 'pipe'] }); let stdout = '', stderr = '';
     child.stdout.on('data', text => stdout += text); child.stderr.on('data', text => stderr += text);
-    child.once('error', reject); child.once('close', code => resolve({ code, stdout, stderr }));
+    child.once('error', reject); child.once('close', (code, signal) => resolve({ code, signal, stdout, stderr }));
   });
 }
 function symlink(t, source, target, type = 'dir') {
@@ -99,5 +99,7 @@ test('real concurrent writers cannot both save the same absent source, and locks
 test('a standalone copied registry package runs without skills-hub source imports', async t => {
   const { home } = fixture(t); const isolated = path.join(home, 'standalone'); fs.mkdirSync(isolated); fs.copyFileSync(script, path.join(isolated, 'registry.mjs'));
   const result = await run([path.join(isolated, 'registry.mjs'), 'inspect', '--home', home]);
-  assert.equal(result.code, 0, result.stderr); assert.equal(JSON.parse(result.stdout).registryRevision, 'absent');
+  assert.equal(result.signal, null, JSON.stringify(result)); assert.equal(result.code, 0, JSON.stringify(result));
+  assert.match(result.stdout, /\S/u, '独立包的 inspect CLI 必须输出 JSON，不能静默跳过入口。');
+  assert.equal(JSON.parse(result.stdout).registryRevision, 'absent');
 });

@@ -222,4 +222,10 @@ export function main(argv = process.argv.slice(2)) {
   }
 }
 
-if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) process.exitCode = main();
+function isDirectInvocation() {
+  if (!process.argv[1]) return false;
+  try { return fs.realpathSync.native(process.argv[1]) === fs.realpathSync.native(fileURLToPath(import.meta.url)); }
+  catch { return false; }
+}
+
+if (isDirectInvocation()) process.exitCode = main();

@@ -51,6 +51,16 @@ class InstallFixture {
   }
   names() { return new Set(fs.readdirSync(this.target)); }
   alias(name) { return path.join(this.project, '.claude', 'skills', name); }
+  // 入口可能尚不存在或已断链，只解析其真实项目根，不解析入口本身。
+  actualAlias(name) { return path.join(fs.realpathSync(this.project), '.claude', 'skills', name); }
+  useSymlinkedParent() {
+    const parent = path.join(this.root, 'linked-parent');
+    fs.symlinkSync(fs.realpathSync(this.root), parent, 'dir');
+    this.project = path.join(parent, 'project');
+    this.target = path.join(this.project, '.agents', 'skills');
+    this.licenseTarget = path.join(this.project, '.agents', 'skills-hub-licenses');
+    assert.notEqual(this.project, fs.realpathSync(this.project));
+  }
   assertAlias(name, relative = true) {
     const canonical = path.join(this.target, name);
     const alias = this.alias(name);
@@ -460,7 +470,9 @@ contract('help and package version do not install anything', (f) => {
   assert.ok(!fs.existsSync(path.join(f.project, '.claude')));
 });
 
-contract('unchanged canonical skills acquire both locks to supplement only missing links', (f) => {
+for (const linkedParent of [false, true]) contract('unchanged canonical skills acquire both locks to supplement only missing links' +
+  (linkedParent ? ' through a symlinked parent' : ''), (f) => {
+  if (linkedParent) f.useSymlinkedParent();
   f.success(f.cli('install', '--domain', 'dev'));
   fs.unlinkSync(f.alias('dev-alpha'));
   const sample = path.join(f.target, 'dev-alpha/SKILL.md');
@@ -471,7 +483,7 @@ contract('unchanged canonical skills acquire both locks to supplement only missi
     cpSync() { assert.fail('Unchanged skill bodies must not be copied'); },
     symlinkSync(target, destination, type) {
       assert.equal(type, 'dir');
-      assert.equal(destination, f.alias('dev-alpha'));
+      assert.equal(destination, f.actualAlias('dev-alpha'));
       for (const name of ['.skills-wta-install.lock', '.skills-hub-install.lock']) {
         assert.ok(fs.lstatSync(path.join(f.project, '.agents', name)).isDirectory());
       }
@@ -482,7 +494,7 @@ contract('unchanged canonical skills acquire both locks to supplement only missi
   const result = installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project);
   assert.deepEqual(result.actions.map(action => [action.kind, action.link.kind]), [['unchanged', 'link'], ['unchanged', 'preserved']]);
   assert.equal(result.backup, null);
-  assert.deepEqual(created, [f.alias('dev-alpha')]);
+  assert.deepEqual(created, [f.actualAlias('dev-alpha')]);
   assert.equal(fs.statSync(sample, { bigint: true }).mtimeNs, mtime);
   assert.equal(fs.lstatSync(f.alias('dev-beta'), { bigint: true }).mtimeNs, preserved.mtimeNs);
   assert.equal(fs.lstatSync(f.alias('dev-beta'), { bigint: true }).ino, preserved.ino);
@@ -636,22 +648,30 @@ contract('failure on the second link restores replacements, previous dangling li
   f.noTemporaryArtifacts();
 });
 
-contract('a failed link cleanup reports the remaining entry instead of claiming complete rollback', (f) => {
+for (const linkedParent of [false, true]) contract('a failed link cleanup reports the remaining entry instead of claiming complete rollback' +
+  (linkedParent ? ' through a symlinked parent' : ''), (f) => {
+  if (linkedParent) f.useSymlinkedParent();
+  const denied = [];
   const installer = f.installer({
     symlinkSync(target, destination, type) {
       if (path.basename(destination) === 'dev-beta') throw new Error('fixture link failed');
       return fs.symlinkSync(target, destination, type);
     },
     unlinkSync(filename) {
-      if (filename === f.alias('dev-alpha')) throw new Error('fixture cleanup denied');
+      if (filename === f.actualAlias('dev-alpha')) {
+        denied.push(filename);
+        throw new Error('fixture cleanup denied');
+      }
       return fs.unlinkSync(filename);
     },
   });
   assert.throws(() => installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project), error => {
     assert.match(error.message, /manual recovery/);
-    assert.ok(error.message.includes(f.alias('dev-alpha')));
+    assert.ok(error.message.includes(f.actualAlias('dev-alpha')));
+    assert.match(error.message, /fixture cleanup denied/);
     return true;
   });
+  assert.deepEqual(denied, [f.actualAlias('dev-alpha')]);
   assert.ok(fs.lstatSync(f.alias('dev-alpha')).isSymbolicLink());
   assert.ok(!fs.existsSync(path.join(f.target, 'dev-alpha')));
   f.noTemporaryArtifacts();

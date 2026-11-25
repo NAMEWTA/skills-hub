@@ -97,4 +97,12 @@ Home checkpoint SHA-256为09805f61116812b86e0f0069f4a5ee2ac15782f6e7d08033d3694f
 
 ## CI runner记录
 
-macos-latest的Arm64任务持续排队，既有main在06:51 UTC的验证及更早06:42的PR验证也未启动该平台。2026-11-25核对GitHub官方runner清单后，将本次macOS门禁固定到同版标准macos-26-intel / Node24，完整check:full、statechart、正常npm包门禁保持。依据：https://docs.github.com/en/actions/reference/runners/github-hosted-runners 。这是实际运行环境选择，不把Intel结果冒称Arm64结果；结果等待本轮真实job。
+macos-latest的Arm64任务曾持续排队，既有main在06:51 UTC的验证及更早06:42的PR验证同样等待。2026-11-25核对GitHub官方runner清单后，将本次macOS门禁固定到同版标准macos-26-intel / Node24，完整check:full、statechart、正常npm包门禁保持。依据：https://docs.github.com/en/actions/reference/runners/github-hosted-runners 。这是实际运行环境选择，不把Intel结果冒称Arm64结果。旧main任务后于07:49 UTC完成；旧首轮Home任务于07:56完成并暴露下述真实缺陷，未把队列问题当作代码通过。
+
+## macOS真实失败与回归
+
+[首轮macOS job](https://github.com/NAMEWTA/skills-hub/actions/runs/45567944978/job/139047243255)绑定139b3e87328aa490d239632f3a1065a939ead696，472项中469通过、3失败、0跳过。
+
+其中两项是安装测试的路径假设：产品正确将项目根规范到真实路径，但测试仍把`/var/...`与`/private/var/...`进行字符串比较，或以未规范路径注入失败。只修夹具比较和注入匹配，并增加注入命中断言；未改安装器产品语义。Linux真实链接模拟该布局，旧版指定两项2/2失败，修复后原合同和新增链接父目录变体4/4通过；整个安装测试73/73、无skip。
+
+另一项是真实Home CLI入口缺陷。Node的ESM入口会解析链接，但argv仍保留别名，原字符串判断静默跳过main。五个Home CLI均修为native realpath比较，保留每包自包含和正常模块导入；不存在或缺失argv不触发CLI。回归实际复制五个独立包，建立`.claude/skills`到`.agents/skills`目录真链接，分别执行help、只读JSON和非法参数；另验证存在、缺失、不存在argv路径的正常导入。六组Home专项68/68、无skip。最终提交的三平台结果归T10，不能由本地复现替代Mac复验。

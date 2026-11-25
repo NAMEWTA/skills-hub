@@ -12,7 +12,7 @@
 
 ## 最终平台与交付点
 
-macos-latest的Arm64任务及既有main任务持续排队。本次核对官方runner清单后，将完整macOS门禁固定到标准macos-26-intel/Node24，未删检查或改成mock。源码/文档收口提交[36fd7d88936ba9af95ad1d6cc9be5e2d5d9ce0d1](https://github.com/NAMEWTA/skills-hub/commit/36fd7d88936ba9af95ad1d6cc9be5e2d5d9ce0d1)的[CI](https://github.com/NAMEWTA/skills-hub/actions/runs/45571274635)正在执行，尚未将Mac结果写为通过。后续仅更新本验收快照的提交仍需核对最终CI与发布精确SHA。
+macos-latest的Arm64任务及既有main任务曾持续排队。本次核对官方runner清单后，将完整macOS门禁固定到标准macos-26-intel/Node24，未删检查或改成mock。d56bb84b51eed021852da46aedaa04800902fdaa的[Linux/Windows CI](https://github.com/NAMEWTA/skills-hub/actions/runs/45571553517)完整通过，但较早Mac任务恢复后发现2项安装夹具路径假设与1项CLI入口缺陷。随后已修五个Home CLI的真链接直接执行判断，以及两项测试的真实路径比较/故障注入；专项Home68/68、安装73/73通过，无skip，旧fixture反例得到准确复现。详见runtime-evidence的Mac回归章节。最终修复提交仍须通过三平台CI，不能用此前Linux/Windows或本地反例替代；最终实际结果在交付回执绑定准确SHA。
 
 包与锁文件由0.1.29递增至0.1.30。合并后使用仓库既有release.yml从固定提交验证、上传、核对公开npm完整性并发布GitHub Release。现在尚未merge或发布；完整外部结果最终归Change根evidence.md与.agents/dev/deploy/npm/releases/0.1.30.md，不提前生成成功回执。
 
