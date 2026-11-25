@@ -1,6 +1,6 @@
 # 验证与 PR 交付验收
 
-状态：本地验证与 F1 独立复验完成；远端门禁与 PR 交付进行中。
+状态：已完成。本地验证、F1 独立复验和最终三平台 CI 通过；PR #19 已合并至 main，PR 与 Issue #18 已关闭。
 
 契约见 [原任务](../tasks/03-verify-deliver.md) 与 [Issue #18](https://github.com/NAMEWTA/skills-hub/issues/18)。原始基准为 `2988ae4ad6390b5c9fa53039666284070b33e697`，实施中保留同期 Home 改动并快进至 `c157ee38c54d524b11eddc31603697ac45343590`；提交前再纳入仅更新 Home 交付记录的 `79d58fd5b517ed1dc30ed91925e53a01fb0d7898`，产品源码没有变化。以下数字均区分合成输入、真实执行器观测和仓库检查；没有测量用户电脑的容量。
 
@@ -72,4 +72,28 @@ F1只增加三处输出语义说明，最终 `npm run check` 退出0（63技能�
 
 首次实现 head `2dd51dfa986f7d9a251060fe5686a7b4f2e24821` 的 [PR CI](https://github.com/NAMEWTA/skills-hub/actions/runs/45578737402) 在首次 attempt 全部成功，基准为 `79d58fd5b517ed1dc30ed91925e53a01fb0d7898`，实际 checkout 为 PR 测试合并提交 `fd0c35bb76b52a6722079960f2499e9dd105b177`。Linux 与 macOS Intel 各 481/481、零跳过；Windows 477 通过、4 平台跳过、零失败。三平台各完成 33 项捕获状态回放、实际 63 技能/1092 文件的包消费验证。Linux 另完成 Archify 真实 browser-check 和官方 Claude 63 技能发现/121 资源读取；后者没有模型用户回合。
 
-合并前 main 新增 `70a60a45d1d0e2e93920c2c47b5b69d3769fcf4c` 的 Windows EPERM 安装器修复。本分支保留其完整改动，仅手工合并 CHANGELOG 的双方新增条目；dev-setup 方法、模板和配套指南未因整合修改。首次 CI 不作为这一新组合的验证结果。最终提交仍需通过对应的完整 CI，再记录合并与关闭的实际回读结果。
+合并前 main 新增 `70a60a45d1d0e2e93920c2c47b5b69d3769fcf4c` 的 Windows EPERM 安装器修复。本分支保留其完整改动，仅手工合并 CHANGELOG 的双方新增条目；dev-setup 方法、模板和配套指南未因整合修改。首次 CI 不作为这一新组合的验证结果，新组合的实际结果如下。
+
+### 最终组合的三平台门禁
+
+最终 PR head 为 `d19a6bcd57ca1b79c8587e04e15fb9dd4e4e0a15`。[PR run 45579634296](https://github.com/NAMEWTA/skills-hub/actions/runs/45579634296) 于 `2026-11-25T08:51:05Z` 首次 attempt 完成，全部 success，无失败或重跑。负责人独立回读 run、三个 job 与步骤状态。
+
+| 平台、实际 Node 与 job | 总数 / 通过 / 失败 / 跳过 | 捕获状态回放 | 实际包消费 |
+| --- | --- | --- | --- |
+| [Linux / v22.14.0](https://github.com/NAMEWTA/skills-hub/actions/runs/45579634296/job/139086119686) | 483 / 482 / 0 / 1 | 33/33 | 63 技能、1092 文件通过 |
+| [macOS Intel / v24.19.0](https://github.com/NAMEWTA/skills-hub/actions/runs/45579634296/job/139086120011) | 483 / 482 / 0 / 1 | 33/33 | 63 技能、1092 文件通过 |
+| [Windows / v24.22.3](https://github.com/NAMEWTA/skills-hub/actions/runs/45579634296/job/139086119946) | 483 / 479 / 0 / 4 | 33/33 | 63 技能、1092 文件通过 |
+
+Linux/macOS 各跳过 Windows 专属交互 EPERM 警告用例；该用例在 Windows 实际通过。Windows 跳过三项 POSIX 可执行位和一项特殊文件/套接字用例，没有将跳过项计作通过。状态图结果是既有捕获输出回放，`new_tlc_run=false`。
+
+Linux 的 Archify doctor、validate、deliver、strict check 和真实 browser-check 全部通过。官方 Claude Agent SDK `0.3.332` / Claude Code `2.1.332` 实际发现、初始化和重载 63 技能，读取 121 资源；`userTurnsSent=0`、`modelInferenceVerified=false`。Windows/macOS 未执行仅 Linux 条件的这两项检查。该证据证明宿主发现和读取，不替代模型实际执行或全平台资源测量。
+
+三平台日志的实际 checkout 均为 PR 测试合并提交 `3436d4b1107798e7da87699167b26fd500d24965`，parents 为 `70a60a45d1d0e2e93920c2c47b5b69d3769fcf4c` 与最终 PR head。Git API 读取的 checkout 树和 head 树均为 `2c99f05aa0d489cee1e2443194edc1532dc868ac`。原始 run/jobs 响应、三个完整日志、workflow 与两个 Git 对象保存在 `temp/dev/2026-11-25-dev-setup-capacity/ci-integrated/`；首轮证据继续保留在 `ci/`。
+
+### 合并与关闭回读
+
+用户已明确授权合并与关闭。合并前回读 main 仍为 `70a60a45d1d0e2e93920c2c47b5b69d3769fcf4c`，PR head、base、可合并状态与三平台门禁一致；使用预期 head 保护执行 squash merge。
+
+[PR #19](https://github.com/NAMEWTA/skills-hub/pull/19) 于 `2026-11-25T08:52:32Z` 合并为 [`83ee08cd53af8aa075fe88725d77341995b48c73`](https://github.com/NAMEWTA/skills-hub/commit/83ee08cd53af8aa075fe88725d77341995b48c73)。随后 API 回读 PR 为 `merged=true`、`state=closed`，main 指向该提交，合并树与上述 CI 树完全一致。Issue #18 于 `08:52:34Z` 自动以 `completed` 关闭；负责人在原正文回填 21 项验收映射、准确门禁、合并身份和未测范围，没有改动标签或负责人。
+
+用户时区对应 2026-11-25 16:52:32（Asia/Taipei）。本次交付到 main，没有另行发布 npm 版本。最终整体验收在授权终点达成后补记，见 [evidence.md](../evidence.md)；补记不改变已验收的技能、安装器或测试源码。
