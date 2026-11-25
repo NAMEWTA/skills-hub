@@ -77,7 +77,9 @@ class InstallFixture {
     assert.equal(fs.realpathSync(alias), fs.realpathSync(canonical));
     assert.deepEqual(snapshot(alias), snapshot(canonical));
   }
-  installer(overrides = {}) { return createInstaller({ repository: this.repository, fsOps: { ...fs, ...overrides } }); }
+  installer(overrides = {}, platform = process.platform) {
+    return createInstaller({ repository: this.repository, fsOps: { ...fs, ...overrides }, platform });
+  }
   selected(...names) { return select(this.installer().catalog(), [], names); }
   seed(name, differing = false) {
     const destination = path.join(this.target, name);
@@ -473,8 +475,14 @@ contract('help and package version do not install anything', (f) => {
 for (const linkedParent of [false, true]) contract('unchanged canonical skills acquire both locks to supplement only missing links' +
   (linkedParent ? ' through a symlinked parent' : ''), (f) => {
   if (linkedParent) f.useSymlinkedParent();
-  f.success(f.cli('install', '--domain', 'dev'));
-  fs.unlinkSync(f.alias('dev-alpha'));
+  const selected = f.selected('dev-alpha', 'dev-beta');
+  const partial = f.installer({ symlinkSync(target, destination, type) {
+    if (path.basename(destination) === 'dev-alpha') {
+      throw Object.assign(new Error('fixture symlink permission denied'), { code: 'EPERM' });
+    }
+    fs.symlinkSync(target, destination, type);
+  } }, 'win32').apply(selected, f.project);
+  assert.deepEqual(partial.actions.map(action => action.link.kind), ['skipped', 'link']);
   const sample = path.join(f.target, 'dev-alpha/SKILL.md');
   const mtime = fs.statSync(sample, { bigint: true }).mtimeNs;
   const preserved = fs.lstatSync(f.alias('dev-beta'), { bigint: true });
@@ -491,7 +499,7 @@ for (const linkedParent of [false, true]) contract('unchanged canonical skills a
       fs.symlinkSync(target, destination, type);
     },
   });
-  const result = installer.apply(f.selected('dev-alpha', 'dev-beta'), f.project);
+  const result = installer.apply(selected, f.project);
   assert.deepEqual(result.actions.map(action => [action.kind, action.link.kind]), [['unchanged', 'link'], ['unchanged', 'preserved']]);
   assert.equal(result.backup, null);
   assert.deepEqual(created, [f.actualAlias('dev-alpha')]);
@@ -615,14 +623,40 @@ contract('the link plan is recomputed after both locks before committing any ski
   f.noTemporaryArtifacts();
 });
 
-contract('directory symlink permission failure has no fallback and rolls back all newly created paths', (f) => {
+contract('Windows skips EPERM links and completes skill updates and project initialization', (f) => {
+  const previous = snapshot(f.seed('dev-alpha', true));
+  const attempts = [];
+  const installer = f.installer({ symlinkSync(target, destination, type) {
+    attempts.push({ target, destination, type });
+    throw Object.assign(new Error('fixture symlink permission denied'), { code: 'EPERM' });
+  } }, 'win32');
+  const selected = f.selected('dev-alpha', 'system-clean');
+  const result = installer.apply(selected, f.project);
+  assert.deepEqual(result.actions.map(action => [action.kind, action.link.kind]), [['replace', 'skipped'], ['install', 'skipped']]);
+  assert.deepEqual(snapshot(path.join(result.backup, 'dev-alpha')), previous);
+  assert.deepEqual(attempts, selected.map(({ name }) => ({
+    target: path.join('..', '..', '.agents', 'skills', name), destination: f.actualAlias(name), type: 'dir',
+  })));
+  for (const { name, source } of selected) {
+    assert.deepEqual(snapshot(path.join(f.target, name)), snapshot(source));
+    assert.equal(fs.lstatSync(f.alias(name), { throwIfNoEntry: false }), undefined);
+  }
+  assert.ok(fs.existsSync(path.join(f.project, '.agents/dev/AGENTS.md')));
+  assert.ok(fs.existsSync(path.join(f.project, '.agents/system/AGENTS.md')));
+  assert.match(fs.readFileSync(path.join(f.project, '.gitignore'), 'utf8'), /\/temp\//);
+  const retry = installer.plan(selected, f.project);
+  assert.deepEqual(retry.map(action => [action.kind, action.link.kind]), [['unchanged', 'link'], ['unchanged', 'link']]);
+  f.noTemporaryArtifacts();
+});
+
+contract('EPERM creating a directory symlink still rolls back on other platforms', (f) => {
   const previous = snapshot(f.project);
   const attempts = [];
   const installer = f.installer({ symlinkSync(target, destination, type) {
     attempts.push({ target, destination, type });
     throw Object.assign(new Error('fixture symlink permission denied'), { code: 'EPERM' });
-  } });
-  assert.throws(() => installer.apply(f.selected('dev-alpha'), f.project), /rolled back.*EPERM.*no junction or copy fallback/);
+  } }, 'linux');
+  assert.throws(() => installer.apply(f.selected('dev-alpha'), f.project), /rolled back.*EPERM.*fixture symlink permission denied/);
   assert.equal(attempts.length, 1);
   assert.equal(attempts[0].type, 'dir');
   assert.ok(!path.isAbsolute(attempts[0].target));

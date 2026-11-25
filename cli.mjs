@@ -42,7 +42,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
       }
     }
     ui.note(project, '目标项目（技能写入 .agents/skills/）');
-    ui.note('每个所选技能在 .claude/skills/ 建立指向同仓 .agents/skills/ 的目录符号链接。需要目录 symlink 权限；同名真实目录、文件或外来链接会阻止安装。', '技能入口');
+    ui.note('安装器尝试在 .claude/skills/ 建立指向 .agents/skills/ 的目录符号链接。Windows 创建链接遇到 EPERM 时仍会安装技能。同名文件、目录或错向链接会阻止安装。', '技能入口');
     const installer = createInstaller();
     const skills = installer.catalog();
     const initialNames = installer.installedNames(skills, project);
@@ -73,7 +73,14 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const output = [];
     spinner.start(dryRun ? '正在检查计划' : '正在安装');
     let code;
-    try { code = main(command, { project, stdout: line => output.push(line), stderr: line => output.push(pc.red(line)) }); }
+    try {
+      code = main(command, {
+        project,
+        stdout: line => output.push(line),
+        stderr: line => output.push(pc.red(line)),
+        warn: line => output.push(pc.yellow(line)),
+      });
+    }
     finally { spinner.stop('检查与文件操作结束'); }
     ui.note(output.join('\n'), '结果');
     ui.outro(code === 0 ? pc.green(dryRun ? '预览完成，未写入文件。' : '安装完成。') : pc.red('安装失败；请检查以上路径、权限或运行错误。'));

@@ -91,7 +91,7 @@ test('a second Claude link failure restores mixed domain navigation, ignore byte
     assert.equal(type, 'dir');
     assert.match(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), /\/\.agents\/home\/local\.json/);
     assert.ok(fs.existsSync(path.join(root, home)));
-    if (++attempts === 2) throw Object.assign(new Error('fixture second alias failed'), { code: 'EPERM' });
+    if (++attempts === 2) throw Object.assign(new Error('fixture second alias failed'), { code: 'EIO' });
     return fs.symlinkSync(target, destination, type);
   } } });
   assert.throws(() => installer.apply(selected, root), /rolled back.*second alias failed/);
@@ -141,7 +141,7 @@ for (const redirected of ['parent', 'file']) test(`link failure rollback does no
     fs.renameSync(redirectedPath, moved);
     fs.symlinkSync(redirected === 'file' ? path.join(outside, 'AGENTS.md') : outside, redirectedPath,
       redirected === 'file' ? 'file' : 'dir');
-    throw Object.assign(new Error('fixture required alias failure after path replacement'), { code: 'EPERM' });
+    throw Object.assign(new Error('fixture alias failure after path replacement'), { code: 'EIO' });
   } } });
   assert.throws(() => installer.apply(selected, root), error => {
     assert.match(error.message, /manual recovery/);

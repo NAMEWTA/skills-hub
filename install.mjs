@@ -77,7 +77,7 @@ export function select(skills, domains = [], names = [], allSkills = false) {
   return skills.filter((skill) => allSkills || domains.includes(skill.domain) || names.includes(skill.name));
 }
 
-export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}) {
+export function createInstaller({ repository = repositoryRoot, fsOps = fs, platform = process.platform } = {}) {
   const skillRoot = path.join(repository, 'skills');
   const upstreamRoot = path.join(repository, 'upstream-skills');
   const licenseRoot = path.join(repository, 'licenses');
@@ -191,10 +191,12 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
     checkLinkParents(project);
     checkDirectory(action.destination);
     const actual = planLink(action.name, project, action.destination);
-    if (actual.kind !== 'preserved' || actual.target !== action.link.target ||
-        path.relative(fsOps.realpathSync(actual.destination), fsOps.realpathSync(action.destination)) !== '') {
+    const expectedKind = action.link.kind === 'skipped' ? 'link' : 'preserved';
+    if (actual.kind !== expectedKind || actual.target !== action.link.target ||
+        (actual.kind === 'preserved' && path.relative(fsOps.realpathSync(actual.destination), fsOps.realpathSync(action.destination)) !== '')) {
       throw new InstallError(`Claude skill link verification failed: ${action.link.destination}`);
     }
+    if (actual.kind === 'link') return;
     const manifest = path.join(actual.destination, 'SKILL.md');
     if (!exists(manifest)?.isFile()) throw new InstallError(`Expected a regular skill entry: ${manifest}`);
   }
@@ -309,7 +311,11 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs } = {}
         if (action.link.kind === 'link') {
           try { fsOps.symlinkSync(action.link.target, action.link.destination, 'dir'); }
           catch (error) {
-            throw new InstallError(`Cannot create directory symlink ${action.link.destination} -> ${action.link.target}: ${error.code ?? ''} ${error.message}. Directory symlink support is required; no junction or copy fallback is used.`);
+            if (platform === 'win32' && error.code === 'EPERM') {
+              action.link.kind = 'skipped';
+              continue;
+            }
+            throw new InstallError(`Cannot create directory symlink ${action.link.destination} -> ${action.link.target}: ${error.code ?? ''} ${error.message}`);
           }
           journal.links.push(action.link);
         }
@@ -384,7 +390,8 @@ const usage = `Usage: skills-hub <list|install> [--domain DOMAIN ...] [--skill N
        skills-hub install <selection> [--dry-run] [--replace]
 
 Install complete skills into the current project's .agents/skills/ and link each selected .claude/skills/<name> to that same skill. No destination option.
-Directory symlink support is required, including on Windows; conflicting Claude entries are never replaced.
+On Windows, EPERM while creating a Claude directory symlink skips that link and prints a warning. Reinstall with symlink permission to add it.
+Conflicting Claude entries are never replaced.
 --domain upstream-skills selects the independent Chinese upstream skills; it creates no domain navigation.
 Selected dev/system/ops/home domains initialize domain AGENTS.md navigation; managed templates are updated and business records are preserved.
 Dev or system selections add /temp/ to the project .gitignore when missing; dev also adds /.agents/dev/worktree/.
@@ -415,7 +422,9 @@ function parseArguments(argv) {
   return result;
 }
 
-export function main(argv = process.argv.slice(2), { repository = repositoryRoot, project = process.cwd(), stdout = console.log, stderr = console.error } = {}) {
+export function main(argv = process.argv.slice(2), {
+  repository = repositoryRoot, project = process.cwd(), stdout = console.log, stderr = console.error, warn = console.warn,
+} = {}) {
   let args;
   try { args = parseArguments(argv); }
   catch (error) { stderr(`${error.message}\n${usage}`); return 2; }
@@ -449,6 +458,9 @@ export function main(argv = process.argv.slice(2), { repository = repositoryRoot
     }
     for (const item of persistence) stdout(`${args.dryRun ? 'would ' : ''}${item.action.padEnd(9)} ${item.path}`);
     if (backup !== null) stdout(`Backups: ${backup}`);
+    if (actions.some(action => action.link.kind === 'skipped')) {
+      warn('警告：标记为 skipped 的 .claude/skills/ 软链接未创建（EPERM）。技能已安装到 .agents/skills/。以管理员身份打开终端，或启用 Windows 开发人员模式，再重跑原安装命令补齐链接。');
+    }
     return 0;
   } catch (error) { stderr(`Error: ${error.message}`); return 1; }
 }
