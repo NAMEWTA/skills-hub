@@ -127,6 +127,21 @@ Lucide 与 Unsplash 补充法律文件的来源 URL、取得时间、摘要和�
 
 v0.1.29 继续按用户要求，移除其他 dev 运行技能对环境初始化技能的提及。环境与资源信息改为直接复用已有记录的有效部分，缺失或过期时依据实际执行主机核对；模板不要求预先建立环境文件。该调整保留资源预留、独立判断、覆盖和工作树回收机制，不改变上游来源版本或已复核对象。
 
+本轮依据 [Issue #18](https://github.com/NAMEWTA/skills-hub/issues/18) 的 2026-11-25 方法研究，补充结果口径、有界校准和会话、重任务、工作树的联合预算。上表已列出的原生并发、工作树、cgroup、系统预留与过载处理来源继续沿用；以下只列新增的具体参考。源码链接固定到研究所用提交，滚动文档的研究日期不表示其内容永久不变，实际配置仍按安装版本核对。
+
+| 增量参考 | 采用与不采用的边界 |
+| --- | --- |
+| Gemini CLI [subagents](https://geminicli.com/docs/core/subagents/)、[安装要求](https://geminicli.com/docs/get-started/installation/) | 区分独立上下文、实际执行资源与环境要求；不把安装页内存建议换算成每个 Agent 的固定成本。 |
+| xAI Grok Build [更新记录](https://x.ai/changelog/build)、固定源码 [admission.rs](https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-grok-tools/src/implementations/grok_build/task/admission.rs)、[auto_gc.rs](https://github.com/xai-org/grok-build/blob/2bdd1d6a6369de0e8c68132ea4539e9abd9e14a8/crates/codegen/xai-fast-worktree/src/auto_gc.rs) | 核对会话准入、workflow 运行池和回收策略各自的作用域；不以旧版本说明推断当前并发或清理能力，会话结束也不视为磁盘已释放。 |
+| GitHub Copilot CLI [命令参考](https://docs.github.com/en/copilot/reference/copilot-cli-reference/cli-command-reference)、[/fleet](https://docs.github.com/en/copilot/how-tos/copilot-cli/use-copilot-cli/speed-up-task-completion) | 将任务独立性、会话树与产品限制、本地资源分别核对；不把产品可创建的会话数当作硬件安全容量。 |
+| obra/superpowers [dispatching-parallel-agents](https://github.com/obra/superpowers/blob/22f0b463e7a5e579904dd6211a520321035526f7/skills/dispatching-parallel-agents/SKILL.md) | 借鉴按独立问题分工，沿用本项目 task 与会话分离及会话复用约定；不把每项 task 固定映射为一个新会话。上表工作树方法中的自动安装与基线测试不作为普通只读评估的默认步骤。 |
+| AI-CFD-Scientist [resource_probe.py](https://github.com/csml-rpi/AI-CFD-Scientist/blob/27eb2e82793ef9f1d190257e10020aa158a81b9a/src/cfd_langgraph/scheduling/resource_probe.py)、[scheduler.py](https://github.com/csml-rpi/AI-CFD-Scientist/blob/27eb2e82793ef9f1d190257e10020aa158a81b9a/src/cfd_langgraph/scheduling/scheduler.py) | 借鉴单项进程树校准、结合 CPU 与内存估算及压力下暂缓新增；不采用未测时按核数猜人数、强制至少一个名额、等待超时后带压启动的策略，不引入其 Python 调度器。 |
+| Linux [PSI](https://docs.kernel.org/accounting/psi.html) | 配合已有 cgroup 来源解释持续压力与恢复观察；保护线、观察窗口和恢复条件按实际环境说明来源，不声称存在全平台通用的安全常数。 |
+| Node.js 22.14 [os.availableParallelism()](https://nodejs.org/download/release/v22.14.0/docs/api/os.html#osavailableparallelism)、[process.constrainedMemory()](https://nodejs.org/download/release/v22.14.0/docs/api/process.html#processconstrainedmemory) | 按接口语义与可见平台约束解释观测；不把并行度估计等同于 Agent 数，也不把内存接口返回 `0` 直接解释为零 RAM 或无限容量。 |
+| Playwright [并行测试](https://playwright.dev/docs/test-parallel)、CMake [构建并发](https://cmake.org/cmake/help/latest/envvar/CMAKE_BUILD_PARALLEL_LEVEL.html) | 记录实际工具版本下的内部 workers 或 jobs，并核对限制是否生效；不让多个工作树各自无条件使用整机并行度。 |
+
+报告中的当前观测、已验证运行规模、建议并发和实际极限分别表述；默认只读、按已有授权有界校准、证据不足时保留未知，以及当前数量超出建议时停止扩张，均是本项目的适配。来源中的团队人数建议、配置默认值与安装要求不能代替实际容量证据。本轮只作方法研究与适配，不执行或导入来源脚本，不新增运行依赖或全量材料副本，也不更新材料的逐文件审校状态和已有历史声明。
+
 ### Issue 撰写与维护
 
 `dev-issue` 将以下资料作为正文完整性、仓库上下文和远程写入语义的对照，自行组织面向 GitHub 的创建、更新与评论流程。完整规格和本地切片方法继续分别由 `dev-spec`、`dev-plan` 维护，不复制其正文或增加第二个材料归属。以下网页和较新源码未整篇翻译收录，也不改变材料父清单的固定版本。
