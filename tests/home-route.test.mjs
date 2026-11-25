@@ -52,7 +52,10 @@ test('Unicode paths resolve without modifying dirty files, index or HEAD and con
   const { home, git, repo, entry } = fixture(t); const project = repo('项目 甲');
   fs.writeFileSync(path.join(project, 'AGENTS.md'), '# 用户尚未提交的指导\n'); const index = fs.readFileSync(path.join(project, '.git/index')); const head = git(project, 'rev-parse', 'HEAD');
   const result = routeRepo(home, entry(project));
-  assert.equal(result.actualCheckout, fs.realpathSync(project)); assert.equal(result.homeRoot, fs.realpathSync(home)); assert.equal(result.dirty, true); assert.equal(result.contextRead, false); assert.equal(result.head, head);
+  assert.equal(result.actualCheckout, fs.realpathSync.native(project)); assert.equal(result.homeRoot, fs.realpathSync.native(home)); assert.equal(result.dirty, true); assert.equal(result.contextRead, false); assert.equal(result.head, head);
+  assert.equal(result.realPath, result.actualCheckout); assert.equal(result.requestedPathIsGitRoot, true);
+  const nested = path.join(project, '内部目录'); fs.mkdirSync(nested);
+  const nestedResult = inspectCheckout(nested); assert.equal(nestedResult.requestedPathIsGitRoot, false); assert.equal(nestedResult.actualCheckout, result.actualCheckout);
   assert.deepEqual(fs.readFileSync(path.join(project, '.git/index')), index); assert.equal(fs.readFileSync(path.join(project, 'AGENTS.md'), 'utf8'), '# 用户尚未提交的指导\n');
 });
 
@@ -79,7 +82,8 @@ test('file-form worktrees, nested checkout and explicit local path choice retain
   git(project, 'worktree', 'add', '-b', 'feature', worktree); assert.equal(fs.lstatSync(path.join(worktree, '.git')).isFile(), true);
   const result = routeRepo(home, entry(project), { checkout: worktree, localPaths: { 'project-a': path.join(root, '不使用的路径') }, reference: 'AGENTS.md' });
   assert.equal(result.isLinkedWorktree, true); assert.equal(result.pathSource, 'explicit-checkout'); assert.equal(result.reference.contentsRead, false); assert.equal(result.entries.skillsDirectory, false);
-  const local = routeRepo(home, entry(project), { localPaths: { 'project-a': worktree } }); assert.equal(local.pathSource, 'local-path-override'); assert.equal(local.actualCheckout, fs.realpathSync(worktree));
+  assert.equal(result.requestedPathIsGitRoot, true); assert.equal(result.realPath, result.actualCheckout); assert.equal(result.reference.realTarget, fs.realpathSync.native(path.join(worktree, 'AGENTS.md')));
+  const local = routeRepo(home, entry(project), { localPaths: { 'project-a': worktree } }); assert.equal(local.pathSource, 'local-path-override'); assert.equal(local.actualCheckout, fs.realpathSync.native(worktree)); assert.equal(local.requestedPathIsGitRoot, true);
 });
 
 test('local-only alternate checkouts require the same Git common directory', t => {
@@ -109,6 +113,7 @@ test('Home registration readers reject linked parents, files and invalid local c
 test('project references reject traversal and aliases outside checkout without reading target content', t => {
   const { root, repo } = fixture(t); const project = repo('项目甲'); const outside = path.join(root, '外部知识'); fs.mkdirSync(outside); fs.writeFileSync(path.join(outside, 'secret.md'), '不得读取的项目知识');
   assert.throws(() => resolveReference(project, '../外部知识/secret.md'), { code: 'INVALID_REFERENCE' });
+  assert.equal(resolveReference(project, 'AGENTS.md').realTarget, fs.realpathSync.native(path.join(project, 'AGENTS.md')));
   if (!symlink(t, outside, path.join(project, 'outside'))) return;
   assert.throws(() => resolveReference(project, 'outside/secret.md'), { code: 'REFERENCE_ESCAPE' });
   assert.equal(resolveReference(project, 'missing.md').exists, false); assert.equal(inspectCheckout(project).entries.agentsFile, true);

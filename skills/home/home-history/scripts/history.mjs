@@ -10,7 +10,7 @@ const writable = (relative) => documentPath(relative) || relative === 'history/i
 
 export function eventTime(value) {
   if (['unknown', '未知'].includes(value)) return null;
-  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)) fail('DATE', '时间须为 YYYY-MM-DD、带时区的 ISO 时间或 unknown');
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)) fail('DATE', '时间须为 YYYY-MM-DD、带时区且小数最多三位的 ISO 时间或 unknown');
   const day = value.slice(0, 10); const calendar = new Date(`${day}T00:00:00Z`);
   if (!Number.isFinite(calendar.getTime()) || calendar.toISOString().slice(0, 10) !== day || !Number.isFinite(Date.parse(value))) fail('DATE', `无效时间：${value}`);
   if (value.length > 10 && (Number(value.slice(11, 13)) > 23 || Number(value.slice(14, 16)) > 59 || Number(value.slice(17, 19)) > 59)) fail('DATE', `无效时刻：${value}`);

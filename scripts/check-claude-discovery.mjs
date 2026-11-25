@@ -105,9 +105,15 @@ export async function checkClaudeDiscovery(root = repositoryRoot) {
         resourcesRead: receipts.length,
         userTurnsSent: 0,
         modelInferenceVerified: false,
-        discovery: definitions.filter(item => selected.some(skill => skill.name === item.name)).map(item => ({
-          name: item.name, source: item.source,
-          path: item.path ? path.relative(project, item.path) : null,
+        discovery: selected.map(skill => ({
+          name: skill.name,
+          initialized: commandNames.has(skill.name),
+          reloaded: reloadedNames.has(skill.name),
+          // Before a model turn the context breakdown can omit definitions;
+          // the actual read receipts below still record each effective path.
+          contextPath: definitions.find(item => item.name === skill.name)?.path
+            ? path.relative(project, definitions.find(item => item.name === skill.name).path)
+            : null,
         })),
         receipts,
       };

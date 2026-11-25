@@ -8,7 +8,7 @@
 
 `event_key` 是原来源事件的稳定身份，与 scope 共同查重；标题不是身份。`id` 可省略，由工具生成；指定时只允许字母、数字、下划线、连字符，最多 101 字符。新文件保存到 `history/YYYY/MM/<id>.md`；事件时间未知时仅用整理年月放置文件，正文仍标 unknown。
 
-`occurred_at` 可为 `YYYY-MM-DD`、带时区偏移的 ISO 时间或 `unknown`。`recorded_at` 由首次记录操作生成，修订保留它并增加 `updated_at`。工具不从文件 mtime、目录或整理时间推断事件实际时间。
+`occurred_at` 可为 `YYYY-MM-DD`、带时区偏移的 ISO 时间或 `unknown`。ISO 时间的秒数必填，小数秒可省略或为 1～3 位，使用 Node Date 的毫秒精度；例如 `2026-11-25T15:20:00.123+08:00`。更高精度输入明确拒绝，不静默截断，owner 需决定是否按毫秒精度转换并保留必要的原始来源。`recorded_at` 由首次记录操作生成，修订保留它并增加 `updated_at`。工具不从文件 mtime、目录或整理时间推断事件实际时间。
 
 ## 命令
 

@@ -16,7 +16,7 @@ const exists = (filename) => { try { fs.lstatSync(filename); return true; } catc
 function homePath(inputHome) {
   const requested = path.resolve(inputHome);
   if (fs.lstatSync(requested).isSymbolicLink()) fail('UNSAFE_HOME', 'Home 根不能是符号链接；使用明确的真实协调仓库。');
-  const root = fs.realpathSync(requested);
+  const root = fs.realpathSync.native(requested);
   if (!fs.statSync(root).isDirectory()) fail('UNSAFE_HOME', 'Home 根必须是已有目录。');
   for (const relative of ['.agents', '.agents/home']) {
     const filename = path.join(root, relative);
@@ -126,11 +126,13 @@ function git(cwd, args, { optional = false } = {}) {
 export function inspectCheckout(inputPath) {
   const requestedPath = path.resolve(inputPath);
   let realPath;
-  try { realPath = fs.realpathSync(requestedPath); } catch (error) { fail('PATH_UNAVAILABLE', `路径不可达：${requestedPath}（${error.code}）。`); }
+  // Resolve every compared path through the native filesystem implementation;
+  // Windows 8.3 input paths and Git's long paths must have the same identity.
+  try { realPath = fs.realpathSync.native(requestedPath); } catch (error) { fail('PATH_UNAVAILABLE', `路径不可达：${requestedPath}（${error.code}）。`); }
   if (!fs.statSync(realPath).isDirectory()) fail('NOT_DIRECTORY', `目标不是目录：${requestedPath}`);
-  const actualCheckout = fs.realpathSync(git(realPath, ['rev-parse', '--show-toplevel']));
-  const gitDir = fs.realpathSync(git(actualCheckout, ['rev-parse', '--absolute-git-dir']));
-  const commonDir = fs.realpathSync(git(actualCheckout, ['rev-parse', '--path-format=absolute', '--git-common-dir']));
+  const actualCheckout = fs.realpathSync.native(git(realPath, ['rev-parse', '--show-toplevel']));
+  const gitDir = fs.realpathSync.native(git(actualCheckout, ['rev-parse', '--absolute-git-dir']));
+  const commonDir = fs.realpathSync.native(git(actualCheckout, ['rev-parse', '--path-format=absolute', '--git-common-dir']));
   const remoteLines = git(actualCheckout, ['config', '--get-regexp', '^remote\\..*\\.url$'], { optional: true });
   const remotes = [];
   for (const line of (remoteLines || '').split('\n').filter(Boolean)) {
@@ -163,12 +165,13 @@ export function resolveReference(checkout, reference) {
   if (!text(reference) || path.isAbsolute(reference) || path.win32.isAbsolute(reference) || reference.split(/[\\/]/u).includes('..')) {
     fail('INVALID_REFERENCE', '项目资料引用必须是实际 checkout 内的相对路径，不接受父目录跳转。');
   }
+  checkout = fs.realpathSync.native(path.resolve(checkout));
   const target = path.resolve(checkout, reference);
   if (!inside(checkout, target)) fail('REFERENCE_ESCAPE', '引用离开实际 checkout。');
   const present = exists(target);
   let realTarget = null;
   if (present) {
-    try { realTarget = fs.realpathSync(target); } catch { fail('BROKEN_REFERENCE', '引用存在但真实目标不可达。'); }
+    try { realTarget = fs.realpathSync.native(target); } catch { fail('BROKEN_REFERENCE', '引用存在但真实目标不可达。'); }
     if (!inside(checkout, realTarget)) fail('REFERENCE_ESCAPE', '引用经 symlink/junction 指向 checkout 之外。');
   }
   return { relativePath: reference, target, realTarget, exists: present, contentsRead: false };
