@@ -77,18 +77,42 @@ function readJson(filename, optional = false) {
 export function readRegistry(homeRoot) {
   homeRoot = homePath(homeRoot);
   const value = readJson(path.join(homeRoot, '.agents/home/repos.json'));
-  if (value?.formatVersion !== 1 || !Array.isArray(value.repos)) fail('REGISTRY_VERSION', '只读取 formatVersion: 1 的 repos 数组；未知版本不猜测迁移。');
+  if (![1, 2].includes(value?.formatVersion) || !Array.isArray(value.repos)) fail('REGISTRY_VERSION', '只读取 formatVersion: 1 或 2 的 repos 数组；未知版本不猜测迁移。');
   const ids = new Set();
   for (const repo of value.repos) {
-    if (!repo || !/^[a-z0-9][a-z0-9-]*$/u.test(repo.id || '') || ids.has(repo.id) || !text(repo.localPath) || typeof repo.remote !== 'string') {
-      fail('INVALID_REGISTRY', '登记必须含唯一 id、localPath 与 remote；请由 home-setup 校验完整 schema。');
+    if (!repo || !/^[a-z0-9][a-z0-9-]*$/u.test(repo.id || '') || ids.has(repo.id) || !text(repo.localPath)) {
+      fail('INVALID_REGISTRY', '登记必须含唯一 id、localPath 与明确 Git 身份；请由 home-setup 校验完整 schema。');
     }
     if (repo.aliases !== undefined && (!Array.isArray(repo.aliases) || repo.aliases.some(alias => !text(alias)))) fail('INVALID_REGISTRY', `仓库 ${repo.id} 的 aliases 无效。`);
     if (repo.groups !== undefined && (!Array.isArray(repo.groups) || repo.groups.some(group => !text(group)))) fail('INVALID_REGISTRY', `仓库 ${repo.id} 的 groups 无效。`);
-    if (repo.remote) normalizeRemote(repo.remote);
+    if (value.formatVersion === 1) {
+      if (typeof repo.remote !== 'string' || Object.hasOwn(repo, 'remotes') || Object.hasOwn(repo, 'primaryRemote')) fail('INVALID_REGISTRY', 'v1 使用原单 remote；迁移后以 v2 保存，不能混用两份身份。');
+      if (repo.remote) normalizeRemote(repo.remote);
+    } else {
+      if (!/^(\.\/|\.\.\/)/u.test(repo.localPath) || repo.localPath.includes('\\') || Object.hasOwn(repo, 'remote')) fail('INVALID_REGISTRY', 'v2 使用 remotes 与显式 Home 相对 localPath；不能混入旧 remote。');
+      validateRemotes(repo);
+    }
     ids.add(repo.id);
   }
   return value;
+}
+
+function validateRemotes(repo) {
+  if (!Array.isArray(repo.remotes)) fail('INVALID_REGISTRY', 'v2 remotes 必须是数组。');
+  const names = new Set();
+  for (const remote of repo.remotes) {
+    if (!remote || !text(remote.name) || /\s/u.test(remote.name) || names.has(remote.name) || Object.keys(remote).some(key => !['name', 'urls', 'pushUrls'].includes(key))) fail('INVALID_REGISTRY', 'remote 名称无效、重复或含未知字段。');
+    names.add(remote.name);
+    for (const key of ['urls', 'pushUrls']) {
+      if (!Array.isArray(remote[key])) fail('INVALID_REGISTRY', `remote ${key} 必须是 URL 数组。`);
+      for (const url of remote[key]) {
+        if (typeof url !== 'string' || /\s/u.test(url)) fail('INVALID_REMOTE', '登记 URL 不得为空或包含空白。');
+        normalizeRemote(url);
+      }
+    }
+    if (!remote.urls.length && !remote.pushUrls.length) fail('INVALID_REGISTRY', 'remote 没有 URL，先由 home-setup 核实配置。');
+  }
+  if (!repo.remotes.length ? repo.primaryRemote !== null : !text(repo.primaryRemote) || !repo.remotes.some(remote => remote.name === repo.primaryRemote && remote.urls.length)) fail('INVALID_PRIMARY_REMOTE', '必须选定含 fetch URL 的 primaryRemote；本地独有仓库写 null。');
 }
 
 export function readLocalPaths(homeRoot, registry) {
@@ -112,7 +136,7 @@ export function selectRepos(registry, query, { group = false } = {}) {
   return exact ? [exact] : registry.repos.filter(repo => (repo.aliases || []).includes(query));
 }
 
-function git(cwd, args, { optional = false } = {}) {
+function git(cwd, args, { optional = false, raw = false } = {}) {
   const env = { ...process.env, GIT_TERMINAL_PROMPT: '0', GIT_OPTIONAL_LOCKS: '0' };
   for (const key of ['GIT_DIR', 'GIT_COMMON_DIR', 'GIT_WORK_TREE', 'GIT_INDEX_FILE', 'GIT_PREFIX', 'GIT_OBJECT_DIRECTORY', 'GIT_ALTERNATE_OBJECT_DIRECTORIES', 'GIT_CONFIG', 'GIT_CONFIG_COUNT', 'GIT_CONFIG_PARAMETERS']) delete env[key];
   const result = spawnSync('git', ['-c', 'core.fsmonitor=false', '-C', cwd, ...args], { env, encoding: 'utf8', timeout: 15_000, maxBuffer: 4 * 1024 * 1024, windowsHide: true });
@@ -120,7 +144,7 @@ function git(cwd, args, { optional = false } = {}) {
     if (optional && !result.error) return null;
     fail('GIT_CHECK_FAILED', `Git 只读核查失败：${args[0]}（${result.error?.code || result.status}）；未执行 fetch、切分支或写入。`);
   }
-  return result.stdout.trim();
+  return raw ? result.stdout : result.stdout.trim();
 }
 
 export function inspectCheckout(inputPath) {
@@ -133,16 +157,28 @@ export function inspectCheckout(inputPath) {
   const actualCheckout = fs.realpathSync.native(git(realPath, ['rev-parse', '--show-toplevel']));
   const gitDir = fs.realpathSync.native(git(actualCheckout, ['rev-parse', '--absolute-git-dir']));
   const commonDir = fs.realpathSync.native(git(actualCheckout, ['rev-parse', '--path-format=absolute', '--git-common-dir']));
-  const remoteLines = git(actualCheckout, ['config', '--get-regexp', '^remote\\..*\\.url$'], { optional: true });
-  const remotes = [];
-  for (const line of (remoteLines || '').split('\n').filter(Boolean)) {
-    const match = line.match(/^remote\.(.+)\.url\s+(.+)$/u);
-    if (!match) continue;
-    let identity;
-    try { identity = normalizeRemote(match[2]); }
+  const remoteNames = git(actualCheckout, ['remote']).split('\n').filter(Boolean);
+  const remoteEntries = new Map(remoteNames.map(name => [name, { name, urls: [], pushUrls: [] }]));
+  const remoteLines = git(actualCheckout, ['config', '--null', '--get-regexp', '^remote\\..*\\.(url|pushurl)$'], { optional: true, raw: true });
+  for (const line of (remoteLines || '').split('\0').filter(Boolean)) {
+    const match = line.match(/^remote\.(.+)\.(url|pushurl)\n([\s\S]*)$/u);
+    if (!match || !remoteEntries.has(match[1])) fail('INVALID_REMOTE', 'Git remote 配置无法完整解析；未忽略未知记录。');
+    const remote = remoteEntries.get(match[1]);
+    const key = match[2] === 'url' ? 'urls' : 'pushUrls';
+    // Empty values clear inherited multi-value URL settings in Git.
+    if (!match[3]) { remote[key] = []; continue; }
+    try { if (/\s/u.test(match[3])) fail('INVALID_REMOTE', 'URL 包含空白。'); normalizeRemote(match[3]); }
     catch (error) { fail(error.code || 'INVALID_REMOTE', `目标 remote ${match[1]} 的 URL 不适合保存；先由项目 owner 移除内嵌认证信息或修复格式。`); }
-    remotes.push({ name: match[1], ...identity });
+    remote[key].push(match[3]);
   }
+  const remotes = [...remoteEntries.values()];
+  const effectiveFetchUrls = remotes.filter(remote => remote.urls.length).map(remote => {
+    const url = git(actualCheckout, ['remote', 'get-url', '--', remote.name], { raw: true }).replace(/\r?\n$/u, '');
+    try { if (/\s/u.test(url)) fail('INVALID_REMOTE', 'URL 包含空白。'); normalizeRemote(url); }
+    catch (error) { fail(error.code || 'INVALID_REMOTE', `目标 remote ${remote.name} 经 Git URL 重写后的 fetch 地址不适合输出；先由项目 owner 修复，不保存认证信息。`); }
+    return { name: remote.name, url };
+  });
+  const suggestedPrimaryRemote = remotes.find(remote => remote.name === 'origin' && remote.urls.length)?.name || (remotes.length === 1 && remotes[0].urls.length ? remotes[0].name : null);
   const head = git(actualCheckout, ['rev-parse', '--verify', 'HEAD'], { optional: true });
   const branch = git(actualCheckout, ['symbolic-ref', '--quiet', '--short', 'HEAD'], { optional: true });
   const dirty = Boolean(git(actualCheckout, ['status', '--porcelain=v1', '--untracked-files=normal']));
@@ -151,7 +187,7 @@ export function inspectCheckout(inputPath) {
     isLinkedWorktree: gitDir !== commonDir,
     requestedPathIsGitRoot: realPath === actualCheckout,
     followsPathAlias: requestedPath !== realPath,
-    head, branch, dirty, remotes,
+    head, branch, dirty, remotes, effectiveFetchUrls, suggestedPrimaryRemote,
     entries: {
       agentsFile: exists(path.join(actualCheckout, 'AGENTS.md')),
       agentsDirectory: exists(path.join(actualCheckout, '.agents')),
@@ -182,10 +218,20 @@ export function routeRepo(homeRoot, repo, { localPaths = {}, checkout, reference
   const registeredPath = path.resolve(homeRoot, localPaths[repo.id] || repo.localPath);
   const chosenPath = checkout ? path.resolve(homeRoot, checkout) : registeredPath;
   const actual = inspectCheckout(chosenPath);
-  const expected = repo.remote ? normalizeRemote(repo.remote) : null;
+  const multiRemote = Object.hasOwn(repo, 'remotes');
+  if (multiRemote) validateRemotes(repo);
+  else if (typeof repo.remote !== 'string') fail('INVALID_REGISTRY', '旧登记缺少 remote；由 home-setup 核实。');
+  const primary = multiRemote ? repo.remotes.find(remote => remote.name === repo.primaryRemote) : null;
+  const expected = primary ? normalizeRemote(primary.urls[0]) : repo.remote ? normalizeRemote(repo.remote) : null;
   let identityEvidence;
   if (expected) {
-    identityEvidence = matchIdentity(actual.remotes, expected, repo.id);
+    if (multiRemote) {
+      const observed = actual.remotes.find(remote => remote.name === repo.primaryRemote);
+      const effective = actual.effectiveFetchUrls.find(remote => remote.name === repo.primaryRemote);
+      const observedIdentity = observed?.urls.length && effective ? normalizeRemote(effective.url) : null;
+      if (!observedIdentity || observedIdentity.kind !== expected.kind || observedIdentity.identity !== expected.identity) fail('IDENTITY_CONFLICT', `仓库 ${repo.id} 的主 remote ${repo.primaryRemote} 缺失，或首个 fetch URL 经 Git 重写后的实际身份与登记不同；其他 remote 或 push URL 命中不能替代。`);
+      identityEvidence = { type: 'remote', expected, actual: observedIdentity, selection: 'primary-remote', primaryRemote: repo.primaryRemote, fetchUrlIndex: 0, matchedRemoteNames: [repo.primaryRemote] };
+    } else identityEvidence = matchIdentity(actual.remotes, expected, repo.id, actual.effectiveFetchUrls);
   } else {
     if (actual.remotes.length) fail('IDENTITY_CONFLICT', `仓库 ${repo.id} 登记为本地独有，但实际配置了 remote；先由 home-setup 核实登记。`);
     if (checkout && path.resolve(chosenPath) !== path.resolve(registeredPath)) {
@@ -194,10 +240,11 @@ export function routeRepo(homeRoot, repo, { localPaths = {}, checkout, reference
     }
     identityEvidence = { type: 'local-only', commonDir: actual.commonDir };
   }
+  const remoteDrift = multiRemote ? compareRemotes(repo.remotes, actual.remotes) : [];
   const result = {
     status: 'resolved', repoId: repo.id, purpose: repo.purpose || '', intent: repo.intent,
     homeRoot, registeredPath, pathSource: checkout ? 'explicit-checkout' : localPaths[repo.id] ? 'local-path-override' : 'registry',
-    identityEvidence, ...actual,
+    identityEvidence, ...actual, remoteDrift, registryMatches: multiRemote ? !remoteDrift.length : null, registryCoverage: multiRemote ? 'all-configured-remotes' : 'legacy-primary-only',
     contextRead: false,
     next: '由进入实际 checkout 的项目 Agent 读取 AGENTS.md、有关 .agents 资料和所需 SKILL；本结果只核对位置与入口。',
   };
@@ -205,11 +252,23 @@ export function routeRepo(homeRoot, repo, { localPaths = {}, checkout, reference
   return result;
 }
 
-function matchIdentity(remotes, expected, repoId = '待接入项目') {
+function compareRemotes(registered, actual) {
+  const before = new Map(registered.map(remote => [remote.name, remote]));
+  const after = new Map(actual.map(remote => [remote.name, remote]));
+  return [...new Set([...before.keys(), ...after.keys()])].sort().flatMap(name => {
+    const saved = before.get(name), observed = after.get(name);
+    if (!saved || !observed) return [{ name, change: saved ? 'removed' : 'added', registered: saved || null, actual: observed || null }];
+    const fields = ['urls', 'pushUrls'].filter(key => JSON.stringify(saved[key]) !== JSON.stringify(observed[key]));
+    return fields.length ? [{ name, change: 'changed', fields, registered: saved, actual: observed }] : [];
+  });
+}
+
+function matchIdentity(remotes, expected, repoId = '待接入项目', effectiveFetchUrls = []) {
   // An parent URL does not change the identity of a fork's origin.
   const origin = remotes.filter(remote => remote.name === 'origin');
   const selected = origin.length ? origin : remotes;
-  if (!selected.length || selected.some(remote => remote.identity !== expected.identity || remote.kind !== expected.kind)) {
+  const effective = new Map(effectiveFetchUrls.map(remote => [remote.name, remote.url]));
+  if (!selected.length || selected.some(remote => !remote.urls.length || !effective.has(remote.name) || [...remote.urls, effective.get(remote.name)].some(url => { const identity = normalizeRemote(url); return identity.identity !== expected.identity || identity.kind !== expected.kind; }))) {
     fail('IDENTITY_CONFLICT', `仓库 ${repoId} 的 origin（无 origin 时为全部已配置 remote）与登记身份不一致或存在歧义；parent 命中不能代替 fork 身份核查。`);
   }
   return { type: 'remote', expected, selection: origin.length ? 'origin' : 'unambiguous-remotes', matchedRemoteNames: selected.map(remote => remote.name) };
@@ -239,7 +298,7 @@ export function main(argv = process.argv.slice(2)) {
       const result = inspectCheckout(options.inspect);
       if (options['expected-remote'] !== undefined) {
         const expected = normalizeRemote(options['expected-remote']);
-        result.identityEvidence = matchIdentity(result.remotes, expected);
+        result.identityEvidence = matchIdentity(result.remotes, expected, '待接入项目', result.effectiveFetchUrls);
       }
       console.log(JSON.stringify({ status: 'inspected', ...result, contextRead: false }, null, 2));
       return 0;

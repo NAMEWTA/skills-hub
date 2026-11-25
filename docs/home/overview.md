@@ -15,6 +15,14 @@ npx @namewta/skills-hub@latest install --domain home
 
 安装只建立 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。真实内容出现时再建登记、知识、历史或配置文件。根 `AGENTS.md` 由用户维护；不会生成其他宿主的指令、配置、hook 或 auto memory 设置。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
 
+## 项目登记与按需地图
+
+`repos.json` 是项目登记真源。v2 保存每个 checkout 的完整 remote 名称、有序 URL 和显式 push URL，并用 `primaryRemote` 指定主身份；无 remote 的本地仓库也可登记。路由按主 remote 的首 fetch URL 核验，同时检查 Git URL 重写后的实际目标。跨仓库重写报身份冲突，其他远端变化单独报告，镜像匹配不能替代主身份核验。
+
+共享 `localPath` 新写入为 Home 根相对的 `./project-a` 或 `../repos/project-a`。本机绝对路径用默认忽略的 `local.json` 覆盖。旧 v1 登记与裸相对路径继续读取，迁到 v2 前先核实实际 checkout，不从旧地址猜 remote 名称。
+
+保存登记只写 `repos.json`，不要求存在 `repos.md`。查看地图使用 `registry.mjs map --home <Home>`，默认输出 Markdown；显式增加 `--write` 并提供登记、地图 revision 才导出派生文件。已有手写地图受到保护，导出链接相对实际地图位置生成。完整操作与格式见 [home-setup 登记方法](../../skills/home/home-setup/references/registry.md)。项目关系仍由 `home-map` 维护 `relations.md`。
+
 ## 按目标选择方法
 
 | 目标 | 技能 | 可检查的结果 |

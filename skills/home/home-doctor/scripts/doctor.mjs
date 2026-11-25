@@ -60,7 +60,7 @@ export function diagnoseHome(inputHome, { requiredSkills = [], maxFiles = 2000, 
   if (registryText !== null) {
     try {
       registry = JSON.parse(registryText);
-      if (registry?.formatVersion !== 1 || !Array.isArray(registry.repos)) throw new Error('version');
+      if (![1, 2].includes(registry?.formatVersion) || !Array.isArray(registry.repos)) throw new Error('version');
       const ids = registry.repos.map(repo => repo.id);
       if (ids.some(id => typeof id !== 'string') || new Set(ids).size !== ids.length) add('error', 'REGISTRY_IDS', registryFile, 'home-setup', '登记 ID 缺失或重复；由 owner 运行完整 schema 校验。');
     } catch { registry = null; add('error', 'REGISTRY_FORMAT', registryFile, 'home-setup', '登记 JSON 或版本无效，未推测迁移。'); }
@@ -77,7 +77,6 @@ export function diagnoseHome(inputHome, { requiredSkills = [], maxFiles = 2000, 
   }
   const mapFile = path.join(domainRoot, 'repos.md');
   const mapText = readable(mapFile, 'home-setup');
-  if (registry && mapText === null && !stat(mapFile)) add('warning', 'MAP_MISSING', mapFile, 'home-setup', '已有登记但缺少派生地图；由 home-setup 按真源重建。');
   if (mapText !== null) {
     if (!mapText.startsWith('<!-- home-setup:generated repos map v1 -->')) add('warning', 'MAP_UNMANAGED', mapFile, 'home-setup', '已有手写地图；保留原件，由 setup 按授权接入，不能直接覆盖。');
     else if (registryText === null || !mapText.includes(`<!-- registry-revision: ${sha(registryText)} -->`)) add('warning', 'MAP_SOURCE_STALE', mapFile, 'home-setup', '地图标记与当前登记真源不同；核对后重建，不刷新项目事实时间。');

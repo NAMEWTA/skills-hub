@@ -1,27 +1,255 @@
 {
-  "title": "Home 仓库登记 v1",
+  "title": "Home 仓库登记 v2（保留 v1 读取兼容）",
   "type": "object",
   "additionalProperties": false,
-  "required": ["formatVersion", "repos"],
+  "required": [
+    "formatVersion",
+    "repos"
+  ],
   "properties": {
-    "formatVersion": { "const": 1 },
+    "formatVersion": {
+      "enum": [
+        1,
+        2
+      ]
+    },
     "repos": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": ["id", "purpose", "remote", "localPath", "intent"],
+      "type": "array"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
         "properties": {
-          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-          "purpose": { "type": "string", "minLength": 1, "pattern": "^[^\\u0000-\\u001f\\u007f]+$" },
-          "aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-          "groups": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
-          "remote": { "type": "string", "description": "保留 host 和仓库路径的无秘密 Git 身份；以 origin 核对，无 origin 时须全部 remote 身份一致。本地独有仓库为空。" },
-          "localPath": { "type": "string", "minLength": 1 },
-          "intent": { "enum": ["work", "reference"] },
-          "backgroundRef": { "type": "string", "minLength": 1, "description": "Home 内相对路径；不接受父目录跳转或绝对路径。" }
+          "formatVersion": {
+            "const": 1
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "repos": {
+            "items": {
+              "$ref": "#/$defs/legacyRepo"
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "repos": {
+            "items": {
+              "$ref": "#/$defs/repo"
+            }
+          }
         }
       }
+    }
+  ],
+  "$defs": {
+    "legacyRepo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "purpose",
+        "remote",
+        "localPath",
+        "intent"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "groups": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "localPath": {
+          "type": "string",
+          "minLength": 1
+        },
+        "intent": {
+          "enum": [
+            "work",
+            "reference"
+          ]
+        },
+        "backgroundRef": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Home 内相对路径；不接受父目录跳转或绝对路径。"
+        },
+        "remote": {
+          "type": "string",
+          "description": "旧单 remote 主身份，仅继续读取；修改登记前实际核查名称并迁移 v2。"
+        }
+      }
+    },
+    "remote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "urls",
+        "pushUrls"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^\\S+$",
+          "description": "实际 Git remote 名称；同一登记内不得重复。"
+        },
+        "urls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^\\u0000-\\u0020\\u007f]+$",
+            "description": "无认证秘密的原始 Git URL；URL 数组保留配置顺序。"
+          },
+          "description": "全部 remote.<name>.url，按 Git 顺序保存；首 URL 为 fetch 身份。"
+        },
+        "pushUrls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[^\\u0000-\\u0020\\u007f]+$",
+            "description": "无认证秘密的原始 Git URL；URL 数组保留配置顺序。"
+          },
+          "description": "全部显式 remote.<name>.pushurl；没有配置则为空，不复制隐式回退值。"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "urls": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "pushUrls": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "purpose",
+        "remotes",
+        "primaryRemote",
+        "localPath",
+        "intent"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "groups": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "localPath": {
+          "type": "string",
+          "pattern": "^(?:\\./|\\.\\./)[^\\\\\\u0000-\\u001f\\u007f]*$",
+          "description": "以 Home 根为基准的规范相对路径，例如 ./project-a 或 ../repos/project-a；绝对路径只进入 local.json。"
+        },
+        "intent": {
+          "enum": [
+            "work",
+            "reference"
+          ]
+        },
+        "backgroundRef": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Home 内相对路径；不接受父目录跳转或绝对路径。"
+        },
+        "remotes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/remote"
+          }
+        },
+        "primaryRemote": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "明确选择有 urls[0] 的 remote 名称；工具校验引用存在。本地独有仓库为 null。"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "remotes": {
+                "maxItems": 0
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "primaryRemote": {
+                "const": null
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "primaryRemote": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

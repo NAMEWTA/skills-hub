@@ -1,6 +1,6 @@
 # Home 资料
 
-- home-setup 管理 repos.json、派生 repos.md、本机 local.json 与 context/ 配置。
+- home-setup 管理 repos.json、local.json 与 context/；项目地图按需查看，显式导出 repos.md。
 - home-map 管理 relations.md。
 - home-knowledge 管理 notes/、inbox/、archive/notes/、exclusions.md 及知识索引。
 - home-history 管理 history/、archive/history/ 及历史索引。

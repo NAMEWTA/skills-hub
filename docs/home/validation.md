@@ -21,7 +21,8 @@ Linux CI 另外在独立临时目录安装官方 `@anthropic-ai/claude-agent-sdk
 
 | 对象 | 需要验证的边界 |
 | --- | --- |
-| registry/route | 中文与空格路径、平级与内嵌仓库、`.git` 文件型 worktree、别名歧义、不同 Git host、本机路径覆盖、dirty 与身份漂移、只读不改 Git |
+| registry/route | 多 remote 和多 URL 无损回读、指定主 remote 首 fetch 身份、fork 与镜像误匹配、附加 remote 漂移、无 remote 本地仓、v1 只读兼容、显式相对路径与本机覆盖、中文/空格/括号链接、worktree、只读不改 Git |
+| 项目登记地图 | 保存不写地图、缺地图正常、默认 stdout 零写入、显式导出、源与目标 revision 冲突、手写地图保护与旧地图过期诊断 |
 | knowledge/history | 来源与作用范围、候选和已核实事实区分、写前修订冲突、事件 ID 冲突、同源重导、不同后续事件、索引回退与重建、排除依据、防路径逃逸 |
 | 安装事务 | 新装、混选、unchanged 补链、正确断链、错向与父目录链接冲突、旧资源删除与备份、锁后重算、注入失败与回滚 |
 | 安装入口 | dry-run/list/help/version/取消零写入；真实 tarball 安装；链接包含所有资源，realpath 回到同仓本体；项目整体搬迁 |

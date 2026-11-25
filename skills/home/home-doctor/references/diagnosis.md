@@ -13,7 +13,7 @@
 | 问题 | 核查方式 | 修复 owner |
 | --- | --- | --- |
 | repos JSON、未知版本、重复 ID、非法 local 覆盖 | 结构报告后由 setup 完整 validate | home-setup |
-| repos 地图缺失/来源 revision 不同 | 结构脚本读生成标记，setup inspect 比较完整派生内容 | home-setup |
+| 已导出 repos 地图的来源 revision 不同或目标由用户维护 | 结构脚本读生成标记，setup inspect 比较完整派生内容；没有导出地图是正常状态 | home-setup |
 | 默认路径、真实 checkout、remote、worktree 不符 | route 的实际只读 Git 核查 | home-setup 维护登记，home-route 提供解析依据 |
 | 根导航缺项、配置引用失效 | 核对原 owner 与用户自定义内容 | home-setup |
 | notes、inbox、exclusions 的断链 | 只报路径与影响，不判结论真假 | home-knowledge |

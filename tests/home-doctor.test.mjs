@@ -25,12 +25,26 @@ test('empty Home is a read-only normal state and unselected tools are not diagno
 
 test('stale maps and malformed local identity overrides go to setup without modifying source', t => {
   const { root, file, write } = fixture(t); const current = inspectRegistry(root);
-  saveRegistry(root, { formatVersion: 1, repos: [] }, { expectedRevision: current.registryRevision, expectedMapRevision: current.mapRevision });
-  const before = fs.readFileSync(file('.agents/home/repos.md'), 'utf8'); write('.agents/home/repos.json', '{"formatVersion":1,"repos":[]}');
+  const registry = { formatVersion: 2, repos: [] };
+  saveRegistry(root, registry, { expectedRevision: current.registryRevision });
+  const saved = inspectRegistry(root);
+  saveRegistry(root, registry, { expectedRevision: saved.registryRevision, expectedMapRevision: saved.mapRevision, mapOnly: true });
+  const before = fs.readFileSync(file('.agents/home/repos.md'), 'utf8'); write('.agents/home/repos.json', '{"formatVersion":2,"repos":[]}');
   write('.agents/home/local.json', '{"formatVersion":1,"paths":{},"remote":"forged"}');
   const result = diagnoseHome(root); assert.equal(result.status, 'issues');
   for (const code of ['MAP_SOURCE_STALE', 'LOCAL_OVERRIDE_FORMAT']) assert.ok(result.findings.some(item => item.code === code && item.owner === 'home-setup'));
   assert.equal(fs.readFileSync(file('.agents/home/repos.md'), 'utf8'), before);
+});
+
+test('a v2 registry without an exported map is healthy and remains unchanged', t => {
+  const { root, file } = fixture(t);
+  saveRegistry(root, { formatVersion: 2, repos: [] }, { expectedRevision: 'absent' });
+  const before = fs.readFileSync(file('.agents/home/repos.json'));
+  const result = diagnoseHome(root);
+  assert.equal(result.status, 'clear-within-scope');
+  assert.ok(!result.findings.some(item => item.code === 'MAP_MISSING'));
+  assert.equal(fs.existsSync(file('.agents/home/repos.md')), false);
+  assert.deepEqual(fs.readFileSync(file('.agents/home/repos.json')), before);
 });
 
 test('structural broken links route to their owners, while fenced examples and external pointers are not opened', t => {

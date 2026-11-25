@@ -69,7 +69,7 @@ description: 协调跨阶段开发、接续后阶段尚不明确的任务，或�
 
 本套技能新增的项目资料统一以 `.agents/dev/` 为根，按需使用以下分区。已有资料按真实位置查阅并保留必要引用；只有明确要求迁移时才搬迁，并保留内容、标识和有效链接。用户本次明确指定其他位置时按其指令执行：
 
-- `.agents/dev/changes/<日期-主题>/`：保存需求、计划、进度和验收；行为契约沿用已有位置。`evidences/` 只放与 `tasks/` 完全同名的 `.md` 报告，失败和复验更新原文件。运行原件按 `dev-verify`（证据存放）放项目根 `temp/dev/`。确认原型及资源仍在 `prototype/`，确认与走查记在 `prototype-review.md` 或等价记录。
+- `.agents/dev/changes/<日期-主题>/`：跟踪需求来源、计划、设计、讨论决定、进度和正式验收。取得的远端 Issue、报告与必要源附件保存到对应或新建 Change 的 `source/`，完整方法归 `dev-issue-setup`（来源留存）；行为契约仍沿用已有位置。`evidences/` 只放与 `tasks/` 完全同名的 `.md` 报告，失败和复验更新原文件。实施与测试的过程输出按 `dev-verify`（证据存放）放项目根 `temp/dev/`。确认原型及资源仍在 `prototype/`，确认与走查记在 `prototype-review.md` 或等价记录。
 - `.agents/dev/notes/`：经过验证的术语、背景、决策、错误经验和模块理解；入口 `index.md` 只指路。
 - `.agents/dev/deploy/<环境>/`：部署手册及 `releases/` 下的历史发布记录。
 - `.agents/dev/archive/changes/implemented/`、`rejected/`：由 `dev-archive` 在归档时按结果分流，并将目录重命名为 `<type>_<YYYY-MM-DD>-<slug>/`，保留创建日期；旧历史不自动迁移。退役知识仍放 `.agents/dev/archive/notes/`。

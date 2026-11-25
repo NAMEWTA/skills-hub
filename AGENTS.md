@@ -16,7 +16,9 @@
 
 README 说明用途、安装和导航，AGENTS 保存共通开发约束与阅读指针，CHANGELOG 记录用户可见的版本变化。`docs/` 维护可重复使用的指南与规范，第三方来源和许可归[第三方声明](THIRD_PARTY_NOTICES.md)。
 
-每个 Change 新建 task 时同时在 `evidences/` 建完全同名的 `.md`，未验就标「未验证」。该目录只含这些普通 Markdown，与 `tasks/` 一一对应；复验更新原报告。整个 Change 完成后在根写唯一的 `evidence.md`，运行原件留 `temp/dev/` 或 `temp/system/`。长期项目知识写入 `.agents/dev/notes/`；记录实际完成范围和未验证事项。
+远端 Issue 或其他需求报告先关联已有 Change，没有合适归属时建立最小 Change；完整来源正文、可取得的讨论和必要方案附件保存到其 `source/` 并纳入 Git。规格、架构取舍、方案讨论、实施计划、确认原型与正式结论随 Change 跟踪，来源更新保留版本。完整方法由 `dev-issue-setup` 维护，资料分类见[持久化规范](docs/reference/persistence-roots.md)。
+
+每个 Change 新建 task 时同时在 `evidences/` 建完全同名的 `.md`，未验就标「未验证」。该目录只含这些普通 Markdown，与 `tasks/` 一一对应；复验更新原报告。整个 Change 完成后在根写唯一的 `evidence.md`。日志、调试截图和测量等运行过程原件留 `temp/dev/` 或 `temp/system/`，按资料用途区分，不凭文件扩展名或生成工具判断。长期项目知识写入 `.agents/dev/notes/`；记录实际完成范围和未验证事项。
 
 ## 按任务阅读
 

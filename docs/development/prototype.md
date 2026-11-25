@@ -55,6 +55,7 @@ npx @namewta/skills-hub@latest install --skill dev-build dev-prototype
 
 | 位置 | 用途 |
 | --- | --- |
+| `source/` 的源需求、讨论及原型附件 | 保留取得时的原文和版本，说明来源完整度；本次确认原型在下列位置维护 |
 | `prototype/index.html` | 用户体验入口，简单场景可以自包含 |
 | `prototype/` 内的 CSS、JS、图片和字体 | 完整体验资源，复杂场景可由项目工具链导出 |
 | `prototype-review.md` | 需求覆盖、风格依据、实际走查、用户反馈、确认版本和缺口 |

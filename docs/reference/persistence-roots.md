@@ -11,7 +11,8 @@
 | `.agents/skills/<技能名>/` | 安装的完整技能，不存业务记录 |
 | `.claude/skills/<技能名>` | 同仓本体的目录符号链接，不保存独立知识或配置 |
 | `.agents/home/` | Home 的项目登记、用户配置、关系、管理知识、历史和协调摘要；细分 owner 见 [Home 说明](../home/overview.md) |
-| `.agents/dev/changes/<日期-主题>/` | 当前需求、规格、计划、进度、确认原型和 Markdown 验收 |
+| `.agents/dev/changes/<日期-主题>/` | 当前需求、规格、架构与方案讨论、计划、进度、确认原型和正式验收 |
+| `.agents/dev/changes/<日期-主题>/source/` | 远端 Issue 等来源的完整正文、可取得的讨论、来源元数据与必要方案附件 |
 | `.agents/dev/notes/` | 术语、架构取舍、背景、错误经验与学习导读 |
 | `.agents/dev/deploy/` | 环境操作说明与每次发布结果 |
 | `.agents/dev/archive/changes/implemented/` | 已完成交付的历史 change |
@@ -36,13 +37,23 @@ Herdr 的主题位置和身份规则随所选终端工具确定。 [Herdr 协作
 
 环境记录保存真实检查所得的事实；采样原件仍留 `temp/dev/`，已有协调器维护预留时只记录引用。开发任务有适用记录就复用，缺失或过期时按当前执行环境核对，不以创建文件为前置。团队配置仅按用户明确请求创建，未指定名称时按主题生成，不预建默认团队或改写根项目指令。其他开发技能沿用本次任务上下文。
 
+## Change 的来源与正式资料
+
+实际获取并处理远端 Issue 或其他需求报告时，先按当前任务与稳定来源身份关联已有 Change；没有合适归属时建立最小 Change。来源身份包含平台实例、项目或仓库及原生 ID，不限 GitHub。多个来源可以属于同一 Change，重复获取复用已有归属。
+
+`source/` 保存完整正文、可取得的全部讨论、来源更新时间、实际获取时点和必要方案附件。未取得的分页、附件和受权限限制的内容明确标注；源文与我们的分析分开。同源更新先保留旧版本，不能覆盖未保存内容。完整导入、更新和旧 `temp/dev/` 来源迁移方法归 [dev-issue-setup](../../skills/dev/dev-issue-setup/SKILL.md)。
+
+规格、架构取舍、方案讨论、实施计划、确认原型和正式测试结论记录 Change 的始末，随 Change 纳入版本管理。已有权威方案保留真实位置并引用，不生成第二份竞争契约。源附件按其用途保存在 `source/`，原型资源跟随 `prototype/`，正式任务结论按下节进入同名证据报告。
+
+文件是否保留由用途决定。源 Issue 的 JSON 导出、方案中的示意图或工具生成后经核实的正式结论，均不能仅因格式或生成方式归为临时文件。日志、重复截图、临时抓包和原始测量属于执行过程，按下节处理。
+
 ## 运行原件与验收
 
-日志、截图、录像、JSON、状态库、工具生成的报告和其他运行原件不进 Git。开发 task 用目标项目根 `temp/dev/<change-id>/tasks/<task-stem>/<run-id>/`，其中 `task-stem` 是票据去掉 `.md` 的名称；组合验证用 `temp/dev/<change-id>/integration/<run-id>/`。主机诊断用 `temp/system/hosts/<host>/<change-id-or-topic>/<run-id>/`，Herdr 自身取证按其协调协议。重跑和并发用新目录，只有确需保留才创建。源码、可复用测试、模型、确认原型、发布制品和恢复备份沿用各自位置。
+执行日志、调试截图录像、原始测量、临时响应、状态库和未经整理的工具输出不进 Git。开发 task 用目标项目根 `temp/dev/<change-id>/tasks/<task-stem>/<run-id>/`，其中 `task-stem` 是票据去掉 `.md` 的名称；组合验证用 `temp/dev/<change-id>/integration/<run-id>/`。主机诊断用 `temp/system/hosts/<host>/<change-id-or-topic>/<run-id>/`，Herdr 自身取证按其协调协议。重跑和并发用新目录，只有确需保留才创建。来源和正式结论按上节跟踪；源码、可复用测试、模型、确认原型、发布制品和恢复备份沿用各自位置。
 
 Change 新建 `tasks/<名称>.md` 时同时建 `evidences/<名称>.md`，尚未执行标「未验证」。`evidences/` 只含与 `tasks/` 普通 `.md` 完全同名的普通 Markdown，包括大小写和后缀；没有索引、额外报告、子目录、符号链接或附件。失败、阻塞、交接和复验均更新原报告。整体验收通过且达到指定交付点后才写 Change 根的 `evidence.md`，引用各票报告。纯查询不为附件建任务。
 
-Git 忽略不是权限隔离，也不取消跟踪。留原件前核对目标确实被忽略且未跟踪；不强制添加或复制到版本控制。安装器不处理旧证据。详细报告和只读目录检查见 [dev-verify 取证方法](../../skills/dev/dev-verify/references/evidence-storage.md)。
+Git 忽略不是权限隔离，也不取消跟踪。保存运行过程原件前核对目标确实被忽略且未跟踪；来源和正式资料则核对目标未被忽略并纳入版本管理。安装器不搬迁既有业务记录。本次发现误放的来源或正式资料时，先核对归属、迁入并修复引用，验证可读和 Git 跟踪后再按授权处理旧副本。详细报告和只读目录检查见 [dev-verify 取证方法](../../skills/dev/dev-verify/references/evidence-storage.md)。
 
 ## 安装时初始化
 
@@ -78,7 +89,7 @@ registry、projects、runs、incidents、lessons 和可重建 index 按真实内
 
 ## Home 的知识与协调资料
 
-Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、派生 `repos.md`、`local.json` 与 `context/`；map 写 `relations.md`；knowledge 写现行 `notes/`、候选 `inbox/`、`archive/notes/` 和持久排除依据 `exclusions.md`；history 写事件 `history/` 与 `archive/history/`；workflow 写 `coordination/` 的管理摘要和直接交付指针。没有统一 Home 派遣账本，也没有新的 `temp/home/` 协议。
+Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、`local.json` 与 `context/`；项目登记地图默认只读生成，显式导出时才写派生 `repos.md`，它不是登记或路由的前置文件。map 写 `relations.md`；knowledge 写现行 `notes/`、候选 `inbox/`、`archive/notes/` 和持久排除依据 `exclusions.md`；history 写事件 `history/` 与 `archive/history/`；workflow 写 `coordination/` 的管理摘要和直接交付指针。没有统一 Home 派遣账本，也没有新的 `temp/home/` 协议。
 
 项目内部知识由当地 Agent 读取维护。派遣技能的任务、回执、日志与当前执行状态留在相应协调仓库；它们不因上层是 Home 而改写原有目录或方法。跨 owner 的忘记请求明确范围、分别处理源资料和派生入口，不宣称 Git 历史、备份或宿主私有存储已一并删除。完整规则见 [Home 方法归属](../home/method-ownership.md)。
 
