@@ -21,6 +21,7 @@
 | [openai/skills — Sentry](https://github.com/openai/skills/tree/main/skills/.curated/sentry)，OpenAI 及贡献者 | `skills/.curated/sentry`；只读错误观测、范围核对与脱敏方法用于 `ops-inspect`。 | [Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)；[清单](materials/openai-sentry/manifest.tsv) |
 | [HumanLayer](https://github.com/humanlayer/humanlayer) / [Dex Horthy](https://github.com/dexhorthy)，QueryTale, Inc. d/b/a HumanLayer | 既有 PR 视觉说明中的 show-me 方法；已作中文翻译和流程适配。NOTICE 中列出的其他程序组件未因此一并收录。 | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) |
 | [abdiraimov-otabek/dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)，Otabek Abdiraimov | 固定版本 `skills/dashboard-design/` 的 11 份 Markdown；完整翻译后独立提供 `zh-dashboard-design`。不包含来源仓库根部的示例页面、图片与 Claude 插件配置。 | [MIT](licenses/dashboard-design-skill-MIT.txt)；[清单](materials/dashboard-design-skill/manifest.tsv) |
+| [HKUDS/nanobot](https://github.com/HKUDS/nanobot)，Xubin Ren 与 nanobot 贡献者 | `nanobot/skills/memory` 的完整短技能及中文底稿；采用按需读取、来源边界、已确认长期知识、读后更新、修复引用和历史检索方法。 | [MIT](licenses/nanobot-MIT.txt)；[清单](materials/nanobot-memory/manifest.tsv) |
 
 ### 整合内容的修改范围
 
@@ -35,6 +36,7 @@
 - `system-herdr` 保留完整 CLI 方法；客户端启动示例与按 pane 的 task/report 文件通信属于本地扩展。
 - `system-herdr-core` 的运行版采用用户明确选用的触发条件，并增加客户端启动示例及按 Core 终端地址派发 task/report 的方法。许可原文与现有 Herdr Apache 2.0 文件字节相同。
 - ops 将调查、经验和只读观测方法适配到本领域的 registry、run、项目资料与实际工具能力。领域之间不因此产生自动安装依赖。
+- home 采用 Matt 的直接负责人、上下文指针、按主题组织知识和交接资料方法，将来源中常驻会话、固定回顾频率和整套开发链改为用户按需选择的项目协作；现行知识、历史和用户配置分别由所属技能维护。nanobot 的记忆方法适配为 `.agents/home/` 下的 Markdown，保留项目当地知识归属，不接入其全局工作区、私有 history.jsonl、游标或 Dream 运行时。具体来源和研究取舍见 [Home 来源](docs/home/sources.md)。
 - issue 初始化、分诊和复现修复保留 pstack 较早 [Benny 自动化资料](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny)的方法；通用来源接口和项目配置属于本地适配，原 Slack 分支保留其身份核对与回读要求。
 
 ## 独立中文上游技能

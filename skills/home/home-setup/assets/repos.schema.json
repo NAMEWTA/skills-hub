@@ -1,0 +1,27 @@
+{
+  "title": "Home 仓库登记 v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "repos"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "repos": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "purpose", "remote", "localPath", "intent"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+          "purpose": { "type": "string", "minLength": 1, "pattern": "^[^\\u0000-\\u001f\\u007f]+$" },
+          "aliases": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "groups": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 1 } },
+          "remote": { "type": "string", "description": "保留 host 和仓库路径的无秘密 Git 身份；以 origin 核对，无 origin 时须全部 remote 身份一致。本地独有仓库为空。" },
+          "localPath": { "type": "string", "minLength": 1 },
+          "intent": { "enum": ["work", "reference"] },
+          "backgroundRef": { "type": "string", "minLength": 1, "description": "Home 内相对路径；不接受父目录跳转或绝对路径。" }
+        }
+      }
+    }
+  }
+}

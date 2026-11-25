@@ -8,7 +8,7 @@
 
 [package.json](../../package.json) 的文件白名单包含安装器、交互模块、持久化初始化资源、两类运行技能以及法律文件。README 和包元数据按 npm 的打包规则分发。`materials/`、`docs/`、开发测试和维护工具不进入包。
 
-安装器复制所选技能、更新领域导航，并在选择 dev 或 system 时补齐相应忽略规则。完整资源和独立包内的原生法律文本随包保留，脚本由使用者按需执行。来源、版权和修改范围见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
+安装器将所选技能完整复制到 `.agents/skills/`，为其创建同仓 `.claude/skills/` 目录符号链接，并更新所选领域导航。dev/system 的临时原件、dev 的工作树及 Home 的本机路径覆盖沿用各自忽略规则。完整资源和独立包内的原生法律文本随包保留，脚本由使用者按需执行。来源、版权和修改范围见[第三方声明](../../THIRD_PARTY_NOTICES.md)。
 
 发布附件使用 npm 实际返回的文件名，另提供 `SHA256SUMS`。包检查在隔离消费者中安装真实 tarball，核对命令入口、运行文件、适用执行位、许可、预览和重复安装。交互依赖由 npm 正常解析；不能把只完成 `npm pack` 写成消费端安装已经验证。
 
@@ -54,7 +54,7 @@
 
 ## 检查与凭据
 
-[跨平台验证](../../.github/workflows/validate.yml)覆盖 Ubuntu 的最低 Node.js 22.14.0，以及 Windows、macOS 的 Node.js 24。各平台执行完整维护检查、捕获轨迹回放和真实 npm 包验证；Linux 另检查已安装 Archify 的完整 finalize 与浏览器检查。发布任务等待这些任务全部成功，同仓库发布串行执行。
+[跨平台验证](../../.github/workflows/validate.yml)覆盖 Ubuntu 的最低 Node.js 22.14.0，以及 Windows、macOS 26 Intel 的 Node.js 24。macOS 使用标准 `macos-26-intel` runner；本轮不把它写成 Arm64 运行证据。各平台执行完整维护检查、捕获轨迹回放和真实 npm 包验证；Linux 另检查已安装 Archify 的完整 finalize 与浏览器检查，以及官方 Claude Code 进程实际发现和读取技能链接。Claude SDK 独立装在临时目录，不进入产品依赖；该项不发送模型回合，详见 [Home 验证](../home/validation.md)。发布任务等待这些任务全部成功，同仓库发布串行执行。
 
 工作流把仓库 Secret `NPM_TOKEN` 映射为 `NODE_AUTH_TOKEN`，需要对实际 scoped 包具备所需发布和只读 stage 权限。凭据不写入源码、压缩包、技能、发布说明或日志。包侧若要求 stage-only 上传，普通 `npm publish` 会被拒绝；本发布器调用普通 publish，只读取并接续已经存在的 stage，不自动改成暂存上传。
 

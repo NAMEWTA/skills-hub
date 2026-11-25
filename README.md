@@ -1,6 +1,6 @@
 # skills-hub
 
-按领域和独立技能分组组织的中文 Agent Skills，覆盖软件开发、系统维护、服务器运维和专门工具。每个技能包含使用入口、完整方法及所需模板、示例和脚本，可以单独安装，也可以按任务组合使用。
+按领域和独立技能分组组织的中文 Agent Skills，覆盖个人 Home、软件开发、系统维护、服务器运维和专门工具。每个技能包含使用入口、完整方法及所需模板、示例和脚本，可以单独安装，也可以按任务组合使用。
 
 ## 安装
 
@@ -15,6 +15,9 @@ npx @namewta/skills-hub list
 
 # 安装整个开发分组
 npx @namewta/skills-hub install --domain dev
+
+# 构建、运营和管理个人 Home Repo
+npx @namewta/skills-hub install --domain home
 
 # 单独安装 Issue 撰写与维护技能
 npx @namewta/skills-hub install --skill dev-issue
@@ -34,7 +37,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 交互界面默认勾选当前项目已安装的技能。使用 ↑/↓ 移动、Tab 展开或收拢领域、空格勾选、←/→ 翻页，按 Enter 查看安装确认。按 `/` 可搜索名称、分组或中文用途。非交互环境使用带 `--domain`、`--skill` 或 `--all` 的安装命令。
 
-技能安装到当前项目的 `.agents/skills/<技能名>/`。重复安装时，相同内容保持不变，有差异的同名技能先备份再替换。安装器只复制文件，不执行技能中的工具；技能是否自动加载由所用 Agent 决定，也可以直接读取对应的 `SKILL.md`。
+技能的完整本体安装到当前项目的 `.agents/skills/<技能名>/`，同时建立 `.claude/skills/<技能名>` 到该本体的目录符号链接。两个入口读取同一份资源，更新一次即可。重复安装时，相同本体保持不变并补齐缺失链接，有差异的同名本体先备份再替换。别名位置有用户文件、目录或错向链接时先报告冲突。安装需要目录符号链接能力，不执行技能中的工具；自动发现仍由实际宿主决定，也可以显式读取 `SKILL.md`。
 
 全局命令、源码离线安装、备份恢复和旧版本迁移见[安装说明](docs/usage/installation.md)。
 
@@ -42,6 +45,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 | 分组 | 用途 | 常用入口 |
 | --- | --- | --- |
+| `home` | Home Repo 构建、项目登记、用户配置、分层协作、持久知识和历史运营 | [home-workflow](skills/home/home-workflow/SKILL.md)、[home-setup](skills/home/home-setup/SKILL.md) |
 | `dev` | 需求澄清、设计、原型、计划、实现、验证、交付和项目知识 | [dev-help](skills/dev/dev-help/SKILL.md)、[dev-workflow](skills/dev/dev-workflow/SKILL.md) |
 | `system` | 主机检查、磁盘清理、代理、软件配置和终端协作 | [system-inspect](skills/system/system-inspect/SKILL.md) |
 | `ops` | 多项目、多服务器与共享服务的巡检、维护、恢复和操作历史 | [ops-workflow](skills/ops/ops-workflow/SKILL.md) |
@@ -86,11 +90,25 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 `upstream-skills` 只是安装分组，各技能按自身用途工作。中文说明与原版保持对应，代码、API、文件名和可执行命令保留。Archify 的完整交付检查需要 Chrome/Chromium；Modern Web Guidance 仍通过原 CLI 检索最新资料，返回内容可能是英文。运行前提与中文范围见[上游独立技能说明](docs/usage/upstream-skills.md)。
 
+## 个人 Home Repo
+
+在自己的 Home 仓库安装 `home` 后，可直接使用 `home-setup` 建立项目地图和按需配置，也可由 `home-workflow` 按任务调用八个方法。已有 clone 原地登记，不要求移动到 Home 下面。Agent、CLI、模型、思考参数和派遣方式由用户选择；保存配置不会启动任务。
+
+Home 了解各项目基本背景和管理关系。涉及项目内部知识、代码、技能或验证时，由当地 Agent 进入实际项目读取和完成；项目可继续依当地规则派遣子 Agent。每层派遣记录归当地所选技能，Home 保留管理摘要与证据指针。Home 的现行知识、历史事件和当前执行状态各有明确位置，可由新会话读取普通 Markdown 接续。
+
+```text
+使用 home-setup：登记这些已有项目，沿用真实目录；先保存我明确选择的协作方式。
+使用 home-workflow：向项目 A 查询接口约定，让项目 B 验证兼容性，回报各自版本和证据。
+使用 home-history：查明当时为什么选择这个方案，再指出当前知识是否已经更正。
+```
+
+完整用法、方法归属和验证边界见 [Home 说明](docs/home/overview.md)。
+
 ## 项目结构
 
 | 位置 | 内容 |
 | --- | --- |
-| `skills/<domain>/<domain>-xxx/` | 按职责整合的开发、系统和运维技能 |
+| `skills/<domain>/<domain>-xxx/` | 按职责整合的 Home、开发、系统和运维技能 |
 | `upstream-skills/zh-<原名>/` | 与原技能一一对应的独立中文运行包 |
 | `materials/` | 固定版本的来源原件、中文对照和逐文件运行映射 |
 | `docs/` | 使用说明、架构解释和维护规范 |
@@ -98,7 +116,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 安装器直接扫描两个运行根，完整复制所选技能的 `SKILL.md`、`references/`、`assets/`、`scripts/` 和其他配套资源。安装后所有技能位于 `.agents/skills/` 同一层级。`materials/` 供维护时对照，不参与技能发现或安装。
 
-项目资料按领域保存：开发在 `.agents/dev/`，系统维护在 `.agents/system/`，运维在 `.agents/ops/`。安装 dev 或 system 技能时，安装器补根 `.gitignore` 的 `/temp/`；日志和截图等原件按需写到 `temp/dev/` 或 `temp/system/`。Change 的 `evidences/` 只放与 `tasks/` 完全同名的 `.md`，完成整体验收后才写 Change 根 `evidence.md`。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/reference/persistence-roots.md)。
+项目资料按领域保存：Home 在 `.agents/home/`，开发在 `.agents/dev/`，系统维护在 `.agents/system/`，运维在 `.agents/ops/`。安装 dev 或 system 技能时，安装器补根 `.gitignore` 的 `/temp/`；日志和截图等原件按需写到 `temp/dev/` 或 `temp/system/`。Change 的 `evidences/` 只放与 `tasks/` 完全同名的 `.md`，完成整体验收后才写 Change 根 `evidence.md`。独立上游分组不创建 `.agents/upstream-skills/`。详见[领域持久化与迁移](docs/reference/persistence-roots.md)。
 
 ## 文档导航
 
@@ -108,6 +126,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | 安装、升级、恢复备份或迁移旧包 | [安装说明](docs/usage/installation.md) |
 | 组合开发技能，处理原型与交接 | [开发流程](docs/development/workflow.md)、[可交互原型](docs/development/prototype.md)、[开发交接](docs/development/handoff.md) |
 | 新建完整 Issue、更新正文或追加评论 | [Issue 撰写与维护](docs/development/issues.md) |
+| 构建、运营和管理个人 Home | [Home 说明](docs/home/overview.md)、[方法归属](docs/home/method-ownership.md) |
 | 维护服务器和项目运行关系 | [运维说明](docs/operations/overview.md) |
 | 用 Herdr TUI 或 Core 启动 agent、派发任务和收取结果 | [Herdr 协作](docs/usage/herdr-coordination.md) |
 | 使用和更新独立中文技能 | [上游独立技能](docs/usage/upstream-skills.md) |

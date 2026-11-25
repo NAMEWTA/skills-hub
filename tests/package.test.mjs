@@ -30,6 +30,7 @@ test('the scoped tarball installs offline and exposes the skills-hub command', (
   for (const name of ['README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']) write(path.join(root, name), '测试发布文档。\n');
   for (const name of licenseBundleFiles) write(path.join(root, 'licenses', name), '测试许可。\n');
   write(path.join(root, 'skills', 'dev', 'dev-sample', 'SKILL.md'), '---\nname: dev-sample\ndescription: 测试离线安装。\n---\n\n# 测试\n');
+  write(path.join(root, 'skills/home/home-sample/SKILL.md'), '---\nname: home-sample\ndescription: 测试 Home 技能安装。\n---\n\n# Home\n');
   write(path.join(root, 'upstream-skills/zh-sample/SKILL.md'), '---\nname: zh-sample\ndescription: 测试独立上游技能。\n---\n# 中文入口\n');
   write(path.join(root, 'upstream-skills/zh-sample/LICENSE'), 'Upstream license\n');
   write(path.join(root, 'upstream-skills/zh-sample/assets/font.bin'), Buffer.from([0, 128, 255]));
@@ -39,5 +40,6 @@ test('the scoped tarball installs offline and exposes the skills-hub command', (
   assert.equal(packed.name, '@namewta/skills-hub');
   assert.equal(packed.version, '0.0.2');
   assert.equal(packed.filename, 'namewta-skills-hub-0.0.2.tgz');
-  assert.equal(packed.skills, 2);
+  assert.equal(packed.skills, 3);
+  assert.equal(packed.links, 3);
 });

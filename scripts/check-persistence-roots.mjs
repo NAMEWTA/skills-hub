@@ -48,7 +48,7 @@ export function main(args = process.argv.slice(2)) {
   else if (args.length) { console.error('Usage: node scripts/check-persistence-roots.mjs [--root DIRECTORY]'); return 2; }
   const problems = check(root);
   if (problems.length) { for (const problem of problems) console.error(problem); return 1; }
-  console.log('Domain persistence paths passed: records in .agents/dev/ or .agents/system/, raw evidence in temp/dev/ or temp/system/.');
+  console.log('Domain persistence paths passed: records use .agents/<domain>/ (home/dev/system/ops); dev/system raw evidence uses temp/dev/ or temp/system/.');
   return 0;
 }
 

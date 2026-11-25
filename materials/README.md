@@ -21,6 +21,7 @@
 | [archify](archify/manifest.tsv) | `archify` | 独立 `zh-archify` 技能 |
 | [modern-web-guidance](modern-web-guidance/manifest.tsv) | `skills` | 独立 `zh-modern-web-guidance`、`zh-chrome-extensions` 技能 |
 | [dashboard-design-skill](dashboard-design-skill/manifest.tsv) | `skills/dashboard-design` | 独立 `zh-dashboard-design` 仪表盘设计技能 |
+| [nanobot-memory](nanobot-memory/manifest.tsv) | `nanobot/skills/memory` | Home 知识维护与历史检索 |
 
 显式同步先解析所选 `ref`，再固定同一个提交读取原件、生成对照与差异。`ref=HEAD` 表示每次解析远端默认分支；Speculo 使用这一约定。其他单元按父清单中的命名分支跟踪。普通校验与 CI 不自动刷新来源。
 

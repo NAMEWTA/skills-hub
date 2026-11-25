@@ -22,6 +22,15 @@
 | 将想法写成可认领 Issue，完善正文或追加评论 | [Issue 撰写与维护](development/issues.md) |
 | 接入问题报告、分诊或持续任务 | [报告来源](development/issue-sources.md) |
 
+## 个人 Home
+
+| 需要做什么 | 阅读 |
+| --- | --- |
+| 建立 Home、登记已有项目并按用户选择协作 | [Home 说明](home/overview.md) |
+| 查明八个技能与配置、知识、历史的唯一维护者 | [Home 方法归属](home/method-ownership.md) |
+| 核对结构、危险路径、实际多级协作与宿主发现 | [Home 验证](home/validation.md) |
+| 对照研究结论、材料采用和取舍 | [Home 来源](home/sources.md) |
+
 ## 运行运维
 
 | 需要做什么 | 阅读 |

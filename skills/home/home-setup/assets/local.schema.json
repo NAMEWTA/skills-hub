@@ -1,0 +1,15 @@
+{
+  "title": "Home 本机路径覆盖 v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["formatVersion", "paths"],
+  "properties": {
+    "formatVersion": { "const": 1 },
+    "paths": {
+      "type": "object",
+      "description": "键必须是当前 repos.json 中的准确 ID；值仅为当前主机的路径。",
+      "propertyNames": { "pattern": "^[a-z0-9][a-z0-9-]*$" },
+      "additionalProperties": { "type": "string", "minLength": 1 }
+    }
+  }
+}
