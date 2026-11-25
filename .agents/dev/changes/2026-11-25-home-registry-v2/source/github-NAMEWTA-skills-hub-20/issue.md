@@ -1,9 +1,19 @@
-# GitHub Issue #20 当前 Plan 快照
+# GitHub Issue #20 完成状态快照
 
+- 来源平台与实例：GitHub / https://github.com
+- 仓库：NAMEWTA/skills-hub
+- 原生对象 ID：6600914701；仓库内 Issue 编号：20
 - URL：https://github.com/NAMEWTA/skills-hub/issues/20
-- 正文重写时间：2026-11-25T09:25:44Z
-- 来源：经用户授权重写后的远端正文；原始需求保存在 issue-original.md。
-- 评论：读取时为 0，无附件。
+- 标题：Home 登记改进：多 remote、显式相对路径与按需项目地图（完整实施 Plan）
+- 来源作者：NAMEWTA
+- 来源创建时间：2026-11-25T09:03:40Z
+- 来源更新时间：2026-11-25T09:59:41Z
+- 来源状态：closed / completed；关闭时间：2026-11-25T09:59:41Z
+- 抓取时间：2026-11-25 10:00:11 UTC
+- 完整度：正文完整，全部评论工具回读为 0 条；正文无附件。
+- 版本关系：[原始需求](issue-original.md) 保留重写前正文；实施前 Plan 已随 [8e58e53 提交](https://github.com/NAMEWTA/skills-hub/blob/8e58e53f2f3c76deec514d236a7bc4a763b2ca65/.agents/dev/changes/2026-11-25-home-registry-v2/source/github-NAMEWTA-skills-hub-20/issue.md) 保存，本文件更新为完成后实际回读的正文。
+
+## 原生正文
 
 ## 0. 目标、基线与决定
 
@@ -147,20 +157,20 @@
 
 ## 7. 验收矩阵
 
-- [ ] origin + internal/mirror 两个 remote 的名称、URL 和显式 push URL 保存后无损回读。
-- [ ] 多 fetch/push URL 顺序保留，首 fetch URL 决定主身份；push URL 不冒充主身份。
-- [ ] fork 的主 remote 错误但其他 remote 命中时仍拒绝；主 remote 不存在明确冲突。
-- [ ] 多 remote 无 origin 时有明确 primaryRemote 才能形成新登记；本地无 remote 正常支持。
-- [ ] 附加 remote 漂移可见，定位成功与登记已同步分别表达。
-- [ ] v1 单 remote 与裸相对路径仍正确读取；查询不自动迁移。
-- [ ] 新保存 Home 内 `./...` 与同级 `../...`；共享绝对路径拒绝，本机 local.json 覆盖正常。
-- [ ] 无 repos.md 也能完成初始化、保存、路由与诊断。
-- [ ] save 不创建/改写 repos.md，不因已有手写地图失败。
-- [ ] map 默认 stdout 零写入；显式导出具有正确的相对目录链接，中文/空格/括号可用。
-- [ ] 登记及导出各自的基线冲突、锁、手写文件保护和异常处理仍成立。
-- [ ] 现有知识、历史、关系、单包执行与安装行为未被破坏。
-- [ ] 同步技能、schema、模板、文档与必要来源映射，无默认强制地图的遗留执行指令。
-- [ ] main 提交完成，补丁版本发布完成，真实验证结果和环境限制已记录。
+- [x] origin + internal/mirror 两个 remote 的名称、URL 和显式 push URL 保存后无损回读。
+- [x] 多 fetch/push URL 顺序保留，首 fetch URL 决定主身份；push URL 不冒充主身份。
+- [x] fork 的主 remote 错误但其他 remote 命中时仍拒绝；主 remote 不存在明确冲突。
+- [x] 多 remote 无 origin 时有明确 primaryRemote 才能形成新登记；本地无 remote 正常支持。
+- [x] 附加 remote 漂移可见，定位成功与登记已同步分别表达。
+- [x] v1 单 remote 与裸相对路径仍正确读取；查询不自动迁移。
+- [x] 新保存 Home 内 `./...` 与同级 `../...`；共享绝对路径拒绝，本机 local.json 覆盖正常。
+- [x] 无 repos.md 也能完成初始化、保存、路由与诊断。
+- [x] save 不创建/改写 repos.md，不因已有手写地图失败。
+- [x] map 默认 stdout 零写入；显式导出具有正确的相对目录链接，中文/空格/括号可用。
+- [x] 登记及导出各自的基线冲突、锁、手写文件保护和异常处理仍成立。
+- [x] 现有知识、历史、关系、单包执行与安装行为未被破坏。
+- [x] 同步技能、schema、模板、文档与必要来源映射，无默认强制地图的遗留执行指令。
+- [x] main 提交完成，补丁版本发布完成，真实验证结果和环境限制已记录。
 
 ## 8. 验证与交付规则
 
@@ -175,7 +185,7 @@ npm run check:upstream
 
 发布由现有 main 版本变更工作流固定源码 SHA，完成 Ubuntu / Windows / macOS 验证后分发同一个 npm tarball 并创建对应 GitHub Release。若本地环境缺完整材料、浏览器或网络条件，明确区分本地已验证内容与远端 CI 实际结果。
 
-当前最新版本为 0.1.30，目标补丁版本为 **0.1.31**；发布前重新核对远端，若有其他并发版本变化则以真实状态顺延，不覆盖现有版本或标签。
+制定计划时最新版本为 0.1.30，目标补丁版本为 **0.1.31**。发布前已重新核对远端，无并发版本冲突；最终正式发布为 v0.1.31，未覆盖已有版本或标签。
 
 ## 9. 可复查实现基线
 
@@ -185,3 +195,25 @@ npm run check:upstream
 - [Home 诊断](https://github.com/NAMEWTA/skills-hub/blob/f7285ab799f76700b36c54293b84c9a0013c3ec9/skills/home/home-doctor/scripts/doctor.mjs)
 - [领域持久化合同](https://github.com/NAMEWTA/skills-hub/blob/f7285ab799f76700b36c54293b84c9a0013c3ec9/docs/reference/persistence-roots.md)
 - [发布流程](https://github.com/NAMEWTA/skills-hub/blob/f7285ab799f76700b36c54293b84c9a0013c3ec9/.github/workflows/release.yml)
+
+
+## 10. 实施与交付结果（2026-11-25）
+
+**已完成实现、main 提交、全部门禁及正式补丁发布。**
+
+- 实现提交：[8e58e53f2f3c76deec514d236a7bc4a763b2ca65](https://github.com/NAMEWTA/skills-hub/commit/8e58e53f2f3c76deec514d236a7bc4a763b2ca65)。
+- 正式发布：[v0.1.31](https://github.com/NAMEWTA/skills-hub/releases/tag/v0.1.31)；npm [@namewta/skills-hub@0.1.31](https://www.npmjs.com/package/@namewta/skills-hub/v/0.1.31)。GitHub 发布时间为 2026-11-25 17:58:20（Asia/Taipei，平台原始时间 `2026-11-25T09:58:20Z`）。
+- 标签、Release target 与两个完整 CI 的源码 SHA 一致；Release 为 `draft=false`、`prerelease=false`，GitHub latest 回读为 v0.1.31。
+- [独立三平台验证](https://github.com/NAMEWTA/skills-hub/actions/runs/45588940751)与[发布流水线](https://github.com/NAMEWTA/skills-hub/actions/runs/45588940638)均成功。
+- 494 项完整测试：Linux/macOS 各 493 通过、0 失败、1 项 Windows 专属跳过；Windows 490 通过、0 失败、4 项 POSIX/Unix 条件跳过。三平台各完成 33 组捕获状态图回放和真实 tarball 消费验证（63 技能、1093 分发文件）。
+- Linux 另通过 Archify 浏览器验证及真实 Claude Code 技能发现/读取（63 技能、121 资源、0 用户回合）。这不是模型推理验收，macOS 本轮为 Intel runner。
+- 发布制品 SHA-256：`82cddaeb57ab63854a0fe7088a649edaf5535431fa174889579ac7c4b6559063`。同一 tarball 上传 npm 与 GitHub；公开 npm 包名/版本/完整性由发布任务核对后才公开 Release。
+- 独立复核额外发现并修复 `url.*.insteadOf` 的身份绕行：原始 remote 配置仍完整保存，同时核验 Git 展开的实际首 fetch 目标。跨仓库改写拒绝，已知等价协议改写允许；未将本机展开检查冒称网络或 SSH 服务端身份验证。
+
+来源及正式记录已经纳入 change 跟踪：
+
+- [Home 实施计划与最终验收](https://github.com/NAMEWTA/skills-hub/tree/main/.agents/dev/changes/2026-11-25-home-registry-v2)
+- [Dev 来源与正式资料持久化方案和验收](https://github.com/NAMEWTA/skills-hub/tree/main/.agents/dev/changes/2026-11-25-dev-change-source)
+- [0.1.31 发布记录](https://github.com/NAMEWTA/skills-hub/blob/main/.agents/dev/deploy/npm/releases/0.1.31.md)
+
+旧 v1 登记保持读取兼容，实际迁移需重新核实 checkout；本次未自动迁移用户 Home 或批量移动历史业务文件。

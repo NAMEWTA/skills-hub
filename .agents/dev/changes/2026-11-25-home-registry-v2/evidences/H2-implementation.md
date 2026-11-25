@@ -12,4 +12,4 @@ Linux，Node.js 24.22.3，Git 2.56.1。实现 v2 多remote和显式主身份，�
 - 独立审查实际复现并复验跨host/fork重写、GitHub等价重写和展开目标秘密保护，确认原始URL保留、主身份正确。
 - 另独立验证多remote闭环、复杂字符目录链接解码、手写地图保护及v1零写入。
 
-没有连接远端Git服务器核实HTTP重定向或SSH服务端映射；Windows/macOS由远端CI继续验证。任务见 [H2](../tasks/H2-implementation.md)。
+没有连接远端Git服务器核实HTTP重定向或SSH服务端映射；Windows/macOS 的实际远端 CI 结果见 [H3](H3-delivery.md)。任务见 [H2](../tasks/H2-implementation.md)。
