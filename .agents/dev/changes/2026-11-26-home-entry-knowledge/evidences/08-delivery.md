@@ -16,4 +16,6 @@ macOS 的 `tests/home-doctor.test.mjs` 不可读入口测试失败：测试 mock
 
 后续只修复测试目标的真实路径和注入命中断言，保留所有行为断言和平台检查；不修改正确的产品路径解析。版本保持未发布的 `0.1.36`，按既有 `Release-Retry: 0.1.36` 契约由修复提交重新验证、发布。初次提交的最终本地 pack 为 6533144 字节，SHA-256 `25564084894e6232e52e70c14d15e6cc57f8fe5ddd92e53023eefda8a6dc7fe6`；非分发测试/证据修复不应改变产品包，后续实际核对。
 
+修复提交为 [a60fc67af1193fa997c1d03079409520e7303061](https://github.com/NAMEWTA/skills-hub/commit/a60fc67af1193fa997c1d03079409520e7303061)，本机 doctor/CLI 专项 22/22 通过。其提交说明把 `Refs #21` 与 Release-Retry 连在同一末段，Git 没有将该段识别为 trailers；[运行 45803618486](https://github.com/NAMEWTA/skills-hub/actions/runs/45803618486) 仅 prepare 成功，validate/publish 跳过，不能称为已发布。随后使用与正文以空行分隔的独立 `Release-Retry: 0.1.36` 末段；提交前已通过 `git interpret-trailers --parse` 确认精确返回该 trailer。GitHub 回读仍无 v0.1.36 Release，未重复上传已有包。
+
 独立 CLI M06 见 [T7](07-validation.md)。该项尚未通过，因此本次提交引用 Issue #21 而不使用自动关闭语句；版本发布成功也不直接构成整项 Issue 完成。
