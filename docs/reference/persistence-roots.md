@@ -89,7 +89,7 @@ registry、projects、runs、incidents、lessons 和可重建 index 按真实内
 
 ## Home 的知识与协调资料
 
-Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、`local.json` 与 `context/`；项目登记地图默认只读生成，显式导出时才写派生 `repos.md`，它不是登记或路由的前置文件。map 写 `relations.md`；knowledge 写现行 `notes/`、候选 `inbox/`、`archive/notes/` 和持久排除依据 `exclusions.md`；history 写事件 `history/` 与 `archive/history/`；workflow 写 `coordination/` 的管理摘要和直接交付指针。没有统一 Home 派遣账本，也没有新的 `temp/home/` 协议。
+Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、`local.json` 与 `context/`，显式初始化时在 `context/dispatch/` 和 `context/team/` 确定派遣方式与 Home team，在 `context/preferences.md` 保存两个独立的默认链接。项目登记地图默认只读生成，显式导出时才写派生 `repos.md`。map 写 `relations.md`，knowledge 写 `notes/` 等现行知识，history 写 `history/` 等历史。`home-tasks` 在 `coordination/<主题>/` 保存 Home 直接任务、回执和验收状态，用主题 `status.tsv` 和全局 `all.status.tsv` 展示状态。
 
 项目内部知识由当地 Agent 读取维护。派遣技能的任务、回执、日志与当前执行状态留在相应协调仓库；它们不因上层是 Home 而改写原有目录或方法。跨 owner 的忘记请求明确范围、分别处理源资料和派生入口，不宣称 Git 历史、备份或宿主私有存储已一并删除。完整规则见 [Home 方法归属](../home/method-ownership.md)。
 

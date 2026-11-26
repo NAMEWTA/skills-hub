@@ -7,7 +7,7 @@
 
 先按任务读取 [Home 导航](.agents/home/AGENTS.md)与[项目登记](.agents/home/repos.json)。实际位置和 checkout 通过 `home-route` 解析；可读项目地图通过 `home-setup` 按需查看，无需预先保存 `repos.md`。
 
-Home 保存各项目基本定位、项目管理与跨项目知识。项目内部知识、文档、SKILL、源码和运行证据由进入该项目的 Agent 读取与维护。当前主题查 `home-knowledge`，有日期的过往事件查 `home-history`，配置变更用 `home-setup`，复合任务用 `home-workflow`。
+Home 保存各项目基本定位、项目管理与跨项目知识。项目内部资料由进入该项目的 Agent 读取与维护。现行知识查 `home-knowledge`，过去事件查 `home-history`，直接任务和项目占用查 `home-tasks`，配置由 `home-setup` 保存，项目派遣和验收由 `home-workflow` 协调。
 
-按用户本次要求、明确选用的协作配置或已设置的 Home 默认选择工具和派遣方法。各项目再次派遣时遵守当地有效规则与记录方法；图中可见关系不授予越级控制权。
+显式初始化时分别设置默认派遣方式和默认 Home team。执行时按本次选择、方式与 team 关联及 Home 默认核对实际入口。各项目再次派遣时遵守当地有效规则与记录方法。
 ```

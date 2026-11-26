@@ -15,6 +15,7 @@ description: 作为个人 Home Repo 的任务入口，理解请求、调用准�
 | 确认 repo ID、实际 checkout、身份或资料入口 | home-route |
 | 查当前背景、长期决定或整理知识候选 | home-knowledge |
 | 查过去事件、会话摘要、当时理由或接续线索 | home-history |
+| 管理派发消息、回复、占用和状态，查询任务或重建视图 | home-tasks |
 | 确认项目关系、契约 owner 和影响集合 | home-map |
 | 验证多个项目共同工作的版本组合 | home-integrate |
 | 诊断登记、路径、导航和必要入口 | home-doctor |
@@ -25,13 +26,13 @@ description: 作为个人 Home Repo 的任务入口，理解请求、调用准�
 
 1. 确定本次目标、范围、完成条件和已有权威任务。先读有关根导航、用户所选配置及小索引，只按需要打开资料。问项目概况且 Home 有有效背景时直接回答，不为查询派遣或造工单。
 2. 复合任务只补真实缺口，按上表调用；始终沿用同一目标和证据。缺少登记或配置时让 `home-setup` 处理有关分支，不重新做全套初始化。
-3. 涉及项目内部知识、开发或运行证据时，读取[项目任务与多级自治](references/delegation.md)，通过 `home-route` 确认实际目录，再按用户选择读取当地派遣技能入口并应用其原方法。工具和模型未指定时按有效配置处理，不按发现顺序替用户选工具。
-4. 有实际跨项目统筹需要时，按[协调与接续](references/coordination.md)维护已有 Issue/计划，或使用[协调记录](assets/coordination.md)。只管理直接负责人和交付依赖，不复制全部后代任务、会话或项目计划。
+3. 涉及项目内部知识、开发或运行证据时，读取[项目任务与多级自治](references/delegation.md)。用 `home-route` 核对 checkout，独立选择 Home 派遣方式和 team，按目标 repo ID 核对 CLI、模型和推理参数，再用所选方法执行。
+4. 接受具体项目任务时，按[协调与接续](references/coordination.md)使用 `home-tasks` 持久化主题、各轮派发、回执和项目占用。可先记录尚未能派发的工作。需要新派发而缺 `home-tasks` 时说明缺项；恢复既有会话仍查原方法。
 5. 收到交付后核对任务范围、绑定版本、实际读取的项目上下文和验证边界；必要时交原负责人修订。项目自报完成不代替 owner 验收。跨项目组合结论交 `home-integrate`。
 6. 按任务价值和用户约定调用 `home-history` 保存实际事件、`home-knowledge` 提炼仍有效结论。允许没有值得记录的内容；history 不改当前派遣状态，知识推断不改执行默认。
 
 ## 交接与完成
 
-使用[项目任务简报](assets/project-brief.md)补足任务所需内容，交给用户选定方法已有的 task/message，不创建另一套协议文件。每层负责自己发出的直接派遣记录；Home→A 记录归 Home，A→子 Agent 的记录归 A。下层对上层指定回执的有限写入不改变其本地记录 owner。
+使用[项目任务简报](assets/project-brief.md)补足任务内容，交给用户选定方法已有的 task/message，同时保留 Home 自己的项目管理记录。Home→A 归 Home 验收，A→子 Agent 的派遣和验收归 A。
 
 交付结果、证据位置、未完成条件和下一责任人。中断、受阻和取消如实记录；只完成部分时保留已交付成果并继续独立已授权工作。没有实际执行条件的能力标未知，不能把终端存在、idle、退出码或“done”当成交付验收。

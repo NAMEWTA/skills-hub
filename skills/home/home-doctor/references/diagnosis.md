@@ -19,7 +19,8 @@
 | notes、inbox、exclusions 的断链 | 只报路径与影响，不判结论真假 | home-knowledge |
 | history/归档的断链或接续线索缺失 | 只报结构；时间、去重与语义回查交 owner | home-history |
 | relations 证据引用不可达 | 报结构位置；当前关系由项目取得新证据 | home-map |
-| coordination 引用缺失或责任入口不清 | 核对当前目标与直接负责人入口 | home-workflow |
+| coordination 主题目录引用缺失或待重建的状态视图 | 核对编号文件与原件，不用旧视图推断派遣状态 | home-tasks |
+| 旧协调页引用缺失或责任入口不清 | 核对当前目标与直接负责人入口 | home-workflow |
 | 本次必要技能本体/发现别名异常 | 检查 canonical、lstat/readlink/realpath 和同仓目标 | 用户所选安装方法 |
 | 投递、就绪、恢复、回收不明 | 使用原派遣记录与原方法 | 实际选用的当地派遣技能 |
 

@@ -7,7 +7,12 @@ import { fileURLToPath } from 'node:url';
 const inside = (root, target) => { const relative = path.relative(root, target); return relative === '' || (!relative.startsWith(`..${path.sep}`) && relative !== '..' && !path.isAbsolute(relative)); };
 const sha = text => `sha256:${createHash('sha256').update(text).digest('hex')}`;
 const stat = filename => { try { return fs.lstatSync(filename); } catch (error) { if (error.code === 'ENOENT') return null; throw error; } };
-const owner = relative => /(?:^|\/)history(?:\/|$)/u.test(relative) ? 'home-history' : /(?:^|\/)(?:notes|inbox)(?:\/|$)/u.test(relative) || relative.endsWith('exclusions.md') ? 'home-knowledge' : relative.endsWith('relations.md') ? 'home-map' : relative.includes('/coordination/') ? 'home-workflow' : 'home-setup';
+function owner(relative) {
+  if (relative.includes('/coordination/')) return /\/coordination\/\d{4}-\d{2}-\d{2}-[^/]+\//u.test(relative) ? 'home-tasks' : 'home-workflow';
+  if (/(?:^|\/)history(?:\/|$)/u.test(relative)) return 'home-history';
+  if (/(?:^|\/)(?:notes|inbox)(?:\/|$)/u.test(relative) || relative.endsWith('exclusions.md')) return 'home-knowledge';
+  return relative.endsWith('relations.md') ? 'home-map' : 'home-setup';
+}
 
 function links(markdown) {
   const output = [];

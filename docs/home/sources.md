@@ -9,7 +9,8 @@
 | [Matt chief-of-staff](../../materials/mattpocock-skills/upstream/in-progress/chief-of-staff/SKILL.md) 与[中文底稿](../../materials/mattpocock-skills/zh/in-progress/chief-of-staff/SKILL.md) | 直接负责人、稀疏上下文指针、已有知识库优先、主题互链与有日期的来源 | workflow 管理直接项目交付；knowledge 保存现行主题，history 保存当时事实。移除强制所有工作交子代理、固定回顾比例、自动日程和跨包相对加载；各层方法按实际用户选择调用 |
 | [Matt handoff](../../materials/mattpocock-skills/upstream/productivity/handoff/SKILL.md) 与[中文底稿](../../materials/mattpocock-skills/zh/productivity/handoff/SKILL.md) | 新会话接续摘要、下一重点、建议方法、引用已有产物与脱敏 | history 提供普通 Markdown 接续说明，沿用现有协调 owner；原会话身份和恢复归原方法，摘要不冒充 native resume |
 | [nanobot memory](../../materials/nanobot-memory/upstream/SKILL.md) 与[中文底稿](../../materials/nanobot-memory/zh/SKILL.md) | 相关页按需读取、来源不是上位指令、保存已确认长期价值、写前读原文、修复引用、回读后报告，按主题/时间查看相关历史 | 配置交 setup，项目内部知识交项目；知识/历史使用 `.agents/home/` Markdown，不读取或写入其原生 JSONL、cursor、global memory 或 Dream 运行时 |
-| 本仓 [dev-setup](../../skills/dev/dev-setup/SKILL.md) | 配置意图、环境能力与真实运行结果分别取证 | home-setup 保存 Home 用户明确选择，只有明确设置才存在 Home 默认。dev 原有技能、模板与方法保持不变 |
+| 本仓 [dev-setup](../../skills/dev/dev-setup/SKILL.md) | 配置意图、环境能力与真实运行结果分别取证 | home-setup 在显式初始化时独立保存默认派遣方式和 Home team。按本次实际工具核对执行能力 |
+| 本仓 [system-herdr-core](../../skills/system/system-herdr-core/SKILL.md) | 编号文件、回执、派遣前留档与结果不明时回查 | home-tasks 采用面向业务主题的 task/report 和派生视图。投递、会话状态和恢复沿用用户所选工具 |
 | 用户实际选择的派遣方法，例如 [system-herdr-core](../../skills/system/system-herdr-core/SKILL.md) | 已有任务投递、身份、观察、恢复、回收与本层持久化协议 | 读取当地已安装入口并调用；home 不复制其实现，不安装依赖，不统一所有层的 CLI 或记录根 |
 
 Matt 的新增 Home 采用关系附加到[已有清单](../../materials/mattpocock-skills/manifest.tsv)，不改原有 dev 采用关系和快照。nanobot 使用独立的[来源单元](../../materials/nanobot-memory/manifest.tsv)。自有 Node 工具实现本 Issue 的结构检查、写入与检索合同，没有复制其他项目的后台服务或数据库实现。版权和许可原文归[第三方声明](../../THIRD_PARTY_NOTICES.md)。

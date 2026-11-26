@@ -12,6 +12,7 @@ const packages = [
   { name: 'home-doctor', script: 'doctor.mjs', errorStatus: 2 },
   { name: 'home-knowledge', script: 'knowledge.mjs', helpTitle: 'Home 知识工具', errorStatus: 1 },
   { name: 'home-history', script: 'history.mjs', helpTitle: 'Home 历史工具', errorStatus: 1 },
+  { name: 'home-tasks', script: 'tasks.mjs', helpTitle: 'Home 任务记录工具', errorStatus: 1 },
 ];
 
 function fixture(t) {
@@ -50,6 +51,7 @@ test('standalone Home CLIs run help and read-only commands through real installe
     const argv = entry.name === 'home-setup' ? ['inspect', '--home', home]
       : entry.name === 'home-route' ? ['--inspect', project]
       : entry.name === 'home-doctor' ? ['--home', home]
+      : entry.name === 'home-tasks' ? ['list', '--home', home]
       : ['query', '--home', home, '--text', '没有资料'];
     const result = run([script, ...argv]);
     assert.equal(result.status, 0, result.stderr); assert.equal(result.stderr, '');
@@ -61,7 +63,8 @@ test('standalone Home CLIs run help and read-only commands through real installe
       assert.equal(output.actualCheckout, fs.realpathSync.native(project)); assert.equal(output.requestedPathIsGitRoot, true);
     } else if (entry.name === 'home-doctor') {
       assert.equal(output.status, 'clear-within-scope'); assert.ok(output.findings.some(item => item.code === 'HOME_NOT_INITIALIZED'));
-    } else { assert.deepEqual(output.entries, []); assert.equal(output.complete, true); }
+    } else if (entry.name === 'home-tasks') assert.deepEqual(output, []);
+    else { assert.deepEqual(output.entries, []); assert.equal(output.complete, true); }
     const invalid = run([script, '--unknown']);
     assert.equal(invalid.status, entry.errorStatus, JSON.stringify(invalid)); assert.equal(invalid.stdout, '');
     assert.equal(typeof JSON.parse(invalid.stderr).message, 'string');

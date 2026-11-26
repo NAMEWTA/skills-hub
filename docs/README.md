@@ -27,7 +27,7 @@
 | 需要做什么 | 阅读 |
 | --- | --- |
 | 建立 Home、登记已有项目并按用户选择协作 | [Home 说明](home/overview.md) |
-| 查明八个技能与配置、知识、历史的唯一维护者 | [Home 方法归属](home/method-ownership.md) |
+| 查明 Home 任务、配置、知识与历史的维护者 | [Home 方法归属](home/method-ownership.md) |
 | 核对结构、危险路径、实际多级协作与宿主发现 | [Home 验证](home/validation.md) |
 | 对照研究结论、材料采用和取舍 | [Home 来源](home/sources.md) |
 

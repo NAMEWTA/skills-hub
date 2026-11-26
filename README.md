@@ -45,7 +45,7 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 | 分组 | 用途 | 常用入口 |
 | --- | --- | --- |
-| `home` | Home Repo 构建、项目登记、用户配置、分层协作、持久知识和历史运营 | [home-workflow](skills/home/home-workflow/SKILL.md)、[home-setup](skills/home/home-setup/SKILL.md) |
+| `home` | Home 初始化、项目登记、团队配置、项目派遣与任务跟踪、持久知识和历史 | [home-workflow](skills/home/home-workflow/SKILL.md)、[home-setup](skills/home/home-setup/SKILL.md)、[home-tasks](skills/home/home-tasks/SKILL.md) |
 | `dev` | 需求澄清、设计、原型、计划、实现、验证、交付和项目知识 | [dev-help](skills/dev/dev-help/SKILL.md)、[dev-workflow](skills/dev/dev-workflow/SKILL.md) |
 | `system` | 主机检查、磁盘清理、代理、软件配置和终端协作 | [system-inspect](skills/system/system-inspect/SKILL.md) |
 | `ops` | 多项目、多服务器与共享服务的巡检、维护、恢复和操作历史 | [ops-workflow](skills/ops/ops-workflow/SKILL.md) |
@@ -92,13 +92,14 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 ## 个人 Home Repo
 
-在自己的 Home 仓库安装 `home` 后，可直接使用 `home-setup` 建立项目地图和按需配置，也可由 `home-workflow` 按任务调用八个方法。已有 clone 原地登记，不要求移动到 Home 下面。Agent、CLI、模型、思考参数和派遣方式由用户选择；保存配置不会启动任务。
+在自己的 Home 仓库安装 `home` 后，用 `home-setup` 初始化默认派遣方式和 Home team，已有 clone 原地登记。`home-workflow` 用所选方式创建项目负责人，`home-tasks` 保存直接任务、回执和项目状态。保存配置不会启动任务。
 
 Home 了解各项目基本背景和管理关系。涉及项目内部知识、代码、技能或验证时，由当地 Agent 进入实际项目读取和完成；项目可继续依当地规则派遣子 Agent。每层派遣记录归当地所选技能，Home 保留管理摘要与证据指针。Home 的现行知识、历史事件和当前执行状态各有明确位置，可由新会话读取普通 Markdown 接续。
 
 ```text
-使用 home-setup：登记这些已有项目，沿用真实目录；先保存我明确选择的协作方式。
+使用 home-setup：初始化我的 Home，登记这些已有项目；默认用当前宿主原生派遣。
 使用 home-workflow：向项目 A 查询接口约定，让项目 B 验证兼容性，回报各自版本和证据。
+使用 home-tasks：查看项目 A 当前有哪些 Home 任务、哪些还在等派发。
 使用 home-history：查明当时为什么选择这个方案，再指出当前知识是否已经更正。
 ```
 

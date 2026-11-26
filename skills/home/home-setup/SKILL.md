@@ -1,6 +1,6 @@
 ---
 name: home-setup
-description: 建立或接入用户的 Home Repo、原地登记项目、维护项目地图，以及按明确请求保存个人背景、运行偏好、命名协作配置和有关环境事实。用于“建立 Home”“接入这个项目”“以后按这套工具协作”“修改 Home 默认”；只查询现有概况或位置时直接使用 home-knowledge 或 home-route，不因安装技能创建配置或启动任务。
+description: 初始化个人 Home Repo 的默认派遣方式和 Home team，原地登记项目、维护项目地图，以及保存用户背景、运行偏好和有关环境事实。用于“建立 Home”“接入这个项目”“以后用这套方式派遣”“记住项目使用哪个模型”“修改 Home 默认”；安装或普通查询不初始化。
 ---
 
 # 接入 Home 与用户配置
@@ -11,8 +11,9 @@ description: 建立或接入用户的 Home Repo、原地登记项目、维护项
 
 | 任务 | 必读方法 | 产物 |
 | --- | --- | --- |
-| 建立 Home、登记/移址/解除登记、查看或导出地图 | [登记与入口](references/registry.md) | repos.json、按需地图、必要薄导航 |
-| 保存用户背景、偏好、默认或命名协作配置 | [用户配置](references/configuration.md) | 用户明确需要的 context 文档或现有 owner |
+| 显式初始化 Home 或补初始化派遣 | [派遣与团队初始化](references/dispatch.md)，有项目时读[登记与入口](references/registry.md) | 默认派遣方式、默认 Home team、适用的登记与导航 |
+| 登记/移址/解除登记、查看或导出地图 | [登记与入口](references/registry.md) | repos.json、按需地图、必要薄导航 |
+| 保存用户背景、偏好、派遣方式或团队 | [用户配置](references/configuration.md)，涉及派遣时读[派遣与团队初始化](references/dispatch.md) | context 文档或现有 owner |
 | 验证本次所需工具或执行位置 | [环境事实](references/environment.md) | 有来源、时间、边界的能力观察 |
 
 普通查询已有足够资料时直接继续，不要求完成全套初始化。只编辑配置时不探测全部账号、不启动任务；同一请求含执行工作时，完成保存后把选用配置交回 `home-workflow`。
@@ -21,12 +22,12 @@ description: 建立或接入用户的 Home Repo、原地登记项目、维护项
 
 1. 确认用户指定的 Home 根、已有 `AGENTS.md`、`.agents/home/` 及同类资料真实位置。先复用既有要求，只有缺项确实阻止当前行动时询问具体项。
 2. 登记项目时按准确名称调用 `home-route`，核实既有 clone、实际 checkout 与全部 remote。新登记采用 v2，保存名称、完整 URL 列表和明确的主 remote，路径写成 Home 根相对的 `./` 或 `../` 形式。旧 v1 继续读取，改写前按现场核查结果迁移。项目内部知识仍由进入项目的 Agent 读取；不移动仓库、不重新 clone、不切分支。
-3. 根据本次范围维护登记、profile、preferences 或一个明确命名的协作配置。没有要求设置默认，就保持未设置；不预建 default-team。
+3. 按本次范围维护登记或 context。显式初始化时确定一个默认派遣方式和一个默认 Home team，分别保留有效旧选择，缺少选择时按派遣与团队初始化方法补齐。普通登记、配置编辑和安装更新沿用原默认。
 4. 将用户的配置意图、现场能力观察和本次实际运行证据分开。CLI、模型、推理设置和派遣技能不设固定候选枚举；未知值不传入工具。
 5. 按授权合并根薄导航，直接引用登记真源并保留用户正文。用包内工具校验、保存，再回读所改字段、路径和作用范围。没有 `repos.md` 是正常状态；地图由当前登记按需生成，显式导出时才写文件。
 6. 报告保存内容、仍未知事项和实际做过的能力检查。保存配置不等于工具已切换、任务已送达或模型已生效。
 
-配置选择顺序为：本次适用的明确要求 → 本次明确选用的命名配置 → 用户明确设置的 Home 默认 → 未指定项使用所选工具自身的实际默认。Home 默认只约束 Home 发出的直接任务；项目再派遣按当地规则，除非用户明确指定全链范围。
+先确定派遣方式，再选择 Home team，最后应用 repo ID 对应的执行者配置与本次覆盖。Home 默认只约束 Home 发出的直接任务，项目再派遣按当地规则，除非用户明确指定全链范围。
 
 ## 工具与模板
 
@@ -39,7 +40,7 @@ node <本技能目录>/scripts/registry.mjs validate --input "<候选登记.json
 
 使用 [repos schema](assets/repos.schema.json)、[本机覆盖 schema](assets/local.schema.json) 校对输入；只有路径可以进入 `local.json`。秘密保留已有安全位置的引用，不写入登记或配置。
 
-按真实内容选择 [profile](assets/profile.md)、[preferences](assets/preferences.md)、[命名协作配置](assets/team.md)、[环境记录](assets/environment.md) 和 [根导航片段](assets/home-navigation.md)。模板不要求全部栏目有值，不在安装时批量生成。已有等价文档原地维护并引用。
+按真实内容选择 [profile](assets/profile.md)、[preferences](assets/preferences.md)、[派遣方式](assets/dispatch.md)、[Home team](assets/team.md)、[环境记录](assets/environment.md) 和 [根导航片段](assets/home-navigation.md)。模板不要求全部栏目有值，不在安装时批量生成。已有等价文档原地维护并引用。
 
 ## 完成条件
 

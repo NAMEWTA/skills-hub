@@ -4,16 +4,17 @@
 
 | 方法或资料 | 唯一 owner | 其他方法如何使用 |
 | --- | --- | --- |
-| Home 任务分流、直接交付验收、`coordination/` 管理摘要 | home-workflow | 原执行和验证事实保留当地，仅引用 |
+| Home 任务分流、派遣协调、直接交付和主题验收 | home-workflow | 按选定方法投递、核查并交 `home-tasks` 保存结论 |
+| `coordination/` 主题、每轮 task/report、项目占用和 TSV 视图 | home-tasks | 记录 Home 直接任务，引用原派遣证据 |
 | `repos.json`、`local.json`、按需生成或显式导出的项目登记地图 | home-setup | route 只读定位，doctor 只读检查；`repos.md` 可缺省，变更交 setup |
-| `context/profile.md`、`preferences.md`、`team/`、`environment.md` | home-setup | knowledge 可提出更正候选，不能形成另一份用户配置 |
+| `context/profile.md`、`preferences.md`、`dispatch/`、`team/`、`environment.md` | home-setup | 保存独立的派遣方式、team、默认及明确关联 |
 | 实际路径、Git root/common dir、worktree、HEAD 与 remote 身份核验 | home-route | 按主 remote 首 fetch URL 核验，报告其他 remote 漂移；登记变更交 setup，不读取项目内部知识正文 |
 | `relations.md` 与基于项目证据的影响分析 | home-map | workflow/integrate 引用方向、边界和证据，不从登记分组推断关系 |
 | `notes/`、`inbox/`、`archive/notes/`、`exclusions.md`、知识派生索引 | home-knowledge | 保留来源、范围、核验与更正边界；配置更正交 setup |
 | `history/`、`archive/history/`、事件与历史查询入口 | home-history | 记录当时理由和结果，不以摘要替代当前任务状态 |
 | 联合验证执行者、组合条件和真实结果核对 | home-integrate | 执行和原件归实际项目；Home 协调摘要由 workflow 保持 |
 | 导航、登记、路径、结构和链接的只读检查 | home-doctor | 报告准确缺口，修复交所属 owner，不重复知识语义判断 |
-| 派遣任务、终端/会话、回执、状态、恢复与清理 | 用户在当地选用的派遣方法 | Home 按原方法调用与核查，不新建 home-dispatch、adapter 或统一会话库 |
+| 实际投递、终端/会话、原始回执、恢复与清理 | 用户在当地选用的派遣方法 | Home 按原方法调用并核查投递结果 |
 | 项目代码、内部知识、文档、技能与开发验收 | 实际项目与当地方法 | Home 委派查询/修改，保留基本管理结论及来源 |
 
 ## 跨 owner 的变更

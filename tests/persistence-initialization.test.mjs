@@ -118,10 +118,19 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   assert.equal(git('check-ignore', '--quiet', '.agents/home/local.json').status, 1);
   assert.equal(fs.readFileSync(local, 'utf8'), '{"formatVersion":1,"paths":{}}\n');
   assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
-  for (const file of ['repos.json', 'repos.md', 'relations.md', 'context/team', 'notes', 'inbox', 'history', 'coordination']) {
+  for (const file of ['repos.json', 'repos.md', 'relations.md', 'context/dispatch', 'context/team', 'notes', 'inbox', 'history', 'coordination']) {
     assert.equal(fs.existsSync(path.join(root, '.agents/home', file)), false, file);
   }
-  success(run(root, 'install', '--skill', 'home-setup'));
+  const dispatch = path.join(root, '.agents/home/context/dispatch/native.md');
+  const team = path.join(root, '.agents/home/context/team/default.md');
+  fs.mkdirSync(path.dirname(dispatch));
+  fs.mkdirSync(path.dirname(team));
+  fs.writeFileSync(dispatch, '# 当前宿主原生派遣\n');
+  fs.writeFileSync(team, '# Home 项目负责人\n');
+  success(run(root, 'install', '--domain', 'home'));
+  assert.equal(fs.readFileSync(dispatch, 'utf8'), '# 当前宿主原生派遣\n');
+  assert.equal(fs.readFileSync(team, 'utf8'), '# Home 项目负责人\n');
+  assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
   assert.equal(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), expected);
 });
 
