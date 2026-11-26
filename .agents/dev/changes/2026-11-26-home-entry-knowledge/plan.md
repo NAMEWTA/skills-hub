@@ -14,8 +14,8 @@
 | [04 setup](tasks/04-setup.md) | Home 负责人，home-setup | 完成 |
 | [05 doctor](tasks/05-doctor.md) | Home 负责人，home-doctor 与专项测试 | 完成 |
 | [06 协作](tasks/06-collaboration.md) | 主负责人，其余六技能及必要参考 | 方法与原生协作验证完成 |
-| [07 验证](tasks/07-validation.md) | 主负责人整合；独立负责人核查实际 CLI 条件 | 本地完整检查、实际打包、原生双项目通过；M06 独立 CLI 初始化阻塞 |
-| [08 交付](tasks/08-delivery.md) | 主负责人，docs/README/CHANGELOG/package 与发布记录 | 文档和 0.1.36 就绪，待同提交 CI 与发布回读 |
+| [07 验证](tasks/07-validation.md) | 主负责人整合；独立负责人核查实际 CLI 条件 | 同 SHA 三平台、实际 npm 安装、原生双项目和新会话召回通过；M06 独立 CLI 初始化阻塞 |
+| [08 交付](tasks/08-delivery.md) | 主负责人，docs/README/CHANGELOG/package 与发布记录 | 已推送 main，v0.1.36 公开发布及完整性回读完成；Issue 因 M06 保持 open |
 
 ## 已固定的公共合同
 

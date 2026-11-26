@@ -44,4 +44,6 @@ node --test tests/home-doctor.test.mjs tests/home-cli-entry.test.mjs
 
 修正仅影响测试：在注入前对已存在的入口文件取得 realpath，用真实路径匹配，增加“恰好一次命中 EACCES”的明确断言，并核对具体 finding 包含 EACCES、扫描 Markdown 数为零、原入口字节保持。原有 issues/complete=false 预期以及目录、实际 symlink 的非普通入口检查全部保留，没有跳过或削弱测试，也没有改产品运行代码。
 
-2026-11-26，当前 Linux/Node.js v24.22.3 实际重跑 `node --test tests/home-doctor.test.mjs tests/home-cli-entry.test.mjs`：22 通过、0 失败、0 跳过，测试总数不变；`git diff --check` 退出 0。过程原件为 `temp/dev/home-entry-knowledge/doctor-macos-fixture-fix.log`。macOS 修正后的实际结果仍需新提交的 CI 验证，不能从本机通过直接推定。
+2026-11-26，当前 Linux/Node.js v24.22.3 实际重跑 `node --test tests/home-doctor.test.mjs tests/home-cli-entry.test.mjs`：22 通过、0 失败、0 跳过，测试总数不变；`git diff --check` 退出 0。过程原件为 `temp/dev/home-entry-knowledge/doctor-macos-fixture-fix.log`。
+
+后续实际 [发布门禁](https://github.com/NAMEWTA/skills-hub/actions/runs/45803876873) 在提交 `cfdcc3f8767c2b1d9fb79ddd40f28a7efb84a90c` 上通过 Linux、Windows 和 macOS 26 Intel。macOS job `139853948551` 回读日志确认检出此 SHA，完整测试 530 通过、0 失败、仅 1 个 Windows 专项跳过；本 EACCES 检查实际通过，没有跳过。跨平台补验已由真实 CI 完成。

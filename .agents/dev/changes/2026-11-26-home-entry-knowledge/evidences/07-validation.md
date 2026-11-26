@@ -19,6 +19,20 @@
 
 这些本机前提缺口交同一发布提交的 GitHub CI 补验，结果追加到 T8 与版本发布记录。过程原件在 `temp/dev/home-entry-knowledge/`：`full-clean-snapshot.log`、`full.log`、`statechart.log`、`package.log`、`upstream.log`；安装专项原件在 `temp/dev/2026-11-26-home-entry-knowledge/tasks/03-installer/final/node-test.log`。
 
+## 同一发布提交的实际 CI 补验
+
+固定源码为 `cfdcc3f8767c2b1d9fb79ddd40f28a7efb84a90c`，tree `f9199c13e9f754f989ae02a32f73438e74163c5e`。[Release 验证](https://github.com/NAMEWTA/skills-hub/actions/runs/45803876873) 三平台完成，另外的 [Validate](https://github.com/NAMEWTA/skills-hub/actions/runs/45803876770) 同 SHA 也通过。
+
+| 实际 runner / Node | 完整测试 | 其余通过项 |
+| --- | --- | --- |
+| Ubuntu / 22.14.0 | 531 项：530 pass、0 fail、1 skip | npm ci、33 项 statechart 回放、实际 npm tarball 安装/重装；真实 Archify browser-check；官方 Claude discovery/read |
+| Windows / 24 | 531 项：527 pass、0 fail、4 skip | npm ci、33 项回放、实际 npm tarball 安装/重装 |
+| macOS 26 Intel / 24 | 531 项：530 pass、0 fail、1 skip | npm ci、33 项回放、实际 npm tarball 安装/重装；修正后的 EACCES 注入实际通过 |
+
+Linux/macOS 跳过的是只适用 Windows 的交互 EPERM；Windows 跳过三项 POSIX 执行位和一项 Unix socket。各平台均验证 64 个技能及同仓链接、1105 个分发文件，不能把这些合理平台跳过写成执行成功。Linux 的 Claude Code `2.1.332` / SDK `0.3.332` 读取 123 个资源；0 个用户模型回合，M06 仍未通过。
+
+在发布提交重新实际打包，与首次实现提交的产品 tarball 逐项摘要相同：6533144 字节，SHA-256 `25564084894e6232e52e70c14d15e6cc57f8fe5ddd92e53023eefda8a6dc7fe6`，SHA-512 `sha512-+FDkYR0yUTuCfTrOawGmM/Dz5k44HoTYWSZB29Xnwv1ufkZ93u4YKxAhWO8lxv9B/j4rnpSAo4YK0kAjVAr8MA==`。本机与 CI 的角色清楚：本机实际 pack/摘要核对，CI 实际 npm 消费端安装；本机 E403 不再构成该项验收缺口。正式公开发布状态仍由 T8 与独立版本记录说明。
+
 ## 从实际打包内容安装的原生模型场景
 
 使用实际 `npm pack` 输出 `namewta-skills-hub-0.1.36.tgz`，1105 个文件；候选包 SRI：
