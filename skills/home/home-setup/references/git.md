@@ -12,12 +12,16 @@ node <本技能目录>/scripts/git.mjs apply-scope --home "<Home 根>" --expect-
 
 完整初始化或明确补 Git 时，根据 `inspect` 选择操作。尚无 Git 时用 `init` 写入白名单并建立 `main`。已有精确 Git 根时检查 `ignoreState`，值为 `absent` 或 `unmanaged` 时用 `apply-scope` 补规则。`init` 对已有 Git 根仍只读。位于祖先仓库内时先确认真正的 Home 根。
 
+完整初始化还包含[根导航接入](registry.md#根导航与交付)，先保留或合并 Home 短指针，再核对其跟踪状态。仅补 Git、克隆后恢复项目或查询跟踪范围沿用已有入口；这些 Git 工具本身不修改根 `AGENTS.md`。
+
 `apply-scope` 使用刚读到的 `ignoreRevision`，仅写 Home 根 `.gitignore`。原有规则保留在白名单段之后，后置规则仍按 Git 的匹配结果生效。已有完整标记段时只复查。用返回的修订判断规则是否落盘，用 `exposed`、`exposedRules` 和 `trackedOutside` 报告仍被放行或已纳入索引的目录和文件。遇到权限、基线变化或部分失败时重跑 `inspect`，从实际状态接续。暂存、提交、远端配置和同步按用户指令操作。
 
 | 默认范围 | 文件 |
 | --- | --- |
 | 适合进入基线 | 根 `AGENTS.md`、`.gitignore`、`.agents/` 内各领域的正式资料与 `.agents/skills/` 的完整技能包，包括必需的模板、脚本与运行资产 |
-| 留在本机或各自仓库 | 项目 checkout、worktree、运行原件、安装缓存、`.claude/skills/` 兼容链接、本机路径覆盖与凭据 |
+| 留在本机或各自仓库 | 项目 checkout、worktree、运行原件、安装缓存、`.claude/skills/` 兼容链接、本机路径覆盖、凭据与确需的宿主薄入口派生适配 |
+
+默认只用根 `AGENTS.md` 作为可跟踪的 Home 短入口。已授权接入确需的 `CLAUDE.md`、`GEMINI.md` 等额外薄入口按本机派生资料处理，不改白名单或 force-add；已有 environment 记录可保存非秘密的重建方法与验证等级，不把本机文件冒称随 Home 提交的内容。
 
 正式资料按用途判断，Home 的候选、派遣记录、回执、知识、历史、归档、索引和状态 TSV 均可入库。执行日志、截图、录像和临时输出放执行仓库根的 `temp/`，Home 执行原件可用 `temp/home/`。随技能发布并实际需要的图片等资产随技能本体保存。核对各领域自己的本机文件和凭据约定，必要时给其准确路径加规则。检查尤其容易和正式资料混淆的 `env.md`。已有项目的 Git 根、worktree 入口或目录链接是扫描边界。报告被放行或已在索引中的排除项，按授权处理实际冲突，保留项目文件。
 
@@ -34,6 +38,8 @@ node .agents/skills/home-setup/scripts/restore.mjs --home . --repo project-a --a
 ```
 
 默认预览所有登记项，`--apply` 恢复缺失项目，可重复 `--repo` 选择准确 ID。源是 `repos.json`。默认路径相对新 Home 根，本机已有合法 `local.json` 时优先使用其覆盖。无须安装技能。可独立查询 `.agents/home/` 正式正文，也可使用同仓 `home-history`、`home-knowledge`、`home-tasks` 的查询入口，项目不可达时这些查询仍可用。
+
+恢复后按新机实际选择的宿主重新核验根入口和技能发现。只有确需且已有授权时，依据既有 environment 的非秘密方法重建本机薄入口；旧机文件不存在或验证等级不同均如实报告。`restore.mjs` 只恢复登记项目，不创建宿主指导文件，也不把旧机的宿主可用性外推到新机。
 
 已有且核验匹配的 checkout 原地复用，报告附加远端漂移并保留当前状态。缺失项目使用登记的主 fetch URL 和远端默认分支。v2 新 checkout 按登记恢复远端名称、有序 URL 和显式 push URL；v1 使用单远端克隆，保留共享登记。克隆前检查 Git 展开的实际 fetch 身份，下载后由 `home-route` 核验再放到目标位置。项目保留独立 Git，内嵌项目须已被 Home 忽略且索引中无该路径。
 

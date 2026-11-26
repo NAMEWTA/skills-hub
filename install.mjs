@@ -393,7 +393,7 @@ Install complete skills into the current project's .agents/skills/ and link each
 On Windows, EPERM while creating a Claude directory symlink skips that link and prints a warning. Reinstall with symlink permission to add it.
 Conflicting Claude entries are never replaced.
 --domain upstream-skills selects the independent Chinese upstream skills; it creates no domain navigation.
-Selected dev/system/ops/home domains initialize domain AGENTS.md navigation; managed templates are updated and business records are preserved.
+Selected dev/system/ops/home domains initialize domain AGENTS.md navigation; Home updates only its marked base block, and business records are preserved.
 Dev or system selections add /temp/ to the project .gitignore when missing; dev also adds /.agents/dev/worktree/.
 Home selections add /.agents/home/local.json to .gitignore; Home business records are created on demand by their owning skills.
 --dry-run  Preview without writing files.

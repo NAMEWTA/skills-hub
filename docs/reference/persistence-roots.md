@@ -67,9 +67,9 @@ Git 忽略不是权限隔离，也不取消跟踪。保存运行过程原件前�
 | 任意 home 技能 | `.agents/home/AGENTS.md`；根 `.gitignore` 的 `/.agents/home/local.json` |
 | 仅独立上游技能 | 无领域导航 |
 
-模板源码归 `scripts/persistence/`，不放在技能内，也不由技能脚本执行。固定位置的 `AGENTS.md` 自动更新，字节相同不重写。自定义规则放根 `AGENTS.md` 或其他非托管文件，已有业务记录按原位置保留。
+模板源码归 `scripts/persistence/`，不放在技能内，也不由技能脚本执行。dev、system、ops 的固定导航沿用全文托管。Home AGENTS 仅更新唯一完整的 v1 标记基础区，区外用户内容和知识指针保留原字节；入口格式与语义归 home-knowledge。精确旧官方模板可迁移，未标记自定义或损坏/未知标记在预检报告冲突并使整次安装零写入。所有导航字节相同均不重写。根 `AGENTS.md` 和已有业务记录保持原位置。
 
-list、help、取消和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机，选择 home 不先造 registry、默认团队、知识、历史或任务目录。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
+初始化集合严格等于本次最终选择的业务 domain；正文引用、建议调用和历史目录都不会扩大集合。交互确认显示最终范围，未选领域的内容与 mtime 保持。list、help、version、取消、非法选择和 dry-run 不初始化。其余子目录在真实内容出现时建立；选择 ops 不先造 registry、projects 或 runs，选择 system 不先造主机，选择 home 不先造 registry、profile、SOUL、默认团队、知识、历史或任务目录。失败回滚及路径检查见[安装契约](../usage/installation.md#更新与冲突)。
 
 目录说明提供职责与导航，不保证宿主递归加载。使用相关技能时显式读取所需导航，已有 docs、ADR 和部署手册继续引用真实位置。普通 Markdown 只保存凭据用途和安全引用。项目明确指定的本地凭据文件（例如项目选用的 `env.md`）可由原部署流程保存实际值，不随技能、操作记录或发布制品分发。
 
@@ -90,6 +90,8 @@ registry、projects、runs、incidents、lessons 和可重建 index 按真实内
 ## Home 的知识与协调资料
 
 Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、`local.json` 与 `context/`，显式初始化时在 `context/dispatch/` 和 `context/team/` 确定派遣方式与 Home team，在 `context/preferences.md` 保存两个独立的默认链接。项目登记地图默认只读生成，显式导出时才写派生 `repos.md`。map 写 `relations.md`，knowledge 写 `notes/` 等现行知识，history 写 `history/` 等历史。`home-tasks` 在 `coordination/<主题>/` 保存 Home 直接任务、回执和验收状态，用主题 `status.tsv` 和全局 `all.status.tsv` 展示状态。
+
+完整 Home 初始化由 setup 合并或复用根短指针，使其指向 `.agents/home/AGENTS.md`；普通安装与局部操作不修改根。knowledge 维护 Home 主入口的渐进式披露方法和非托管内容。可选 `.agents/home/SOUL.md` 只承载尚无现成 owner 的长期合作原则；profile/preferences 中的既有配置继续由 setup 维护。AGENTS/SOUL 采用读基线、最小编辑、写前复核和回读，不属于知识 CLI 的主题白名单或写锁范围。
 
 显式建立 Home Git 时，各领域正式资料和 `.agents/skills/` 本体可随 Home 提交。运行原件放执行仓库根的 `temp/`，Home 可用 `temp/home/`。正式正文保存使用结论、明白理由和接续工作需要的事实，换机时可脱离旧机原件阅读。项目 checkout 与本机配置继续按各自边界维护。换机恢复使用同仓 `home-setup` 入口。 [Home Git 方法](../home/overview.md#从已提交的-home-换机)
 

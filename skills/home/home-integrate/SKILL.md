@@ -9,7 +9,7 @@ description: 联合验证多个项目是否满足同一个验收目标。用于�
 
 ## 执行
 
-先读[组合验证方法](references/integration.md)，采用[组合验收模板](assets/integration.md)补齐已有权威任务，不强制新建中心测试仓库。
+先读取下述 Home 主入口，再读[组合验证方法](references/integration.md)，采用[组合验收模板](assets/integration.md)补齐已有权威任务。同一上下文已读同一根、同一版本可复用；新会话、压缩后缺失、入口更新或换根时重读。入口读不到先核对根、路径和安装状态，可用时调用 `home-doctor`；无需先成功读取才能做最小只读诊断。不强制新建中心测试仓库。
 
 1. 从实际 Home 根读取 `./.agents/home/AGENTS.md`，明确用户可观察的共同目标、参与 repo ID、影响关系和完成条件。关系不清交 `home-map`，实际位置交 `home-route`，项目内部调查交当地 Agent。
 2. 指定一个实际联调执行者、交付顺序、所需输入和最终证据位置。执行者按自己项目规则工作，必要协作通过各项目直接负责人；Home 不直接接管所有服务。

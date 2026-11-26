@@ -6,11 +6,14 @@ import path from 'node:path';
 import { diagnoseHome } from '../skills/home/home-doctor/scripts/doctor.mjs';
 import { inspectRegistry, saveRegistry } from '../skills/home/home-setup/scripts/registry.mjs';
 
-function fixture(t) {
+const validEntry = '<!-- skills-hub:home-entry:start v1 -->\n# Home 资料\n\n按任务读取已存在的正式资料。\n<!-- skills-hub:home-entry:end -->\n';
+
+function fixture(t, { entry = validEntry } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'home-doctor-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const file = relative => path.join(root, relative);
   const write = (relative, content) => { const target = file(relative); fs.mkdirSync(path.dirname(target), { recursive: true }); fs.writeFileSync(target, content); return target; };
+  if (entry !== null) write('.agents/home/AGENTS.md', entry);
   return { root, file, write };
 }
 function symlink(t, source, target, type = 'dir') {
@@ -19,7 +22,7 @@ function symlink(t, source, target, type = 'dir') {
 }
 
 test('empty Home is a read-only normal state and unselected tools are not diagnosed as failures', t => {
-  const { root } = fixture(t); const result = diagnoseHome(root);
+  const { root } = fixture(t, { entry: null }); const result = diagnoseHome(root);
   assert.equal(result.status, 'clear-within-scope'); assert.equal(result.complete, true); assert.equal(result.findings[0].code, 'HOME_NOT_INITIALIZED'); assert.deepEqual(fs.readdirSync(root), []);
 });
 
@@ -55,14 +58,14 @@ test('structural broken links route to their owners, while fenced examples and e
   const result = diagnoseHome(root);
   const broken = result.findings.filter(item => item.code === 'BROKEN_LINK');
   assert.equal(broken.length, 2); assert.deepEqual(new Set(broken.map(item => item.owner)), new Set(['home-knowledge', 'home-history']));
-  assert.equal(result.checked.markdownFiles, 2); assert.ok(result.checked.externalPointers >= 1 || result.checked.localLinks >= 3);
+  assert.equal(result.checked.markdownFiles, 3); assert.ok(result.checked.externalPointers >= 1 || result.checked.localLinks >= 3);
   assert.ok(result.findings.every(item => !item.message.includes('sample.md') && !item.message.includes('missing-in-project.md')));
 });
 
 test('scan budgets expose incomplete coverage without treating unvisited documents as healthy', t => {
   const { root, write } = fixture(t); write('.agents/home/notes/a.md', '# A\n'); write('.agents/home/notes/b.md', '# B\n[断链](missing.md)\n');
-  const result = diagnoseHome(root, { maxFiles: 1 });
-  assert.equal(result.complete, false); assert.equal(result.checked.markdownFiles, 1); assert.ok(result.findings.some(item => item.code === 'SCAN_LIMIT')); assert.equal(result.status, 'attention');
+  const result = diagnoseHome(root, { maxFiles: 2 });
+  assert.equal(result.complete, false); assert.equal(result.checked.markdownFiles, 2); assert.ok(result.findings.some(item => item.code === 'SCAN_LIMIT')); assert.equal(result.status, 'attention');
 });
 
 test('canonical and relative alias are diagnosed without claiming actual host skill discovery', t => {
@@ -85,5 +88,110 @@ test('linked canonical parent or SKILL file cannot masquerade as a local install
 test('linked Home data is reported without following project contents or changing original bytes', t => {
   const { root, file, write } = fixture(t); const privateFile = write('project/private.md', '# 原件\n[不读取](missing.md)\n'); fs.mkdirSync(file('.agents/home/notes'), { recursive: true });
   if (!symlink(t, file('project'), file('.agents/home/notes/foreign'))) return;
-  const result = diagnoseHome(root); assert.ok(result.findings.some(item => item.code === 'LINKED_HOME_DATA')); assert.equal(result.checked.markdownFiles, 0); assert.equal(fs.readFileSync(privateFile, 'utf8'), '# 原件\n[不读取](missing.md)\n');
+  const result = diagnoseHome(root); assert.ok(result.findings.some(item => item.code === 'LINKED_HOME_DATA')); assert.equal(result.checked.markdownFiles, 1); assert.equal(fs.readFileSync(privateFile, 'utf8'), '# 原件\n[不读取](missing.md)\n');
+});
+
+test('existing Home data or a single installed Home skill requires the main entry without creating it', t => {
+  const { root, file, write } = fixture(t, { entry: null });
+  fs.mkdirSync(file('.agents/home'), { recursive: true });
+  const emptyDomain = diagnoseHome(root);
+  assert.equal(emptyDomain.status, 'issues');
+  assert.ok(emptyDomain.findings.some(item => item.code === 'HOME_ENTRY_MISSING' && item.owner === '用户所选安装方法'));
+  assert.deepEqual(fs.readdirSync(file('.agents/home')), []);
+  fs.rmdirSync(file('.agents/home'));
+  write('.agents/skills/home-route/SKILL.md', '# 已安装的单个 Home 技能\n');
+  const installed = diagnoseHome(root);
+  assert.ok(installed.findings.some(item => item.code === 'HOME_ENTRY_MISSING'));
+  assert.equal(fs.existsSync(file('.agents/home')), false);
+  assert.equal(fs.existsSync(file('.agents/skills/home-knowledge')), false);
+});
+
+test('unselected domains do not require Home entry and optional Home documents may remain absent', t => {
+  const { root, file, write } = fixture(t, { entry: null });
+  write('.agents/skills/dev-build/SKILL.md', '# 开发技能\n');
+  fs.mkdirSync(file('.agents/skills/home-not-installed'), { recursive: true });
+  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
+  write('.agents/home/AGENTS.md', validEntry);
+  const before = fs.readFileSync(file('.agents/home/AGENTS.md'));
+  const result = diagnoseHome(root);
+  assert.equal(result.status, 'clear-within-scope');
+  assert.deepEqual(result.findings, []);
+  assert.deepEqual(fs.readdirSync(file('.agents/home')), ['AGENTS.md']);
+  assert.deepEqual(fs.readFileSync(file('.agents/home/AGENTS.md')), before);
+});
+
+test('the exact legacy installer entry is reported for migration without rewriting user documents', t => {
+  const legacy = '# Home 资料\n\n相对本文件，资料按需建立。缺索引查正文。\n\n- home-setup `./repos.json`、`./local.json`、`./context/preferences.md`\n- home-route 定位，home-workflow 派遣验收\n- home-knowledge `./notes/index.md`、`./notes/`、`./inbox/`、`./archive/notes/`、`./exclusions.md`\n- home-history `./history/index.md`、`./history/`、`./archive/history/`\n- home-map `./relations.md`\n- home-tasks `./coordination/all.status.tsv`、`./coordination/`\n- home-integrate 联调，home-doctor 诊断\n';
+  const { root, file } = fixture(t, { entry: legacy });
+  const result = diagnoseHome(root);
+  assert.equal(result.status, 'attention');
+  assert.ok(result.findings.some(item => item.code === 'HOME_ENTRY_LEGACY' && item.owner === '用户所选安装方法'));
+  assert.equal(fs.readFileSync(file('.agents/home/AGENTS.md'), 'utf8'), legacy);
+});
+
+test('main entry rejects empty, damaged, duplicate, nested and unknown markers while preserving bytes', t => {
+  const { root, file, write } = fixture(t);
+  const start = '<!-- skills-hub:home-entry:start v1 -->';
+  const end = '<!-- skills-hub:home-entry:end -->';
+  const cases = [
+    [' \n\t', 'HOME_ENTRY_EMPTY'],
+    [`${start}\n${end}\n`, 'HOME_ENTRY_BASE_EMPTY'],
+    [`${start}\n<!-- 只有注释 -->\n${end}\n`, 'HOME_ENTRY_BASE_EMPTY'],
+    [`${start}\n# 缺尾标记\n`, 'HOME_ENTRY_MARKERS'],
+    [`${end}\n# 顺序错误\n${start}\n`, 'HOME_ENTRY_MARKERS'],
+    [`${validEntry}${validEntry}`, 'HOME_ENTRY_MARKERS'],
+    [`${start}\n${start}\n# 嵌套\n${end}\n${end}\n`, 'HOME_ENTRY_MARKERS'],
+    [`前缀 ${start}\n# 非独占行\n${end}\n`, 'HOME_ENTRY_MARKERS'],
+    [`<!-- skills-hub:home-entry:start v2 -->\n# 较新版本\n${end}\n`, 'HOME_ENTRY_VERSION'],
+  ];
+  for (const [content, code] of cases) {
+    write('.agents/home/AGENTS.md', content);
+    const result = diagnoseHome(root);
+    assert.equal(result.status, 'issues', code);
+    const expectedOwner = ['HOME_ENTRY_EMPTY', 'HOME_ENTRY_MARKERS'].includes(code) ? 'home-knowledge' : '用户所选安装方法';
+    assert.ok(result.findings.some(item => item.code === code && item.owner === expectedOwner), JSON.stringify(result));
+    if (code === 'HOME_ENTRY_VERSION') assert.match(result.findings.find(item => item.code === code).message, /不降级/);
+    assert.equal(fs.readFileSync(file('.agents/home/AGENTS.md'), 'utf8'), content);
+  }
+  write('.agents/home/AGENTS.md', `\uFEFF${validEntry.replaceAll('\n', '\r\n')}`);
+  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
+  write('.agents/home/AGENTS.md', `${validEntry}\n这里只讨论 skills-hub:home-entry: 的名称。\n`);
+  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
+  write('.agents/home/AGENTS.md', `${validEntry}\n<!-- skills-hub:home-entry:unknown -->\n`);
+  assert.ok(diagnoseHome(root).findings.some(item => item.code === 'HOME_ENTRY_MARKERS'));
+});
+
+test('unmarked custom entry belongs to knowledge while its relative links resolve from the entry file', t => {
+  const { root, write } = fixture(t, { entry: '# 自有入口\n[现行结论](notes/current.md)\n' });
+  const unmarked = diagnoseHome(root);
+  assert.equal(unmarked.status, 'attention');
+  assert.ok(unmarked.findings.some(item => item.code === 'HOME_ENTRY_UNMANAGED' && item.owner === 'home-knowledge'));
+  assert.ok(unmarked.findings.some(item => item.code === 'BROKEN_LINK' && item.owner === 'home-knowledge'));
+  write('.agents/home/notes/current.md', '# 已确认结论\n');
+  write('.agents/home/AGENTS.md', `${validEntry}\n[现行结论](notes/current.md)\n`);
+  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
+});
+
+test('unreadable or nonregular main entry reports a concrete error without traversing its content', t => {
+  const { root, file, write } = fixture(t);
+  const read = fs.readFileSync;
+  const mocked = t.mock.method(fs, 'readFileSync', (filename, ...args) => {
+    if (filename === file('.agents/home/AGENTS.md')) throw Object.assign(new Error('fixture denied'), { code: 'EACCES' });
+    return read(filename, ...args);
+  });
+  const denied = diagnoseHome(root);
+  assert.equal(denied.status, 'issues'); assert.equal(denied.complete, false);
+  assert.ok(denied.findings.some(item => item.code === 'HOME_ENTRY_UNREADABLE'));
+  mocked.mock.restore();
+  fs.unlinkSync(file('.agents/home/AGENTS.md'));
+  write('.agents/home/AGENTS.md/private.md', '[不应进入](missing.md)\n');
+  const directory = diagnoseHome(root);
+  assert.ok(directory.findings.some(item => item.code === 'HOME_ENTRY_TYPE'));
+  assert.equal(directory.checked.markdownFiles, 0);
+  fs.rmSync(file('.agents/home/AGENTS.md'), { recursive: true });
+  write('outside.md', '[不应读取](missing.md)\n');
+  if (!symlink(t, file('outside.md'), file('.agents/home/AGENTS.md'), 'file')) return;
+  const linked = diagnoseHome(root);
+  assert.ok(linked.findings.some(item => item.code === 'HOME_ENTRY_TYPE'));
+  assert.equal(linked.checked.markdownFiles, 0);
 });

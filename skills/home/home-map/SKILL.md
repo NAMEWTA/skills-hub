@@ -9,7 +9,7 @@ description: 根据项目证据查询或维护跨项目依赖、关系方向、�
 
 ## 执行
 
-先读[关系核实与影响分析](references/relations.md)，以[关系模板](assets/relations.md)组织实际记录。
+先读取下述 Home 主入口，再读[关系核实与影响分析](references/relations.md)，以[关系模板](assets/relations.md)组织实际记录。同一上下文已读同一根、同一版本可复用；新会话、压缩后缺失、入口更新或换根时重读。入口读不到先核对根、路径和安装状态，可用时调用 `home-doctor`；无需先成功读取才能做最小只读诊断。
 
 1. 从实际 Home 根读取 `./.agents/home/AGENTS.md`，明确当前问题、变化和相关 repo ID，读取已有关系与必要 Home 背景。名称相近、同组、同一 owner 或同一派遣图不构成依赖证据。
 2. 通过 `home-route` 取得本次实际 checkout。需要当前技术事实时，向 `home-workflow` 交付准确的项目调查目标，由用户选择的当地方法把任务交给项目 Agent。

@@ -9,7 +9,7 @@ description: 只读定位已登记项目，解析项目名、别名、分组、�
 
 ## 执行
 
-先读[路由与身份核查](references/routing.md)，再按当前意图执行：
+先读取下述 Home 主入口，再读[路由与身份核查](references/routing.md)。同一上下文已读同一根、同一版本的入口可复用；新会话、压缩后缺失、入口更新或换根时重读。入口读不到先核对根、路径和安装状态，可用时调用 `home-doctor`；无需先成功读取才能做最小只读诊断。
 
 1. 从实际 Home 根读取 `./.agents/home/AGENTS.md`。按用户所指 ID、别名或分组读取登记及合法本机路径覆盖。准确 ID 优先，别名重名时返回候选，以登记和用户明确指定的目标核对身份。
 2. 按显式 checkout → local.json → 登记路径选择入口。核对真实路径、Git root、主 remote 和 common directory，支持 `.git` 为文件的 worktree；路径指向不同仓库时停止该目标。v2 按指定主 remote 的首 fetch URL 核验，其他 remote 的变动单独报告；旧 v1 沿用原身份规则。

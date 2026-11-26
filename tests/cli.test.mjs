@@ -255,6 +255,29 @@ test('interactive Home selection reports its local mapping rule and creates the 
   assert.deepEqual(fs.readdirSync(path.join(project, '.agents/home')), ['AGENTS.md']);
 });
 
+test('the confirmation reports final selected domains after an installed domain is deselected', async t => {
+  const project = temporary(t, 'skills-hub Home final selection ');
+  assert.equal(await interactive({ project, ...context(['dev-spec']) }), 0);
+  const navigation = path.join(project, '.agents/dev/AGENTS.md');
+  const original = fs.readFileSync(navigation);
+  const mtime = fs.statSync(navigation, { bigint: true }).mtimeNs;
+  const ctx = context([]);
+  ctx.choose = async ({ initialNames }) => {
+    assert.deepEqual(initialNames, ['dev-spec']);
+    return ['home-knowledge'];
+  };
+  ctx.ui.confirm = async () => {
+    assert.ok(ctx.ui.notes.includes('home'));
+    assert.ok(!ctx.ui.notes.includes('dev、home'));
+    assert.ok(!fs.existsSync(path.join(project, '.agents/home')));
+    return true;
+  };
+  assert.equal(await interactive({ project, ...ctx }), 0);
+  assert.deepEqual(fs.readFileSync(navigation), original);
+  assert.equal(fs.statSync(navigation, { bigint: true }).mtimeNs, mtime);
+  assert.deepEqual(fs.readdirSync(path.join(project, '.agents/home')), ['AGENTS.md']);
+});
+
 test('search matches names, abbreviations, domains and Chinese descriptions', () => {
   const option = { value: 'dev-spec', label: 'dev-spec', hint: 'dev · 整理开发规格，定义验收标准' };
   for (const term of ['', '   ', 'SPEC', 'ｓｐｅｃ', 'dvsp', '规格', '验标', 'dev 规格', '规格 dev']) {

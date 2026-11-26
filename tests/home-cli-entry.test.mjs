@@ -54,7 +54,7 @@ test('standalone Home CLIs run help and read-only commands through real installe
       : entry.name === 'home-tasks' ? ['list', '--home', home]
       : ['query', '--home', home, '--text', '没有资料'];
     const result = run([script, ...argv]);
-    assert.equal(result.status, 0, result.stderr); assert.equal(result.stderr, '');
+    assert.equal(result.status, entry.name === 'home-doctor' ? 1 : 0, result.stderr); assert.equal(result.stderr, '');
     assert.match(result.stdout, /\S/u, `${entry.name} 必须实际运行入口并输出 JSON`);
     const output = JSON.parse(result.stdout);
     if (entry.name === 'home-setup') assert.equal(output.registryRevision, 'absent');
@@ -62,7 +62,7 @@ test('standalone Home CLIs run help and read-only commands through real installe
       assert.equal(output.status, 'inspected'); assert.equal(output.contextRead, false);
       assert.equal(output.actualCheckout, fs.realpathSync.native(project)); assert.equal(output.requestedPathIsGitRoot, true);
     } else if (entry.name === 'home-doctor') {
-      assert.equal(output.status, 'clear-within-scope'); assert.ok(output.findings.some(item => item.code === 'HOME_NOT_INITIALIZED'));
+      assert.equal(output.status, 'issues'); assert.ok(output.findings.some(item => item.code === 'HOME_ENTRY_MISSING'));
     } else if (entry.name === 'home-tasks') assert.deepEqual(output, []);
     else { assert.deepEqual(output.entries, []); assert.equal(output.complete, true); }
     const invalid = run([script, '--unknown']);
@@ -70,6 +70,14 @@ test('standalone Home CLIs run help and read-only commands through real installe
     assert.equal(typeof JSON.parse(invalid.stderr).message, 'string');
     assert.equal(fs.existsSync(path.join(home, '.agents/home')), false);
   });
+  const navigation = path.join(home, '.agents/home/AGENTS.md');
+  fs.mkdirSync(path.dirname(navigation), { recursive: true });
+  fs.writeFileSync(navigation, fs.readFileSync(new URL('../scripts/persistence/home.md', import.meta.url)));
+  const repaired = run([path.join(aliases, 'home-doctor/scripts/doctor.mjs'), '--home', home]);
+  assert.equal(repaired.status, 0, repaired.stderr);
+  const repairedOutput = JSON.parse(repaired.stdout);
+  assert.equal(repairedOutput.status, 'clear-within-scope');
+  assert.deepEqual(repairedOutput.findings, []);
 });
 
 test('importing standalone Home modules does not run their CLIs with existing, absent or nonexistent argv paths', t => {

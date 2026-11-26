@@ -45,7 +45,7 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 搜索支持非连续缩写和多个关键词，各词都须匹配。搜索会展开第一个匹配的分组。分组名称匹配时，可浏览其全部子项。分组勾选作用于整组，包括被搜索隐藏的技能。收拢、搜索和翻页都会保留勾选。
 
-交互界面会预选 `.agents/skills/` 中包含常规 `SKILL.md` 文件且名称出现在当前目录清单中的技能。取消勾选会跳过该技能的本轮安装或更新。已勾选的技能按下文的更新规则处理。非 TTY 环境使用明确的命令参数，不启动交互。
+交互界面会预选 `.agents/skills/` 中包含常规 `SKILL.md` 文件且名称出现在当前目录清单中的技能。取消勾选会跳过该技能的本轮安装或更新。确认前显示最终选中的技能及实际涉及的业务领域；只新点选 Home 但仍保留其他预选项时，那些领域仍属于本次范围。已勾选的技能按下文的更新规则处理。非 TTY 环境使用明确的命令参数，不启动交互。
 
 ## 选择
 
@@ -79,7 +79,9 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 安装器为每个本次选中的技能规划 Claude 入口 `.claude/skills/<name>`。新链接使用相对路径 `../../.agents/skills/<name>`，指向同仓的完整技能目录，移动整个项目后仍然有效。两个入口共享同一份本体。`.claude/skills/` 本身是普通目录。未选中的技能和用户自有入口保持原样。Home 与各项目分别安装、分别更新。
 
-选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 和 home 技能分别触发本领域根导航。固定模板由安装代码管理，内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+业务目录只由本次最终选中技能的 domain 决定。选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 和 home 技能分别触发本领域根导航。Home 只更新明确标记的基础区，其他领域沿用固定模板；内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+
+只选 Home 不创建 dev、ops 或 system。仅装上游独立技能不创建四个业务域；混选建立对应集合，`--all` 才明确选择所有业务域。技能文档提到其他 domain 不构成安装依赖。旧目录保留在原处，未选领域的导航与业务内容不补齐、不更新、不删除。全局 npm 安装或升级只更新工具，项目领域仍需实际安装选择。
 
 选择任意 dev 或 system 技能时，在项目根 `.gitignore` 补齐 `/temp/`。dev 另补 `/.agents/dev/worktree/`，system 同时补系统根导航。home 补 `/.agents/home/local.json`；仅装 home 不加 `/temp/`。混装只加一条 `/temp/`；仅 ops 或独立上游包不加忽略项。缺少 `.gitignore` 时创建，已有等效条目不重复写；新增 `/temp/` 和 Home 本机映射默认规则放在既有项目规则之前，保留 `!/temp/`、`!/.agents/home/local.json` 等明确例外。实际忽略结果以 Git 判定为准。任务按需建立工作树和附件目录。交互和显式命令使用同一规则；`--dry-run` 只预览。list、help、取消和 dry-run 均不写入，也不创建链接探测或安装锁。
 
@@ -133,7 +135,20 @@ npx @namewta/skills-hub@latest install --domain home
 
 安装只处理选中技能本体、同仓 Claude 入口、`.agents/home/AGENTS.md` 与本机映射默认忽略项。不创建 repos.json、用户背景与偏好、团队配置、知识、候选、历史、协调记录、clone 或 worktree，也不遍历子项目安装其他领域。
 
-安装后用 `$home-setup 初始化 Home` 初始化用户选定的 Home。只发 `$home-setup` 会先检查状态并询问操作范围。Home 资料以 `./.agents/home/AGENTS.md` 为目录索引，业务资料按需建立。单独明确要求补根导航时，可由 setup 合并根 `AGENTS.md` 中的 Home 入口。已保存完整技能本体的 Home 克隆可直接调用同仓恢复工具。 [Home 说明](../home/overview.md)
+安装后可以自然表达“把这个目录作为我的 Home，管理这些项目，沿用当前派遣方式”，也可用 `$home-setup 初始化 Home`。完整初始化会合并或复用根 `AGENTS.md` 的 Home 短指针，保留原有规则；普通安装、只查登记或局部配置不修改根。只发 `$home-setup` 会先检查状态并询问操作范围。Home 资料以 `./.agents/home/AGENTS.md` 为主要必读入口，业务资料按需建立。已保存完整技能本体的 Home 克隆可直接调用同仓恢复工具。 [Home 说明](../home/overview.md)
+
+### Home 入口更新与迁移
+
+Home 入口格式和语义由 `home-knowledge` 维护，安装器基础模板唯一位于 `scripts/persistence/home.md`。自定义长期约定和真实知识指针保存在基础区外。基础区边界是独占行的 `<!-- skills-hub:home-entry:start v1 -->` 与 `<!-- skills-hub:home-entry:end -->`。
+
+| 安装前状态 | 结果 |
+| --- | --- |
+| 主入口不存在 | 创建最小基础区，不创建 profile、SOUL 或空知识文件 |
+| 精确等于已知 v0.1.35 官方模板 | 自动迁移到基础区结构 |
+| 唯一完整 v1 基础区及用户内容 | 只替换基础区，保留区外原字节与顺序；内容相同不改 mtime |
+| 未标记自定义内容，半缺/重复/嵌套/行内标记或未知版本 | `HOME_ENTRY_CONFLICT`，退出 1，预检失败使整次安装零写入 |
+
+冲突由 knowledge 在已有授权内读取和保留有效内容，整理非托管正文及已知版本标记，再重跑原安装命令填入基础区。不能猜测任意 Markdown 的可覆盖范围，也不能将未知较新版本改成 v1 降级。基础区暂为空、重装未完成或修复失败时仍是待恢复状态。安装中的陈旧写入检查和失败恢复沿用原事务；这种保护不承诺与外部编辑器的全局锁。
 
 ## 独立 ops 领域
 

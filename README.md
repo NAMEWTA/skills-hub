@@ -92,15 +92,18 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 ## 个人 Home Repo
 
-在自己的 Home 仓库安装 `home` 后，用 `$home-setup 初始化 Home` 建立或补齐 Git 白名单、登记已有 clone，并设置默认派遣方式和 Home team。只发 `$home-setup` 会先检查状态，由用户选择操作。`home-workflow` 用所选方式派发任务，`home-tasks` 保存直接任务、回执和项目状态。
+在自己的 Home 仓库安装 `home` 后，可以直接要求“把这里作为我的 Home，管理这些项目，沿用当前派遣方式”，也可用 `$home-setup 初始化 Home`。完整初始化建立 Git 白名单、合并根短入口、登记已有 clone，并沿用或补齐已选派遣方式与 Home team。只发 `$home-setup` 会先检查状态，由用户选择操作。`home-workflow` 用所选方式派发任务，`home-tasks` 保存直接任务、回执和项目状态。
+
+九个 Home 技能都从 `.agents/home/AGENTS.md` 按需读取资料。重装只更新明确标记的基础区，保留区外长期约定和知识指针；未标记自定义或损坏入口先报告冲突。`home-knowledge` 维护入口规范及可选 `SOUL.md`，已有 profile/preferences 保持唯一职责。安装只初始化本次所选 domain，单选 Home 不预建其他业务域。实际宿主的技能发现、入口加载和模型执行分别验证。
 
 Home 了解各项目基本背景和管理关系。涉及项目内部知识、代码、技能或验证时，由当地 Agent 进入实际项目读取和完成；项目可继续依当地规则派遣子 Agent。每层派遣记录归当地所选技能，Home 保留管理摘要与证据指针。Home 的现行知识、历史事件和当前执行状态各有明确位置，可由新会话读取普通 Markdown 接续。
 
 ```text
-使用 home-setup：初始化我的 Home，登记这些已有项目。默认用当前宿主原生派遣，每个项目安排一位负责人。
-使用 home-workflow：向项目 A 查询接口约定，让项目 B 验证兼容性，回报各自版本和证据。
-使用 home-tasks：查看项目 A 当前有哪些 Home 任务、哪些还在等派发。
-使用 home-history：查明当时为什么选择这个方案，再指出当前知识是否已经更正。
+初始化我的 Home，登记这些已有项目。默认用当前宿主原生派遣，每个项目安排一位负责人。
+向项目 A 查询接口约定，让项目 B 验证兼容性，回报各自版本和证据。
+查看项目 A 当前有哪些 Home 任务、哪些还在等派发。
+查明当时为什么选择这个方案，再指出当前知识是否已经更正。
+记住这个已经确认的管理约定，下次按它处理。这次的临时简短回复不用改默认。
 ```
 
 完整用法、方法归属和验证边界见 [Home 说明](docs/home/overview.md)。

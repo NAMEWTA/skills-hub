@@ -1,8 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const templates = fileURLToPath(new URL('./persistence/', import.meta.url));
+const homeStart = '<!-- skills-hub:home-entry:start v1 -->';
+const homeEnd = '<!-- skills-hub:home-entry:end -->';
+// v0.1.35 的 11 行官方模板；只接受原字节，不推测手写文件的语义。
+const legacyHomeSha256 = 'b9c3332a066c7a681a62c5a773e118fa6e9490da76c9b3c44e7a322e6dc9b18f';
 const targets = [
   ['dev', 'dev', '.agents/dev'],
   ['dev', 'changes', '.agents/dev/changes'],
@@ -55,12 +60,51 @@ function ensureIgnoreRules(previous, rules) {
   return Buffer.concat([content, Buffer.from(separator + missing.join(eol) + eol)]);
 }
 
-// 安装器维护固定导航和领域忽略规则。
+function homeBlock(content, filename) {
+  // latin1 保证字符串位置与字节偏移一致，区外内容不经 UTF-8 解码重写。
+  const text = content.toString('latin1');
+  const count = [...text.matchAll(/<!--[\t ]*skills-hub:home-entry:/g)].length;
+  const reject = reason => {
+    const error = new Error(`HOME_ENTRY_CONFLICT ${filename}: ${reason}；保留原文，由 home-knowledge 按已有授权合并后重试。`);
+    error.code = 'HOME_ENTRY_CONFLICT';
+    throw error;
+  };
+  if (count === 0) reject('不是已知旧模板且没有受管标记');
+  if (count !== 2) reject('受管标记必须是唯一一对，不能重复或嵌套');
+  const start = text.indexOf(homeStart);
+  const end = text.indexOf(homeEnd);
+  if (start < 0 || end < 0) reject('标记不完整或版本未知，仅支持 v1');
+  if (end < start + homeStart.length) reject('结束标记必须位于开始标记之后');
+  const standalone = (offset, length) => {
+    const before = offset === 0 || text[offset - 1] === '\n' ||
+      (offset === 3 && content.subarray(0, 3).equals(Buffer.from([0xef, 0xbb, 0xbf])));
+    const after = text.slice(offset + length);
+    return before && (!after || after.startsWith('\n') || after.startsWith('\r\n'));
+  };
+  if (!standalone(start, homeStart.length) || !standalone(end, homeEnd.length)) reject('开始与结束标记必须各自独占一行');
+  return { start, end: end + homeEnd.length };
+}
+
+function homeNavigation(template, previous, filename) {
+  const replacement = homeBlock(template, path.join(templates, 'home.md'));
+  if (previous === null || createHash('sha256').update(previous).digest('hex') === legacyHomeSha256) return template;
+  const current = homeBlock(previous, filename);
+  return Buffer.concat([
+    previous.subarray(0, current.start),
+    template.subarray(replacement.start, replacement.end),
+    previous.subarray(current.end),
+  ]);
+}
+
+// Home 只更新基础区；其他领域沿用固定导航。计划阶段没有写入。
 export function planPersistence(skills, project, fsOps = fs) {
   const domains = new Set(skills.map(skill => skill.domain));
   const entries = targets.filter(([domain]) => domains.has(domain)).map(([, template, directory]) => [
     directory + '/AGENTS.md',
-    () => fsOps.readFileSync(path.join(templates, template + '.md')),
+    previous => {
+      const content = fsOps.readFileSync(path.join(templates, template + '.md'));
+      return template === 'home' ? homeNavigation(content, previous, path.join(project, directory, 'AGENTS.md')) : content;
+    },
   ]);
   const ignoreRules = [];
   if (domains.has('dev')) ignoreRules.push('/.agents/dev/worktree/');

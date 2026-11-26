@@ -51,8 +51,10 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const selected = select(skills, [], names);
     if (!selected.length) throw new Error('请至少勾选一个技能。');
     ui.note(formatSummary(selected.map(skill => skill.name)), `${selected.length} 个技能`);
-    if (selected.some(skill => ['dev', 'system', 'ops', 'home'].includes(skill.domain))) {
-      ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；固定模板自动更新，业务记录保留，预览不写入。', '领域初始化');
+    const domains = [...new Set(selected.map(skill => skill.domain).filter(domain => ['dev', 'system', 'ops', 'home'].includes(domain)))].sort();
+    ui.note(domains.length ? domains.join('、') : '无；独立上游技能不初始化业务领域。', '本次最终涉及的领域');
+    if (domains.length) {
+      ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；Home 只更新基础区，区外内容保留；其他领域沿用固定模板。预览不写入。', '领域初始化');
     }
     if (selected.some(skill => skill.domain === 'dev' || skill.domain === 'system')) {
       ui.note('如缺少规则，将补项目根 .gitignore 的 /temp/ 默认规则，保留项目例外；运行附件目录按需创建。', '临时取证');

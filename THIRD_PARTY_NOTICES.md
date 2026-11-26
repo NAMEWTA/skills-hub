@@ -37,6 +37,7 @@
 - `system-herdr-core` 的运行版采用用户明确选用的触发条件，并增加客户端启动示例及按 Core 终端地址派发 task/report 的方法。许可原文与现有 Herdr Apache 2.0 文件字节相同。
 - ops 将调查、经验和只读观测方法适配到本领域的 registry、run、项目资料与实际工具能力。领域之间不因此产生自动安装依赖。
 - home 采用 Matt 的直接负责人、上下文指针、按主题组织知识和交接资料方法，将来源中常驻会话、固定回顾频率和整套开发链改为用户按需选择的项目协作；现行知识、历史和用户配置分别由所属技能维护。nanobot 的记忆方法适配为 `.agents/home/` 下的 Markdown，保留项目当地知识归属，不接入其全局工作区、私有 history.jsonl、游标或 Dream 运行时。具体来源和研究取舍见 [Home 来源](docs/home/sources.md)。
+- Home 入口与可选合作风格的组织参考 Agent Skills、OpenAI、Claude、Gemini、Grok、GitHub 的官方发现机制，以及 Orca 的生成/用户文件生命周期和 OpenClaw 的工作区职责划分。此轮新增模板、迁移逻辑和诊断由本项目实现，没有复制这些产品的源码或网页正文，也未新增第三方代码来源单元。研究版本和采用边界见 [Home 入口研究](docs/home/sources.md#入口与宿主研究)。
 - issue 初始化、分诊和复现修复保留 pstack 较早 [Benny 自动化资料](https://github.com/cursor/plugins/tree/6b0300214a09fd6029cfb7077043125758cd1fd2/pstack/automations/benny)的方法；通用来源接口和项目配置属于本地适配，原 Slack 分支保留其身份核对与回读要求。
 
 ## 独立中文上游技能

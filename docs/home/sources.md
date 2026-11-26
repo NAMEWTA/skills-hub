@@ -32,6 +32,23 @@ Matt 的新增 Home 采用关系附加到[已有清单](../../materials/mattpoco
 
 网站文章的许可不由关联代码仓推定。研究参考没有被当作整仓代码收录；后续若复制新的 source unit，先固定版本、保留原件与必要中文对照，再补运行映射和法律归属。不得因 Home 新增方法而刷新其他领域的共享快照。
 
+## 入口与宿主研究
+
+[Issue #21](https://github.com/NAMEWTA/skills-hub/issues/21) 固定了 2026-11-26 查阅的官方行为、现有源码差距与采用范围。此轮由本项目编写 Home 基础区模板、确定性迁移、诊断和知识入口方法；没有复制下列网页正文或新增上游代码单元。
+
+| 一手资料 | 已采用边界 |
+| --- | --- |
+| [Agent Skills 规范](https://agentskills.io/specification)、[OpenAI Skills](https://learn.chatgpt.com/docs/build-skills) | metadata、SKILL 和条件资源逐级读取；自有入口维持标准 frontmatter |
+| [OpenAI AGENTS](https://learn.chatgpt.com/docs/agent-configuration/agents-md)、[Memories](https://learn.chatgpt.com/docs/customization/memories) | 区分 root→cwd 指令发现和技能读取；Home 版本化正文是权威资料，原生 memory 仅辅助 |
+| [Claude Memory](https://code.claude.com/docs/en/memory)、[Skills](https://code.claude.com/docs/en/skills) | AGENTS 支持受版本与设置影响，`.agents/` 内的主入口仍需显式读取；复用 `.claude/skills` 链接 |
+| [Anthropic Context Engineering](https://www.anthropic.com/research/effective-context-engineering-for-ai-agents) | 轻量定位、按需读取、外部笔记与项目自治，不把所有历史塞进主入口 |
+| [Gemini 上下文文件](https://geminicli.com/docs/cli/gemini-md/)、[Skills](https://geminicli.com/docs/cli/skills/)、[Auto Memory](https://geminicli.com/docs/cli/auto-memory/) | 核验实际上下文入口，复用当前支持的项目 `.agents/skills` alias；实验性记忆不成为必需能力 |
+| [Grok Build 项目规则](https://docs.x.ai/build/features/project-rules)、[Skills](https://docs.x.ai/build/features/skills-plugins-marketplaces)、[Sessions](https://docs.x.ai/build/features/sessions) | 优先验证其声明的 Claude 兼容发现；用户级 `~/.agents/skills` 不被外推为项目级保证，恢复按真实协议 |
+| [GitHub 自定义能力](https://docs.github.com/en/copilot/reference/customization-cheat-sheet)、[指令支持矩阵](https://docs.github.com/en/copilot/reference/custom-instructions-support) | 记录实际 CLI/IDE/云端界面，不把支持表当成模型闭环证据 |
+| [Orca Bot Home 固定源码](https://github.com/stablyai/orca/blob/8f97cb210f601d8381a59589a3a97bc43b539a7e/src/main/bots/bot-home.ts)、[OpenClaw Workspace](https://docs.openclaw.ai/concepts/agent-workspace) | 借鉴生成区与用户资料的维护边界及可选风格职责；不照搬全文覆盖 AGENTS 或建立新的 USER/MEMORY 副本 |
+
+自然语言指针不等同于任何宿主的原生导入语法。宿主薄入口仅在实际选定、必要且已有接入授权时处理；默认不批量生成厂商文件。可移植根 AGENTS 和本机派生适配分别说明，后者换机后重新核验。实际验证等级见 [Home 验证](validation.md)，具体命令和版本保存在对应 Change。
+
 ## 维护入口
 
 - 业务职责和字段归属见[方法归属](method-ownership.md)。

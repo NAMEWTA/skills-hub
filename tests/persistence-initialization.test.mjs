@@ -13,6 +13,9 @@ const dev = ['dev', 'dev/changes', 'dev/notes', 'dev/deploy', 'dev/archive',
   .map(directory => `.agents/${directory}/AGENTS.md`).sort();
 const system = '.agents/system/AGENTS.md';
 const home = '.agents/home/AGENTS.md';
+const legacyHome = fs.readFileSync(path.join(repositoryRoot, 'tests/fixtures/home-entry-v0.1.35.md'));
+const homeStart = '<!-- skills-hub:home-entry:start v1 -->';
+const homeEnd = '<!-- skills-hub:home-entry:end -->';
 const tempRule = '/temp/';
 const worktreeRule = '/.agents/dev/worktree/';
 const homeRule = '/.agents/home/local.json';
@@ -67,8 +70,9 @@ for (const [label, args, expected] of [
       assert.equal(content, rules.join('\n') + '\n');
       continue;
     }
-    assert.match(content, /^# /);
-    assert.ok(Array.from(content.replace(/\s/gu, '')).length <= 400, file);
+    assert.match(content, /^# /m);
+    assert.ok(Array.from(content.replace(/\s/gu, '')).length <= (file === home ? 1600 : 400), file);
+    if (file === home) assert.ok(content.split('\n').length <= 80);
   }
 });
 
@@ -84,6 +88,8 @@ test('a second Claude link failure restores mixed domain navigation, ignore byte
   fs.mkdirSync(path.join(root, '.agents/dev/notes'), { recursive: true });
   fs.writeFileSync(path.join(root, '.agents/dev/notes/user.md'), 'Existing project knowledge.\n');
   fs.writeFileSync(path.join(root, '.agents/dev/AGENTS.md'), '# Previous managed navigation\n');
+  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
+  fs.writeFileSync(path.join(root, home), `# 用户的知识入口\r\n\r\n${homeStart}\n旧的基础说明\n${homeEnd}\n\n[约定](notes/policy.md)\n`);
   fs.writeFileSync(path.join(root, '.gitignore'), '\uFEFF# 本地规则\r\n/generated/');
   const previous = snapshot(root);
   let attempts = 0;
@@ -132,7 +138,7 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   fs.writeFileSync(dispatch, '# 当前宿主原生派遣\n');
   fs.writeFileSync(team, '# Home 项目负责人\n');
   const navigation = path.join(root, home);
-  fs.writeFileSync(navigation, '# 旧版 Home 导航\n');
+  fs.writeFileSync(navigation, legacyHome);
   success(run(root, 'install', '--domain', 'home'));
   assert.deepEqual(fs.readFileSync(navigation), fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md')));
   assert.deepEqual(fs.readFileSync(rootRules), originalRootRules);
@@ -151,7 +157,7 @@ test('home local defaults preserve explicit Git exceptions and leave business re
 for (const redirected of ['parent', 'file']) test(`link failure rollback does not follow a replaced persistence ${redirected}`, t => {
   const root = project(t);
   const outside = project(t);
-  const original = '# Previous managed Home navigation\n';
+  const original = legacyHome;
   fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
   fs.writeFileSync(path.join(root, '.agents/home/AGENTS.md'), original);
   fs.writeFileSync(path.join(outside, 'AGENTS.md'), '# Outside content must survive\n');
@@ -174,6 +180,110 @@ for (const redirected of ['parent', 'file']) test(`link failure rollback does no
   assert.deepEqual(snapshot(outside), previous);
   assert.equal(fs.readFileSync(path.join(root, 'moved-home-' + redirected, redirected === 'file' ? '' : 'AGENTS.md'), 'utf8'),
     fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md'), 'utf8'));
+});
+
+test('Home upgrades only its marked base block and preserves surrounding bytes and repeat mtime', t => {
+  const root = project(t);
+  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
+  const navigation = path.join(root, home);
+  const prefix = Buffer.from('\uFEFF# 用户的现行约定\r\n本文记录 skills-hub:home-entry: 的使用方法。\r\n\r\n');
+  const suffix = Buffer.concat([Buffer.from('\r\n\r\n## 知识入口\r\n[发布规则](notes/release.md)\r\n'), Buffer.from([0xff])]);
+  fs.writeFileSync(navigation, Buffer.concat([prefix, Buffer.from(`${homeStart}\r\n旧基础说明\r\n${homeEnd}`), suffix]));
+  const before = snapshot(root);
+  assert.match(success(run(root, 'install', '--skill', 'home-knowledge', '--dry-run')).stdout, /would update\s+\.agents\/home\/AGENTS\.md/);
+  assert.deepEqual(snapshot(root), before);
+  success(run(root, 'install', '--skill', 'home-knowledge'));
+  const template = fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md'));
+  const block = template.subarray(0, template.length - 1);
+  assert.equal(template[template.length - 1], 10, 'the installed base template has one final newline');
+  assert.deepEqual(fs.readFileSync(navigation), Buffer.concat([prefix, block, suffix]));
+  const mtime = fs.statSync(navigation, { bigint: true }).mtimeNs;
+  success(run(root, 'install', '--skill', 'home-knowledge'));
+  assert.equal(fs.statSync(navigation, { bigint: true }).mtimeNs, mtime);
+  assert.equal(fs.existsSync(path.join(root, 'AGENTS.md')), false);
+  assert.equal(fs.existsSync(path.join(root, '.agents/system')), false);
+});
+
+for (const [label, content] of [
+  ['unmarked user navigation', '# 我自己维护的 Home 入口\n'],
+  ['modified legacy template', Buffer.concat([legacyHome, Buffer.from('\n用户补充\n')])],
+  ['legacy with different line endings', legacyHome.toString('utf8').replaceAll('\n', '\r\n')],
+  ['missing end', `${homeStart}\n未闭合\n`],
+  ['missing start', `只有结尾\n${homeEnd}\n`],
+  ['unknown version', `<!-- skills-hub:home-entry:start v2 -->\n较新的格式\n${homeEnd}\n`],
+  ['duplicate blocks', `${homeStart}\nA\n${homeEnd}\n${homeStart}\nB\n${homeEnd}\n`],
+  ['nested blocks', `${homeStart}\n${homeStart}\nA\n${homeEnd}\n${homeEnd}\n`],
+  ['reversed markers', `${homeEnd}\nA\n${homeStart}\n`],
+  ['inline marker', `用户正文 ${homeStart}\nA\n${homeEnd}\n`],
+]) test(`Home ${label} stops the complete selected installation before any writes`, t => {
+  const root = project(t);
+  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
+  fs.writeFileSync(path.join(root, home), content);
+  fs.writeFileSync(path.join(root, 'AGENTS.md'), '# 根规则\n');
+  const before = snapshot(root);
+  for (const flags of [[], ['--dry-run'], ['--replace']]) {
+    const result = run(root, 'install', '--skill', 'home-setup', 'dev-intake', ...flags);
+    assert.equal(result.status, 1, result.stdout + result.stderr);
+    assert.match(result.stderr, /HOME_ENTRY_CONFLICT/);
+    assert.match(result.stderr, /home-knowledge/);
+    assert.deepEqual(snapshot(root), before);
+  }
+});
+
+test('selecting another domain neither validates nor repairs a conflicting Home entry', t => {
+  const root = project(t);
+  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
+  const navigation = path.join(root, home);
+  const content = '# 用户自有且未标记的 Home 导航\n';
+  fs.writeFileSync(navigation, content);
+  const mtime = fs.statSync(navigation, { bigint: true }).mtimeNs;
+  success(run(root, 'install', '--skill', 'system-inspect'));
+  assert.equal(fs.readFileSync(navigation, 'utf8'), content);
+  assert.equal(fs.statSync(navigation, { bigint: true }).mtimeNs, mtime);
+  assert.deepEqual(fs.readdirSync(path.dirname(navigation)), ['AGENTS.md']);
+});
+
+test('Home installation preserves old unselected domain navigation and business records', t => {
+  const root = project(t);
+  const domains = ['dev', 'ops', 'system'];
+  const previous = new Map();
+  for (const domain of domains) {
+    const directory = path.join(root, '.agents', domain);
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(path.join(directory, 'AGENTS.md'), `# ${domain} 用户导航\r\n`);
+    fs.writeFileSync(path.join(directory, 'existing.md'), '原有业务事实\n');
+    previous.set(domain, { bytes: snapshot(directory), mtime: fs.statSync(path.join(directory, 'AGENTS.md'), { bigint: true }).mtimeNs });
+  }
+  success(run(root, 'install', '--skill', 'home-workflow'));
+  for (const domain of domains) {
+    const directory = path.join(root, '.agents', domain);
+    assert.deepEqual(snapshot(directory), previous.get(domain).bytes);
+    assert.equal(fs.statSync(path.join(directory, 'AGENTS.md'), { bigint: true }).mtimeNs, previous.get(domain).mtime);
+  }
+  assert.deepEqual(fs.readdirSync(path.join(root, '.agents/skills')), ['home-workflow']);
+  assert.equal(fs.existsSync(path.join(root, 'AGENTS.md')), false);
+});
+
+test('a Home edit after the locked plan is not overwritten by installation or rollback', t => {
+  const root = project(t);
+  const navigation = path.join(root, home);
+  fs.mkdirSync(path.dirname(navigation), { recursive: true });
+  fs.writeFileSync(navigation, `${homeStart}\n旧基础说明\n${homeEnd}\n`);
+  const selected = createInstaller().catalog().filter(skill => skill.name === 'home-setup');
+  let expected;
+  const installer = createInstaller({ fsOps: { ...fs, cpSync(source, target, options) {
+    fs.cpSync(source, target, options);
+    if (!expected) {
+      fs.appendFileSync(navigation, '\n用户同时新增的决定\n');
+      expected = snapshot(root);
+      delete expected['.agents/.skills-wta-install.lock'];
+      delete expected['.agents/.skills-hub-install.lock'];
+      for (const relative of Object.keys(expected)) if (relative.startsWith('.agents/.skills-hub-stage-')) delete expected[relative];
+    }
+  } } });
+  assert.throws(() => installer.apply(selected, root), /rolled back.*安装目标在安装期间变化/);
+  assert.ok(expected);
+  assert.deepEqual(snapshot(root), expected);
 });
 
 test('system installation adds a default without rewriting user bytes on reinstall', t => {
@@ -445,6 +555,8 @@ test('generated navigation paths resolve relative to each AGENTS.md, including d
     ['home', './repos.json', 'home/repos.json'],
     ['home', './local.json', 'home/local.json'],
     ['home', './context/preferences.md', 'home/context/preferences.md'],
+    ['home', './context/profile.md', 'home/context/profile.md'],
+    ['home', './SOUL.md', 'home/SOUL.md'],
     ['home', './notes/index.md', 'home/notes/index.md'],
     ['home', './notes/', 'home/notes'],
     ['home', './inbox/', 'home/inbox'],
@@ -454,7 +566,6 @@ test('generated navigation paths resolve relative to each AGENTS.md, including d
     ['home', './history/', 'home/history'],
     ['home', './archive/history/', 'home/archive/history'],
     ['home', './relations.md', 'home/relations.md'],
-    ['home', './coordination/all.status.tsv', 'home/coordination/all.status.tsv'],
     ['home', './coordination/', 'home/coordination'],
   ]) {
     const parent = path.join(root, '.agents', directory);
