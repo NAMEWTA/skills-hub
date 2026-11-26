@@ -174,15 +174,24 @@ test('unmarked custom entry belongs to knowledge while its relative links resolv
 
 test('unreadable or nonregular main entry reports a concrete error without traversing its content', t => {
   const { root, file, write } = fixture(t);
+  const entryFile = fs.realpathSync(file('.agents/home/AGENTS.md'));
+  const before = fs.readFileSync(entryFile);
   const read = fs.readFileSync;
+  let deniedReads = 0;
   const mocked = t.mock.method(fs, 'readFileSync', (filename, ...args) => {
-    if (filename === file('.agents/home/AGENTS.md')) throw Object.assign(new Error('fixture denied'), { code: 'EACCES' });
+    if (filename === entryFile) {
+      deniedReads += 1;
+      throw Object.assign(new Error('fixture denied'), { code: 'EACCES' });
+    }
     return read(filename, ...args);
   });
   const denied = diagnoseHome(root);
+  assert.equal(deniedReads, 1, 'the actual canonical entry read must receive EACCES');
   assert.equal(denied.status, 'issues'); assert.equal(denied.complete, false);
-  assert.ok(denied.findings.some(item => item.code === 'HOME_ENTRY_UNREADABLE'));
+  assert.ok(denied.findings.some(item => item.code === 'HOME_ENTRY_UNREADABLE' && item.message.includes('EACCES')));
+  assert.equal(denied.checked.markdownFiles, 0);
   mocked.mock.restore();
+  assert.deepEqual(fs.readFileSync(entryFile), before);
   fs.unlinkSync(file('.agents/home/AGENTS.md'));
   write('.agents/home/AGENTS.md/private.md', '[不应进入](missing.md)\n');
   const directory = diagnoseHome(root);

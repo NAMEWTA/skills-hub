@@ -15,7 +15,7 @@
 | `npm run check:package` | 消费端下载依赖时 E403 | 实际 `npm pack` 可用；不能把现有 node_modules 当作 npm 消费端安装证据 |
 | `npm run check:upstream` | Archify validate/deliver/check 通过；browser-check 未执行成功 | `/usr/bin/chromium` 引用的 `/usr/lib/chromium/chromium` 不存在 |
 
-完整检查绑定暂存树 `8e62afd88306520876175238a4e4d3cf67dc70d1`。此后只补正式证据、来源尾部空行和发布记录；运行代码与包内技能没有改变。直接在工作目录第一次运行时，既有扫描器读到了 ignored temp 中解包后的 README/声明，因包不分发 docs/materials 而报告其源码链接；没有修改或绕过检查器。使用仓库 `withSnapshot` 导出精确暂存树，再在该干净目录运行原样 `npm run check:full`，实际退出 0。复制的 13 个现有依赖版本逐项与锁文件相符；这不是 `npm ci` 成功。
+完整检查绑定暂存树 `8e62afd88306520876175238a4e4d3cf67dc70d1`。首次推送前只补正式证据和来源尾部空行；后续 CI 修复及发布身份见 T8。直接在工作目录第一次运行时，既有扫描器读到了 ignored temp 中解包后的 README/声明，因包不分发 docs/materials 而报告其源码链接；没有修改或绕过检查器。使用仓库 `withSnapshot` 导出精确暂存树，再在该干净目录运行原样 `npm run check:full`，实际退出 0。复制的 13 个现有依赖版本逐项与锁文件相符；这不是 `npm ci` 成功。
 
 这些本机前提缺口交同一发布提交的 GitHub CI 补验，结果追加到 T8 与版本发布记录。过程原件在 `temp/dev/home-entry-knowledge/`：`full-clean-snapshot.log`、`full.log`、`statechart.log`、`package.log`、`upstream.log`；安装专项原件在 `temp/dev/2026-11-26-home-entry-knowledge/tasks/03-installer/final/node-test.log`。
 

@@ -37,3 +37,11 @@ node --test tests/home-doctor.test.mjs tests/home-cli-entry.test.mjs
 ## 验证边界
 
 本轮为当前 Linux/Node 环境的确定性工具验证。读取异常使用明确标记的 EACCES 注入，真实 symlink 已执行；不外推为所有平台权限状态。诊断结果只证明文件、标记和显式链接的结构，不证明知识真伪、项目功能、真实 CLI 自动发现或模型已读取。最终整合、真实宿主闭环和发布结果由对应任务报告。
+
+## macOS 发布门禁发现的测试夹具修正
+
+初次提交 `212f7f21e09ab2b354ebd3fd24b629d57a6fde0e` 的 [Release 验证](https://github.com/NAMEWTA/skills-hub/actions/runs/45802799825) 在 macOS 的上述 EACCES 场景失败：预期 issues，实际 clear-within-scope。检查代码发现测试按 `mkdtemp` 返回的原始临时路径匹配 mock，而 doctor 会先用 `fs.realpathSync` 规范化 Home 根；临时目录父路径存在别名时，两条字符串路径不同，注入没有命中。这个结果不能解释为真实 EACCES 被 doctor 忽略。
+
+修正仅影响测试：在注入前对已存在的入口文件取得 realpath，用真实路径匹配，增加“恰好一次命中 EACCES”的明确断言，并核对具体 finding 包含 EACCES、扫描 Markdown 数为零、原入口字节保持。原有 issues/complete=false 预期以及目录、实际 symlink 的非普通入口检查全部保留，没有跳过或削弱测试，也没有改产品运行代码。
+
+2026-11-26，当前 Linux/Node.js v24.22.3 实际重跑 `node --test tests/home-doctor.test.mjs tests/home-cli-entry.test.mjs`：22 通过、0 失败、0 跳过，测试总数不变；`git diff --check` 退出 0。过程原件为 `temp/dev/home-entry-knowledge/doctor-macos-fixture-fix.log`。macOS 修正后的实际结果仍需新提交的 CI 验证，不能从本机通过直接推定。
