@@ -95,12 +95,19 @@ function indexedPaths(root) {
 }
 
 function ignoreMatches(root, relativePaths) {
-  const input = [...new Set(relativePaths)].map(relative => `${relative}\0`).join('');
+  const pathsByQuery = new Map();
+  for (const relative of relativePaths) {
+    const directory = relative.endsWith('/') ? relative.slice(0, -1) : null;
+    // Git uses a trailing slash to check inside a directory, where its own ignore rules can apply.
+    const query = directory && entry(path.join(root, directory))?.isDirectory() ? directory : relative;
+    pathsByQuery.set(query, relative);
+  }
+  const input = [...pathsByQuery.keys()].map(query => `${query}\0`).join('');
   const output = git(root, ['check-ignore', '--no-index', '--verbose', '-z', '--stdin'], { input, accept: [0, 1] }).stdout.split('\0');
   const matches = new Map();
   for (let index = 0; index + 3 < output.length; index += 4) {
-    const [source, line, rule, relative] = output.slice(index, index + 4);
-    matches.set(relative, { source, line: Number(line), rule });
+    const [source, line, rule, query] = output.slice(index, index + 4);
+    matches.set(pathsByQuery.get(query), { source, line: Number(line), rule });
   }
   return matches;
 }
@@ -149,26 +156,31 @@ function writeIgnore(filename, before, after) {
   }
 }
 
-export function initGit(home, expected) {
-  const root = homeRoot(home);
-  const current = inspectGit(root);
+function inspectIndependentHome(home) {
+  const current = inspectGit(home);
   if (current.status === 'ancestor') fail('ANCESTOR_REPO', 'Home 位于另一 Git 工作树中，请先确认真正的仓库根。');
-  if (current.gitRoot) return current;
+  return current;
+}
+
+function updateGitScope(current, expected) {
   if (current.ignoreRevision !== expected) fail('STALE_IGNORE', '.gitignore 基线不符，请先运行 inspect。');
-  if (current.boundaries.length) {
+  if (!current.gitRoot && current.boundaries.length) {
     fail('HOME_BOUNDARY', `Home 待跟踪范围存在嵌套仓库、目录链接或特殊入口：${current.boundaries.join('、')}。`);
   }
+  if (current.gitRoot && current.ignoreState === 'managed') return current;
+
+  const root = current.homeRoot;
   const lock = path.join(root, '.home-git.lock');
   const descriptor = fs.openSync(lock, 'wx', 0o600);
   let ignoreWritten = false;
   try {
-    if (gitRoot(root)) fail('STALE_GIT', 'Git 工作树已变化，请重新检查。');
+    if (gitRoot(root) !== current.gitRoot) fail('STALE_GIT', 'Git 工作树已变化，请重新检查。');
     const filename = path.join(root, '.gitignore');
     const before = readIgnore(filename);
     if (revision(before) !== expected) fail('STALE_IGNORE', '.gitignore 已变化，请重新检查。');
     const { bytes } = ignorePlan(before);
     if (!before?.equals(bytes)) { writeIgnore(filename, before, bytes); ignoreWritten = true; }
-    git(root, ['init', '--template=', '-b', 'main']);
+    if (!current.gitRoot) git(root, ['init', '--template=', '-b', 'main']);
     return inspectGit(root);
   } catch (error) {
     if (ignoreWritten) error.message += ' 忽略规则已落盘，请先运行 inspect 再接续。';
@@ -179,15 +191,31 @@ export function initGit(home, expected) {
   }
 }
 
+export function initGit(home, expected) {
+  const current = inspectIndependentHome(home);
+  return current.gitRoot ? current : updateGitScope(current, expected);
+}
+
+export function applyScope(home, expected) {
+  const current = inspectIndependentHome(home);
+  if (!current.gitRoot) fail('GIT_REQUIRED', '请在已有的 Home Git 根使用 apply-scope。尚无 Git 时使用 init。');
+  return updateGitScope(current, expected);
+}
+
 export function main(argv = process.argv.slice(2)) {
   try {
     if (!argv.length || (argv.length === 1 && argv[0] === '--help')) {
-      console.log('git.mjs inspect --home HOME\ngit.mjs init --home HOME --expect-ignore REV\ninspect 只读；init 仅为无 Git 的 Home 配置范围并建立本地仓库。');
+      console.log('git.mjs inspect --home HOME\ngit.mjs init --home HOME --expect-ignore REV\ngit.mjs apply-scope --home HOME --expect-ignore REV\ninspect 只读。init 建立 Git 和跟踪范围。apply-scope 为已有 Home Git 根补齐跟踪范围。');
       return 0;
     }
     const [command, homeFlag, home, expectFlag, expected] = argv;
-    if (homeFlag !== '--home' || !home || home.startsWith('--') || !((command === 'inspect' && argv.length === 3) || (command === 'init' && argv.length === 5 && expectFlag === '--expect-ignore' && /^(?:absent|sha256:[a-f0-9]{64})$/u.test(expected)))) fail('USAGE', '请使用 --help 查看参数。');
-    const result = command === 'inspect' ? inspectGit(home) : initGit(home, expected);
+    const inspect = command === 'inspect' && argv.length === 3;
+    const update = ['init', 'apply-scope'].includes(command) && argv.length === 5 && expectFlag === '--expect-ignore' && /^(?:absent|sha256:[a-f0-9]{64})$/u.test(expected);
+    if (homeFlag !== '--home' || !home || home.startsWith('--') || !(inspect || update)) fail('USAGE', '请使用 --help 查看参数。');
+    let result;
+    if (inspect) result = inspectGit(home);
+    else if (command === 'init') result = initGit(home, expected);
+    else result = applyScope(home, expected);
     console.log(JSON.stringify(result, null, 2));
     return ['conflict', 'ancestor'].includes(result.status) ? 1 : 0;
   } catch (error) {

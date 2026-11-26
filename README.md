@@ -92,12 +92,12 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 
 ## 个人 Home Repo
 
-在自己的 Home 仓库安装 `home` 后，用 `home-setup` 初始化默认派遣方式和 Home team，已有 clone 原地登记。`home-workflow` 用所选方式创建项目负责人，`home-tasks` 保存直接任务、回执和项目状态。保存配置不会启动任务。
+在自己的 Home 仓库安装 `home` 后，用 `$home-setup 初始化 Home` 建立或补齐 Git 白名单、登记已有 clone，并设置默认派遣方式和 Home team。只发 `$home-setup` 会先检查状态，由用户选择操作。`home-workflow` 用所选方式派发任务，`home-tasks` 保存直接任务、回执和项目状态。
 
 Home 了解各项目基本背景和管理关系。涉及项目内部知识、代码、技能或验证时，由当地 Agent 进入实际项目读取和完成；项目可继续依当地规则派遣子 Agent。每层派遣记录归当地所选技能，Home 保留管理摘要与证据指针。Home 的现行知识、历史事件和当前执行状态各有明确位置，可由新会话读取普通 Markdown 接续。
 
 ```text
-使用 home-setup：初始化我的 Home，登记这些已有项目；默认用当前宿主原生派遣。
+使用 home-setup：初始化我的 Home，登记这些已有项目。默认用当前宿主原生派遣，每个项目安排一位负责人。
 使用 home-workflow：向项目 A 查询接口约定，让项目 B 验证兼容性，回报各自版本和证据。
 使用 home-tasks：查看项目 A 当前有哪些 Home 任务、哪些还在等派发。
 使用 home-history：查明当时为什么选择这个方案，再指出当前知识是否已经更正。

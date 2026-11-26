@@ -11,7 +11,7 @@ npx @namewta/skills-hub@latest install --domain home --dry-run
 npx @namewta/skills-hub@latest install --domain home
 ```
 
-随后显式调用 `home-setup` 初始化。它在独立 Home 根建立和检查本地 Git 跟踪范围，按已核实的路径与 Git 身份登记项目，并保存默认派遣方式和 team。已有 Home 可只补 Git 或只补派遣。仅维护知识或历史也可单选对应技能。
+随后用 `$home-setup 初始化 Home` 启动完整初始化。技能会建立或补齐 Home Git 白名单，按已核实的路径和 Git 身份登记指定项目，并保存已确认的默认派遣方式和 team。只发 `$home-setup` 时，先只读检查当前状态，再选完整初始化、项目登记、补 Git 或补派遣等操作。维护知识或历史也可单选对应技能。
 
 安装只建立 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。真实内容出现时再建登记、知识、历史或配置文件。根 `AGENTS.md` 由用户维护；不会生成其他宿主的指令、配置、hook 或 auto memory 设置。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
 
@@ -53,9 +53,9 @@ node .agents/skills/home-setup/scripts/restore.mjs --home . --apply
 
 先按本次指定或 Home 默认选择派遣方式，再按本次指定、方式关联、Home 默认的顺序选择 team。team 可针对准确 repo ID 指定项目负责人所用的 CLI、模型和推理强度。派遣方式和 team 各自保存，用户可以用同一方式配合不同 team。
 
-显式初始化未指定方式时，默认采用可确认的当前宿主原生派遣，并在每次执行时重新解析当前入口。未指定 team 时建立只有项目负责人一个角色的配置，未指定的参数沿实际工具默认。保存不启动任务，临时选择也不会回写长期偏好。
+显式初始化时沿用有效的已有选择或采用用户已指定的值。默认方式待定时，列出有依据的入口供用户选择。默认 team 待定时，可建议每个项目一位负责人，CLI、模型和推理强度沿用执行入口的默认值。确认后保存长期偏好，每次实际派遣时核验入口与参数。
 
-实际派遣前按所需能力核验执行入口、当前工作目录、所选设置和资源约束。多个项目共用一台主机、账号或额度时引用同一资源 owner；角色数不等于可同时运行的进程数，父子层也不能重复计入一份额度。
+team 表中的执行者数量按单个项目计算。实际派遣前核验执行入口、工作目录、项目占用和资源约束。多个项目或父子层共用主机、账号或额度时，沿用同一份预算和资源 owner。
 
 ## 多级协作怎样落地
 

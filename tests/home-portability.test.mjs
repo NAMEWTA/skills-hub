@@ -5,7 +5,7 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { initGit, inspectGit } from '../skills/home/home-setup/scripts/git.mjs';
+import { applyScope, initGit, inspectGit } from '../skills/home/home-setup/scripts/git.mjs';
 
 const installer = fileURLToPath(new URL('../install.mjs', import.meta.url));
 const gitTool = fileURLToPath(new URL('../skills/home/home-setup/scripts/git.mjs', import.meta.url));
@@ -89,11 +89,13 @@ test('ancestor and embedded Git roots are refused, while existing scope conflict
   fs.mkdirSync(nested);
   assert.equal(inspectGit(nested).status, 'ancestor');
   assert.throws(() => initGit(nested, 'absent'), { code: 'ANCESTOR_REPO' });
+  assert.throws(() => applyScope(nested, 'absent'), { code: 'ANCESTOR_REPO' });
   assert.equal(fs.existsSync(path.join(nested, '.git')), false);
   const boundary = path.join(root, 'boundary');
   write(boundary, '.agents/home/notes.md', '# Home\n');
   project(path.join(boundary, '.agents/home'), 'subrepo');
   assert.throws(() => initGit(boundary, 'absent'), { code: 'HOME_BOUNDARY' });
+  assert.throws(() => applyScope(boundary, 'absent'), { code: 'GIT_REQUIRED' });
   assert.equal(fs.existsSync(path.join(boundary, '.gitignore')), false);
 
   const home = path.join(root, 'scope');
@@ -109,6 +111,71 @@ test('ancestor and embedded Git roots are refused, while existing scope conflict
   assert.deepEqual(checked.trackedOutside.map(item => item.path), ['temp/home/log.md']);
   assert.deepEqual(fs.readFileSync(path.join(home, '.git/index')), index);
   assert.deepEqual(fs.readFileSync(path.join(home, '.gitignore')), ignore);
+});
+
+test('apply-scope hides embedded projects in an existing Home with an empty index', t => {
+  const home = fixture(t);
+  git(home, 'init', '-b', 'existing-home');
+  const originalRules = '# 用户规则\r\n/temp/\r\n';
+  const ignoreFile = write(home, '.gitignore', originalRules);
+  const registryPath = '.agents/home/repos.json';
+  write(home, registryPath, '{"formatVersion":2,"repos":[]}\n');
+  const projects = ['alpha', 'beta'].map(name => {
+    const cwd = project(home, name);
+    const indexFile = path.join(cwd, '.git/index');
+    return { name, cwd, head: git(cwd, 'rev-parse', 'HEAD'), indexFile, index: fs.readFileSync(indexFile) };
+  });
+  write(projects[1].cwd, '.gitignore', '*\n');
+  const before = inspectGit(home);
+  assert.equal(before.ignoreState, 'unmanaged');
+  const status = () => git(home, 'status', '--porcelain', '--untracked-files=normal').split('\n');
+  const beforeStatus = status();
+  for (const { name } of projects) {
+    assert.ok(beforeStatus.includes(`?? ${name}/`));
+    assert.ok(before.exposed.includes(`${name}/`));
+  }
+  assert.deepEqual(initGit(home, before.ignoreRevision), before);
+  assert.equal(fs.readFileSync(ignoreFile, 'utf8'), originalRules);
+
+  const applied = JSON.parse(run(home, process.execPath, [gitTool, 'apply-scope', '--home', '.', '--expect-ignore', before.ignoreRevision]));
+  assert.equal(applied.status, 'ready');
+  assert.equal(applied.ignoreState, 'managed');
+  assert.deepEqual(applied.tracked, []);
+  assert.deepEqual(applied.staged, []);
+  assert.equal(applied.head, null);
+  assert.ok(applied.trackable.includes(registryPath));
+  assert.deepEqual(status(), ['?? .agents/', '?? .gitignore']);
+  assert.equal(git(home, 'symbolic-ref', '--short', 'HEAD'), 'existing-home');
+  for (const { cwd, head, indexFile, index } of projects) {
+    assert.equal(git(cwd, 'rev-parse', 'HEAD'), head);
+    assert.deepEqual(fs.readFileSync(indexFile), index);
+  }
+  const rules = fs.readFileSync(ignoreFile, 'utf8');
+  assert.ok(rules.endsWith(originalRules));
+  assert.throws(() => applyScope(home, before.ignoreRevision), { code: 'STALE_IGNORE' });
+  assert.deepEqual(applyScope(home, applied.ignoreRevision), applied);
+  assert.equal(fs.readFileSync(ignoreFile, 'utf8'), rules);
+});
+
+test('apply-scope reports custom rule and index conflicts in an existing Home', t => {
+  const home = fixture(t);
+  git(home, 'init', '-b', 'main');
+  const ignoreFile = write(home, '.gitignore', '!/visible-project/\n');
+  project(home, 'visible-project');
+  project(home, 'staged-project');
+  git(home, '-c', 'advice.addEmbeddedRepo=false', 'add', '--', 'staged-project');
+  const indexFile = path.join(home, '.git/index');
+  const index = fs.readFileSync(indexFile);
+  const before = inspectGit(home);
+  const applied = JSON.parse(run(home, process.execPath, [gitTool, 'apply-scope', '--home', '.', '--expect-ignore', before.ignoreRevision], 1));
+
+  assert.equal(applied.status, 'conflict');
+  assert.deepEqual(applied.exposed, ['visible-project/']);
+  assert.equal(applied.exposedRules[0].rule, '!/visible-project/');
+  assert.deepEqual(applied.trackedOutside, [{ mode: '160000', path: 'staged-project' }]);
+  assert.ok(fs.readFileSync(ignoreFile, 'utf8').endsWith('!/visible-project/\n'));
+  assert.deepEqual(fs.readFileSync(indexFile), index);
+  assert.deepEqual(applyScope(home, applied.ignoreRevision), applied);
 });
 
 test('an init failure after writing ignore rules can be retried from the actual persisted revision', t => {

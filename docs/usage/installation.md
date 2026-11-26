@@ -133,7 +133,7 @@ npx @namewta/skills-hub@latest install --domain home
 
 安装只处理选中技能本体、同仓 Claude 入口、`.agents/home/AGENTS.md` 与本机映射默认忽略项。不创建 repos.json、用户背景与偏好、团队配置、知识、候选、历史、协调记录、clone 或 worktree，也不遍历子项目安装其他领域。
 
-安装后显式调用 `home-setup` 初始化用户选定的 Home。根 `AGENTS.md` 的薄导航由 setup 在已有授权内合并，用户资料按需建立。已保存完整技能本体的 Home 克隆可直接调用同仓恢复工具。更新 Home 技能保留业务资料。 [Home 说明](../home/overview.md)
+安装后用 `$home-setup 初始化 Home` 初始化用户选定的 Home。只发 `$home-setup` 会先检查状态并询问操作范围。根 `AGENTS.md` 的薄导航由 setup 在已有授权内合并，用户资料按需建立。已保存完整技能本体的 Home 克隆可直接调用同仓恢复工具。更新 Home 技能保留业务资料。 [Home 说明](../home/overview.md)
 
 ## 独立 ops 领域
 

@@ -7,9 +7,12 @@
 ```sh
 node <本技能目录>/scripts/git.mjs inspect --home "<Home 根>"
 node <本技能目录>/scripts/git.mjs init --home "<Home 根>" --expect-ignore "<ignoreRevision>"
+node <本技能目录>/scripts/git.mjs apply-scope --home "<Home 根>" --expect-ignore "<ignoreRevision>"
 ```
 
-`init` 在尚无 Git 的独立 Home 根写入独立管理段，再建立 `main`。原有忽略规则保留在管理段后，后置例外以 Git 实际判定为准。已有精确 Git 根只读核验；若用户明确要求修复，先检查其既有规则和索引，再处理具体冲突。位于祖先仓库内时先确认真正的 Home 根。遇到权限、基线变化或部分失败时重跑 `inspect`，从实际状态接续。工具仅写本地 Git 元数据和忽略规则。暂存、提交、远端配置和同步按用户指令操作。
+完整初始化或明确补 Git 时，根据 `inspect` 选择操作。尚无 Git 时用 `init` 写入白名单并建立 `main`。已有精确 Git 根时检查 `ignoreState`，值为 `absent` 或 `unmanaged` 时用 `apply-scope` 补规则。`init` 对已有 Git 根仍只读。位于祖先仓库内时先确认真正的 Home 根。
+
+`apply-scope` 使用刚读到的 `ignoreRevision`，仅写 Home 根 `.gitignore`。原有规则保留在白名单段之后，后置规则仍按 Git 的匹配结果生效。已有完整标记段时只复查。用返回的修订判断规则是否落盘，用 `exposed`、`exposedRules` 和 `trackedOutside` 报告仍被放行或已纳入索引的目录和文件。遇到权限、基线变化或部分失败时重跑 `inspect`，从实际状态接续。暂存、提交、远端配置和同步按用户指令操作。
 
 | 默认范围 | 文件 |
 | --- | --- |
@@ -18,7 +21,7 @@ node <本技能目录>/scripts/git.mjs init --home "<Home 根>" --expect-ignore 
 
 正式资料按用途判断，Home 的候选、派遣记录、回执、知识、历史、归档、索引和状态 TSV 均可入库。执行日志、截图、录像和临时输出放执行仓库根的 `temp/`，Home 执行原件可用 `temp/home/`。随技能发布并实际需要的图片等资产随技能本体保存。核对各领域自己的本机文件和凭据约定，必要时给其准确路径加规则。检查尤其容易和正式资料混淆的 `env.md`。已有项目的 Git 根、worktree 入口或目录链接是扫描边界。报告被放行或已在索引中的排除项，按授权处理实际冲突，保留项目文件。
 
-检查 `trackable`、`tracked`、`staged`、`head`、`blockedBaseline`、`exposed` 与 `trackedOutside`，按实际结果区分可跟踪、已暂存或已有提交。`missingSkills` 表示基线还缺哪些 Home 技能入口。建基线时从已经选定的 `skills-hub` 来源补齐缺项并核对本体资源，沿用已验证的技能版本和用户定制。Home 提交同时标识资料和随仓技能版本。接入旧 Home 时查看历史、知识和任务是否存在只能跳到旧机日志或会话的记录，按材料补全正式正文。能确认的事实和未能补齐的缺口分别写清。使用[根导航片段](../assets/home-navigation.md)合并换机入口。
+检查 `trackable`、`tracked`、`staged`、`head`、`blockedBaseline`、`exposed` 与 `trackedOutside`，按实际结果区分可跟踪、已在索引、已暂存和已有提交。`git status --short` 中的 `??` 表示未忽略的未跟踪路径。`missingSkills` 表示基线还缺哪些 Home 技能入口。建基线时从已经选定的 `skills-hub` 来源补齐缺项并核对本体资源，沿用已验证的技能版本和用户定制。Home 提交同时标识资料和随仓技能版本。接入旧 Home 时查看历史、知识和任务是否存在只能跳到旧机日志或会话的记录，按材料补全正式正文。能确认的事实和未能补齐的缺口分别写清。使用[根导航片段](../assets/home-navigation.md)合并换机入口。
 
 ## 新机克隆后使用
 
