@@ -108,8 +108,11 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   fs.mkdirSync(path.join(root, '.agents/home/context'), { recursive: true });
   const local = path.join(root, '.agents/home/local.json');
   const preferences = path.join(root, '.agents/home/context/preferences.md');
+  const rootRules = path.join(root, 'AGENTS.md');
+  const originalRootRules = Buffer.from('# 用户的根规则\r\n');
   fs.writeFileSync(local, '{"formatVersion":1,"paths":{}}\n');
   fs.writeFileSync(preferences, '# 用户明确保存的设置\n');
+  fs.writeFileSync(rootRules, originalRootRules);
   const original = '\uFEFF# Keep the explicitly selected mapping\r\n!/.agents/home/local.json\r\n';
   fs.writeFileSync(path.join(root, '.gitignore'), original);
   success(run(root, 'install', '--skill', 'home-setup'));
@@ -118,6 +121,7 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   assert.equal(git('check-ignore', '--quiet', '.agents/home/local.json').status, 1);
   assert.equal(fs.readFileSync(local, 'utf8'), '{"formatVersion":1,"paths":{}}\n');
   assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
+  assert.deepEqual(fs.readFileSync(rootRules), originalRootRules);
   for (const file of ['repos.json', 'repos.md', 'relations.md', 'context/dispatch', 'context/team', 'notes', 'inbox', 'history', 'coordination']) {
     assert.equal(fs.existsSync(path.join(root, '.agents/home', file)), false, file);
   }
@@ -127,11 +131,21 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   fs.mkdirSync(path.dirname(team));
   fs.writeFileSync(dispatch, '# 当前宿主原生派遣\n');
   fs.writeFileSync(team, '# Home 项目负责人\n');
+  const navigation = path.join(root, home);
+  fs.writeFileSync(navigation, '# 旧版 Home 导航\n');
   success(run(root, 'install', '--domain', 'home'));
+  assert.deepEqual(fs.readFileSync(navigation), fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md')));
+  assert.deepEqual(fs.readFileSync(rootRules), originalRootRules);
   assert.equal(fs.readFileSync(dispatch, 'utf8'), '# 当前宿主原生派遣\n');
   assert.equal(fs.readFileSync(team, 'utf8'), '# Home 项目负责人\n');
   assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
   assert.equal(fs.readFileSync(path.join(root, '.gitignore'), 'utf8'), expected);
+
+  fs.unlinkSync(navigation);
+  success(run(root, 'install', '--skill', 'home-setup'));
+  assert.deepEqual(fs.readFileSync(navigation), fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md')));
+  assert.deepEqual(fs.readFileSync(rootRules), originalRootRules);
+  assert.equal(fs.readFileSync(preferences, 'utf8'), '# 用户明确保存的设置\n');
 });
 
 for (const redirected of ['parent', 'file']) test(`link failure rollback does not follow a replaced persistence ${redirected}`, t => {
@@ -413,7 +427,7 @@ test('filling missing records for unchanged skills holds both installer locks', 
 
 test('generated navigation paths resolve relative to each AGENTS.md, including deep archives', t => {
   const root = project(t);
-  success(run(root, 'install', '--skill', 'dev-intake', 'system-inspect'));
+  success(run(root, 'install', '--skill', 'dev-intake', 'system-inspect', 'home-setup'));
   for (const [directory, relative, target] of [
     ['dev', './changes/', 'dev/changes'],
     ['dev', '../system/', 'system'],
@@ -428,6 +442,20 @@ test('generated navigation paths resolve relative to each AGENTS.md, including d
     ['dev/archive/changes/implemented', '../../../notes/', 'dev/notes'],
     ['dev/archive/changes/rejected', '../../../notes/', 'dev/notes'],
     ['system', '../dev/', 'dev'],
+    ['home', './repos.json', 'home/repos.json'],
+    ['home', './local.json', 'home/local.json'],
+    ['home', './context/preferences.md', 'home/context/preferences.md'],
+    ['home', './notes/index.md', 'home/notes/index.md'],
+    ['home', './notes/', 'home/notes'],
+    ['home', './inbox/', 'home/inbox'],
+    ['home', './archive/notes/', 'home/archive/notes'],
+    ['home', './exclusions.md', 'home/exclusions.md'],
+    ['home', './history/index.md', 'home/history/index.md'],
+    ['home', './history/', 'home/history'],
+    ['home', './archive/history/', 'home/archive/history'],
+    ['home', './relations.md', 'home/relations.md'],
+    ['home', './coordination/all.status.tsv', 'home/coordination/all.status.tsv'],
+    ['home', './coordination/', 'home/coordination'],
   ]) {
     const parent = path.join(root, '.agents', directory);
     assert.ok(fs.readFileSync(path.join(parent, 'AGENTS.md'), 'utf8').includes('`' + relative + '`'), directory + ': ' + relative);
@@ -435,6 +463,7 @@ test('generated navigation paths resolve relative to each AGENTS.md, including d
   }
   // A navigation entry for on-demand knowledge must not create empty business directories.
   assert.equal(fs.existsSync(path.join(root, '.agents/dev/notes/context')), false);
+  assert.deepEqual(fs.readdirSync(path.join(root, '.agents/home')), ['AGENTS.md']);
 });
 
 test('initialization ownership is the installer, not an installed skill', t => {

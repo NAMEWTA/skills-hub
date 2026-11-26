@@ -21,7 +21,7 @@ node <本技能目录>/scripts/git.mjs apply-scope --home "<Home 根>" --expect-
 
 正式资料按用途判断，Home 的候选、派遣记录、回执、知识、历史、归档、索引和状态 TSV 均可入库。执行日志、截图、录像和临时输出放执行仓库根的 `temp/`，Home 执行原件可用 `temp/home/`。随技能发布并实际需要的图片等资产随技能本体保存。核对各领域自己的本机文件和凭据约定，必要时给其准确路径加规则。检查尤其容易和正式资料混淆的 `env.md`。已有项目的 Git 根、worktree 入口或目录链接是扫描边界。报告被放行或已在索引中的排除项，按授权处理实际冲突，保留项目文件。
 
-检查 `trackable`、`tracked`、`staged`、`head`、`blockedBaseline`、`exposed` 与 `trackedOutside`，按实际结果区分可跟踪、已在索引、已暂存和已有提交。`git status --short` 中的 `??` 表示未忽略的未跟踪路径。`missingSkills` 表示基线还缺哪些 Home 技能入口。建基线时从已经选定的 `skills-hub` 来源补齐缺项并核对本体资源，沿用已验证的技能版本和用户定制。Home 提交同时标识资料和随仓技能版本。接入旧 Home 时查看历史、知识和任务是否存在只能跳到旧机日志或会话的记录，按材料补全正式正文。能确认的事实和未能补齐的缺口分别写清。使用[根导航片段](../assets/home-navigation.md)合并换机入口。
+检查 `trackable`、`tracked`、`staged`、`head`、`blockedBaseline`、`exposed` 与 `trackedOutside`，按实际结果区分可跟踪、已在索引、已暂存和已有提交。`git status --short` 中的 `??` 表示未忽略的未跟踪路径。`missingSkills` 表示基线还缺哪些 Home 技能入口。建基线时从已经选定的 `skills-hub` 来源补齐缺项并核对本体资源，沿用已验证的技能版本和用户定制。Home 提交同时标识资料和随仓技能版本。接入旧 Home 时查看历史、知识和任务是否存在只能跳到旧机日志或会话的记录，按材料补全正式正文。能确认的事实和未能补齐的缺口分别写清。
 
 ## 新机克隆后使用
 

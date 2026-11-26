@@ -13,7 +13,7 @@ npx @namewta/skills-hub@latest install --domain home
 
 随后用 `$home-setup 初始化 Home` 启动完整初始化。技能会建立或补齐 Home Git 白名单，按已核实的路径和 Git 身份登记指定项目，并保存已确认的默认派遣方式和 team。只发 `$home-setup` 时，先只读检查当前状态，再选完整初始化、项目登记、补 Git 或补派遣等操作。维护知识或历史也可单选对应技能。
 
-安装只建立 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。真实内容出现时再建登记、知识、历史或配置文件。根 `AGENTS.md` 由用户维护；不会生成其他宿主的指令、配置、hook 或 auto memory 设置。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
+安装任一 Home 技能都会建立或补齐 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。初始化和日常使用都先读领域导航，再按任务读取登记、知识、历史或配置。根 `AGENTS.md` 由用户维护；不会生成其他宿主的指令、配置、hook 或 auto memory 设置。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
 
 ## 从已提交的 Home 换机
 
@@ -79,7 +79,7 @@ flowchart TD
 
 每层管理自己的直接子任务。实际方法提供投递、会话和恢复证据。Home 用 `home-tasks` 记录它直接派出的业务任务、回执和占用。项目 A 同时是上层执行者和当地派发者时，上层回执与当地子任务分属各自 owner。
 
-若用户明确选择 `system-herdr-core`，每个需要自行派遣的仓库都读取当地安装的同名技能，并沿用它的协议、记录与恢复方式。Home 不复制该方法、不创建第二套会话清单，也不通过中央技能路径替代项目自己的安装。缺少所选方法或 CLI 时报告缺口，不能悄悄换工具。
+Home 从 `./.agents/home/context/preferences.md` 跟随相对链接读取派遣方式和 team。每个需要自行派遣的项目按当地配置定位入口，沿用所选方法的投递、记录与恢复协议。入口不可用时报告具体缺项，并由用户选择替代方式。
 
 每个业务任务一个主题。一次派给多个项目仍是一条 `task_序号.md`，每次回复另存 `report_序号.md`。主题的 `status.tsv` 按派发消息列出各项目状态，全局 `all.status.tsv` 按主题列出项目与结论。同项目另一主题仍占用时可以先记录，空闲项目可先接收独立部分。Home 验收项目交付或确认取消后释放占用。详细用法见 [Home 派遣记录](../../skills/home/home-tasks/SKILL.md)。
 

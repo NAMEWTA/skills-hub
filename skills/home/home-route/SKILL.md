@@ -1,6 +1,6 @@
 ---
 name: home-route
-description: 从 Home 仓库登记解析准确项目、别名或分组，核对实际 checkout、Git remote 身份、worktree、本机路径覆盖和资料入口。用于“项目在哪里”“用这个 worktree”“这个名字对应哪个仓库”；仅确认位置与身份，不读取项目内部知识或启动项目 Agent，登记变更由 home-setup 负责。
+description: 只读定位已登记项目，解析项目名、别名、分组、本机路径覆盖或指定 worktree。用于「项目在哪里」「这个名字指哪个仓库」「用这个 worktree」，核对实际 checkout、Git 远端身份和资料入口。更新登记用 home-setup，诊断已发现的结构异常用 home-doctor。
 ---
 
 # 定位项目与实际 checkout
@@ -11,7 +11,7 @@ description: 从 Home 仓库登记解析准确项目、别名或分组，核对�
 
 先读[路由与身份核查](references/routing.md)，再按当前意图执行：
 
-1. 取得明确 Home 根和用户所指 ID、别名或分组。读取登记及合法本机路径覆盖；准确 ID 优先，别名重名返回候选，不凭目录名或最近任务猜测。
+1. 从实际 Home 根读取 `./.agents/home/AGENTS.md`。按用户所指 ID、别名或分组读取登记及合法本机路径覆盖。准确 ID 优先，别名重名时返回候选，以登记和用户明确指定的目标核对身份。
 2. 按显式 checkout → local.json → 登记路径选择入口。核对真实路径、Git root、主 remote 和 common directory，支持 `.git` 为文件的 worktree；路径指向不同仓库时停止该目标。v2 按指定主 remote 的首 fetch URL 核验，其他 remote 的变动单独报告；旧 v1 沿用原身份规则。
 3. 只确认统一入口是否存在；项目资料引用只解析 `repo ID + checkout 内相对路径`，不读取正文或扫描项目知识。
 4. 将解析结果交回调用者。需要项目调查/开发时，由 `home-workflow` 按用户选择调用当地派遣方法；需要登记修改交 `home-setup`，结构异常交 `home-doctor`。
