@@ -23,9 +23,10 @@ node <本技能目录>/scripts/route.mjs --home "<Home 根>" --repo "<准确 ID 
 node <本技能目录>/scripts/route.mjs --home "<Home 根>" --repo "<ID>" --checkout "<实际 worktree>" --ref "<项目内相对路径>"
 node <本技能目录>/scripts/route.mjs --home "<Home 根>" --group "<明确分组>"
 node <本技能目录>/scripts/route.mjs --inspect "<接入前的既有 clone>" --expected-remote "<无秘密的 Git URL>"
+node <本技能目录>/scripts/route.mjs --home "<Home 根>" --check-fetch "<登记主 fetch URL>"
 ```
 
-工具使用 Node.js 22.14+ 和当前主机的 Git，只读 Git 元数据与文件入口。成功退出 0；输入/读取错误退出 2；缺项、歧义或身份冲突退出 3。分组结果可部分成功，调用者保留失败目标，不把已解析集合当成全部完成。
+工具使用 Node.js 22.14+ 和当前主机的 Git，只读 Git 元数据与文件入口。`--check-fetch` 供恢复前核对 Git 实际展开的 URL 身份，不联络远端。成功退出 0；输入/读取错误退出 2；缺项、歧义或身份冲突退出 3。分组结果可部分成功，调用者保留失败目标，不把已解析集合当成全部完成。
 
 ## 完成条件
 

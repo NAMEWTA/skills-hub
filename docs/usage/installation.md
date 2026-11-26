@@ -57,7 +57,7 @@ node /path/to/skills-hub/install.mjs install --domain dev
 | `list --domain dev` | 列出指定领域 |
 | `list --domain upstream-skills` | 列出独立上游中文技能 |
 | `install --domain dev system` | 安装所列领域的全部技能 |
-| `install --domain home` | 安装完整八个 Home 技能，建立同仓入口与 Home 最小导航 |
+| `install --domain home` | 安装完整 Home 技能域，建立同仓入口与 Home 最小导航 |
 | `install --domain upstream-skills` | 安装全部独立上游中文技能 |
 | `install --skill dev-spec system-proxy zh-archify` | 按完整安装名选择，允许跨组混选 |
 | `install --domain system --skill dev-learn` | 领域与技能选择取并集并去重 |
@@ -133,7 +133,7 @@ npx @namewta/skills-hub@latest install --domain home
 
 安装只处理选中技能本体、同仓 Claude 入口、`.agents/home/AGENTS.md` 与本机映射默认忽略项。不创建 repos.json、用户背景与偏好、团队配置、知识、候选、历史、协调记录、clone 或 worktree，也不遍历子项目安装其他领域。
 
-安装后按实际任务使用 `home-setup` 或 `home-workflow` 初始化用户选定的 Home Repo。根 `AGENTS.md` 的薄导航由 setup 在已有授权内合并，用户资料按需建立。更新 Home 技能保留业务资料；具体构建、配置、运营和多级派遣方法见 [Home 说明](../home/overview.md)。
+安装后显式调用 `home-setup` 初始化用户选定的 Home。根 `AGENTS.md` 的薄导航由 setup 在已有授权内合并，用户资料按需建立。已保存完整技能本体的 Home 克隆可直接调用同仓恢复工具。更新 Home 技能保留业务资料。 [Home 说明](../home/overview.md)
 
 ## 独立 ops 领域
 

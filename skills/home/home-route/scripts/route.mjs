@@ -64,6 +64,15 @@ export function normalizeRemote(value) {
   return { kind: 'network', host, port: port || null, repositoryPath: repoPath, transport, username: username || null, pathKind, identity };
 }
 
+function checkFetchUrl(home, url) {
+  const expected = normalizeRemote(url);
+  const effective = normalizeRemote(git(homePath(home), ['ls-remote', '--get-url', '--', url]));
+  if (expected.kind !== effective.kind || expected.identity !== effective.identity) {
+    fail('IDENTITY_CONFLICT', '主 fetch URL 经 Git 重写后的实际身份与登记不同。');
+  }
+  return { status: 'verified' };
+}
+
 function readJson(filename, optional = false) {
   if (optional && !exists(filename)) return undefined;
   if (exists(filename)) {
@@ -279,7 +288,7 @@ function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const key = argv[index];
     if (key === '--help') { options.help = true; continue; }
-    if (!['--home', '--repo', '--group', '--checkout', '--ref', '--inspect', '--expected-remote'].includes(key) || !argv[index + 1] || argv[index + 1].startsWith('--')) fail('USAGE', `未知或缺值参数：${key}`);
+    if (!['--home', '--repo', '--group', '--checkout', '--ref', '--inspect', '--expected-remote', '--check-fetch'].includes(key) || !argv[index + 1] || argv[index + 1].startsWith('--')) fail('USAGE', `未知或缺值参数：${key}`);
     if (options[key.slice(2)] !== undefined) fail('USAGE', `重复参数：${key}`);
     options[key.slice(2)] = argv[++index];
   }
@@ -290,7 +299,12 @@ export function main(argv = process.argv.slice(2)) {
   try {
     const options = parseArgs(argv);
     if (options.help) {
-      console.log('用法：node route.mjs --home HOME --repo ID或别名 [--checkout 路径] [--ref 相对路径]\n分组：--home HOME --group 组名；接入前：--inspect 路径 [--expected-remote URL]\n只读本机核查；远端须在用户指定且可达的实际主机运行，不启动 Agent。');
+      console.log('用法：node route.mjs --home HOME --repo ID或别名 [--checkout 路径] [--ref 相对路径]\n分组：--home HOME --group 组名；接入前：--inspect 路径 [--expected-remote URL]\n克隆前：--home HOME --check-fetch URL（只检查本机 URL 展开）\n只读本机核查；远端须在用户指定且可达的实际主机运行，不启动 Agent。');
+      return 0;
+    }
+    if (options['check-fetch']) {
+      if (!options.home || Object.keys(options).length !== 2) fail('USAGE', '--check-fetch 仅与 --home 一起使用。');
+      console.log(JSON.stringify(checkFetchUrl(options.home, options['check-fetch'])));
       return 0;
     }
     if (options.inspect) {

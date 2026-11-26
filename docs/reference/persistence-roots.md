@@ -91,6 +91,8 @@ registry、projects、runs、incidents、lessons 和可重建 index 按真实内
 
 Home 安装只建立导航和本机路径忽略规则。setup 按需写 `repos.json`、`local.json` 与 `context/`，显式初始化时在 `context/dispatch/` 和 `context/team/` 确定派遣方式与 Home team，在 `context/preferences.md` 保存两个独立的默认链接。项目登记地图默认只读生成，显式导出时才写派生 `repos.md`。map 写 `relations.md`，knowledge 写 `notes/` 等现行知识，history 写 `history/` 等历史。`home-tasks` 在 `coordination/<主题>/` 保存 Home 直接任务、回执和验收状态，用主题 `status.tsv` 和全局 `all.status.tsv` 展示状态。
 
+显式建立 Home Git 时，各领域正式资料和 `.agents/skills/` 本体可随 Home 提交。运行原件放执行仓库根的 `temp/`，Home 可用 `temp/home/`。正式正文保存使用结论、明白理由和接续工作需要的事实，换机时可脱离旧机原件阅读。项目 checkout 与本机配置继续按各自边界维护。换机恢复使用同仓 `home-setup` 入口。 [Home Git 方法](../home/overview.md#从已提交的-home-换机)
+
 项目内部知识由当地 Agent 读取维护。派遣技能的任务、回执、日志与当前执行状态留在相应协调仓库；它们不因上层是 Home 而改写原有目录或方法。跨 owner 的忘记请求明确范围、分别处理源资料和派生入口，不宣称 Git 历史、备份或宿主私有存储已一并删除。完整规则见 [Home 方法归属](../home/method-ownership.md)。
 
 ## 从早期 `.agents/wtadev/` 迁移

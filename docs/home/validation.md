@@ -29,6 +29,7 @@ Linux CI 另外在独立临时目录安装官方 `@anthropic-ai/claude-agent-sdk
 | 安装入口 | dry-run/list/help/version/取消零写入；真实 tarball 安装；链接包含所有资源，realpath 回到同仓本体；项目整体搬迁 |
 | Windows | 有权限时真实 dir symlink；权限不足时明确失败并恢复，不改用 junction 或复制 |
 | 单包使用 | 实际安装目录运行工具；资源闭包；缺少兄弟方法准确报告，不能借用源码外部文件 |
+| Home Git 与换机恢复 | 提交并克隆一份带技能本体的 Home；无旧机资料时可直接查正式历史、知识、任务；按真实登记恢复项目并核验身份、默认分支、完整远端和重复执行；子仓与本机资料保留在 Home 跟踪边界之外 |
 
 ## 真实组合验收
 

@@ -11,9 +11,19 @@ npx @namewta/skills-hub@latest install --domain home --dry-run
 npx @namewta/skills-hub@latest install --domain home
 ```
 
-随后显式调用 `home-setup` 初始化。可给出已有项目位置、默认派遣方式和默认 team。它核对路径与 Git 身份后原地登记。旧 Home 更新后再次显式调用 `home-setup` 补初始化；仅维护知识或历史也可单选对应技能，安装器不会补装其他包。
+随后显式调用 `home-setup` 初始化。它在独立 Home 根建立和检查本地 Git 跟踪范围，按已核实的路径与 Git 身份登记项目，并保存默认派遣方式和 team。已有 Home 可只补 Git 或只补派遣。仅维护知识或历史也可单选对应技能。
 
 安装只建立 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。真实内容出现时再建登记、知识、历史或配置文件。根 `AGENTS.md` 由用户维护；不会生成其他宿主的指令、配置、hook 或 auto memory 设置。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
+
+## 从已提交的 Home 换机
+
+Home 基线包含根导航、各领域正式资料和 `.agents/skills/` 的技能本体。项目 checkout、凭据、本机映射和运行原件各留原处。提交及同步按用户指令操作。新机克隆已提交的 Home 后，可立即阅读正式资料，或直接使用随仓技能查询历史、知识和任务。使用 Git 和 Node.js 22.14+ 恢复登记项目：
+
+```sh
+node .agents/skills/home-setup/scripts/restore.mjs --home . --apply
+```
+
+省略 `--apply` 可预览。已有匹配 checkout 原地复用，缺失项目从登记主远端的默认分支克隆。需要私有远端权限时使用新机自己的 Git 凭据。 [Home Git 方法](../../skills/home/home-setup/references/git.md)
 
 ## 项目登记与按需地图
 
@@ -28,7 +38,7 @@ npx @namewta/skills-hub@latest install --domain home
 | 目标 | 技能 | 可检查的结果 |
 | --- | --- | --- |
 | 组织项目派遣、处理依赖和验收直接交付 | `home-workflow` | 有范围的管理结果、实际交付与证据指针 |
-| 初始化 Home、登记项目、保存派遣方式或 team | `home-setup` | 项目身份、默认选择和环境观察 |
+| 初始化 Home Git、恢复登记项目、登记项目、保存派遣方式或 team | `home-setup` | Git 跟踪与逐项目恢复结果、项目身份、默认选择和环境观察 |
 | 查询项目占用、记录任务与回执、重建状态表 | `home-tasks` | 主题记录、项目状态与 TSV 视图 |
 | 定位项目，核验当前 checkout 和任务落点 | `home-route` | 实际路径、Git 身份、版本及有关缺口 |
 | 维护项目关系，确定受影响集合 | `home-map` | 有方向、来源和适用范围的关系 |
@@ -75,7 +85,7 @@ flowchart TD
 
 ## 项目知识与关系
 
-Home 可以保存单个项目的用途、负责人、基本背景、交付约束和管理决定，不要求知识必须横跨多个项目。项目内部架构、文档、SKILL 和代码则由进入实际项目的 Agent 读取。回报说明读取范围、相关版本、当前结论和未验证之处；Home 留必要摘要与指针。
+Home 可以保存单个项目的用途、负责人、基本背景、交付约束和管理决定。项目内部架构、文档、SKILL 和代码由进入实际项目的 Agent 读取。Home 正式正文写出需要使用的结论、观察、范围、有关版本、未验证之处与接续条件，让旧机原件缺席时仍可使用。来源与产物位置供进一步追溯。
 
 登记身份保留 Git host。同名 owner/repo 位于不同 host 时是不同身份；路径、别名和仓库身份也不是同一个字段。平级、内嵌、含中文或空格的路径以及 Git worktree 均以实际落点核验。进入另一个 cwd 不会把 Home 知识自动改成项目知识。
 

@@ -7,6 +7,7 @@
 | Home 任务分流、派遣协调、直接交付和主题验收 | home-workflow | 按选定方法投递、核查并交 `home-tasks` 保存结论 |
 | `coordination/` 主题、每轮 task/report、项目占用和 TSV 视图 | home-tasks | 记录 Home 直接任务，引用原派遣证据 |
 | `repos.json`、`local.json`、按需生成或显式导出的项目登记地图 | home-setup | route 只读定位，doctor 只读检查；`repos.md` 可缺省，变更交 setup |
+| Home Git 跟踪范围、基线与换机恢复登记项目 | home-setup | 用同仓技能读取正式资料，恢复时调用 route 核验项目身份 |
 | `context/profile.md`、`preferences.md`、`dispatch/`、`team/`、`environment.md` | home-setup | 保存独立的派遣方式、team、默认及明确关联 |
 | 实际路径、Git root/common dir、worktree、HEAD 与 remote 身份核验 | home-route | 按主 remote 首 fetch URL 核验，报告其他 remote 漂移；登记变更交 setup，不读取项目内部知识正文 |
 | `relations.md` 与基于项目证据的影响分析 | home-map | workflow/integrate 引用方向、边界和证据，不从登记分组推断关系 |
@@ -37,6 +38,6 @@ Home 默认只在用户定义的 Home 作用范围内生效。项目收到上层
 
 ## 安装与宿主
 
-安装器拥有完整本体、逐技能 Claude 兼容链接、固定导航及相关忽略规则。home-setup 处理业务资料；home-doctor 诊断实际结构。技能内容不依赖源码仓库的 `materials/`、`docs/` 或兄弟包内部路径。
+安装器负责部署完整本体、逐技能 Claude 兼容链接、固定导航及安装忽略规则。home-setup 维护业务资料、Home Git 范围和换机恢复。Home 提交可保存 `.agents/skills/` 本体，新机直接使用同仓技能。home-doctor 诊断实际结构。技能内容不依赖源码仓库的 `materials/`、`docs/` 或兄弟包内部实现。
 
 安装契约见[安装说明](../usage/installation.md)，实际宿主加载与执行能力须按[验证说明](validation.md)取得证据。
