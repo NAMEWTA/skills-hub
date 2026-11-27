@@ -128,6 +128,7 @@ Home 了解各项目基本背景和管理关系。涉及项目内部知识、代
 | --- | --- |
 | 浏览完整文档、理解项目结构 | [文档导航](docs/README.md)、[架构设计](docs/reference/architecture.md) |
 | 安装、升级、恢复备份或迁移旧包 | [安装说明](docs/usage/installation.md) |
+| 找回近期工作、复盘对话或查当前项目会话文件 | `dev-recall`、`dev-reflect` 和三宿主路径指引 `dev-session-history`，见[开发方法归属](docs/development/method-ownership.md) |
 | 组合开发技能，处理原型与交接 | [开发流程](docs/development/workflow.md)、[可交互原型](docs/development/prototype.md)、[开发交接](docs/development/handoff.md) |
 | 新建完整 Issue、更新正文或追加评论 | [Issue 撰写与维护](docs/development/issues.md) |
 | 构建、运营和管理个人 Home | [Home 说明](docs/home/overview.md)、[方法归属](docs/home/method-ownership.md) |
@@ -143,5 +144,3 @@ Home 了解各项目基本背景和管理关系。涉及项目内部知识、代
 ## 致谢与许可
 
 项目许可、第三方来源、贡献者归属与适用法律文本统一见[第三方声明](THIRD_PARTY_NOTICES.md)。
-
-按主题找回近期开发背景使用 `dev-recall`；复盘一次开发对话使用 `dev-reflect`。两者与防错技能共用 `dev-session-history` 提供的 Claude Code、Codex、Pi 本地会话定位方法。见[开发方法归属](docs/development/method-ownership.md)。

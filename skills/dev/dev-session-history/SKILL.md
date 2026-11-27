@@ -1,6 +1,6 @@
 ---
 name: dev-session-history
-description: 在当前或明确指定的项目内，定位并只读核验 Claude Code、Codex、Pi 的原生会话历史。用于查会话文件、确认会话与工作区归属，或为回忆、接续、反思、偏好提炼读取相关事件与来源指针。
+description: 查 Claude Code、Codex、Pi 的原生会话记录存在哪里，按会话 ID、项目目录或文件定位并只读核验 transcript，确认会话与工作区归属、读取相关消息或工具事件。也为回忆、接续、反思和偏好提炼提供历史来源指针。
 ---
 
 # 定位当前项目的会话

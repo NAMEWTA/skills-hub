@@ -1,3 +1,5 @@
 # 比对全部固定来源、中文对照与许可
 
-范围和通过条件见同 Change 的 #22 原文及 request.md。记录来源身份、改动位置、验证结果与剩余缺口。
+锁定 15 个来源的实际 SHA、模式与字节，比较候选快照和译文，复核 3 个 oncall 共用版本、删除旧映射及第三方声明。
+
+需求与验收出处见同 Change 的 [Issue 原件](../source/github-NAMEWTA-skills-hub-22/issue.json)及[补充要求](../source/github-NAMEWTA-skills-hub-22/request.md)。

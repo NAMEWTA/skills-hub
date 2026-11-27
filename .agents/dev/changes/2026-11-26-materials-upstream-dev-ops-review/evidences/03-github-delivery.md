@@ -1,3 +1,3 @@
-# 03 GitHub 交付证据
+# GitHub 交付
 
-未验证。材料内容与综合 Issue 已准备完毕；待创建分支/PR/Issue 并回读后，更新此证据。GitHub blob/tree 的准备不等于分支或 Issue 已发布。
+已回读 [Issue #22](https://github.com/NAMEWTA/skills-hub/issues/22) 和关联的 [PR #23](https://github.com/NAMEWTA/skills-hub/pull/23)。材料候选 43552f68 与主线 ac71b45 的集成由本 PR 交付。各平台验证范围见 [集成报告](22-integration.md)。
