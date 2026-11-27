@@ -21,7 +21,7 @@
 // 必须：检查 popover 之类的全局 DOM attribute 或 property 时，
 // 优先检查 HTMLElement.prototype，而非 window 或 document。
 if (!('popover' in HTMLElement.prototype)) {
-  // 用顶层 await 暂停所有导入本文件的模块， 
+  // 用顶层 await 暂停所有导入本文件的模块，
   // 直到 polyfill 完成下载和执行。
   await import('/path/to/popover-polyfill.js');
 }
@@ -33,7 +33,7 @@ export const polyfillLoaded = true;
 ```javascript
 // main.js
 
-// 必须：由于 conditionally-load-polyfill.js 使用顶层 await， 
+// 必须：由于 conditionally-load-polyfill.js 使用顶层 await，
 // 此导入会阻止 main.js 执行，直到 polyfill 准备就绪。
 import './conditionally-load-polyfill.js';
 

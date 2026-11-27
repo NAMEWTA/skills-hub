@@ -254,7 +254,7 @@ test("状态图显示 UTF-8 的 SANY 错误并保留原有输出边界", (t) => 
   const jar = path.join(folder, "fixture.jar");
   const output = path.join(folder, "chart");
   fs.writeFileSync(spec, "---- MODULE Example ----\n====\n");
-  fs.writeFileSync(path.join(folder, "Example.cfg"), "");
+  fs.writeFileSync(path.join(folder, "Example.cfg"), "INIT Init\nNEXT Next\n");
   fs.writeFileSync(jar, "");
   fs.writeFileSync(java, `
     const args = process.argv.slice(2);

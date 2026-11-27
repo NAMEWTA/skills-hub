@@ -67,7 +67,7 @@ container.addEventListener('scrollsnapchange', (event) => {
 页面加载时，浏览器可能恢复滚动位置，例如历史导航或锚点链接。`scrollsnapchange` 和 `scroll` 都不会自动触发。执行一次几何检查，同步 UI 与初始位置。
 
 ```javascript
-// 注意：要让 item.offsetLeft 相对于容器， 
+// 注意：要让 item.offsetLeft 相对于容器，
 // 容器必须是 offsetParent，例如设置 position: relative。
 const findClosestItemIndex = () => {
   // 中心距离算法假定项目使用 scroll-snap-align: center。
