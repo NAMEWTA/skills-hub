@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import { expect } from "./assertions.mjs";
-import {                  main, parseArgs } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/cli.mjs";
+import {                  main, parseArgs } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/cli.mjs";
 import { fakeReader, passingCheck } from "./fakes.test-helper.mjs";
-import { renderJson, renderPretty } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/render.mjs";
+import { renderJson, renderPretty } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/render.mjs";
 
-import { parsePrNumber } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/types.mjs";
+import { parsePrNumber } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/types.mjs";
 
 const silentIo = { stdout: () => {}, stderr: () => {} };
 

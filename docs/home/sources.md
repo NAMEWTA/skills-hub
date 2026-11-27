@@ -2,6 +2,15 @@
 
 本页区分实际采用的方法与研究参考。固定来源版本只由[材料父清单](../../materials/manifest.tsv)维护；逐文件原件、完整中文对照、Git blob 与运行路径见对应子清单。Home 运行包不依赖本页或 materials。
 
+## Dev 与 Home 的团队协作依据
+
+两个领域都用自然语言记录分工，按项目依赖、用户偏好与宿主能力组合方法。下列来源用于设计 team 模板。
+
+- 子任务完成后可以交回结果；也可以将下一阶段的责任和上下文移交给接手者。两者可以组合。[OpenAI Agents SDK](https://openai.github.io/openai-agents-js/guides/multi-agent/)
+- 工作可预先拆分，也可随调查结果动态分派。评审标准明确、反馈能改善结果时，可约定评审与修订循环。[Anthropic 工作流模式](https://www.anthropic.com/research/building-effective-agents)
+- 上下游有依赖时顺序执行，相互独立时可并行，重复步骤以条件结束。模板采用这些执行关系，具体调度交给可用宿主。[Google ADK 工作流](https://adk.dev/agents/workflow-agents/)
+- 多方调研先明确比较维度、证据来源和交付格式，由约定的人综合结论。额外参与者会消耗预算，服务内部的协作机制不决定项目角色。[Grok Multi Agent](https://docs.x.ai/developers/model-capabilities/text/multi-agent)
+
 ## 运行采用
 
 | 来源 | 已采用的方法 | 本项目适配 |

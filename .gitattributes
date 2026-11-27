@@ -1,2 +1,3 @@
 * text=auto eol=lf
 materials/**/*.txt -text -whitespace
+**/OASIS-SARIF-2.1.0-Errata01-NOTICES.html -text -whitespace

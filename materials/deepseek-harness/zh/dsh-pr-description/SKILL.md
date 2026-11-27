@@ -1,12 +1,12 @@
 ---
 name: dsh-pr-description
-description: 创建 deepseek-harness PR，或后续变化、已处理评审轮次后更新描述时使用。定义各描述章节、Issue 引用、测试设计、变更专用披露，以及 AI Usage 节的级别、阶段、评级规则、AI-DECLARATION 徽章及更新时间。
+description: 创建 deepseek-harness PR，或后续变化、已处理评审轮次后更新描述时使用。定义各描述章节、Issue 引用、模块职责与依赖边、测试设计、变更专用披露，以及 AI Usage 节的级别、阶段、评级规则、AI-DECLARATION 徽章及更新时间。
 user-invocable: false
 ---
 
 # 编写 PR 描述
 
-本技能定义 deepseek-harness PR 描述包含什么、如何写及何时更新。[PR 模板](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.github/pull_request_template.md)只提供章节标题及占位符；各节要求由本技能负责。所有 PR 描述均遵循本技能，包括绕过模板的 `gh pr create --body-file` 创建的 PR。
+本技能定义 deepseek-harness PR 描述包含什么、如何写及何时更新。[PR 模板](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.github/pull_request_template.md)只提供章节标题及占位符；各节要求由本技能负责。所有 PR 描述均遵循本技能，包括绕过模板的 `gh pr create --body-file` 创建的 PR。
 
 ## 范围
 
@@ -18,18 +18,64 @@ user-invocable: false
 
 依次使用四个二级标题：`## Motivation`、`## Changes`、`## Testing` 和 `## AI Usage`。
 
-固定章节标题及标签，如 **Interface changes**、**Behavior changes**、**Test design** 和 **Test entries**，用英文。表头及其余描述使用 PR 描述语言，除非人类要求其他语言，否则用中文。
+固定章节标题及标签，如 **Interface changes**、**Behavior changes**、**Module responsibilities and dependencies**、**Test design** 和 **Test entries**，用英文。表头及其余描述使用 PR 描述语言，除非人类要求其他语言，否则用中文。
 
 ### Motivation
 
 - 一句话说明问题。
-- 至少引用一个同仓库 Issue：解决它时用 `Fixes #N`、`Closes #N` 或 `Resolves #N`，只提供上下文时用 `Refs #N`。PR 编号不算 Issue 引用；HTML 注释、代码围栏或行内代码中的引用也不算。准确规则及 Priority 匹配由 [Issue 管理](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.github/issue-management/README.md)负责。
+- 至少引用一个同仓库 Issue：解决它时用 `Fixes #N`、`Closes #N` 或 `Resolves #N`，只提供上下文时用 `Refs #N`。PR 编号不算 Issue 引用；HTML 注释、代码围栏或行内代码中的引用也不算。准确规则及 Priority 匹配由 [Issue 管理](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.github/issue-management/README.md)负责。
 
 ### Changes
 
 - Interface changes：总结命令（包括仓库脚本）、标志、配置键、环境变量、公开导出、插件注册值、协议或持久化格式变化；没有则写 None。
 - Behavior changes：总结用户、模型、开发者或系统可观察的结果，包括默认值、性能、时机及输出；没有则写 None。README、AGENTS.md、技能等文档及 agent 指令变化，对其指导的读者是行为变化。
+- Module responsibilities and dependencies：按[模块职责与依赖](#模块职责与依赖)规定的形式，说明结构性变更涉及的每个包的职责，以及 PR 新增或移除的每条工作区包之间的运行时依赖。PR 不增删包、不增删工作区包之间的运行时依赖、也不在包之间移动职责时，写 None。
 - 只陈述差异保证、测试覆盖的行为。
+
+#### 模块职责与依赖
+
+评审者在读差异之前，通过这一项判断每个包是否只有一个职责，以及每条新增依赖是否必要。工作区包是 `pnpm-workspace.yaml` 列出的成员；使用其清单中的 `name`，去掉 `@deepseek-ai/` scope，名称可能与目录不同。这一项不是 None 时，依次包含三部分：
+
+1. **职责表**：PR 新增或移除的包、新增或移除依赖边的起点包，以及获得或失去职责的包，各占一行。列为包名、一句话职责，以及本 PR 对它做了什么：新增、移除、如何修改，或未改动但被依赖。角色相同且接受相同修改的包可以合为一行。PR 没有修改、仅作为新增边终点的包，如果其职责能解释为什么需要该边，就应列一行；`dsh-error` 等通用工具包可以省略。仅有组合边变化的包不单独列行。
+2. **依赖边**：列出 PR 新增或移除的每条工作区包之间的运行时依赖，使用 `A → B` 表示“A 依赖 B”，并标明新增或移除。边从差异中取得，绝不凭记忆：在 `git diff <base>...HEAD -- '*package.json'` 中，比较每个工作区包清单的 `dependencies`、`peerDependencies` 和 `optionalDependencies`。排除 `devDependencies`、测试夹具和模板的 `package.json`，以及对 `vendor/` 下包的依赖。可选 peer dependency 或 `optionalDependencies` 条目标为可选。一个条目可包含起点或终点相同的多条边，但每条边都要出现。bundle、app 或部署根仅挂载插件或将包纳入闭包的边，单列在组合条目中，因为它们不是运行时调用。列表末尾列出反向边检查：每条新增 `A → B` 都检查 B 的运行时依赖没有 A，然后声明所有新增边都没有反向边，或逐条列出存在反向边的情况。
+3. **调用流程**：在代码围栏中用三到六行伪代码展示跨包的主要调用路径。仅当 PR 新增或改变跨包调用时编写。
+
+依赖边涉及四个或更多包时，可在列表之后附 Mermaid `graph`，但图不能替代列表。
+
+根据 #8521 的清单、README 和调用点填写的示例：
+
+````markdown
+**Module responsibilities and dependencies**
+
+| 包 | 职责 | 本 PR 的变化 |
+|---|---|---|
+| `dsh-deepseek-auth` | `ctx.deepseekAuth`：在 API 密钥与账号登录之间选择，把凭据绑定到所属部署，给出请求头 | 新增 |
+| `dsh-llm-deepseek-api-key`、`dsh-llm-deepseek-account` | 注册各自的 DeepSeek 模型路由 | 用 `connect()` 登记自己的部署，用 `authorize()` 取请求头 |
+| `dsh-web-deepseek-api`、`dsh-web-search-deepseek` | Search / Fetch API 与 Messages 搜索 | 改为向 `ctx.deepseekAuth` 取凭据，不再自己读账号服务和模型路由配置 |
+| `dsh-sdk-jsonrpc-server` | SDK JSON-RPC 服务 | 组合里没有 `deepseekAuth` 时自己挂载它 |
+| `dsh-credentials`、`dsh-deepseek-account` | 凭据存取、账号登录 | 不变，被 `dsh-deepseek-auth` 读取 |
+
+依赖边：
+
+- 新增 `dsh-deepseek-auth → dsh-credentials`、`dsh-error`、`dsh-launch-environment`、`dsh-deepseek-account`（可选）
+- 新增 `dsh-llm-deepseek-api-key → dsh-deepseek-auth`、`dsh-llm-deepseek-account → dsh-deepseek-auth`
+- 新增 `dsh-web-deepseek-api → dsh-deepseek-auth`、`dsh-web-search-deepseek → dsh-deepseek-auth`
+- 新增 `dsh-sdk-jsonrpc-server → dsh-deepseek-auth`
+- 删除 `dsh-web-deepseek-api → dsh-deepseek-account`（可选）、`dsh-web-deepseek-api → dsh-launch-environment`
+- 删除 `dsh-web-search-deepseek → dsh-llm`
+- 组合：`dsh-base`、`dsh-sdk-minimal`、`dsh-python-runtime-closure` 新增 `dsh-deepseek-auth`
+- 反向边：无。`dsh-deepseek-auth` 的运行时依赖只有第一条中的四个包，不含任何新依赖它的包；这四个包都不依赖 `dsh-deepseek-auth`
+
+调用流程：
+
+```ts
+const authorization = await ctx.deepseekAuth.authorize({
+  consumer: 'my-plugin', accepts: ['account', 'api-key'], billing: 'auto',
+  route, destination: { path: '/v1/tools/search' },
+}, signal)
+await fetch(authorization.endpoint, { headers: authorization.headers, signal }) // 请求仍由使用方自己发
+```
+````
 
 ### Testing
 
@@ -58,10 +104,10 @@ PR 混合多种变更时，每种类型给一种形式。Changes 标为 None 的
 
 | 变化 | 描述说明什么 | 规则负责者 |
 |---|---|---|
-| 改变已有测试描述的行为 | 行为何以改变 | [根 AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/AGENTS.md) 的 Tests describe behavior 规则 |
-| 提高 `scripts/doc-budgets.manifest.json` 上限 | 每项提高的旧值、新值及文字必要性 | [字数预算](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md#wordcount-budgets) |
+| 改变已有测试描述的行为 | 行为何以改变 | [根 AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md) 的 Tests describe behavior 规则 |
+| 提高 `scripts/doc-budgets.manifest.json` 上限 | 每项提高的旧值、新值及文字必要性 | [字数预算](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md#wordcount-budgets) |
 | 改变产品用户可见 GUI 行为 | 嵌入演示 GIF，并在旁边给出 record-browser-gif 要求的披露；每项无 GIF 的 GUI 变化，说明未嵌入及原因 | [record-browser-gif](../record-browser-gif/SKILL.md#每个-gui-pr-都含-gif) |
-| 使用术语表未收录的译词 | 译法来源，或在待定术语下提出译法 | [翻译规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/i18n/translation-rules.md) |
+| 使用术语表未收录的译词 | 译法来源，或在待定术语下提出译法 | [翻译规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/i18n/translation-rules.md) |
 
 ## AI Usage
 
@@ -201,4 +247,4 @@ AI-DECLARATION 块固定规范版本 0.1.2。使用[章节格式](#章节格式)
 
 1. 写到 git 忽略的文件，如 `.artifacts/pr/body.md`。用 `gh pr create --body-file <file>` 创建，或 `gh pr edit <number> --body-file <file>` 更新；嵌入 GIF 时遵循 [record-browser-gif](../record-browser-gif/SKILL.md)，使用 `--attach`。
 2. 更新前，用 `gh pr view <number> --json body --jq .body` 保存现有描述，只改需要的章节：保留作者文字及媒体，仅替换已有 `ai-declaration` 块内容，删除不再匹配代码的陈述。若仍有旧 `## Human and Agent Roles`，将该标题及级别行替换为 `## AI Usage` 及声明块；只保留一个 AI Usage 节。
-3. 写完回读，确认四节齐全，AI Usage 匹配当前代码及评审状态，无旧 `## Human and Agent Roles` 节残留。
+3. 写完回读，确认四节齐全，Changes 中的依赖边匹配当前差异，AI Usage 匹配当前代码及评审状态，无旧 `## Human and Agent Roles` 节残留。

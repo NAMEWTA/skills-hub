@@ -47,11 +47,11 @@ disable-model-invocation: true
 
 pstack 为 Cursor 构建，也可通过 `/plugin marketplace add cursor/plugins` 与 `/plugin install pstack@cursor-plugins` 安装到 Claude Code。那里每条命令带 `pstack:` 前缀，例如 `/pstack:poteto-mode`。[Claude Code 适配器](../../docs/harness/claude-code.md) 映射 Cursor 名称；需要 Bugbot 或 Automations 等 Cursor 专属功能的步骤会跳过，并用一行说明。
 
-其他工具也能读取这些技能，因为它们使用 Agent Skills 格式。但 `/poteto-mode`、`/how`、`/why`、`/teach` 等大多数工作流技能会按角色模型启动 Cursor 子代理；Custom Modes 和 `/loop` 也是 Cursor 功能，因此这些部分可能不能在其他工具中运行。
+其他工具也可以读取这些技能，因为它们使用 Agent Skills 格式。但大多数工作流技能，包括 `/poteto-mode`、`/how` 和 `/teach`，会启动 Cursor 子代理，有些还会为不同角色指定模型；Custom Modes 和 `/loop` 也是 Cursor 功能，因此这些部分在其他工具中可能无法运行。
 
 ## 用 `/poteto-mode` 开始任务
 
-`/poteto-mode` 把任务匹配到一个操作流程，把其步骤复制到任务清单，并在需要时运行其他技能。跳过的步骤仍以 `skip: <reason>` 留在清单中。好的提示词说明目标及完成判据，不列技能清单，因为手工序列容易丢失或重排流程会保留的步骤。帮助组织提示词前先读 [`references/prompting.md`](references/prompting.md)。例子见[指南第 2 页](../../docs/guide/02-poteto-mode.md)。
+`/poteto-mode` 会为任务匹配 playbook，将 playbook 的步骤复制到待办清单，并在各步骤需要时调用其他技能。好的提示词会说明目标以及如何判断已经完成。无需列出技能，因为手写的技能序列容易遗漏或打乱 playbook 原本会保留的步骤。在帮助组织提示词前，先阅读 [`references/prompting.md`](references/prompting.md)。[指南第 2 页](../../docs/guide/02-poteto-mode.md)提供了示例。
 
 `/poteto-mode` 是否持续生效，取决于启动方式：
 
@@ -70,6 +70,7 @@ pstack 为 Cursor 构建，也可通过 `/plugin marketplace add cursor/plugins`
 | 严谨完成任何非平凡任务 | [`/poteto-mode`](../poteto-mode/SKILL.md) |
 | 开始前确认代理理解目标与问题 | [`/in-your-own-words`](../in-your-own-words/SKILL.md) |
 | 发送前深化提示词而不扩大范围：专业人士会增加什么、原始材料与方法是什么、外部如何核验；只返回提示词而不执行 | [`/sharpen`](../sharpen/SKILL.md) |
+| 学习描述所构建事物的专业词汇，包括相邻领域借用的术语，核验每个引用来源，并用这些词汇改写自己的描述 | [`/reframe`](../reframe/SKILL.md) |
 | 理解代码现在如何工作、新代码应放在哪里 | [`/how`](../how/SKILL.md) |
 | 理解代码为何如此组织、某个数字从哪里来 | [`/why`](../why/SKILL.md) |
 | 用简单语言理解改动或子系统 | [`/teach`](../teach/SKILL.md) |
@@ -108,16 +109,15 @@ pstack 为 Cursor 构建，也可通过 `/plugin marketplace add cursor/plugins`
 
 - `/how` 解释代码做什么，`/why` 解释理由，`/teach` 运行一个或两者，再用简单语言讲解结果。
 - `/arena` 给每个执行者同一简报并融合优点；`/swarm` 划分切片或竞速，返回一份报告。
-- `/architect` 确定设计后立即实施。要在写代码前审查设计，增加“with checkpoint”。
 - `/interrogate` 审查 diff；`/blast-radius` 查找 diff 以外的破坏，并证明让改动安全的关键事实。
 - `/recall` 从最近多次对话重建上下文；`/ketchup` 只覆盖本对话自用户上次消息以来的变化。恢复某个具体对话或分支使用 Session pickup 流程。
-- `/figure-it-out` 设计一次严谨执行；Orchestrate 流程协调跨多日、多 PR 的项目；Autonomous run 流程把单个任务推进到完成条件。
+- `/figure-it-out` 设计一次严谨的执行。Autonomous run playbook 将一项任务推进至其完成条件。
 
 pstack 未包含：
 
 - `/deslop`、`control-cli`、`control-ui` 来自 `cursor-team-kit` 插件。
 - `/loop` 和 `/create-skill` 是 Cursor 内置能力。
-- pstack 没有 `/orchestrate` 技能。Orchestrate 是 `/poteto-mode` 的操作流程。如果斜杠菜单出现 `/orchestrate`，它来自其他插件。
+- pstack 没有 `/orchestrate` 技能。如果斜杠菜单显示 `/orchestrate`，它来自另一个插件。
 
 ## 操作流程与原则
 
@@ -130,7 +130,7 @@ pstack 未包含：
 - “full autopilot on this queue”运行 Autopilot-full；“autopilot, don't merge”运行 Autopilot-stack。
 - “run the eval playbook”运行 Eval。
 
-未使用 `/poteto-mode` 时，“babysit this pr”可能启动 Cursor 自己的同类技能。[`poteto-mode`](../poteto-mode/SKILL.md) 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](../../docs/guide/06-verify-and-ship.md) 说明开启、跟进和落地 PR。
+不使用 `/poteto-mode` 时，“babysit this pr”之类的表述可能会启动 Cursor 自带的同类技能。[`poteto-mode`](../poteto-mode/SKILL.md) 的 Playbooks 部分列出了所有 playbook。[指南第 6 页](../../docs/guide/06-verify-and-ship.md)介绍如何创建、看护和合入 PR。
 
 pstack 没有规划技能，Cursor Plan Mode 可以配合使用。跨阶段或堆叠 PR 的工作，要求 `/poteto-mode` 制订计划会运行[多阶段计划流程](../poteto-mode/playbooks/multi-phase-plan.md)，只写计划而不实施。设计问题先通过 Prototype 流程或 `/architect` 用代码厘清。
 

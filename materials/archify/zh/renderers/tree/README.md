@@ -26,7 +26,9 @@ node archify/renderers/tree/render-tree.mjs input.tree.json output.html
 }
 ```
 
-节点包含 `id`、`label`，以及可选的 `parent`、`sublabel`、`collapsed`、`sources`。子节点按声明顺序读取。链接只表示包含关系；第一阶段实现不包含跨分支关系。
+节点具有 `id`、`label`，以及可选 `parent`、`sublabel`、`collapsed` 和 `sources`。子节点按声明顺序读取。每条链接连接父节点及其子节点。Schema 支持单一父节点，没有边标签。
+
+决策是严格层级时，把各结果的条件写进子节点标签，例如 `No matching provider: Exit 2`。保留来源中的精确条件。需要带标签的转换、汇合或循环时使用 [Workflow](../workflow/README.md)。
 
 <a id="structure-checks"></a>
 
@@ -45,13 +47,13 @@ node archify/renderers/tree/render-tree.mjs input.tree.json output.html
 
 ## 布局
 
-每一代共享一条带：`layout.direction: "down"`（默认）时是一行，`"right"` 时是一列。在另一轴上，每棵子树拥有一段连续范围，因此宽度或深度不一致的分支也不会重叠。父节点位于第一个和最后一个子节点的中间（若中间子节点距中点只有几个像素，则直接与它精确对齐，使主干不发生小折弯；绘边时，舍入后相差不超过 2px 的主干也会吸附对齐）；向右布局时，节点在各自列内左对齐。
+`layout.direction: "down"`（默认）时，每代共享一行；`"right"` 时共享一列。父节点居于首个与末个子节点之间。在没有堆叠列表的自动向下树中，相邻子树可在不同行复用横向空间。自动画布高于宽度的向右树，在空间允许时让各父节点与第一个子节点对齐，使读者从根开始再滚动。作者指定的 `meta.viewBox` 保留完整跨度布局和居中的父节点。
 
 向下布局时，连续三个或更多的叶子兄弟节点，会在父节点下方堆叠成缩进列表，共享同一宽度，并沿一条主干抵达，而不是横向扇出。这使仓库这样的真实层级能在一屏尺度内保持可读；更短的连续叶节点和每个分支仍保留行布局。叶子节点使用安静的卡片；根与分支承担色调强调。
 
 节点按 label 在 `layout.nodeW`（140）和 `layout.nodeMaxW`（向下 220，向右 200）之间调整尺寸。label 和 sublabel 按单词换行（CJK 可在任意字符处换行），选择保持相同行数的最窄宽度，使长标签形成均衡盒子；一个单词可以先把节点扩到 1.5 × `nodeMaxW`，再被拆开，因此不会截断任何内容。`gapX`／`gapY` 设置兄弟间距和代际间距。
 
-自动画布声明 `data-reader-fit="intrinsic-height"` 和 7.5px 的阅读器文字下限，因此深层向右树图会滚动，而不是缩小。
+自动画布请求 10px 的阅读器文本下限，但仍受可用宽度限制。较高的树可纵向滚动，以保持标签可读。
 
 <a id="expand-and-collapse"></a>
 

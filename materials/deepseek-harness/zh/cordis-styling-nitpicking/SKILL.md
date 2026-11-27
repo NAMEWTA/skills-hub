@@ -9,10 +9,10 @@ description: 用于 DeepSeek Harness Cordis 插件及其入口可达辅助函数
 
 ## 事实来源
 
-- [仓库约定](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/AGENTS.md)：Cordis 责任归属要求。
-- [生命周期与副作用](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cordis-tutorial/02-lifecycle-and-effects.md)：副作用获取与释放。
-- [服务](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cordis-tutorial/03-services.md)：依赖跟踪与服务可用性。
-- [防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/general.md)：达到静止状态后的拆除与必需完成监听器。
+- [仓库约定](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md)：Cordis 责任归属要求。
+- [生命周期与副作用](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cordis-tutorial/02-lifecycle-and-effects.md)：副作用获取与释放。
+- [服务](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cordis-tutorial/03-services.md)：依赖跟踪与服务可用性。
+- [防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/general.md)：达到静止状态后的拆除与必需完成监听器。
 
 ## 审查流程
 
@@ -38,7 +38,7 @@ description: 用于 DeepSeek Harness Cordis 插件及其入口可达辅助函数
 
 完成清理所需的任何服务调用或事件投递，都是生命周期依赖。在消费者结束前，实际资源及监听器必须保持可用，包括最终结果发布和持久写入。提供者的释放 Promise 比消费者更晚结束，不能证明其资源在消费者清理期间一直可用。
 
-当前 [fiber 卸载](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/vendor/cordis/src/fiber.ts)会并发启动同级释放器。[服务撤回](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/vendor/cordis/src/reflect.ts)在自己的释放器中等待依赖 fiber，但同级资源关闭器可能已运行。增加 `inject`、反转注册顺序或保留服务引用都无法修复该竞态。监听器也可能属于消费者 fiber，与操作排空同时自动取消订阅。
+当前 [fiber 卸载](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/vendor/cordis/src/fiber.ts)会并发启动同级释放器。[服务撤回](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/vendor/cordis/src/reflect.ts)在自己的释放器中等待依赖 fiber，但同级资源关闭器可能已运行。增加 `inject`、反转注册顺序或保留服务引用都无法修复该竞态。监听器也可能属于消费者 fiber，与操作排空同时自动取消订阅。
 
 要求明确责任归属和等待排序：停止准入，在依赖仍可用时等待已接纳消费者结束，再排空并释放资源。分开新准入拒绝与已接受操作的完成。使用显式组合的副作用，或拥有资源、会等待消费者／服务子级的父拥有者；验证实际捕获的释放器身份。`ctx.effect(function* ...)` 顺序执行所收集的释放器，但包装独立注册的副作用不会转移原副作用的责任归属。顶层插件生成器的 yield 并不普遍保证同级顺序释放。也检查失败路径：一次清理错误不得跳过必需的中止、结束等待或资源释放。
 

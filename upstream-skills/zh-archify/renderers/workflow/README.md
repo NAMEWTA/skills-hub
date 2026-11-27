@@ -123,14 +123,15 @@ node archify/bin/archify.mjs validate workflow input.workflow.json --layout-json
 
 | 不变量 | 契约 |
 |----------|----------|
-| 逻辑列 | `col` 是 `0..5` 内整数；像素中心是测量输出 |
-| 相邻 rank 基线 | 应用文档特定约束前，中心距离 120px |
+| 逻辑列 | `col` 为 `0..5` 中的整数；像素中心是测量输出 |
+| 相邻层级基线 | 应用文档特定约束前，中心距离为 120px |
 | 同泳道节点净空 | 节点纵向区间重叠时 ≥8px |
-| 面对面的直连边 | 净间隙 ≥`max(28px, measured label mask width + 8px)` |
-| 自动路由节奏 | 直连段 ≥28px；端点短段 ≥8px；内部转弯段 ≥16px |
+| 相向直连边 | 净空 ≥`max(28px, measured label mask width + 8px)` |
+| 自动路由节奏 | 直线段 ≥28px；端点短段 ≥8px；内部转弯段 ≥16px |
 | 隐式 viewBox | 固有内容边界加契约内边距 |
-| 显式 viewBox | 容纳容量；输入过小时报告确切 `requiredViewBox` 与贡献项 |
-| 泳道测量 | 同列纵向堆叠（两个或更多不同 `yOffset` 值）使隐式、未固定工作流选择按泳道测量。显式 `meta.viewBox`、`via`、`labelAt`、`channelX`、`channelY`，以及没有堆叠的工作流，为兼容而保留共享高度的 v2 几何。 |
+| 显式 viewBox | 作为容纳容量；输入过小时报告精确的 `requiredViewBox` 及贡献项 |
+| 泳道测量 | 同列纵向堆叠（两个或更多不同 `yOffset` 值）会让隐式且未固定的工作流启用逐泳道测量。显式 `meta.viewBox`、`via`、`labelAt`、`channelX` 或 `channelY`，以及没有堆叠的工作流，为兼容而保留共享高度的 v2 几何。 |
+| 自动纵向链 | 在同一泳道、同一列中，不带画布或路由控制的单一有向链可省略全部 `yOffset`。布局遵循边顺序并测量每个间隙。 |
 
 未固定的 v2 草稿，在重叠的同泳道节点间为路由预留 32px；省略节点宽度时，可从 92px 增长到 200px 以容纳文字。文档存在显式 `meta.viewBox` 或绝对 `via`、`labelAt`、`channelX`、`channelY` 固定值时，在编译与迁移规划中都保留现有宽度默认值和 8px rank 净空约束。作者指定宽度保持权威。
 
@@ -138,7 +139,15 @@ node archify/bin/archify.mjs validate workflow input.workflow.json --layout-json
 
 编译器只对真实相关或同泳道重叠节点应用约束，因此无关泳道里的宽节点不会扩展所有 rank。满足正确性约束后，旧中心位置只是软偏好，不是几何保证。phase 和 group 框从求解后的 rank 带推导。自动路由只规范化一次，同一个最终场景驱动校验和 SVG 序列化。长自动标签会比较直连间隙扩展与合法通道，而不是扩宽所有下游 rank。实测多行图例参与固有高度和显式 viewBox 容量计算。
 
-Issue #250 的结构已经能在 v2 中表达，无需作者指定泳道尺寸。将三个阶段保留在一个分组泳道中，省略 `meta.viewBox`，并让偏移围绕零居中：
+对于含多个泳道、末尾列未使用的隐式横向工作流，编译器可在路由后让泳道框和画布适配实测场景。节点、路由、标签和图例位置不变。outside-right 路由或较宽泳道标题可能使完整宽度保留。
+
+<a id="vertical-workflows"></a>
+
+### 纵向工作流
+
+对于从上到下的链，将所有步骤放在同一泳道、同一列中，并用有向边连接连续步骤。省略全部 `yOffset` 值、画布尺寸和路由控制。编译器沿边顺序处理，测量每个节点的高度，并为箭杆、箭头和边标签留空间。步骤在共享容器内运行时，可用一个分组包围整条链。
+
+使用 `col: 0` 获得默认居中堆叠。没有阶段标题、且分组局限于该列的链中，泳道会适配节点和标签宽度，并允许图例换行。如果围绕较长标题或图例居中反而会让画布更宽，编译器保留既定宽度。较大的 `col` 保留作者指定的层级。作者指定的短间隙如果需要带标签绕行，仍保留完整路由宽度。
 
 ```json
 {
@@ -146,18 +155,20 @@ Issue #250 的结构已经能在 v2 中表达，无需作者指定泳道尺寸�
   "diagram_type": "workflow",
   "meta": { "title": "stack", "output": "stack.html" },
   "lanes": [{ "id": "cage", "label": "one cage" }],
-  "groups": [{ "id": "g", "label": "cage", "lane": "cage", "fromCol": 1, "toCol": 3 }],
+  "groups": [{ "id": "g", "label": "cage", "lane": "cage", "fromCol": 0, "toCol": 0 }],
   "nodes": [
-    { "id": "a", "lane": "cage", "col": 2, "type": "security", "label": "stageA", "yOffset": -90 },
-    { "id": "b", "lane": "cage", "col": 2, "type": "security", "label": "stageB", "yOffset": 0 },
-    { "id": "c", "lane": "cage", "col": 2, "type": "security", "label": "stageC", "yOffset": 90 }
+    { "id": "a", "lane": "cage", "col": 0, "type": "security", "label": "Stage A" },
+    { "id": "b", "lane": "cage", "col": 0, "type": "security", "label": "Stage B", "tag": "check" },
+    { "id": "c", "lane": "cage", "col": 0, "type": "security", "label": "Stage C" }
   ],
   "edges": [
-    { "from": "a", "to": "b", "fromSide": "bottom", "toSide": "top" },
-    { "from": "b", "to": "c", "fromSide": "bottom", "toSide": "top" }
+    { "from": "a", "to": "b" },
+    { "from": "b", "to": "c" }
   ]
 }
 ```
+
+如果链已使用递增的 `yOffset`，编译器会使泳道适配堆叠，同时保留步骤间距离。对于 `workflow/vertical-stack-clearance`，报告的边框间隙过短，容不下直线箭头。省略全部 `yOffset`，让编译器测量间距；或者调整偏移，在考虑各节点高度后，使节点边框之间留出每条连接所报告的 `requiredGapPx`。带标签连接可能需要更多空间，以避免箭头与标签相撞。分支工作流，以及带显式画布或路由控制的工作流，保留原有放置行为。
 
 隐式 readable-v2 的纵向堆叠，若测得泳道高度超过 104px 基线，会声明 `data-reader-fit="width-first"`；任何隐式 readable-v2 画布，如果以全宽显示会溢出 1440×900 桌面页面，也会如此声明。桌面查看器使用可用阅读宽度和普通页面滚动，让高阶段保持可读，并保留既有 1.5× 自动放大上限。这只改变显示尺寸：规范 SVG 几何和显式 `meta.viewBox` 工作流保留作者契约。Embed、Present 和打印保留现有适配模式。`visual-check` 仍检查可读性、横向容纳性和裁切；该声明不弱化节点或路由校验。
 
@@ -167,17 +178,17 @@ Issue #250 的结构已经能在 v2 中表达，无需作者指定泳道尺寸�
 
 ## 设计规则
 
-- 泳道用于归属或运行时边界。
-- phase 标题用于 Intake、Plan、Execute、Report 等高层故事节拍。
-- group 用于并行检查、分支处理或泳道内有界工作；每个 group 至少包含一个节点。
-- 一个容器内纵向堆叠的顺序阶段，使用一条 v2 泳道和一个 group，让阶段同列，并省略 `meta.viewBox`。`yOffset` 相对于泳道内容区中心，因此三阶段堆叠应以 `-90 / 0 / 90` 居中，而不是 `0 / 90 / 180`。路由和画布由编译器控制时，编译器只扩展该泳道。
-- 人工等待、拒绝、重试、回退和失败泳道使用 `lane.variant: "exception"`，不要把它们混入正常路径。
-- 图有明确正常路径时设置 `mainPath`；渲染器验证相邻 ID 有匹配的边，并从左向右移动。
-- 使用 lane ID 与 `0..5` 内的 `col` 索引摆放节点，不使用原始 SVG 坐标。
-- 保留语义边标签。可读 v2 分配实测标签净空；标签放不下时，修复报告的容量或路由约束，不删除含义。
-- 对决策、审批、协议、异步追踪、返回路径，以及端点无法完整暗示的任何关系含义，使用标签。
-- 在使用原始 `via` 点之前，优先使用路由预设——`drop`（泳道间弯折；`bias` 0–1 选择位置）、`outside-right`、`return-left`、`bottom-channel`、`up-channel`；其余由 `straight` 和默认 `auto` 覆盖。
-- 工作流示例保持足够紧凑，以便在窄聊天／浏览器预览中良好渲染。
+- 用泳道表示归属或运行时边界。
+- 用阶段标题表示 Intake、Plan、Execute、Report 等高层故事节拍。
+- 用分组表示泳道内的并行检查、分支处理或有限范围工作；每个分组至少包含一个节点。
+- 同一容器内纵向堆叠的顺序阶段，使用[纵向工作流配方](#vertical-workflows)。其他布局中，`yOffset` 相对于泳道内容区中心。
+- 对等待人工、拒绝、重试、回退和失败泳道使用 `lane.variant: "exception"`，不要把这些路径混入正常路径。
+- 图有明确正常路径时设置 `mainPath`；渲染器会验证连续 id 之间有匹配边，且从左向右移动。
+- 用泳道 ID 和 `0..5` 内的 `col` 索引放置节点，不用原始 SVG 坐标。
+- 保留语义边标签。Readable v2 会分配实测标签净空；标签放不下时，应修复报告的容量或路由约束，不要删除含义。
+- 对决策、审批、协议、异步 trace、返回路径，以及端点未完全隐含的任何其他关系含义使用标签。
+- 使用原始 `via` 点之前，优先采用路由预设：`drop`（泳道间弯折；`bias` 0–1 选择位置）、`outside-right`、`return-left`、`bottom-channel` 和 `up-channel`。其他情况由 `straight` 和默认 `auto` 覆盖。
+- 工作流示例应保持紧凑，以便在较窄的聊天/浏览器预览中良好渲染。
 
 <a id="optional-semantic-checks"></a>
 

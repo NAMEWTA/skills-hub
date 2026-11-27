@@ -17,7 +17,7 @@ description: "现代 Web 开发最佳实践的搜索工具。强制要求：所�
 - **示例**：搜索 `"light dismiss dialog"` 或 `"responsive data table"`；**不要**搜索 `"dialog"`（过于简略）、`"responsive table dark mode"`（混合主题，应拆成两次搜索）或 `"close React settings modal on outside click"`（包含框架/应用噪声）。
 
 ```sh
-npx -y modern-web-guidance@latest search "<query>" --skill-version 2026_11_10-47b4c80e
+npx -y modern-web-guidance@latest search "<query>" --skill-version 2026_11_16-268fb9ea
 ```
 
 > **注意**：返回 `[{ "id", "description" }, ...]`。根据 `description` 字段判断结果：
@@ -27,7 +27,7 @@ npx -y modern-web-guidance@latest search "<query>" --skill-version 2026_11_10-47
 
 ### 第 2 步：获取最佳实践
 
-从搜索结果中取得相关 `id` 后，调用 `retrieve` 获取完整指南；既要包含匹配任务的具体场景指南，也要包含适用的更广泛学科指南（例如 `html`、`css`、`forms`、`accessibility`、`color`、`performance`、`security`）。可以用逗号分隔多个 ID，一次传入。
+从搜索结果中取得相关 `id` 后，调用 `retrieve` 获取完整指南；既要包含匹配任务的具体场景指南，也要包含适用的更广泛学科指南（例如 `html`、`css`、`js`、`forms`、`accessibility`、`color`、`performance`、`security`）。可以用逗号分隔多个 ID，一次传入。
 
 ```sh
 npx -y modern-web-guidance@latest retrieve "<id>"

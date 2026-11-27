@@ -8,7 +8,7 @@
 
 **泄漏：**“斜杠输入针对可见目录解析（decision 21）。”
 
-**修正：**“斜杠输入针对可见目录解析——纯文本引用决定，由 [Web 输入状态机笔记](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/archived/architecture/2026-07-25-web-input-machine-and-slash-pipeline.md)负责。”
+**修正：**“斜杠输入针对可见目录解析——纯文本引用决定，由 [Web 输入状态机笔记](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/archived/architecture/2026-07-25-web-input-machine-and-slash-pipeline.md)负责。”
 
 序号在 HEAD 无处解析；决定名称及负责笔记路径可以。每文件至少一次命名负责笔记路径，支持链接的表面应链接，后续可只用可搜索名称。
 

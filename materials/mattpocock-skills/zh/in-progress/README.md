@@ -15,3 +15,4 @@ npx skills@latest add mattpocock/skills --skill=<name>
 - **[claude-handoff](./claude-handoff/SKILL.md)**：经由 `claude --bg`，把当前对话连同交接摘要移交给全新的后台代理，让它立即接手工作。由用户调用。
 - **[setup-ts-deep-modules](./setup-ts-deep-modules/SKILL.md)**：将 dependency-cruiser 接入 TypeScript 仓库，使每个包成为深模块：实现隐藏在子目录，只能经由入口文件访问，测试也通过这些入口检验它。由用户调用。
 - **[software-factory](./software-factory/SKILL.md)**：设计软件工厂的共享语言：它运行的任务，以及接入的服务。与深入追问会话一起调用。由用户调用。
+- **[chief-of-staff](./chief-of-staff/SKILL.md)**：把工作派给全新上下文的子代理，并将获得的知识保存在带日期的 wiki 中，让下一次会话接得上。由用户调用。

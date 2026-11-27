@@ -5,7 +5,7 @@ description: 将依赖 GitHub PR 栈（A ← B ← C，每个基于下层分支�
 
 # 落地官方 GitHub PR 栈
 
-通过 GitHub 原生栈对象和 `gh stack merge` 落地依赖 PR。不要用 `gh pr merge` 与 `gh pr edit` 逐个合并并改换目标来复刻栈语义。根 [AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/AGENTS.md)负责允许的向前合并和变基历史；[栈审查指南](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/responding-to-pr-review-on-a-stack.md)负责审查修复的传播。
+通过 GitHub 原生栈对象和 `gh stack merge` 落地依赖 PR。不要用 `gh pr merge` 与 `gh pr edit` 逐个合并并改换目标来复刻栈语义。根 [AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md)负责默认启用 rerere 的变基方式，以及作者明确要求时才向前合并的例外；[栈审查指南](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/responding-to-pr-review-on-a-stack.md)负责审查修复的传播。
 
 ## 要求原生栈支持
 
@@ -67,10 +67,10 @@ gh stack link --base <trunk> <bottom-pr> <next-pr> ... <top-pr>
 
 ## 只在需要时刷新
 
-不要仅因为存在刷新机制就改写分支。在线合并状态或仓库规则要求更新主干时，在两种允许的历史中选择：
+不要仅因为存在刷新机制就改写分支。在线合并状态或仓库规则要求更新主干时，启用 rerere（`git config rerere.enabled true`），再变基；暂存前检查每个重放的解决结果。只有 PR 作者明确要求时才使用向前合并：
 
 - **原生级联变基：** 远程栈尚未在本地跟踪时，用 `gh stack checkout <pr-or-stack>` 检出，再运行 `gh stack sync`。命令可能在本地验证前对每个活动层变基，并进行租约保护的强推。立即检查改写范围，对每个受影响层运行相关检查；通过前不得合并或声称已就绪。sync 检测到变基冲突时，用 `gh stack rebase`，解决并验证，再用 `gh stack push` 发布。checkout 或 sync 报告本地与远程栈组合分歧时，取消并询问，不自动删除或重建远程栈。
-- **增量向前合并：** 把主干合入最底部受影响分支，再按自底向上顺序将每个更新后的父分支传播到子分支，正常推送。合并进行期间基准前进时，先保留该检查点，再合入较新的头。
+- **PR 作者明确要求时的增量向前合并：** 把主干合入最底部受影响分支，再按自底向上顺序将每个更新后的父分支传播到子分支，正常推送。合并进行期间基准前进时，先保留该检查点，再合入较新的头。
 
 审查后允许任何历史改写，但会使提交 OID 假设失效。推送后重新获取准确头提交，重审未解决审查线程、批准、可合并性及检查。绝不使用裸 `--force`，也不覆盖并发前进的远程头。
 

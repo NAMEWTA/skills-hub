@@ -6,8 +6,12 @@ disable-model-invocation: true
 
 # 类型系统纪律
 
-让编译器拒绝不可能的状态、不匹配的基础类型和未处理变体。优先通过定义消除错误与特殊情况，而非不断增加处理器。TypeScript 语法见 `typescript-best-practices` 技能。
+在 Claude Code 中，每个会话首次遵循本技能前，先读一次 [Claude Code 适配器](../../docs/harness/claude-code.md)。它将 pstack 技能里的 Cursor 名称映射到 Claude Code。
 
-- **为语义基础类型加品牌。** `UserId` 和 `OrderId` 底层都是字符串，但不应可以互换。分别给它们类型，例如 TypeScript 的品牌交叉类型，或其他语言的 newtype。创建时验证一次，后续信任类型。两个参数共享同一基础类型却有不同含义时，就加品牌。
-- **外部数据在解析前没有类型。** 包括 RPC 负载、JSON、IPC 消息、CLI 参数、配置文件、环境变量、数据库行。在每个边界设置解析函数，把无结构输入转成有类型模型。**boundary-discipline** 原则说明验证应放在哪里。
-- **从权威 Schema 派生类型。** 协议缓冲定义、OpenAPI 规格、GraphQL Schema、数据库迁移、设计变量文件或其他文件负责某个形状时，从它派生，不手写另一套并行类型。见 **encode-lessons-in-structure** 原则技能。
+让编译器拒绝不可能状态、含义不匹配的基础类型，以及未处理的变体。
+
+- **为语义基础类型加品牌。** 两个参数使用相同基础类型却含义不同时，各自定义独立类型。在创建时验证一次。
+- **外部数据在解析前没有可信类型。** JSON、RPC 载荷、CLI 参数、配置、环境变量及数据库行，都要经过边界上的解析函数，返回有类型的模型。
+- **从权威 schema 派生类型。** 形状由 schema 文件拥有时，从它派生类型，不手工维护平行版本。
+
+TypeScript 语法见 **typescript-best-practices** 技能。

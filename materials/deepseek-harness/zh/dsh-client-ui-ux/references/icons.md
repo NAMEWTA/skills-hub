@@ -8,7 +8,7 @@
 
 只有现有作品无法表达含义，或用户要求不同设计时才绘制。绘制前解释最接近替代及未满足含义或所需设计差异。新字形落地前需设计师批准；用户要求的草稿可本地准备。不为修复一个消费者而重画共享字形。
 
-[基础组件图标约定](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-primitives/README.md#controls-and-icons)及图标源码负责可用变体、描边缩放及菜单尺寸；[官方图像](../../dsh-official-plugin-artwork/SKILL.md)负责包图像。
+[基础组件图标约定](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-primitives/README.md#controls-and-icons)及图标源码负责可用变体、描边缩放及菜单尺寸；[官方图像](../../dsh-official-plugin-artwork/SKILL.md)负责包图像。
 
 ## 系统风格
 
@@ -19,13 +19,13 @@
 
 ## 实现前先看光学尺寸及清晰度
 
-采用负责控件支持的尺寸与粗细。[共享菜单尺寸及描边缩放](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-primitives/README.md#controls-and-icons)由基础组件负责；[权限触发器](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-permission-presets/README.md)及[设置导航](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-settings-general/README.md)由功能包负责。更大或更粗触发器的已审提案，不表示所有已有消费者已采用。按负责控件的尺寸、粗细、颜色及标签比较，以描边圆及矩形控件作参考。开放轮廓可能比密集填充需要更大延展；辅助箭头、手柄及点保留角色。不按墨迹面积归一，也不填满每个 view box。
+采用负责控件支持的尺寸与粗细。[共享菜单尺寸及描边缩放](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-primitives/README.md#controls-and-icons)由基础组件负责；[权限触发器](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-permission-presets/README.md)及[设置导航](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-settings-general/README.md)由功能包负责。更大或更粗触发器的已审提案，不表示所有已有消费者已采用。按负责控件的尺寸、粗细、颜色及标签比较，以描边圆及矩形控件作参考。开放轮廓可能比密集填充需要更大延展；辅助箭头、手柄及点保留角色。不按墨迹面积归一，也不填满每个 view box。
 
 共享 view box 变化会影响每个消费者各自 CSS 尺寸下的效果。同时检查紧凑菜单及较大纯图标控件；小箭头更清楚后，在悬浮按钮可能过大。必要时调整消费者支持的图标尺寸，但保留按钮底座及命中目标。
 
 模糊时依次查 CSS 尺寸及祖先变换、view box 与绘图边界、描边与填充轮廓、设备像素位置、颜色／不透明度。非 16 的 view box 有效；归因行内 SVG 与 sprite 清晰度差异前，先比较相同作品。
 
-使用[已实现描边行为](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-primitives/README.md#controls-and-icons)：源码描边宽度随 SVG 视口缩放，填充轮廓按几何缩放。普通放置或复用修复，不加非缩放描边，不转换填充轮廓。渲染约定变化应单列库变更范围并验证消费者；保留有意轮廓及镂空。
+使用[已实现描边行为](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-primitives/README.md#controls-and-icons)：视口变化时，Regular 线条作品保留 1 CSS 像素描边，Medium 保留 1.3 CSS 像素。共享和行内线条作品使用不随视口缩放的描边；有意设置的填充按几何缩放。普通放置或复用修复，不改变该渲染行为，也不转换填充轮廓。库的渲染变化必须验证消费者；保留有意轮廓及镂空。
 
 全部缩放后按实际 DPR 检查直描边边缘：中心与宽度共同决定覆盖。仅整数源码坐标不保证锐利。只有布局把原本清晰作品放在像素之间时，才按设备像素取整定位叠加元素；保留锚定及视口包含。曲线／斜线保留抗锯齿；不全局取整路径，也不用 `crispEdges` 隐藏位置错误。1.3px 描边部分覆盖是合理的。
 
@@ -57,4 +57,4 @@
 
 普通复用或放置变更，在实际尺寸及相关状态检查受影响控件；不要求固定尺寸／DPR 矩阵或单独栅格报告。新作品或作品、描边、渲染变化，按受影响尺寸及粗细与同类对比；描边缩放或像素位置可能变化时查 DPR 1、2，颜色或光学粗细受影响时查两主题。变更或交付要求需要时保留前后捕获。实际尺寸判断辨识、裁切、中心、间隙及邻文；放大图只诊断像素。
 
-整套变化后，追踪受影响家族、消费者及粗细，包括作品未变但渲染会变的项。用未变同类对比。明确要求全套审查时，按匹配条件盘点及比较每个字形。只在当前修复必要时合并重复作品；无关重复另记，不扩大任务。判断不确定时查[案例](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#icon-optics)。
+整套变化后，追踪受影响家族、消费者及粗细，包括作品未变但渲染会变的项。用未变同类对比。明确要求全套审查时，按匹配条件盘点及比较每个字形。只在当前修复必要时合并重复作品；无关重复另记，不扩大任务。判断不确定时查[案例](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#icon-optics)。

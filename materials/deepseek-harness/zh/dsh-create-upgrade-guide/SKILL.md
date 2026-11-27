@@ -17,7 +17,7 @@ description: deepseek-harness 变更破坏外部可感知的接口（CLI、配�
 - TypeScript 和 Python SDK 导出、JSON-RPC、HTTP 及 ACP 消息；
 - 已发布包名称与入口。
 
-尚不稳定、且所有消费者都在同一变更中更新的内部 API 无需指南。Session 格式变更仍遵循[类型确认](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/reviewing-persistence-type-changes.md)；指南只陈述读者需要执行的动作，并链接到该记录。
+尚不稳定、且所有消费者都在同一变更中更新的内部 API 无需指南。Session 格式变更仍遵循[类型确认](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/reviewing-persistence-type-changes.md)；指南只陈述读者需要执行的动作，并链接到该记录。
 
 ## 位置
 
@@ -41,9 +41,9 @@ description: deepseek-harness 变更破坏外部可感知的接口（CLI、配�
 
 `Change` 陈述接口的旧行为、新行为及受影响者。`Migration` 按顺序列步骤，写明准确的文件、键、命令或符号，并说明如何确认迁移成功。
 
-指南需要超过 500 词时，多余文字应放到别处：链接源文件或符号，而非重述代码；把理由移入 [Agent Note](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md)；把重复的机械步骤做成脚本或 `dsh` 命令，由指南调用。
+指南需要超过 500 词时，多余文字应放到别处：链接源文件或符号，而非重述代码；把理由移入 [Agent Note](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md)；把重复的机械步骤做成脚本或 `dsh` 命令，由指南调用。
 
-遵循 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)。按[双语配对规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md)在同一变更中编写中文对应文件，然后执行 `pnpm run verify-translation-pairing --write docs/upgrade-guide/v<version>/<item>/guide.md` 记录配对。
+遵循 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)。按[双语配对规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md)在同一变更中编写中文对应文件，然后执行 `pnpm run verify-translation-pairing --write docs/upgrade-guide/v<version>/<item>/guide.md` 记录配对。
 
 ## 验证
 

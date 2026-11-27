@@ -1,0 +1,297 @@
+[
+  {
+    "project": "modern-web-guidance",
+    "revision": "2b4aa13a72dd47cd135b06ce5abfccd92e19b24f",
+    "total": 236,
+    "added": [
+      "modern-web-guidance/guides/ui-components/context-menu.md",
+      "modern-web-guidance/guides/visual-design/teaser.md"
+    ],
+    "changed": [
+      {
+        "path": "modern-web-guidance/SKILL.md",
+        "oldBlob": "7483c781ee0045cea7558cff21513ae0ef468669",
+        "newBlob": "f4e966d9297caf7cd76f2e5aa2fa708e10d2618f",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/SKILL.md",
+        "runtime_reviewed_blob": "7483c781ee0045cea7558cff21513ae0ef468669"
+      },
+      {
+        "path": "modern-web-guidance/guides/css/css-layout.md",
+        "oldBlob": "086f7b70219d01ff025a32b626103e8e9f78709d",
+        "newBlob": "b85ad03bcf16321e932c2f1988129aa24efd4fc8",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/css/css-layout.md",
+        "runtime_reviewed_blob": "086f7b70219d01ff025a32b626103e8e9f78709d"
+      },
+      {
+        "path": "modern-web-guidance/guides/forms/brand-consistent-forms.md",
+        "oldBlob": "90eaf44c463739116cdf3fe0f70e59eeca55b204",
+        "newBlob": "3c64efe9ab8ee40181771318ab2e3af45dd5cbff",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/forms/brand-consistent-forms.md",
+        "runtime_reviewed_blob": "90eaf44c463739116cdf3fe0f70e59eeca55b204"
+      },
+      {
+        "path": "modern-web-guidance/guides/performance/conditional-async-dependencies.md",
+        "oldBlob": "b75a7bba0fe7b68d9540bb3399596f91fcdbe66b",
+        "newBlob": "a7c5445aeb0d705ec217c5b0c1267f33dd64e2e3",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/performance/conditional-async-dependencies.md",
+        "runtime_reviewed_blob": "b75a7bba0fe7b68d9540bb3399596f91fcdbe66b"
+      },
+      {
+        "path": "modern-web-guidance/guides/security/passkey-authentication.md",
+        "oldBlob": "8d96ba6107c6702b2624a2a8d6a8a13da293a60d",
+        "newBlob": "05d89e4b87a60324140733da65dc18eb9cac05e4",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/security/passkey-authentication.md",
+        "runtime_reviewed_blob": "8d96ba6107c6702b2624a2a8d6a8a13da293a60d"
+      },
+      {
+        "path": "modern-web-guidance/guides/security/security.md",
+        "oldBlob": "6fa7247014ff79a89862c42d66f14e1390d6a9c2",
+        "newBlob": "c1b0a640385739bffb77ffc3f5f92d3d79e2831f",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/security/security.md",
+        "runtime_reviewed_blob": "6fa7247014ff79a89862c42d66f14e1390d6a9c2"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-atoms/position-aware-tooltips.md",
+        "oldBlob": "313e66a026d853bff34b46b72ffb3db65fb847fb",
+        "newBlob": "a291311ef9f2161f210496b6ad03e87642973936",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-atoms/position-aware-tooltips.md",
+        "runtime_reviewed_blob": "313e66a026d853bff34b46b72ffb3db65fb847fb"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-atoms/viewport-aware-dropdowns.md",
+        "oldBlob": "4cf7a8ad045759868208975b4dccac3a0f6c4762",
+        "newBlob": "d75ef0839dff67807a0cdb590476155ff9a360d2",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-atoms/viewport-aware-dropdowns.md",
+        "runtime_reviewed_blob": "4cf7a8ad045759868208975b4dccac3a0f6c4762"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/anchor-positioning-tab-underline.md",
+        "oldBlob": "f2008fcf28c27f0fe6f391461b20e310f9f04a44",
+        "newBlob": "640a84376e65b699c0aed8c45585d08dfc9c69a9",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/anchor-positioning-tab-underline.md",
+        "runtime_reviewed_blob": "f2008fcf28c27f0fe6f391461b20e310f9f04a44"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/animate-to-from-top-layer.md",
+        "oldBlob": "1b024c2012ddbca7fbd5c9f70a9447fcaee86291",
+        "newBlob": "1b0f29a21ec4f249b2b5eb9b83460b226df09a47",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/animate-to-from-top-layer.md",
+        "runtime_reviewed_blob": "1b024c2012ddbca7fbd5c9f70a9447fcaee86291"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/custom-button-actions.md",
+        "oldBlob": "05837c19d961b01ef570746bc5745ff20440feaf",
+        "newBlob": "3d5ef488b2e3a8ec70ee511a3a8b401777de49e5",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/custom-button-actions.md",
+        "runtime_reviewed_blob": "05837c19d961b01ef570746bc5745ff20440feaf"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/declarative-dialog-popover-control.md",
+        "oldBlob": "9df693c67e5fd0893fcf3b5cca6b20115e9ac86f",
+        "newBlob": "b16d6e3eae2430c49a669dfefa3fa2ee7da5cd10",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/declarative-dialog-popover-control.md",
+        "runtime_reviewed_blob": "9df693c67e5fd0893fcf3b5cca6b20115e9ac86f"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/interest-triggered-action-previews.md",
+        "oldBlob": "a7091972849c45edf6ea18429cc298b5972602eb",
+        "newBlob": "f00a094ee8fc9f623b0bf92c3a3b52814e08a2f5",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/interest-triggered-action-previews.md",
+        "runtime_reviewed_blob": "a7091972849c45edf6ea18429cc298b5972602eb"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/interest-triggered-tooltips.md",
+        "oldBlob": "08bc93cadcaca1b655b233056abbe6d33b6bc2ee",
+        "newBlob": "f71426fab20fcfe8eab98a1333714d64db58cee9",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/interest-triggered-tooltips.md",
+        "runtime_reviewed_blob": "08bc93cadcaca1b655b233056abbe6d33b6bc2ee"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/platform-controls-dismiss-dialog.md",
+        "oldBlob": "2b3bc6aa5a6672ea2a7fe4c81030d32675ed5e54",
+        "newBlob": "f5432c6774d259812925cf4b2ee0f716b44bc7df",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/platform-controls-dismiss-dialog.md",
+        "runtime_reviewed_blob": "2b3bc6aa5a6672ea2a7fe4c81030d32675ed5e54"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/scroll-snap-realtime-feedback.md",
+        "oldBlob": "00b4d27e254d8e05739573675a0b9be26e3ae01c",
+        "newBlob": "da159df10d65514bb9eeddc2d00f006eeae93f3d",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/scroll-snap-realtime-feedback.md",
+        "runtime_reviewed_blob": "00b4d27e254d8e05739573675a0b9be26e3ae01c"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-behaviors/sortable-table.md",
+        "oldBlob": "0c96703203efc3f0f5a0583e8468c6972bb695bf",
+        "newBlob": "8eb8407a65d971a7eda1baff1b3afaba4fd41456",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-behaviors/sortable-table.md",
+        "runtime_reviewed_blob": "0c96703203efc3f0f5a0583e8468c6972bb695bf"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/app-menus.md",
+        "oldBlob": "8e6b65e1a0ffcd5f7a9ec97a0454caae22aca9f2",
+        "newBlob": "a45ec42f45dde04c976454b8dd4b9ae7c0d8e899",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/app-menus.md",
+        "runtime_reviewed_blob": "8e6b65e1a0ffcd5f7a9ec97a0454caae22aca9f2"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/copy-button.md",
+        "oldBlob": "593242da742d42170295c28dea70cabe90d7ff6c",
+        "newBlob": "65a4d74b338b080bf18b79ba9334fb13270aa4a3",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/copy-button.md",
+        "runtime_reviewed_blob": "593242da742d42170295c28dea70cabe90d7ff6c"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/dialog.md",
+        "oldBlob": "811741314e336bbfa4ba5716a66646ad3de66267",
+        "newBlob": "883edbe83d93fe6f2ed77ddb4a2cdfa27ded39a4",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/dialog.md",
+        "runtime_reviewed_blob": "811741314e336bbfa4ba5716a66646ad3de66267"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/hovercard.md",
+        "oldBlob": "721bbdbea10eccf403f28be58d068d12fad863a1",
+        "newBlob": "bc6b9fab5a1e6ac36666640fbc52ff339472cb29",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/hovercard.md",
+        "runtime_reviewed_blob": "721bbdbea10eccf403f28be58d068d12fad863a1"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/menu.md",
+        "oldBlob": "e36d0d13f0faf3ac7d1daab270532ca42883f4e9",
+        "newBlob": "17d5c8b7e15909a26a22cbc6122d13355e0426ff",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/menu.md",
+        "runtime_reviewed_blob": "e36d0d13f0faf3ac7d1daab270532ca42883f4e9"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/navbar.md",
+        "oldBlob": "f6b366940fdc7b9a1afefa2cd4978d28692e72db",
+        "newBlob": "33a0ad322a984784aee70839e161b9a082cee5dd",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/navbar.md",
+        "runtime_reviewed_blob": "f6b366940fdc7b9a1afefa2cd4978d28692e72db"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/persistent-app-tours.md",
+        "oldBlob": "35fe4f4366beb0a872bfb53ceb344e1f7a5773a1",
+        "newBlob": "2f90fdf1f7bd6c196c3238c9d6bd12126807ec76",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/persistent-app-tours.md",
+        "runtime_reviewed_blob": "35fe4f4366beb0a872bfb53ceb344e1f7a5773a1"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/persistent-toast-notifications.md",
+        "oldBlob": "77d3e5f5f8bbcb2dbaa263e7251f39bbcc6356a8",
+        "newBlob": "b38db71a60df6af01e692f952497f9ee521ec6df",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/persistent-toast-notifications.md",
+        "runtime_reviewed_blob": "77d3e5f5f8bbcb2dbaa263e7251f39bbcc6356a8"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/progress-ring.md",
+        "oldBlob": "6c4f5fef7f291911caf1edd9a03882f222fbf932",
+        "newBlob": "85982fa9ae589bc03ce207a960e318e3f6d06896",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/progress-ring.md",
+        "runtime_reviewed_blob": "6c4f5fef7f291911caf1edd9a03882f222fbf932"
+      },
+      {
+        "path": "modern-web-guidance/guides/ui-components/toolbar.md",
+        "oldBlob": "8c89518b19a7d53070099d5ae91a72edef945242",
+        "newBlob": "3e8cf0876d1d2f2eff2e7f23c7dab75f8dc2f0d8",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/ui-components/toolbar.md",
+        "runtime_reviewed_blob": "8c89518b19a7d53070099d5ae91a72edef945242"
+      },
+      {
+        "path": "modern-web-guidance/guides/user-experience/content-first-noise-reduction.md",
+        "oldBlob": "ff61899f32cccd6c25035f9e000962aab126f6ae",
+        "newBlob": "3261366b6ace8b4959d3dc5aceeb4e81a053cb5a",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/user-experience/content-first-noise-reduction.md",
+        "runtime_reviewed_blob": "ff61899f32cccd6c25035f9e000962aab126f6ae"
+      },
+      {
+        "path": "modern-web-guidance/guides/user-experience/natural-interactions.md",
+        "oldBlob": "805da89460eb2aeabf3b4dbb73f6f74c7d18eab5",
+        "newBlob": "36ba88b28f6ee61bbca730e57aacdea89f17a8cd",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/user-experience/natural-interactions.md",
+        "runtime_reviewed_blob": "805da89460eb2aeabf3b4dbb73f6f74c7d18eab5"
+      },
+      {
+        "path": "modern-web-guidance/guides/visual-design/visual-effects.md",
+        "oldBlob": "ff214bc608a6dcb84f548d84383cbce2f1ed2621",
+        "newBlob": "1bdc987d58d48b38f4d2b436b808a709cad87179",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/visual-design/visual-effects.md",
+        "runtime_reviewed_blob": "ff214bc608a6dcb84f548d84383cbce2f1ed2621"
+      },
+      {
+        "path": "modern-web-guidance/guides/webmcp/agentic-javascript-tools.md",
+        "oldBlob": "fefe3ebb5960318d68c51debafa74807280f2a71",
+        "newBlob": "0174c6a501044e44cfd8ab24020f9fe921138a83",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/webmcp/agentic-javascript-tools.md",
+        "runtime_reviewed_blob": "fefe3ebb5960318d68c51debafa74807280f2a71"
+      }
+    ],
+    "deleted": [
+      {
+        "path": "modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+        "kind": "document",
+        "language": "en",
+        "source_git_mode": "100644",
+        "source_git_blob": "8ea2441587b308dc4e670580e14a8b12490ae366",
+        "upstream_sha256": "f9a4607b1e34c271afe47085bea7d0d6fdc00a85fa7b93bb123cd4a99286b17b",
+        "zh_path": "zh/modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+        "zh_sha256": "852bff8d616ea7e2b2f672697c5d81e09bec41474126193de71541c47824e10b",
+        "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+        "runtime_reviewed_blob": "8ea2441587b308dc4e670580e14a8b12490ae366",
+        "adaptation": "完整中文翻译，保留原可执行代码块、命令、技术标识、参考链接与表格，并补原英文标题锚点。"
+      }
+    ],
+    "sourceTreeVerified": true,
+    "runtimeReviewedBlobsPreserved": true
+  },
+  {
+    "project": "dashboard-design-skill",
+    "revision": "57f96688862668b482f647fa1e370efb5d3ddd31",
+    "total": 14,
+    "added": [
+      "references/inspiration.md",
+      "references/layout-ideas.md",
+      "references/playbooks.md"
+    ],
+    "changed": [
+      {
+        "path": "SKILL.md",
+        "oldBlob": "2b80bec6e483ed1428bdf56ad78186fdcc66244b",
+        "newBlob": "9d2802348af88b424394e266f0c40401a5e62539",
+        "runtime_paths": "upstream-skills/zh-dashboard-design/SKILL.md",
+        "runtime_reviewed_blob": "2b80bec6e483ed1428bdf56ad78186fdcc66244b"
+      },
+      {
+        "path": "references/components.md",
+        "oldBlob": "38cfd8ac3cbc0b936647453383b17d53b5cba5e4",
+        "newBlob": "a42e091967ff226286c9e97626a813746d164f3c",
+        "runtime_paths": "upstream-skills/zh-dashboard-design/references/components.md",
+        "runtime_reviewed_blob": "38cfd8ac3cbc0b936647453383b17d53b5cba5e4"
+      },
+      {
+        "path": "references/snippets.md",
+        "oldBlob": "5188bbb40a3a0b2f6f2e4748e5840dde66c04159",
+        "newBlob": "8c2091d32e1903b6173efdfd4bc1d2c123305e7f",
+        "runtime_paths": "upstream-skills/zh-dashboard-design/references/snippets.md",
+        "runtime_reviewed_blob": "5188bbb40a3a0b2f6f2e4748e5840dde66c04159"
+      },
+      {
+        "path": "references/sources.md",
+        "oldBlob": "f83b1793f2aea5b918e9fbda4b56c4b376047178",
+        "newBlob": "a82a37faa2862a49c141dc83d219fd0a0eb50d62",
+        "runtime_paths": "upstream-skills/zh-dashboard-design/references/sources.md",
+        "runtime_reviewed_blob": "f83b1793f2aea5b918e9fbda4b56c4b376047178"
+      },
+      {
+        "path": "references/swiftui.md",
+        "oldBlob": "446d5f5687f88828b01c8c39999fff590fcf7655",
+        "newBlob": "da413f9e47eac8777b34f49e046494b876b2e698",
+        "runtime_paths": "upstream-skills/zh-dashboard-design/references/swiftui.md",
+        "runtime_reviewed_blob": "446d5f5687f88828b01c8c39999fff590fcf7655"
+      }
+    ],
+    "deleted": [],
+    "sourceTreeVerified": true,
+    "runtimeReviewedBlobsPreserved": true
+  }
+]

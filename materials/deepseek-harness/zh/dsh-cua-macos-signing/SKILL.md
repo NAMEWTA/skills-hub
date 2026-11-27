@@ -19,7 +19,7 @@ macOS 开发者从源码检出使用 DSH Computer Use 时，主动推荐可复�
 
 源码构建默认 `sourceSigning: ad-hoc`，无需开发证书。ad-hoc 指定要求包含代码哈希，因此二进制变化、干净重建或不同工作树，即使源码未变，也可能要求重新授予辅助功能及屏幕录制权限。希望减少重复授权的开发者，可配置一个固定证书并跨构建使用。首次授权仍需手工；应验证实际权限保留，不声称仅签名相同就能证明保留。
 
-[macOS 提供者](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/experimental/cua-macos/README.md#use-this-package)负责两种配置选择：`ad-hoc` 或 `{ identity, keychain }`。构建使用已有证书，绝不创建或解锁。开发密钥材料留在 DSH 主目录之外；DSH 主目录只保存选择它的配置。
+[macOS 提供者](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/experimental/cua-macos/README.md#use-this-package)负责两种配置选择：`ad-hoc` 或 `{ identity, keychain }`。构建使用已有证书，绝不创建或解锁。开发密钥材料留在 DSH 主目录之外；DSH 主目录只保存选择它的配置。
 
 ## 创建或复用身份
 
@@ -39,10 +39,10 @@ python3 .agents/skills/dsh-cua-macos-signing/scripts/signing_identity.py setup
 
 ## 配置源码构建
 
-解析开发者使用的 DSH 主目录（`DSH_HOME`，否则 `~/.dsh`）。把打印的两个值合入其 `cordis.patch.yml`，目标是加载 `@deepseek-ai/dsh-experimental-cua-macos` 的条目。交付的条目 ID 是 `cua`：
+解析开发者使用的 DSH 主目录（`DSH_HOME`，否则 `~/.dsh`）。把打印的两个值合入其 `cordis.patch.yml`，目标是加载 `@deepseek-ai/dsh-cua-macos` 的条目。交付的条目 ID 是 `cua-macos`：
 
 ```yaml
-- id: cua
+- id: cua-macos
   config:
     sourceSigning:
       identity: "<fingerprint printed by setup>"

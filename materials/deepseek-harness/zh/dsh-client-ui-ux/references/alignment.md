@@ -29,4 +29,4 @@
 
 按钮在自身边界内居中，欢迎组在主窗格内居中，空状态在标题／筛选器下方剩余内容区居中。固定顶部 margin 不等于居中。窗口过矮容不下整组时，以紧凑顶对齐布局保留滚动访问，而非裁切。
 
-必要的小光学偏移之前，先统一同级控件尺寸和槽位；验证可比较的用法。保留可用且不重叠的命中目标，不通过 transform 掩盖父布局不一致。透明命中内边距可以超过绘制图标槽位；收紧操作组后检查相邻目标边缘。检查[间距](spacing.md)时不移动选定轴；不确定的判断查阅[案例](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#alignment)。
+必要的小光学偏移之前，先统一同级控件尺寸和槽位；验证可比较的用法。保留可用且不重叠的命中目标，不通过 transform 掩盖父布局不一致。透明命中内边距可以超过绘制图标槽位；收紧操作组后检查相邻目标边缘。检查[间距](spacing.md)时不移动选定轴；不确定的判断查阅[案例](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#alignment)。

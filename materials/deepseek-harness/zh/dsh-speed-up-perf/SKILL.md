@@ -9,11 +9,11 @@ description: 调查或优化 DeepSeek Harness 性能、设计真实合成基准�
 
 ## 确定范围及当前权威
 
-阅读 [AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/AGENTS.md)、[架构](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/architecture.md)、[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/testing.md)、[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/README.md)，及受影响包指令和 Agent Notes。进程、时钟、浏览器测试及异步清理使用 [CI 测试可靠性](../dsh-ci-test-reliability/SKILL.md)。
+阅读 [AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md)、[架构](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/architecture.md)、[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/testing.md)、[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/README.md)，及受影响包指令和 Agent Notes。进程、时钟、浏览器测试及异步清理使用 [CI 测试可靠性](../dsh-ci-test-reliability/SKILL.md)。
 
 约定用户可见终点、负载范围、资源约束、可接受轻微行为差异及停止规则。后端与浏览器端到端测量分开：历史迭代器或 Client 折叠快，不证明传输、绘制、滚动或输入响应快。测本地开销时排除模型／网络延迟，并说明排除，不称为完整产品延迟。
 
-检查准确当前基准，不只运行中的检出。研究最终合并差异、负责源码、测试及已解决评审线程；PR 正文可能描述已放弃实现。区分已合并、关闭未合并、被替代、估计及新测证据。[已归档性能流程决定及证据](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/archived/process/2026-09-06-evidence-driven-performance-skill.md)提供历史线索，不授权重新引入其实现。
+检查准确当前基准，不只运行中的检出。研究最终合并差异、负责源码、测试及已解决评审线程；PR 正文可能描述已放弃实现。区分已合并、关闭未合并、被替代、估计及新测证据。[已归档性能流程决定及证据](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/archived/process/2026-09-06-evidence-driven-performance-skill.md)提供历史线索，不授权重新引入其实现。
 
 ## 调查用户路径，再排序候选
 
@@ -30,7 +30,7 @@ description: 调查或优化 DeepSeek Harness 性能、设计真实合成基准�
 
 ## 先建真实合成基准
 
-遵循 [benchmarks/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/benchmarks/AGENTS.md)及[性能门禁决定](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/implemented/testing/2026-09-04-session-open-performance-gate.md)。扩展已有必需通道，不创建竞争校准或报告设施。包本地诊断留负责者旁；跨包必需案例放 `benchmarks/` 中被测用户路径下。
+遵循 [benchmarks/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/benchmarks/AGENTS.md)及[性能门禁决定](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/implemented/testing/2026-09-04-session-open-performance-gate.md)。扩展已有必需通道，不创建竞争校准或报告设施。包本地诊断留负责者旁；跨包必需案例放 `benchmarks/` 中被测用户路径下。
 
 用户授权本地语料检查时，只抽取聚合负载特征。绝不把提示、输出、路径、身份、ID、凭据、录像或可识别片段复制到夹具、日志、截图、PR 或产物。由已审常量生成固定输入；基准不依赖用户主目录、环境仓库、网络服务或私有数据。
 
@@ -83,7 +83,7 @@ CPU worker 在普通 Node 下测构建 JavaScript；源码加载器开销及模�
 
 ## 交付有界、可审查结果
 
-长期理由、替代、校准、排除及残余风险按 [Agent Note 规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md)。查相关笔记替代关系，不把性能工作变成全语料文字清理。可复用程序留本技能，场景事实归基准或包负责者。
+长期理由、替代、校准、排除及残余风险按 [Agent Note 规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md)。查相关笔记替代关系，不把性能工作变成全语料文字清理。可复用程序留本技能，场景事实归基准或包负责者。
 
 任务要求堆叠 PR 时，编辑前选择层，使用 GitHub 官方堆叠及独立工作树。每层可合并：基准设施保护已测基线；优化层带修复、功能覆盖及更紧预算。独立瓶颈可用独立堆叠。先在负责层修发现，再向上传播。
 

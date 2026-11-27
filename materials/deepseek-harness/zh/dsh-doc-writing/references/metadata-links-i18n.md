@@ -39,7 +39,7 @@ kind: "package-reference"
 | `kind` | 仓库位置 | 模板 | 标准 |
 |---|---|---|---|
 | `package-group` | `packages/README.md`、`packages/<group>/README.md` | [package-group.md](../templates/package-group.md) | 分组地图：介绍能力家族、映射直接包含的包、解释组合关系，并链接包自己负责的细节。 |
-| `package-reference` | 具有插件入口的 `packages/<group>/<package>/README.md` | [package-reference.md](../templates/package-reference.md) | 包约定：遵循[包 README 审查标准](review.md#包-readme-审查)及规范的[包文档要求](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/adding-a-package.md#4-write-the-package-readme)。 |
+| `package-reference` | 具有插件入口的 `packages/<group>/<package>/README.md` | [package-reference.md](../templates/package-reference.md) | 包约定：遵循[包 README 审查标准](review.md#包-readme-审查)及规范的[包文档要求](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/adding-a-package.md#4-write-the-package-readme)。 |
 | `package-library` | 具有普通模块入口的 `packages/<group>/<package>/README.md` | [package-library.md](../templates/package-library.md) | 库约定：消费者入口及限制；没有配置档安装路径或挂载配置。 |
 | `package-bundle` | 声明 `dsh.bundle.patch` 的 `packages/<group>/<package>/README.md` | [package-bundle.md](../templates/package-bundle.md) | 可安装层：已验证的 `dsh plugin` 安装路径、层语义及补丁文档。 |
 | `persistence-change` | `docs/persistence-changes/YYYY-MM-DD-slug.md` 及中文对应文件 | [persistence-change.md](../templates/persistence-change.md) | 历史确认：机械检测的类型变化、逐根前驱引用、兼容性决定及生成的变更后模式。 |

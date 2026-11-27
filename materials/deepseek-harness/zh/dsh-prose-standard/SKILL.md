@@ -23,7 +23,7 @@ description: 在 deepseek-harness 仓库撰写、评审、恢复、精简或审�
 
 文字评审与编辑也排除 `.agents/notes/archived/`。归档 Agent Notes 是冻结快照；只有为理解指向历史的入站引用时才检查明确目标，不为了使正文或出站链接现代化而查看。
 
-生成的目录、快照和样例属于派生物。编辑前追踪每个消费者：源 JSDoc 也可能供模型可见的生成目录使用。先编辑负责内容的源文件或场景，再重新生成全部派生物。生成器从源正文提取摘要时，要让提取后的句子在目标界面上语义完整。双语对没有永久主语言：更新时任一语言都可作为原创一侧。遵循[轻量日常路径](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md#writing-rules)，最小更新对应语言，并重新记录配对。
+生成的目录、快照和样例属于派生物。编辑前追踪每个消费者：源 JSDoc 也可能供模型可见的生成目录使用。先编辑负责内容的源文件或场景，再重新生成全部派生物。生成器从源正文提取摘要时，要让提取后的句子在目标界面上语义完整。双语对没有永久主语言：更新时任一语言都可作为原创一侧。遵循[轻量日常路径](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md#writing-rules)，最小更新对应语言，并重新记录配对。
 
 ## 保留完整命题
 
@@ -50,7 +50,7 @@ description: 在 deepseek-harness 仓库撰写、评审、恢复、精简或审�
 - **模块注释：** 说明模块角色、依赖、责任，以及不明显的架构选择；架构选择链接到其负责解释的文档。
 - **测试：** 只解释不明显的测试设计，例如为什么需要某个样例、断言、平台适配、真实入口路径或间接观察。删除逐步讲解和清单罗列。
 - **操作指南：** 包含前提、必需动作、真实入口路径、可观察验证，以及简明警示。
-- **README：** 包含消费者约定：配置、语义、失败、限制、扩展点和对模型可见的影响。引用包拥有的稳定模型可见文本；链接生成目录和跨包负责者。保留长期缺口和维护陷阱，不保留日常清理清单。遵循[包 README 要求](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/adding-a-package.md#4-write-the-package-readme)。
+- **README：** 包含消费者约定：配置、语义、失败、限制、扩展点和对模型可见的影响。引用包拥有的稳定模型可见文本；链接生成目录和跨包负责者。保留长期缺口和维护陷阱，不保留日常清理清单。遵循[包 README 要求](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/adding-a-package.md#4-write-the-package-readme)。
 - **Agent Notes：** 保留独特理由、机制、备选方案、后果、已经交付的验证证据，以及明确指出的覆盖缺口。已实施 Agent Notes 用现在时陈述交付现实；删除规划清单，但不删除支撑决策的证据。
 - **事后复盘：** 保留事件顺序、证据、因果链、影响和预防措施。删除重复劝服，以及无法建立因果关系的实现细节。
 - **技能和 Agent 指令：** 说明行为限制及明确范围约束，例如“这是指导，不是脚本或清单”。工作流程简洁，并链接其事实来源。
@@ -63,7 +63,7 @@ description: 在 deepseek-harness 仓库撰写、评审、恢复、精简或审�
 ## 工作流程
 
 1. 确认范围、模式、当前分支或 PR 基准，以及适用的 `AGENTS.md`。不检查无关分支。
-2. 判断段落前，阅读[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md)和负责该事实的代码或文档。需要校准或遇到陌生情形时，阅读[提炼示例](references/examples.md)。
+2. 判断段落前，阅读[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md)和负责该事实的代码或文档。需要校准或遇到陌生情形时，阅读[提炼示例](references/examples.md)。
 3. 检查请求范围，不只检查最大的文件。用搜索和字数发现候选项，再按语义判断段落。
 4. 将候选项分类为保留、增加、精简、恢复、重组或延后。仅在任务授权编辑时执行清楚的修改；不为达到删除目标而制造改动。
 5. 先更新负责内容的源文件，再更新派生产物。学到新规则后，重新检查相似段落。

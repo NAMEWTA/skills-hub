@@ -28,7 +28,7 @@ poteto-mode 是一个人的风格；它下方的规程、分流和模型角色�
 /reflect 这次花得太久了。记录我们学到的内容，让下次不再重复。
 ```
 
-[`/reflect`](../../skills/reflect/SKILL.md) 将对话记录交给三位并行审查者，再由汇总者把提案分为 `Accepted`、`Rejected` 和 `Backlog`，并在修改任何技能前等待你的批准。只有会改变未来决定的提案才值得批准。一次奇怪会话只是轶事，不是规则。
+[`/reflect`](../../skills/reflect/SKILL.md) 阅读对话记录，只保留会改变未来智能体工作的经验，并把提案分为 `Accepted`、`Rejected` 和 `Backlog`。修改任何技能前，它会等待你的批准。只有会改变未来决定的提案才值得批准。一次奇怪会话只是轶事，不是规则。
 
 ## 使用 `/correct` 修复环境
 

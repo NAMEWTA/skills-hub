@@ -9,7 +9,7 @@ description: 在 DeepSeek Harness 的代码、API、配置、测试及文字中�
 
 ## 确定范围与约束
 
-阅读 `AGENTS.md`；判断包之前读[架构](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/architecture.md)，以及[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/README.md)和[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/testing.md)。查阅相关活动 Agent Notes 以了解有意决定；新记录使用[笔记规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md)。归档笔记是历史示例，不是当前权威：绝不检查、验证或修复其出站链接。
+阅读 `AGENTS.md`；判断包之前读[架构](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/architecture.md)，以及[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/README.md)和[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/testing.md)。查阅相关活动 Agent Notes 以了解有意决定；新记录使用[笔记规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md)。归档笔记是历史示例，不是当前权威：绝不检查、验证或修复其出站链接。
 
 两个 LLM 适配器是有意保留的。JSONL 是唯一第一方 Session 持久化提供者，而后端中立的 Service Definition 支持树外提供者。除非用户明确覆盖此约束，否则不提议删除任一 LLM 对应实现或持久化接缝。受保护设计内部的未使用成员，只要删除不破坏设计目的，仍可作为候选。
 
@@ -24,7 +24,7 @@ description: 在 DeepSeek Harness 的代码、API、配置、测试及文字中�
 - **更小的明确行为能否删除整个子系统？** 固定间隔、调用者提供时区或报告激活失败，可消除泛化日历、持久默认值或自动回滚。指出放弃能力与删除机制。有生产调用者使其成为行为决定，不是自动否决；实施必须在用户授权内。
 - **消费者能否在需要时读取权威值？** 寻找复制历史、提升账本、后接读取的失效事件，以及共享投影流旁的功能缓存。推导或复用可能一起删除订阅、保留数据、过期响应处理及恢复路径。先确定必需观察时机。
 - **是否把组合误当策略？** 可选服务存在、提供者方法或同级工具可以表达可用性，却不决定部署行为。显式配置或表达调用者意图的操作，可删除注册表及依赖检查。责任归属或完成时机不同时，保留不同操作。
-- **谁拥有完整维护成本？** 追踪重复应用树、产品使用的演示启动器、仅解析工作区，以及有自身升级生命周期的安装辅助程序。对必需行为，按[责任归属规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/general.md#a-business-capability-owns-itself)，比较已有生产者／消费者扩展点（包括声明合并），与修改远处核心或共享类型声明。比较整个删除系统与替代方案，包括残余胶合；把不必要概念搬近拥有者，或增加门禁保证重复定义相等，都没消除维护成本。
+- **谁拥有完整维护成本？** 追踪重复应用树、产品使用的演示启动器、仅解析工作区，以及有自身升级生命周期的安装辅助程序。对必需行为，按[责任归属规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/general.md#a-business-capability-owns-itself)，比较已有生产者／消费者扩展点（包括声明合并），与修改远处核心或共享类型声明。比较整个删除系统与替代方案，包括残余胶合；把不必要概念搬近拥有者，或增加门禁保证重复定义相等，都没消除维护成本。
 
 ## 证明可达性及取舍
 
@@ -38,7 +38,7 @@ description: 在 DeepSeek Harness 的代码、API、配置、测试及文字中�
 - 明确有损失的更窄公开或产品行为；
 - 受保护义务或证据不足。
 
-破坏保留义务、仅搬迁相同复杂性或没有实质缩减的候选应拒绝。按提议变化的层级阅读拒绝理由：过时清单或混合提案中被拒行为，不能决定每个独立项。重新提议前刷新证据。小型局部改进应按[紧急度规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/development.md)写成可操作 `TODO`／`FIXME`／`XXX` 注释，不写独立设计记录。
+破坏保留义务、仅搬迁相同复杂性或没有实质缩减的候选应拒绝。按提议变化的层级阅读拒绝理由：过时清单或混合提案中被拒行为，不能决定每个独立项。重新提议前刷新证据。小型局部改进应按[紧急度规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/development.md)写成可操作 `TODO`／`FIXME`／`XXX` 注释，不写独立设计记录。
 
 ## 保留责任归属及失败语义
 
@@ -48,7 +48,7 @@ description: 在 DeepSeek Harness 的代码、API、配置、测试及文字中�
 
 ## 只为净缩减替换基础设施
 
-遵循[依赖政策](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/implemented/process/2026-07-26-dependencies-over-hand-rolling.md)。新增包前，搜索已有依赖及最低引擎版本的 Node 内置能力。指出替代会删除的准确实现与专用测试，其维护及传递成本，以及胶合必须保留的每个残余行为。
+遵循[依赖政策](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/implemented/process/2026-07-26-dependencies-over-hand-rolling.md)。新增包前，搜索已有依赖及最低引擎版本的 Node 内置能力。指出替代会删除的准确实现与专用测试，其维护及传递成本，以及胶合必须保留的每个残余行为。
 
 测试最可能推翻替代方案的不匹配：协议截断、取消及拆除、配置上限、确定性测试时钟、平台打包、源码与构建入口。库覆盖分帧，但为强制大小限制仍需重建相同分帧，就不是简化。接受的边缘行为变化写入提案及相关测试。不要重复证明依赖的通用规范，却省略执行框架专用兼容层的测试。
 
@@ -56,7 +56,7 @@ description: 在 DeepSeek Harness 的代码、API、配置、测试及文字中�
 
 文字在范围内时，使用 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)。删除重述代码或远处负责的解释，保留局部行为、时机、责任及失败义务。受影响 README、JSDoc、模型可见目录、配置、快照及生成文件，与负责变更一起更新。
 
-实质提案使用必需笔记骨架：`Problem`、`Proposal`、`Alternatives considered`、`Acceptance criteria` 和 `Risks`。包含具体消费者证据、删除的维护成本、放弃能力及可观察验收条件。已实施决定改用[已实施格式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md#the-body-skeleton)。同一决定更新已有负责记录，不为保留候选数量创建重复笔记。
+实质提案使用必需笔记骨架：`Problem`、`Proposal`、`Alternatives considered`、`Acceptance criteria` 和 `Risks`。包含具体消费者证据、删除的维护成本、放弃能力及可观察验收条件。已实施决定改用[已实施格式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md#the-body-skeleton)。同一决定更新已有负责记录，不为保留候选数量创建重复笔记。
 
 每篇新笔记都需通过 [dsh-archive-agent-notes](../dsh-archive-agent-notes/SKILL.md)做限定范围的替代检查。该流程负责保留、合并、三文件组删除及冻结归档机制。代码调查不暗示全仓笔记审计。保留部分替代，以及当前持久化、传输、兼容性或被拒备选义务。
 

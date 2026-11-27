@@ -14,6 +14,7 @@
 | [ai-design-skills](ai-design-skills/manifest.tsv) | `skills` | 设计方法 |
 | [speculo](speculo/manifest.tsv) | `.`，整仓 | 开发与系统方法 |
 | [herdr](herdr/manifest.tsv) | `skills/herdr` | 终端控制 |
+| [herdr-core](herdr-core/manifest.tsv) | `skills/herdr-core` | Core 终端控制入口与手册 |
 | [oncall-triage](oncall-triage/manifest.tsv) | `skills/triage` | ops 调查 |
 | [oncall-templates](oncall-templates/manifest.tsv) | `templates` | ops 经验与手册 |
 | [oncall-replay](oncall-replay/manifest.tsv) | `eval` | ops 回放评估 |

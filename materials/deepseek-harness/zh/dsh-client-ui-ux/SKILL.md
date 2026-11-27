@@ -16,7 +16,7 @@ UI 变化应用适用设计规则，包括可见加载、错误、禁用、展�
 |---|---|---|
 | 局部文案、图标复用、颜色或间距 | 检查实际页面、受影响邻项及相关状态；跑适用测试。应用下列最低检查。 | 简报结果及实质缺口。默认不需独立计划、轴线图、场景清单、源快照或截图报告。 |
 | 页面布局、共享组件或全局样式 | 识别受影响关系及消费者；在组装页面中检查不同的受影响布局、内容及状态变体。只在等价有依据时复用证据。 | 简述范围。被要求或需解释广泛变化、评估回归风险时，保留起始版本及可比图像。 |
-| 明确全面审查 | 覆盖约定区域及相关状态；区分已查结果、缺陷及未查范围。 | 用[审查指南](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/reviewing-ui-design.md)记录覆盖、发现及支持证据。仅要求比较不意味着全产品审计。 |
+| 明确全面审查 | 覆盖约定区域及相关状态；区分已查结果、缺陷及未查范围。 | 用[审查指南](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/reviewing-ui-design.md)记录覆盖、发现及支持证据。仅要求比较不意味着全产品审计。 |
 
 ### 受影响 UI 最低检查
 
@@ -35,7 +35,7 @@ UI 变化应用适用设计规则，包括可见加载、错误、禁用、展�
 
 交付、评审或推送前，只查新增累积交互、缺失必需检查及失效证据；不在每阶段重复已完成验证。准确报告结果及实质缺口。必需场景或检查缺失时，不声称完整覆盖或视觉验收。
 
-这些投入层级只改变额外设计审查程序。已有[客户端测试要求](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/AGENTS.md)、[GUI PR GIF 要求](../record-browser-gif/SKILL.md#每个-gui-pr-都含-gif)及[设计师／产品批准](#设计审查升级)仍适用，包括原触发条件满足时的局部变化。
+这些投入层级只改变额外设计审查程序。已有[客户端测试要求](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/AGENTS.md)、[GUI PR GIF 要求](../record-browser-gif/SKILL.md#每个-gui-pr-都含-gif)及[设计师／产品批准](#设计审查升级)仍适用，包括原触发条件满足时的局部变化。
 
 ## 选择规则负责者
 
@@ -46,17 +46,17 @@ UI 变化应用适用设计规则，包括可见加载、错误、禁用、展�
 | 共享轴、文字起点、居中、树缩进、完整图标框 | [对齐](references/alignment.md) |
 | 语义组、内外间隙、重复节奏、章节分离 | [间距及分组](references/spacing.md) |
 | 界面图标选择与作品；图标按钮与纯图标动作、提示、信息悬停内容、无障碍标签及焦点 | [图标](references/icons.md) |
-| 颜色、字体及既有处理 | [视觉基础](#视觉基础)；[Web 样式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/web-styling.md)负责 token／材质 |
-| 组件几何、嵌套轮廓及状态填充 | [几何决定](#组件几何)；[圆角标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-radius.md)负责值及例外 |
+| 颜色、字体及既有处理 | [视觉基础](#视觉基础)；[Web 样式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/web-styling.md)负责 token／材质 |
+| 组件几何、嵌套轮廓及状态填充 | [几何决定](#组件几何)；[圆角标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-radius.md)负责值及例外 |
 | 反馈寿命、加载、叠加、滚动及平台净空 | [交互及反馈](#交互及反馈)；[错误处理](../dsh-error-handling/SKILL.md)负责失败保证 |
 | 响应布局、移动专用交互、文字按钮等组件截断／省略规则 | [响应式 UI](../dsh-responsive-ui/SKILL.md) |
 | 官方插件图像及功能预览 | [官方图像](../dsh-official-plugin-artwork/SKILL.md) |
-| 文案、语言归属及组件语义 | [文字标准](../dsh-prose-standard/SKILL.md)、[语言归属](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/implemented/architecture/2026-08-23-locale-owned-client-ui-copy.md)、[基础组件目录](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/ui-primitives/README.md#component-catalog) |
-| 密度、信息层级、组合控件状态及组件选择 | [原则参考](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#density)第 3–6 节 |
+| 文案、语言归属及组件语义 | [文字标准](../dsh-prose-standard/SKILL.md)、[语言归属](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/implemented/architecture/2026-08-23-locale-owned-client-ui-copy.md)、[基础组件目录](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/ui-primitives/README.md#component-catalog) |
+| 密度、信息层级、组合控件状态及组件选择 | [原则参考](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#density)第 3–6 节 |
 
 ## 先复用再新增
 
-能力匹配时扩展已有组件、容器及交互。右侧栏内容通过现有侧栏槽注册，不新建独立侧栏。遵循[图标复用](references/icons.md#优先复用已有图标)。重组前读[客户端指令](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/client/AGENTS.md)及[客户端防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/client-components.md)，了解组件／状态归属及分层。
+能力匹配时扩展已有组件、容器及交互。右侧栏内容通过现有侧栏槽注册，不新建独立侧栏。遵循[图标复用](references/icons.md#优先复用已有图标)。重组前读[客户端指令](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/client/AGENTS.md)及[客户端防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/client-components.md)，了解组件／状态归属及分层。
 
 ## 视觉基础
 
@@ -68,16 +68,16 @@ UI 变化应用适用设计规则，包括可见加载、错误、禁用、展�
 
 ## 组件几何
 
-先选组件角色及尺寸变体，再选容器关系。高度、圆角、曲线、内缩及材质一起比较；仅圆角相等不构成协调，换行／展开本身也不证明应加大圆角。[圆角标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-radius.md#radius-scale)负责值及例外。
+先选组件角色及尺寸变体，再选容器关系。高度、圆角、曲线、内缩及材质一起比较；仅圆角相等不构成协调，换行／展开本身也不证明应加大圆角。[圆角标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-radius.md#radius-scale)负责值及例外。
 
 - **内缩：** 协调内外曲线及内缩。同心圆弧的半径相减准确；超椭圆相减只为名义尺寸规则，因此除侧间隙还查对角留白。
 - **齐边或相接：** 外框负责暴露角，内部连接保持方角。悬停填充及伪元素遵循轮廓，不裁菜单或焦点。
 - **独立子卡／组：** 用自身角色／尺寸层级，不套对话框圆角，也不扣除全部父内边距。
 - **圆／胶囊：** 用主题圆曲线例外保形，包括头像容器及图像；普通控件用共享曲线。
 
-悬停、按下、选中、加载及禁用状态保持填充、描边、叠加几何稳定。复用[卡片／高度材质](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-radius.md#settings-cards)：阴影已有中性细线；保留语义状态色边框，不叠中性边缘。
+悬停、按下、选中、加载及禁用状态保持填充、描边、叠加几何稳定。复用[卡片／高度材质](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-radius.md#settings-cards)：阴影已有中性细线；保留语义状态色边框，不叠中性边缘。
 
-在受影响主题／状态及相关长标签／窄布局下，按实际尺寸比较相关控件，包括小选择控件。静态检查拒绝不支持声明；渲染比较判断适配。需要时查[几何案例](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#geometry)。应用于范围内变化，不批量改风格。
+在受影响主题／状态及相关长标签／窄布局下，按实际尺寸比较相关控件，包括小选择控件。静态检查拒绝不支持声明；渲染比较判断适配。需要时查[几何案例](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#geometry)。应用于范围内变化，不批量改风格。
 
 ## 交互及反馈
 
@@ -110,7 +110,7 @@ UI 变化应用适用设计规则，包括可见加载、错误、禁用、展�
 
 ## 每条规则一个负责者
 
-更新本技能内负责章节或参考；不把设计专长暴露为独立技能。示例留[案例参考](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md)；AGENTS 及 PR 流程链接这里，不复制规则。
+更新本技能内负责章节或参考；不把设计专长暴露为独立技能。示例留[案例参考](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md)；AGENTS 及 PR 流程链接这里，不复制规则。
 
 规则变化说明适用性、决定、例外及可观察验证；更新区分案例，删除其他处被替代陈述。说明是迁移还是未来编辑范围，不暗示已有 UI 已遵循。只自动化机械可判检查。本地审查工具消费仓库规则，保留来源／规则修订，不另维护标准副本。
 

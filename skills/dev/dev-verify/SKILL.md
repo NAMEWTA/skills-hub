@@ -17,7 +17,7 @@ description: 通过真实应用入口验证用户行为、可观察结果和副�
 
 ## 完整验证与交付指南
 
-本技能负责真实应用验证。形式化属性检查由 `dev-formal-verify`、TLA+ 结果图由 `dev-statechart`、PR 落地由 `dev-deploy` 负责；按当前需要调用各自入口，明确其检查边界，不以普通测试冒充证明。使用说明可选查阅 `dev-help`。
+本技能负责真实应用验证。形式化属性检查由 `dev-formal-verify`、TLA+ 结果图由 `dev-statechart`、PR 落地由 `dev-pr` 负责；按当前需要调用各自入口，明确其检查边界，不以普通测试冒充证明。使用说明可选查阅 `dev-help`。
 
 ## 验证当前实现
 

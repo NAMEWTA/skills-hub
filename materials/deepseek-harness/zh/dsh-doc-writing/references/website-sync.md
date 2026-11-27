@@ -2,7 +2,7 @@
 
 ## 概要
 
-文档网站是经过测试的仓库 Markdown 投影，绝不是第二份副本。[website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/website/docs.ts)是显式公开允许列表，[scripts/project-doc-site.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/scripts/project-doc-site.ts)将映射来源重写进可丢弃的 `website/.generated/` 树，再由 VitePress 构建。构建还从同一清单，为每个路由输出原始 Markdown 对应文件和根 `llms.txt` 索引。本参考负责清单字段、投影器链接规则、预览与验证命令，以及部署边界。
+文档网站是经过测试的仓库 Markdown 投影，绝不是第二份副本。[website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/website/docs.ts)是显式公开允许列表，[scripts/project-doc-site.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/scripts/project-doc-site.ts)将映射来源重写进可丢弃的 `website/.generated/` 树，再由 VitePress 构建。构建还从同一清单，为每个路由输出原始 Markdown 对应文件和根 `llms.txt` 索引。本参考负责清单字段、投影器链接规则、预览与验证命令，以及部署边界。
 
 ## 目录
 
@@ -16,7 +16,7 @@
 
 ## 清单归属
 
-修改清单前，阅读 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md) 和 [website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/website/docs.ts) 中当前 `DocsPage` 类型及条目，不依赖记忆中的字段集。新增章节、侧栏集合、语言区域或顶层导航项前，阅读 [website/.vitepress/config.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/website/.vitepress/config.ts)。编辑双语来源时，遵循 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md#writing-rules) 的轻量日常路径和[配对约定](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/i18n/README.md)；绝不自动调用扩展翻译技能。
+修改清单前，阅读 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md) 和 [website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/website/docs.ts) 中当前 `DocsPage` 类型及条目，不依赖记忆中的字段集。新增章节、侧栏集合、语言区域或顶层导航项前，阅读 [website/.vitepress/config.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/website/.vitepress/config.ts)。编辑双语来源时，遵循 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md#writing-rules) 的轻量日常路径和[配对约定](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/i18n/README.md)；绝不自动调用扩展翻译技能。
 
 绝不编辑或提交 `website/.generated/`、`website/.cache/` 或 `website/.dist/`。除 `website/AGENTS.md` 外，不在 `website/` 下新增 Markdown；`website/zh-CN/`、`website/en/` 和 `website/api/` 等语言区域及路由目录都是无效源码布局。生成目录留在 `docs/`，在那里设置新鲜度门禁，再通过清单发布。
 
@@ -32,7 +32,7 @@
 
 ## DocsPage 字段
 
-有意识地设置每个 `DocsPage` 字段。规范字段集及 `DocsSidebar` 联合位于 [website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/website/docs.ts)，去那里阅读，不把值复制进文字；章节由该文件的 `sections` 记录负责，VitePress 配置没有单独顺序列表。
+有意识地设置每个 `DocsPage` 字段。规范字段集及 `DocsSidebar` 联合位于 [website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/website/docs.ts)，去那里阅读，不把值复制进文字；章节由该文件的 `sections` 记录负责，VitePress 配置没有单独顺序列表。
 
 - `source`：仓库相对的规范 Markdown 路径。完整双语对通过 `pairedPages()` 添加英文 `.md` 路径；它推导同目录 `.zh.md`、内容语言区域及对应别名。
 - `route`：包括 `.md` 后缀的公开 VitePress 路径。

@@ -16,14 +16,14 @@ import {
   resolveChecks,
   resolveContext,
   resolveReviewThreads,
-} from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/github.mjs";
+} from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/github.mjs";
 import {
   fakeReader,
   failedCheck,
   passingCheck,
   pendingCheck,
 } from "./fakes.test-helper.mjs";
-import { parsePrNumber } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/types.mjs";
+import { parsePrNumber } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/types.mjs";
 
 const context = {
   owner: "owner",
@@ -459,7 +459,7 @@ describe("上下文与堆叠发现", () => {
 
   it("无关派生仓库以 main 对 main 打开 PR 时仍能结束", () => {
     // 限制子进程时长，让这项回归检查报告失败，而不是挂住整套测试。
-    const program = `import { orderStack } from ${JSON.stringify(new URL("../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/github.mjs", import.meta.url).href)};
+    const program = `import { orderStack } from ${JSON.stringify(new URL("../../skills/dev/dev-pr/scripts/local-tools/watch-pr/github.mjs", import.meta.url).href)};
       console.log(JSON.stringify(orderStack(${JSON.stringify(context)}, [
         { number: 41, headRefName: "main", baseRefName: "main", isCrossRepository: true },
         { number: 42, headRefName: "feature", baseRefName: "main", isCrossRepository: false }
@@ -476,7 +476,7 @@ describe("上下文与堆叠发现", () => {
       const fake = join(directory, "fake-gh.mjs");
       writeFileSync(fake, `if (!process.argv.slice(2).includes("number,headRefName,baseRefName,isCrossRepository")) process.exit(2);
 console.log(JSON.stringify([{number:42,headRefName:"feature",baseRefName:"main",isCrossRepository:true}]));`);
-      const moduleUrl = new URL("../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/github.mjs", import.meta.url).href;
+      const moduleUrl = new URL("../../skills/dev/dev-pr/scripts/local-tools/watch-pr/github.mjs", import.meta.url).href;
       // 只替换子进程传输；真实读取器仍负责生成 gh 参数、等待进程、解析 JSON。
       const program = `import childProcess from "node:child_process";
         import { syncBuiltinESMExports } from "node:module";

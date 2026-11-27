@@ -31,7 +31,7 @@ pnpm --silent run change-scope --base <verified-base-ref>
 待发变化新增或修改拥有资源或异步的测试、夹具、辅助程序或 CI 执行路径时，先用 [dsh-ci-test-reliability](../dsh-ci-test-reliability/SKILL.md)决定是否适用恢复、负控制、静止拆除或并发进程证据。本技能仍负责选命令，避免重复已通过证据。
 
 - **包或脚本行为：** 运行负责的 Vitest 文件或聚焦测试名。共享约定变化时加邻包测试；除非变化确实横切或用户要求，全仓覆盖留给 CI。
-- **Remote mock 类型：** 未构建的 `any` 是显式本地回退，不是严格证据。交付 Remote／mock 变化前运行 `pnpm run typecheck`；诊断剩余错误前重建缺失、过时或不完整生成声明。例外留在[测试代理](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/test-support/remote-mock/README.md#remote-proxy)，不进生产 Remote 类型、环境标志或复制签名。
+- **Remote mock 类型：** 未构建的 `any` 是显式本地回退，不是严格证据。交付 Remote／mock 变化前运行 `pnpm run typecheck`；诊断剩余错误前重建缺失、过时或不完整生成声明。例外留在[测试代理](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/test-support/remote-mock/README.md#remote-proxy)，不进生产 Remote 类型、环境标志或复制签名。
 - **文档、Agent Notes、目录或文档链接注释：** 运行 `pnpm run doc-sync`；文档流程要求时跑完整 lint。
 - **用户可见 UI：** 用 [UI 变更流程](../dsh-client-ui-ux/SKILL.md#required-review-loop)及其[最低检查](../dsh-client-ui-ux/SKILL.md#受影响-ui-最低检查)，验证必需检查及新增累积效果。披露缺失检查；可选文书不替代结果检查。复用有效证据；普通变更推送时不需单独完整审计报告。保留既有测试、GUI GIF 及设计师／产品批准要求。仅测试不足以确立视觉验收。
 - **模型、编辑器、CLI 或终端可见输出：** 运行负责输出的聚焦无密钥快照或真实可运行示例场景。
@@ -80,7 +80,7 @@ pnpm exec vitest related packages/<group>/<package>/src/<changed>.ts \
 
 ## 保护重写历史的推送
 
-独立及堆叠 PR 分支允许变基，包括评审之后。独立历史重写前，获取当前远程分支，记录准确 OID；用 `--force-with-lease=<branch>:<observed-oid>` 发布，确保并发更新会中止推送。`gh stack push` 及 `gh stack sync` 为托管分支提供租约保护。绝不允许裸 `--force`。
+独立及堆叠 PR 分支默认通过变基刷新，包括评审之后；根 [AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md)负责这一选择及 rerere 设置。独立历史重写前，获取当前远程分支，记录准确 OID；用 `--force-with-lease=<branch>:<observed-oid>` 发布，确保并发更新会中止推送。`gh stack push` 及 `gh stack sync` 为托管分支提供租约保护。绝不允许裸 `--force`。
 
 任何重写推送后，再取实时分支头，重新审计未解决评审线程、批准、可合并性及检查。重写前提交哈希及行内评论锚点不再是当前证据。
 

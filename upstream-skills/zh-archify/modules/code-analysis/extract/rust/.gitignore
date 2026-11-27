@@ -1,0 +1,4 @@
+/target/
+
+# Include this upstream file when packaging the skill with npm.
+!.gitignore

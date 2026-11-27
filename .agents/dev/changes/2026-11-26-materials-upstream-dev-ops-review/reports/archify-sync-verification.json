@@ -1,0 +1,4820 @@
+{
+  "revision": "d6b0f71f25a3337ed2fcd09c973cacf67be7baba",
+  "originalFiles": 601,
+  "oldFiles": 206,
+  "added": 411,
+  "changed": 100,
+  "deleted": 16,
+  "pendingTranslations": [],
+  "deletedRuntimeMappings": [
+    {
+      "path": "examples/class-payment-processors-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "360715f3bfb144080109e5fff439a940628d0e88",
+      "upstream_sha256": "56d2f75d3e147acd4de44d23d1715d2d3a6c5f057c08b50dd3e1d35b7dd8a66e",
+      "zh_path": "zh/examples/class-payment-processors-rendered.html",
+      "zh_sha256": "56d2f75d3e147acd4de44d23d1715d2d3a6c5f057c08b50dd3e1d35b7dd8a66e",
+      "runtime_paths": "upstream-skills/zh-archify/examples/class-payment-processors-rendered.html",
+      "runtime_reviewed_blob": "360715f3bfb144080109e5fff439a940628d0e88",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/class-payments-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "6c9ddff4c412bab0fcc48421cdf01d522dea9575",
+      "upstream_sha256": "4749922e51166b7f855fd4f2070459a27641a1b429d52d5bcbdb9fa8e641d152",
+      "zh_path": "zh/examples/class-payments-rendered.html",
+      "zh_sha256": "4749922e51166b7f855fd4f2070459a27641a1b429d52d5bcbdb9fa8e641d152",
+      "runtime_paths": "upstream-skills/zh-archify/examples/class-payments-rendered.html",
+      "runtime_reviewed_blob": "6c9ddff4c412bab0fcc48421cdf01d522dea9575",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/dataflow-product-analytics.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "28ffcf29e3ad55b6e0b6d9fe76290481b9963b01",
+      "upstream_sha256": "f41d292adca854bf46e0114d1cb4e73566a667533c659467538a7fa4788d9897",
+      "zh_path": "zh/examples/dataflow-product-analytics.html",
+      "zh_sha256": "f41d292adca854bf46e0114d1cb4e73566a667533c659467538a7fa4788d9897",
+      "runtime_paths": "upstream-skills/zh-archify/examples/dataflow-product-analytics.html",
+      "runtime_reviewed_blob": "28ffcf29e3ad55b6e0b6d9fe76290481b9963b01",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/erd-orders-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "2cb9aba9f6f9561e914ee86bb39a2d19b3534443",
+      "upstream_sha256": "e97a501766ff355602f9e123ff2a11784d09ee473b9db296a79267a3508533d2",
+      "zh_path": "zh/examples/erd-orders-rendered.html",
+      "zh_sha256": "e97a501766ff355602f9e123ff2a11784d09ee473b9db296a79267a3508533d2",
+      "runtime_paths": "upstream-skills/zh-archify/examples/erd-orders-rendered.html",
+      "runtime_reviewed_blob": "2cb9aba9f6f9561e914ee86bb39a2d19b3534443",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/lifecycle-agent-run.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "4a255369af0bc33a90dbac54e0e62ff086ab4321",
+      "upstream_sha256": "ed4d735dc926b3c27324d0c174fe0607377722674d150b34a2fedce47459e111",
+      "zh_path": "zh/examples/lifecycle-agent-run.html",
+      "zh_sha256": "ed4d735dc926b3c27324d0c174fe0607377722674d150b34a2fedce47459e111",
+      "runtime_paths": "upstream-skills/zh-archify/examples/lifecycle-agent-run.html",
+      "runtime_reviewed_blob": "4a255369af0bc33a90dbac54e0e62ff086ab4321",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/locales/ru.json",
+      "kind": "fixture",
+      "language": "en",
+      "source_git_mode": "100644",
+      "source_git_blob": "8fab5fff47010adc19d311043d81c3c6a15e7b6f",
+      "upstream_sha256": "ea673bf7156d87ac43d754839155a1a145aafa481b5de540e04d1f8d3ec008d3",
+      "zh_path": "zh/examples/locales/ru.json",
+      "zh_sha256": "ea673bf7156d87ac43d754839155a1a145aafa481b5de540e04d1f8d3ec008d3",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/ru.json",
+      "runtime_reviewed_blob": "8fab5fff47010adc19d311043d81c3c6a15e7b6f",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/sequence-cache-miss-request.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "7363354e982e943b39f14871504fcdb81991a1f4",
+      "upstream_sha256": "49e750c91bb8a21a63db5f80f147bf4867cf938f75cbdd5a5da1e11b36a3d3ba",
+      "zh_path": "zh/examples/sequence-cache-miss-request.html",
+      "zh_sha256": "49e750c91bb8a21a63db5f80f147bf4867cf938f75cbdd5a5da1e11b36a3d3ba",
+      "runtime_paths": "upstream-skills/zh-archify/examples/sequence-cache-miss-request.html",
+      "runtime_reviewed_blob": "7363354e982e943b39f14871504fcdb81991a1f4",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/subscription-billing-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "17d1cfd8bed80a7ce2067f222eae1a8ea3813cba",
+      "upstream_sha256": "0cab0e29a347b6427cebb20c6c1d236e59cd7689ce7790e029101f7927c5a944",
+      "zh_path": "zh/examples/subscription-billing-rendered.html",
+      "zh_sha256": "0cab0e29a347b6427cebb20c6c1d236e59cd7689ce7790e029101f7927c5a944",
+      "runtime_paths": "upstream-skills/zh-archify/examples/subscription-billing-rendered.html",
+      "runtime_reviewed_blob": "17d1cfd8bed80a7ce2067f222eae1a8ea3813cba",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/timeline-archify-dev-activity-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "49e296be48223e618d2f7d81db0f28c6d523c5a8",
+      "upstream_sha256": "f66dd976211353de010a43aec72205f6aad7dc53f1433a22e41c6eed391230b1",
+      "zh_path": "zh/examples/timeline-archify-dev-activity-rendered.html",
+      "zh_sha256": "f66dd976211353de010a43aec72205f6aad7dc53f1433a22e41c6eed391230b1",
+      "runtime_paths": "upstream-skills/zh-archify/examples/timeline-archify-dev-activity-rendered.html",
+      "runtime_reviewed_blob": "49e296be48223e618d2f7d81db0f28c6d523c5a8",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/timeline-payment-incident-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "d350487165baf8191d3a18e742fc0565357ad6aa",
+      "upstream_sha256": "46494b119b8637449a402ec05990b2b63a0ffc3b883a85a3d622656ce909260e",
+      "zh_path": "zh/examples/timeline-payment-incident-rendered.html",
+      "zh_sha256": "46494b119b8637449a402ec05990b2b63a0ffc3b883a85a3d622656ce909260e",
+      "runtime_paths": "upstream-skills/zh-archify/examples/timeline-payment-incident-rendered.html",
+      "runtime_reviewed_blob": "d350487165baf8191d3a18e742fc0565357ad6aa",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/tree-archify-repository-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "adfe781c7dae1795ce696caf1c00888f48a6c205",
+      "upstream_sha256": "e1a68b7c1ae795994f29c8c9a3efcb91f616e637d0c8d5b95c179c2597345683",
+      "zh_path": "zh/examples/tree-archify-repository-rendered.html",
+      "zh_sha256": "e1a68b7c1ae795994f29c8c9a3efcb91f616e637d0c8d5b95c179c2597345683",
+      "runtime_paths": "upstream-skills/zh-archify/examples/tree-archify-repository-rendered.html",
+      "runtime_reviewed_blob": "adfe781c7dae1795ce696caf1c00888f48a6c205",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/tree-payment-platform-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "383fb75fb5e4605d4b140a285fcffa9d60b52325",
+      "upstream_sha256": "b79f07651f7d26eb8651e4c321d8396963d125ed66d2ec9bd86365284ddb472e",
+      "zh_path": "zh/examples/tree-payment-platform-rendered.html",
+      "zh_sha256": "b79f07651f7d26eb8651e4c321d8396963d125ed66d2ec9bd86365284ddb472e",
+      "runtime_paths": "upstream-skills/zh-archify/examples/tree-payment-platform-rendered.html",
+      "runtime_reviewed_blob": "383fb75fb5e4605d4b140a285fcffa9d60b52325",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/waterfall-checkout-request-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "4395cd7c204e53d35743585ca8fa7d3b231d7d4f",
+      "upstream_sha256": "74cb226d2a44be1482a824d08e6ca21d3b0353065118623c692ea651cd9e9759",
+      "zh_path": "zh/examples/waterfall-checkout-request-rendered.html",
+      "zh_sha256": "74cb226d2a44be1482a824d08e6ca21d3b0353065118623c692ea651cd9e9759",
+      "runtime_paths": "upstream-skills/zh-archify/examples/waterfall-checkout-request-rendered.html",
+      "runtime_reviewed_blob": "4395cd7c204e53d35743585ca8fa7d3b231d7d4f",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/waterfall-example-rebuild-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "c6b0bd4ff3e0a4a667ec1a168c10b1c09306a0dc",
+      "upstream_sha256": "6a7840b16ed9e8175f2f6eaa2ffbd9518e06a96b5ca0a5dafaaad874ca80ec70",
+      "zh_path": "zh/examples/waterfall-example-rebuild-rendered.html",
+      "zh_sha256": "6a7840b16ed9e8175f2f6eaa2ffbd9518e06a96b5ca0a5dafaaad874ca80ec70",
+      "runtime_paths": "upstream-skills/zh-archify/examples/waterfall-example-rebuild-rendered.html",
+      "runtime_reviewed_blob": "c6b0bd4ff3e0a4a667ec1a168c10b1c09306a0dc",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/web-app-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "5e4c94c0900ec60812eaa88b300d26cac405dd55",
+      "upstream_sha256": "ffabd084c754ee97ed9e9355ba19fab449533432537d6b8cdb5c6d276293741a",
+      "zh_path": "zh/examples/web-app-rendered.html",
+      "zh_sha256": "ffabd084c754ee97ed9e9355ba19fab449533432537d6b8cdb5c6d276293741a",
+      "runtime_paths": "upstream-skills/zh-archify/examples/web-app-rendered.html",
+      "runtime_reviewed_blob": "5e4c94c0900ec60812eaa88b300d26cac405dd55",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    },
+    {
+      "path": "examples/workflow-agent-tool-call-rendered.html",
+      "kind": "fixture",
+      "language": "mixed",
+      "source_git_mode": "100644",
+      "source_git_blob": "6a10fcb949c2eff7faf95aa175d22152563590fc",
+      "upstream_sha256": "6ee1999c899c2b7bed3b69b14e23dfbf9c7ff096441870361c690b469ad43e29",
+      "zh_path": "zh/examples/workflow-agent-tool-call-rendered.html",
+      "zh_sha256": "6ee1999c899c2b7bed3b69b14e23dfbf9c7ff096441870361c690b469ad43e29",
+      "runtime_paths": "upstream-skills/zh-archify/examples/workflow-agent-tool-call-rendered.html",
+      "runtime_reviewed_blob": "6a10fcb949c2eff7faf95aa175d22152563590fc",
+      "adaptation": "完整保留上游示例与测试用数据的原始字节，包括业务字符串和预渲染产物；非文档译稿。"
+    }
+  ],
+  "changes": [
+    {
+      "path": "assets/template.html",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/assets/template.html",
+      "old_blob": "51da6984ee79385535ff137ca56dfd034bcd3418",
+      "new_blob": "2f28465490745a00c95c7a03f7a7425fd782837c"
+    },
+    {
+      "path": "bin/archify.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/bin/archify.mjs",
+      "old_blob": "8b9e534157b9fc7f1774d59812c1d052c0e25b20",
+      "new_blob": "9c0f538827970cc9f61e79b1fcb2a629cc1cde05"
+    },
+    {
+      "path": "bin/delivery-update.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/bin/delivery-update.mjs",
+      "old_blob": "bb516f5b5e4779db24072d321882e7daca3e7542",
+      "new_blob": "6ff463f3e6b7e8a4a1cb496110c0b2e091593608"
+    },
+    {
+      "path": "bin/export-svg.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1adff5b0ceeed02f3f322197182cd372c277d3d4"
+    },
+    {
+      "path": "bin/finalize.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/bin/finalize.mjs",
+      "old_blob": "5414a07cdcc0ab03e52354e05b4fd4f5c989ce55",
+      "new_blob": "aa686338948d6a0477473c682853c5f3b7d8f3c3"
+    },
+    {
+      "path": "bin/preview.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/bin/preview.mjs",
+      "old_blob": "7ab01ebda311d63683a592899baf6f38a05538a6",
+      "new_blob": "944413f60de826638b0b12b5249f018bf0e7f1f5"
+    },
+    {
+      "path": "bin/update-notice.mjs",
+      "status": "added",
+      "kind": "legal",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4d582c746d6557b7843cf0ab00344ec2964b154b"
+    },
+    {
+      "path": "bin/visual-check.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/bin/visual-check.mjs",
+      "old_blob": "ceb5054f51a57674a25bd1a6a97e23c2729d4b42",
+      "new_blob": "7af3e6f87a09e3d829a10a35c20edaf3a6ea70ea"
+    },
+    {
+      "path": "delta/architecture-delta.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/delta/architecture-delta.mjs",
+      "old_blob": "6f3180a5e1fac875245cb880464de927218bc7b1",
+      "new_blob": "fdf2661122d0ddf816693962ab7dc619f91f3510"
+    },
+    {
+      "path": "examples/checkout-ledger.architecture.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d8e022fc19048bb8d9cffc081d7ca939792369a1"
+    },
+    {
+      "path": "examples/checkout-ledger.erd.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "bfa99d99a947f3fb4e8d9de91a7a5e029b1e403b"
+    },
+    {
+      "path": "examples/checkout-ledger.pr-pack.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4ae660656bf6aad03ae00bb3278aa3fa85531ca6"
+    },
+    {
+      "path": "examples/checkout-ledger.sequence.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cade82c0ead410e946b90f3fc08ccc61b1de1810"
+    },
+    {
+      "path": "examples/drilldown-api.dataflow.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "63adfced275b2f72df07e332bba418a6b81ece8b"
+    },
+    {
+      "path": "examples/drilldown-api.sequence.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cc8a79e53945d06733a5a33ff029408d3a8610e8"
+    },
+    {
+      "path": "examples/drilldown-integrations.architecture.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "75a71159da487d4a0f574a8818f8008b0cf3654c"
+    },
+    {
+      "path": "examples/drilldown-overview.architecture.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "27339c0b64220ffe9d56557263355f7f8dc617ab"
+    },
+    {
+      "path": "examples/drilldown-platform.architecture.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a6211bc93de0cc51a916a66bb89683658c852653"
+    },
+    {
+      "path": "examples/locales/de.json",
+      "status": "changed",
+      "kind": "fixture",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/de.json",
+      "old_blob": "7fdebf22b389bc652741ee45966fd88585ed758a",
+      "new_blob": "2da7a9d34ca8708056622479e200877e9fa9a976"
+    },
+    {
+      "path": "examples/locales/fr.json",
+      "status": "changed",
+      "kind": "fixture",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/fr.json",
+      "old_blob": "ae02f6318677ade1ffb0266bd019a12ec95f2d5d",
+      "new_blob": "8bc65f63c7b1b61e7ea30af904b3a28c8d59d892"
+    },
+    {
+      "path": "examples/locales/it.json",
+      "status": "changed",
+      "kind": "fixture",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/it.json",
+      "old_blob": "57df42adc9408540e7e3d95a9ec15b2a2ce3b7f2",
+      "new_blob": "f1f0cade6273b0e6b0da8fc04147db7094f260d6"
+    },
+    {
+      "path": "examples/locales/ja.json",
+      "status": "changed",
+      "kind": "fixture",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/ja.json",
+      "old_blob": "d49ce3a201d7188ccceeb3599e3edc63d9ea4869",
+      "new_blob": "1496f7549ea188d7fe18e81dc575624562463c44"
+    },
+    {
+      "path": "examples/locales/pt.json",
+      "status": "changed",
+      "kind": "fixture",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/examples/locales/pt.json",
+      "old_blob": "166c308917214c4d0428304442eac8fecae443df",
+      "new_blob": "ed635557d0442092cde42bd5373a1c1d229b8712"
+    },
+    {
+      "path": "explainer/browser-check.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/browser-check.mjs",
+      "old_blob": "72f8f8b07a7bbb585463d8b7995e83b434d79427",
+      "new_blob": "8522f4f73864eef02a8187b5a59cb836276b55c0"
+    },
+    {
+      "path": "explainer/charts.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/charts.mjs",
+      "old_blob": "8b03886e64c60edf3487e019d5f7518bc41087ad",
+      "new_blob": "0900f8994a60a3a80d13fbb20ab0a6736d99f8ec"
+    },
+    {
+      "path": "explainer/diagrams.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/diagrams.mjs",
+      "old_blob": "efde2a5cad4ac747ea239afda83fff2fd33ab35c",
+      "new_blob": "f3dd8d9285edb8032ee23ddc7cdf61961d3f568e"
+    },
+    {
+      "path": "explainer/layout.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/layout.mjs",
+      "old_blob": "dddc7095478019d737b942844fbe91e5695edba3",
+      "new_blob": "d7b56c3a472df210f1a106c38e49cb557c98e74d"
+    },
+    {
+      "path": "explainer/page-bundle.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/page-bundle.mjs",
+      "old_blob": "32bb7c7b29d041bd28559652f5741a7e28d71198",
+      "new_blob": "9bce090c2ef4291d2b083d8ad3053a812a599dc6"
+    },
+    {
+      "path": "explainer/parse.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/parse.mjs",
+      "old_blob": "4b4edb62321c7296bdbadf29b6d4ae03df3dfaec",
+      "new_blob": "b34f30c83a9e97b2c667ea97151610e5c11a9a06"
+    },
+    {
+      "path": "explainer/patch.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/patch.mjs",
+      "old_blob": "5b14ccb089a90e57f800912bea71a2d92fe6bf6a",
+      "new_blob": "a07d0df6991b39416ac7e32d1362962e126f16d8"
+    },
+    {
+      "path": "explainer/prepare.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/prepare.mjs",
+      "old_blob": "0d9accd9d6bc8740182e05595407b5961128433e",
+      "new_blob": "ab06198777da593480089f2602b24d8a5bcab8aa"
+    },
+    {
+      "path": "explainer/reader.css",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/reader.css",
+      "old_blob": "5eefd93d1a3cee4e22e53a9754f9b37d5c5ebde8",
+      "new_blob": "8cb612d4ae555d2485c14c6ec584bbc8eca4151f"
+    },
+    {
+      "path": "explainer/reader.js",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/reader.js",
+      "old_blob": "46a176c554ea791bda7fa3bb960283d59dcd3ccd",
+      "new_blob": "b986ec96415db5a46c9606e11eb123854a14ec19"
+    },
+    {
+      "path": "explainer/render.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/render.mjs",
+      "old_blob": "1a359a318c94b69088196ec228f05b42eba29847",
+      "new_blob": "b06203f1cb731b19334e5c4e57f74f0dd2d675e8"
+    },
+    {
+      "path": "explainer/validate.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/validate.mjs",
+      "old_blob": "2d8ad4200fdb3bed00a3af9971ad44bf88e2ce58",
+      "new_blob": "c7ae478a618cce19d42bc628379881d487343e85"
+    },
+    {
+      "path": "explainer/writing.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/explainer/writing.mjs",
+      "old_blob": "a534249fd1eefa5cbf20a2b005eeef08562a361b",
+      "new_blob": "4c6e258e534603e3c2f90940caecb5986410ff56"
+    },
+    {
+      "path": "locales/ar.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/ar.json",
+      "old_blob": "edfe36c9f4a94fbf391c967f8db1c5efcffff34c",
+      "new_blob": "0b9adfb79c44114bcc4dd567972b0b8bbcb955d0"
+    },
+    {
+      "path": "locales/en.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/en.json",
+      "old_blob": "ce8c4c72cef31df683590d544327d8a3e1512052",
+      "new_blob": "e969a920040a1d1c716050bb88fbb53bac98c4ba"
+    },
+    {
+      "path": "locales/es.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/es.json",
+      "old_blob": "85bf4dcee4ab94decc6368b978f74ab07a0b049f",
+      "new_blob": "38fb4759cfa04161bb7612251e7601b0fca89a12"
+    },
+    {
+      "path": "locales/ko.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/ko.json",
+      "old_blob": "38c14e32676f4d5d85b0511a342d358c75ea328c",
+      "new_blob": "09f762f71276e1e7a8a5085386b818e29544920f"
+    },
+    {
+      "path": "locales/manifest.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/manifest.json",
+      "old_blob": "34080e03359e03ce46cae8fde4b7a8732bf14ac1",
+      "new_blob": "ec79658768ca50e42c9a6e58b9a310f235fa4e62"
+    },
+    {
+      "path": "locales/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/locales/README.md",
+      "old_blob": "07941272af11d7d49750a134bdbc26b588d2fc47",
+      "new_blob": "6c123724a0b25355aa6c5e7b301640c036663077"
+    },
+    {
+      "path": "locales/ru.json",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "561354f8d0e024b73ca0844192039da348117c8c"
+    },
+    {
+      "path": "locales/zh-CN.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/locales/zh-CN.json",
+      "old_blob": "c78685837cbcbf78a7f9613ce74b6a198c1f9fec",
+      "new_blob": "cecaa161d10b3a0b90fc3ef60a5b9fb727f392a5"
+    },
+    {
+      "path": "locales/zh-TW.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/locales/zh-TW.json",
+      "old_blob": "f4bad2942e1ada0f8015843cb7f2159d97c91245",
+      "new_blob": "a2f5c664d4cfc82a79499992a886167c9bcbe9c7"
+    },
+    {
+      "path": "modules/code-analysis/.gitattributes",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8d7dd3f288d16e1e104635d61635aa82cad43e9a"
+    },
+    {
+      "path": "modules/code-analysis/.gitignore",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7c2828a2813a991dc3a3e4e753247e455030bdd9"
+    },
+    {
+      "path": "modules/code-analysis/ARCHITECTURE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b1a134d08de30a2386dde28d37ddfde5bb4de8f7"
+    },
+    {
+      "path": "modules/code-analysis/bin/analyze-run.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "568e99fca256f00ae04c82679134b3df20a69ddb"
+    },
+    {
+      "path": "modules/code-analysis/bin/check.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5646f7c3fd8302268cf84835c0aea76543761f7d"
+    },
+    {
+      "path": "modules/code-analysis/bin/drift.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fcc9ca571be21527ba85b5addf560fb4382795de"
+    },
+    {
+      "path": "modules/code-analysis/bin/import-review.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3f613af1bc691e174ad40303604d66889cb72746"
+    },
+    {
+      "path": "modules/code-analysis/bin/prepare.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "04e49ae37bcf81a8b504d2e1b672edcfc67793af"
+    },
+    {
+      "path": "modules/code-analysis/bin/serve.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "12e969a6f4167a3e81074ae510e830fccdc6a2ef"
+    },
+    {
+      "path": "modules/code-analysis/bin/task.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "841573e7bd974b4231c549ab7818521115159584"
+    },
+    {
+      "path": "modules/code-analysis/bin/verify-change.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a7dc60441ad2d8be8324834a029fc3e194f02f65"
+    },
+    {
+      "path": "modules/code-analysis/bin/verify-drift.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5b19cc350adb6a2d819bcd7c9ab0135d71e29f1b"
+    },
+    {
+      "path": "modules/code-analysis/config/defaults.json",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2d79c08079a8b6b186d7e639d32e1fb76b03fcb1"
+    },
+    {
+      "path": "modules/code-analysis/core/diagnostics.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3137ba44683d811e82c31cbb2f241112faaa77b9"
+    },
+    {
+      "path": "modules/code-analysis/core/glob.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "118b67f1b7ce970b71880e66d9c922a5facc6c18"
+    },
+    {
+      "path": "modules/code-analysis/core/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ee9e6f10216c2b6c807b33c7e99b06297f2d959d"
+    },
+    {
+      "path": "modules/code-analysis/core/line-ranges.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "345f241b688cd1142ab0ebcc0fd0c9a7f7e1cffc"
+    },
+    {
+      "path": "modules/code-analysis/core/source-decoding.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "288c1f170def66a6959822544af2e047491a88e0"
+    },
+    {
+      "path": "modules/code-analysis/core/source-range.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c1d8dfd70144d659a033ba88f57e08aa255aeb17"
+    },
+    {
+      "path": "modules/code-analysis/core/typescript-text.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3dcbf7d0071b99fe8ae416f6c204b84220abb9bc"
+    },
+    {
+      "path": "modules/code-analysis/docs/C_CPP.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "779c25ab00bc097e2a9c55368a46aecf218f0f04"
+    },
+    {
+      "path": "modules/code-analysis/docs/EXTERNAL-DIAGNOSTICS.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "18589e4494f875425f1c02ca26042639777287ca"
+    },
+    {
+      "path": "modules/code-analysis/docs/FUNCTION-ANALYSIS.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0c1bb7b61eb6a4effe9636b755c577385f4df160"
+    },
+    {
+      "path": "modules/code-analysis/docs/GO.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "812d61b47b23684793bddb7ac1a28a1deeaae286"
+    },
+    {
+      "path": "modules/code-analysis/docs/JAVA.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ac002a28cccfc264781146a6f0f1ca96652af584"
+    },
+    {
+      "path": "modules/code-analysis/docs/LANGUAGE-REFERENCE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4b3d27ec69e8bf56c8d98c8a77b8adf9b27f73ef"
+    },
+    {
+      "path": "modules/code-analysis/docs/PYTHON.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e98b8c4dd8960f9c77f14ca2ecd62be5ed1d219e"
+    },
+    {
+      "path": "modules/code-analysis/docs/RUST-RA-PARITY.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5f5d3132921b5491cf9ab1b267f8eaea0583ad11"
+    },
+    {
+      "path": "modules/code-analysis/docs/RUST.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "472ff87634189de1e28c155ab5c66168d1e193fd"
+    },
+    {
+      "path": "modules/code-analysis/docs/TECH-GUIDE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7ddd9a3ba1bc4646b60ee8667f12e7811e243301"
+    },
+    {
+      "path": "modules/code-analysis/docs/TS-REAL-PROJECT-ACCEPTANCE.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f70c1a68932602bb039859a13ff2badab80f95e9"
+    },
+    {
+      "path": "modules/code-analysis/docs/TS-REAL-PROJECT-ACCEPTANCE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "zh",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "490f59f78d8ee6f0395f0c7f315bbe58c62fd6ab"
+    },
+    {
+      "path": "modules/code-analysis/docs/TS-SDK-PROBE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "zh",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8367b356869e6cfc02041e3a48dba77e5d7bbab5"
+    },
+    {
+      "path": "modules/code-analysis/docs/TS-UPSTREAM-LEDGER.md",
+      "status": "added",
+      "kind": "document",
+      "language": "zh",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7938678f7ba7beeba2eaf3579bcc8ab3f041bd2a"
+    },
+    {
+      "path": "modules/code-analysis/docs/USAGE.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "72d722ecf5033ac1eea9793be2411ec9b43bcd9e"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f75fb4172c2d93bcdc1579ee81dc6e45a2c63e0c"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/architecture/boundary.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f5d9e1545b6d8cdec7d6f0e5fdce0eb500a5643b"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/complexity/function.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "380938efd083ac0f222c31754b9246f61b7cda0a"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/concentration.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2b7d6987d1bbb2e397f32186e35fcce7dc067cc2"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/cycle-graph.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "da16f6b34942df13aefe9f3fb33ba2c9d66df05a"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/cycle.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fef641fa7e5e65057b35dbe8404b873476c67fb1"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/hub.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e8aa2530159b5516787304bd9940d195ca59b671"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/import-cycle.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "78ca138c09519a7dfb4e2d10224e069a70a5da98"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/internal-leak.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "746d80bc0e63db3dcf3cd6459d3e23cfa7b455a2"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/coupling/scc.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c6990b9d96772e9c0aa6f3a6f6778d5c6e4bbffa"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b6d5ac2c2f2061d247f8f0786fd5c6fa1682c9cc"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/redundancy/duplicate-block.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "bb4fbd0bef3f6bd81ceaa595f497c10ceccf39e9"
+    },
+    {
+      "path": "modules/code-analysis/evaluate/rules/redundancy/jscpd.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b0976b5545f8df37f33e53ac22d4d98d61404f41"
+    },
+    {
+      "path": "modules/code-analysis/extract/c/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "84c457aff68a1ea064ebc66004a58f59204cf693"
+    },
+    {
+      "path": "modules/code-analysis/extract/cpp/extract.py",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c984cbc09730705544662efbd36985096c357e2e"
+    },
+    {
+      "path": "modules/code-analysis/extract/cpp/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "eff0f08f8f1e853dade283f2e474aa0fa4d4f1a7"
+    },
+    {
+      "path": "modules/code-analysis/extract/go/extract.go",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4a3e539d4c60785db9649a2a7c476fc869b3e74e"
+    },
+    {
+      "path": "modules/code-analysis/extract/go/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "adede5c9271ad28615ae415ee0dbf0c346007e18"
+    },
+    {
+      "path": "modules/code-analysis/extract/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "66578b375714d5a53ef60c302a23575b89019853"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/calls.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5249ff5d704e31a5114e48738a1cf1742d90177c"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/functions.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "00f412e6a40308c529f672123bb2a1b59d5fbf3b"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/imports.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2e9e196f661fb77c7581459c0714d364c55d3735"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e42494bca0bc108cf535b975eec60146c28e6bc0"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/parse.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9bbac7173c01e442ff754ae78dc563f159f16260"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/projects.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9fdd85e7d9cd6fff6d88a7ede4d45d683d8494be"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/semantic.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "401dd20c199c8563e0ce9bccadca128f41085bbc"
+    },
+    {
+      "path": "modules/code-analysis/extract/java/SourceBindings.java",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9a26610ce99daaf1da179ec3386617d0445de392"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/analyze.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e7452fdaf86a42740aa6d8312ab6c4cc714c1158"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/analyze.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1b131091f933158bcefb1735ec19143553ca3b0d"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/bindings.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "417f7f901d1a9273b3feb8441aa8478e67df72ec"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/collect.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ee90f8c057277ed2ccc367240a3c3ae266718b09"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/declarations.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c4baff5db6961e49f14eabb385a11b2d98216a16"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/facts.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "889a2c414dbb9f9bb576533abfc89184753d18c4"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/flow.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4813e5f7ca40ffc6d3c7f0052e489bcaee5da922"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "33e98869c5f9e8640f9bb44218f1fba90d7cfd65"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/source.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "156e1b6d12db305cf845322bcba3bfffb6f9e701"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/syntax.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d9281b967cb17b96f766498b9469287aba55dc2a"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/tsconfig.json",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "85941551af72b725a67080f643f505fd6687f4d9"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/charCodes.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "99698ffa3eb8f292ba87d484b20859967c516b2a"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/collectionUtils.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f24ec2da7965f9b7ec935d8b959603170ca5a626"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/core.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d74518845f43e05a565d9b66bf040c14d5e626dc"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/debug.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "128c8e83c8b6ac343d99d16935117726d34a354c"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/diagnostic.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8a905413315cfd28ef0629b5611fcb05db07d0c8"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/diagnosticSink.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "263d639c0b5f2b71859d42614c17a5c7192a27f8"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/positionUtils.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c5c2218617428d5d56055daae338fbe1fb1c257e"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/pythonVersion.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7966f18cf08f7487943bc4bf559e6598a19d7323"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/textRange.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "eb36e55be098e33c46ea81cd7ff694d6e79f31d4"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/common/textRangeCollection.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f3ce724341f2cbbd34dcbc1b3f274b39ffe9af7f"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/LICENSE.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0c537977906fbe6f3fb260109f579bc4d9cad402"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/localization/localize.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c4f374418b34da0428842779c8d80e72ddb59a5f"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/localization/strings.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a606c3322309d1e129680ec8e5f0f7d632278d84"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/characters.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "daa31f8966b54e8324c6bced8c83b6dbd3d78271"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/characterStream.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7003c431d8354c760df8442723bb53f20d4b6505"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/parseNodes.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c7cf6a28b458a69403cf9b864a7caac77993b69b"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/parser.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d04595cd400a62316bdb58a846153486d004f916"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/stringTokenUtils.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3120c6981b2f0e90b7df88eeefcb9b0ca58dadd4"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/stringVersionChecks.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6b55503083b2889ee99a8fac350843c03e57f685"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/tokenizer.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3ccc42bd4270eda429162a549ca8dc595443b397"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/tokenizerTypes.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "09b7c0d62e764a166df3f75fd9a7b986bca66b28"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/parser/unicode.ts",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8a1ac111a451e8e2d3e09465064fc308f7e5f877"
+    },
+    {
+      "path": "modules/code-analysis/extract/py/upstream/UPSTREAM.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "91bd374bddeb8f5c450153fa871e3dc3c35bf9d8"
+    },
+    {
+      "path": "modules/code-analysis/extract/rust/.gitignore",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b83d22266ac8aa2f8df2edef68082c789727841d"
+    },
+    {
+      "path": "modules/code-analysis/extract/rust/Cargo.lock",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c06202d9ee7bc4014b6511885dfaa425b3dc98e0"
+    },
+    {
+      "path": "modules/code-analysis/extract/rust/Cargo.toml",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f6a434517bca140ee5fd8c00cc6ac922a61da13e"
+    },
+    {
+      "path": "modules/code-analysis/extract/rust/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "042e3809a670b5b87d846608981f3b0af1993e02"
+    },
+    {
+      "path": "modules/code-analysis/extract/rust/src/main.rs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d3b5f3cfffb410c3ec1e00a5e8b8e8890d094085"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/diagnostics.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "aa91375563f18a7d08e4351503fa34cf4b3e4024"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/files.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f5b8761c8ebbba8445c13b05ee5f223c3b9eab8f"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/git.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3f49a48fb721ac5e5209426224d0ad08eb253842"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/glob.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5e576c1d3e6d006d459fda97875588b33e57e501"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/schema.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4e7352d14134b7c941f6319a15734253d7f25c4b"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/semantics.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8a5abef0dabea3f58c267d0a92095126511c3cb0"
+    },
+    {
+      "path": "modules/code-analysis/extract/shared/source-range.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6110343e6a2945a276b7b9534661c2629e6b9166"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/calls.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a85ca47b086e4f92e22dba41afa8dabcb50d0aee"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/functions.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a97d0c3811bde55d9a0934b5e4e246b6f1742862"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/imported-calls.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d416a8971c20d89f85ef63a0cc4ca0e3211c7efa"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f1fb28fcf10c7e04564fb095e67824ee8269bd20"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/runtime-package-target.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ffa2edfe62feb644b970c5e92761e55bccdde78b"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/sdk.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "525121cea0054f740c9a15d1ccaa7c67e69e6b2f"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/snapshot-host.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c273ceb11009e0dbbb6102354b87e77ed4eda5c2"
+    },
+    {
+      "path": "modules/code-analysis/extract/ts/syntax-walk.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "efe531dbd45c2294c99b46828839c6a2119a73cc"
+    },
+    {
+      "path": "modules/code-analysis/graphs/module.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "89581a59378e10c71224eeaba1cd3acbebf25ee9"
+    },
+    {
+      "path": "modules/code-analysis/import/common.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f7265f48a2b2e5129b7651123550e3ad3f06c31b"
+    },
+    {
+      "path": "modules/code-analysis/import/eslint.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fb738f7701e1ee8b2601e0203670d337e5e5518f"
+    },
+    {
+      "path": "modules/code-analysis/import/fingerprints.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "08af7467c97d9d7e2128d61ebfe63b47c4e55223"
+    },
+    {
+      "path": "modules/code-analysis/import/github-review.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0d2e4573b4942f3e7efe523275d85196a6234679"
+    },
+    {
+      "path": "modules/code-analysis/import/ruff.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "044f94ce5224553855f35abd4dcd34077f45852a"
+    },
+    {
+      "path": "modules/code-analysis/import/sarif.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "33dee60b8dd9dac40397682362658868661ed9cc"
+    },
+    {
+      "path": "modules/code-analysis/import/vendor/CODEQL-LICENSE.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b50625eb63949013cae604b1cadd42cfa1eaf825"
+    },
+    {
+      "path": "modules/code-analysis/import/vendor/OASIS-LICENSE.md",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4f6c09850303dbc804e8b8aa34eab7acc5ad1817"
+    },
+    {
+      "path": "modules/code-analysis/import/vendor/README.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "232c9a0f6f9dec4a0e5a1699324a7b9b1b3fbf64"
+    },
+    {
+      "path": "modules/code-analysis/import/vendor/sarif-schema-2.1.0.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0f58372b548f60c84d20fca77687435e71b3b3a3"
+    },
+    {
+      "path": "modules/code-analysis/lib/analysis.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "31081d9cf296632742200543c5a27aad8c92a4e9"
+    },
+    {
+      "path": "modules/code-analysis/lib/architecture-brief.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fb1835b0dc5d35a84bb88ed8b3eede039b1da08c"
+    },
+    {
+      "path": "modules/code-analysis/lib/architecture-drift.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c75773d16de1aa66e795db9f54ed479766d4d738"
+    },
+    {
+      "path": "modules/code-analysis/lib/change-question.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fe3818b0cb4d898914b5b6cd7357fb8fb567435a"
+    },
+    {
+      "path": "modules/code-analysis/lib/diagram-mapping.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "38ac3f008fa414d0474b9e667a3835c85eaf9b4c"
+    },
+    {
+      "path": "modules/code-analysis/lib/drift-capture.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f62693884c7c099ad3d00c6b3fe253fe771d1f5c"
+    },
+    {
+      "path": "modules/code-analysis/lib/drift-input.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5df358feaefc0f045a8d56f30090129871f25b8e"
+    },
+    {
+      "path": "modules/code-analysis/lib/drift-verification.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "92d3204110c6ae06e8ce2b5834cca4fc3b3325da"
+    },
+    {
+      "path": "modules/code-analysis/lib/duplicates.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2abbf1fe85f511940f059a00c51864a8fc9461d3"
+    },
+    {
+      "path": "modules/code-analysis/lib/evidence.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7457fa2630fd41fa3eb9147b2d07470e3c10c83a"
+    },
+    {
+      "path": "modules/code-analysis/lib/explain.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5b820e6a8eb4d5c743718e9c0180d3d5a8b6655f"
+    },
+    {
+      "path": "modules/code-analysis/lib/external.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f881edaa0af1b2b5d56a851be27180449974d158"
+    },
+    {
+      "path": "modules/code-analysis/lib/git-sources.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ba7586f977dcf2e1b6c0c5f8924d47d34b7cfcd1"
+    },
+    {
+      "path": "modules/code-analysis/lib/module-summary.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "40458b35134b14f433999a5c7606c81d4a56012c"
+    },
+    {
+      "path": "modules/code-analysis/lib/pull-request-impact.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7bcb7f3c6727da7f12d097a7fed6e386fe4535b5"
+    },
+    {
+      "path": "modules/code-analysis/lib/pull-request.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "de80d20bcf0922a188e6eaa9f44dd0a006e3b0dd"
+    },
+    {
+      "path": "modules/code-analysis/lib/question-calls.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e9bc5494b02078188f92545ff2194476f9a54f62"
+    },
+    {
+      "path": "modules/code-analysis/lib/question-incoming.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a2b3e0f3656c3dd75de2f291b7bbc3f98eb5acba"
+    },
+    {
+      "path": "modules/code-analysis/lib/review.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d2fba1a0930a09d6755b2223f131f6747001f4dc"
+    },
+    {
+      "path": "modules/code-analysis/lib/task-command.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b9ed621f10d136a6d7c945a659e280fffaede81e"
+    },
+    {
+      "path": "modules/code-analysis/lib/task-id.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "916d22d40f58a7644ab34ae7dc9053eeb8321db1"
+    },
+    {
+      "path": "modules/code-analysis/lib/task.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "91d908d17459d16ed5169e046f4a5ad04bc2f2ad"
+    },
+    {
+      "path": "modules/code-analysis/lib/verification-context.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "60fa5b9ca00eadb79374401371cc703c8623a3a6"
+    },
+    {
+      "path": "modules/code-analysis/lib/verification.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "705b0888094746202837c14578abebc98ab199d3"
+    },
+    {
+      "path": "modules/code-analysis/LICENSE",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "dffabba03bee5055b72fdab212661e3757a916b5"
+    },
+    {
+      "path": "modules/code-analysis/NOTICE",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ff6f6c16ff460ded798fde6b3cff8290fd333cb8"
+    },
+    {
+      "path": "modules/code-analysis/overlay/architecture-handoff.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5e4ee9c45c8f7ba048ee1c9012b46f542748437e"
+    },
+    {
+      "path": "modules/code-analysis/overlay/atlas.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "05dcd2d0f68b5798a61bf60e38f758440b0f11c2"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client-assets.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3af1074da616a817a8a997eea85c01bfdf3f15b9"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/atlas.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ad786936f5a9af1ae37ab14582f062a42bd236c6"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/atlas.js",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ccaafb88d49eb918eb007e221165defdbcd34853"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/atlas3d.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e2a72a5d5c694d9472a8a7c44fc04f987ce3805b"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/atlas3d.js",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "10f9ff93306e97a3c4ea4a014a9d4c4ac4ae25a0"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/drift.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a927686dd091e177ff3228ef00514e876ffb3d60"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/drift.js",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "89236abcf84a12c5e4710db01651b9b908a6a75b"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/entry.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "876da992b06dd89b7dc4b6bd3a9be006a538b908"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/overlay.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6aaf7e492cc16bf90d9d313d52af633be45c82c9"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/overlay.js",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "26b6c51023b119cee50d8232d4e8c0850ef21fcc"
+    },
+    {
+      "path": "modules/code-analysis/overlay/client/verification.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "23906dd9a44bff3fd651d3ca05f27be271278702"
+    },
+    {
+      "path": "modules/code-analysis/overlay/drift.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "bb06361524355db9b27eb32a5075523cf8ff7ddf"
+    },
+    {
+      "path": "modules/code-analysis/overlay/i18n.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "605c5255415f649f01415aa97e27ab381aab3c86"
+    },
+    {
+      "path": "modules/code-analysis/overlay/inject.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8ad9a79219dac2dcd98bc998e8e0b4930ea1e850"
+    },
+    {
+      "path": "modules/code-analysis/overlay/overview.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ec063ca0778e0f8b7d4d8478d57310ac8a1318ca"
+    },
+    {
+      "path": "modules/code-analysis/overlay/page.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "68d31726d7961490ea9eb77c109bd3fadaf747e3"
+    },
+    {
+      "path": "modules/code-analysis/overlay/pull-request-markdown.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e9d6a20c81a36fed8731cf801db935fb260a68b9"
+    },
+    {
+      "path": "modules/code-analysis/overlay/pull-request.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5e33ce74669a44838ef3e0917c85392da0914315"
+    },
+    {
+      "path": "modules/code-analysis/overlay/source-changes.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c9e030d47f9a7f25de4310313dbc42937f84fbb5"
+    },
+    {
+      "path": "modules/code-analysis/overlay/standalone.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "31ea321c559a039197327fd8f3ac0e0a8391345c"
+    },
+    {
+      "path": "modules/code-analysis/overlay/vendor/THREE-LICENSE.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5303437e406ed22d8cb0b4c12398870792a25878"
+    },
+    {
+      "path": "modules/code-analysis/overlay/vendor/three.min.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b14f47c0908bab15e890b468d53bb07db0be3a18"
+    },
+    {
+      "path": "modules/code-analysis/package.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3d9720a63e7f4f63d36c349d8dace64c182a7144"
+    },
+    {
+      "path": "modules/code-analysis/README.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6f622d7ffab111644483cb543043a2ab6e78edc2"
+    },
+    {
+      "path": "modules/code-analysis/schemas/ai-task.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c8edd0fc104d32757375ed566abfc610faa75dc4"
+    },
+    {
+      "path": "modules/code-analysis/schemas/baseline.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5014bbbb23afc006c6d44f9d889dd153f206d2cd"
+    },
+    {
+      "path": "modules/code-analysis/schemas/findings.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "533c7c68c8f0ce8b36db0da2fc50eb5fac09a860"
+    },
+    {
+      "path": "modules/code-analysis/schemas/index.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "036eee140ecb8413770c104e9cef383e0b11e512"
+    },
+    {
+      "path": "modules/code-analysis/schemas/module-graph.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "341518ba36f2d5ce8c57838aea46e80923c55aa7"
+    },
+    {
+      "path": "modules/code-analysis/schemas/raw-facts.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3cd51360e0dd336ee137cb8d725bb90fdc48e035"
+    },
+    {
+      "path": "modules/code-analysis/schemas/semantics.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c4441960adee77c29c8bf62e6a45c88673fec6da"
+    },
+    {
+      "path": "modules/code-analysis/schemas/validate.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "31a6b5e6065106437973d0de3dd1e5680e5822e6"
+    },
+    {
+      "path": "modules/code-analysis/scripts/build-python.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2ab7f1b1476790ef4e4b70f673682429ef9b0196"
+    },
+    {
+      "path": "modules/code-analysis/scripts/build-vendor.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "578c6c1d70ca965a73f93c6e2ee8750fe99e9fb2"
+    },
+    {
+      "path": "modules/code-analysis/test/atlas.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d940ec245d61f1a74b11e449dd167e612adecc65"
+    },
+    {
+      "path": "modules/code-analysis/test/boundary.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7a6995cdf6292a7462c86bb0e06d265c8fab6928"
+    },
+    {
+      "path": "modules/code-analysis/test/calls-java.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3b978f1c5ec99e530ac3cdf75080a9c7c76db2b5"
+    },
+    {
+      "path": "modules/code-analysis/test/calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "df7b04561b4f030755bb6eee4a6287d78b791035"
+    },
+    {
+      "path": "modules/code-analysis/test/change-question.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b6db2c37241129fe5d6087d37bd82950323a8d83"
+    },
+    {
+      "path": "modules/code-analysis/test/check-coverage.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "54f5cf1a79d3799b8a81c19394a256df3c36eed8"
+    },
+    {
+      "path": "modules/code-analysis/test/client-assets.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "16428c333a2f6deaa1b75cbcfb3f1ae76e60bc06"
+    },
+    {
+      "path": "modules/code-analysis/test/comparability.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3996b22795263d796f1f11b31ba5fe63b7d6d903"
+    },
+    {
+      "path": "modules/code-analysis/test/complexity-java.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "07d3934a678a59aa1df66a5525995aa8f20421bd"
+    },
+    {
+      "path": "modules/code-analysis/test/complexity.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "47aabe4fd673120fa375aa1fd28d110d3f9eb876"
+    },
+    {
+      "path": "modules/code-analysis/test/concentration.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5f3f1dee60b2af888d8fce5790183bcb1e32e0f3"
+    },
+    {
+      "path": "modules/code-analysis/test/cpp-analysis.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "56d9cc3f2282b6df8c7c9891e4298c3e478f569e"
+    },
+    {
+      "path": "modules/code-analysis/test/definition-metadata.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cbaad9e68bd1e1b13e88cf41dc95638c7c0e965a"
+    },
+    {
+      "path": "modules/code-analysis/test/duplicate-coordinates.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "51c28d9516f2dc20662a0e986d15c5eb826d2f3f"
+    },
+    {
+      "path": "modules/code-analysis/test/duplicate-evidence.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "28dbba2083890464ff5042a766534bf28ab2bcab"
+    },
+    {
+      "path": "modules/code-analysis/test/duplicate-languages.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "112960a11cd1dfd9b531056b0f528c2236d5a996"
+    },
+    {
+      "path": "modules/code-analysis/test/duplicate-workflow.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5e2a067070220a5900f7feac089b97887758bea6"
+    },
+    {
+      "path": "modules/code-analysis/test/duplicates.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b3c1941d602c6d71a0e1cef9fa2c77b8ce5c442d"
+    },
+    {
+      "path": "modules/code-analysis/test/evaluate.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fc23b0eae780471f542aeb44e8e7cb781a0c7d4a"
+    },
+    {
+      "path": "modules/code-analysis/test/explain.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "31c81e3c52521793c2e7c1c283783e04b20323bf"
+    },
+    {
+      "path": "modules/code-analysis/test/external-contract-regressions.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "418b38fee394c645d634a1a2a6084801b6b3c8f9"
+    },
+    {
+      "path": "modules/code-analysis/test/external-import.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fc2a6a5bb78381892036b2c5bdae4bf2dbf12240"
+    },
+    {
+      "path": "modules/code-analysis/test/external-map.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fe68f7450cded251a1bb63e1ee2d27a403491171"
+    },
+    {
+      "path": "modules/code-analysis/test/external-review.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0077a2c23d8e16e433a69a6b1c9e22ed7058ae7d"
+    },
+    {
+      "path": "modules/code-analysis/test/external-serve-review.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c42f86da4d85e3f67fbe8e3197712c5452a0d179"
+    },
+    {
+      "path": "modules/code-analysis/test/external-task.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4661d8a0d365535f9ca74e10d3191d40fc895a78"
+    },
+    {
+      "path": "modules/code-analysis/test/external-workflow.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6148f0876b7ab2f8ab146aca6e310dce23b5c9cb"
+    },
+    {
+      "path": "modules/code-analysis/test/extract-fixture.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0df2b4d69786f43395497e9c2d9b97aeaaa72caa"
+    },
+    {
+      "path": "modules/code-analysis/test/extract-java.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "12f4fae79a8f9d37c89e11ee2cc72cade0cc06af"
+    },
+    {
+      "path": "modules/code-analysis/test/extract-py.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b7b513c321939aba4836208e638fd0b9c26ea7c4"
+    },
+    {
+      "path": "modules/code-analysis/test/extract-regressions.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "54b6353ba1aa23f2d26b02dca398c2793df173d1"
+    },
+    {
+      "path": "modules/code-analysis/test/extract-self.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ff23b584952dd0fcbae669622a139e260077b5e2"
+    },
+    {
+      "path": "modules/code-analysis/test/extractor-revisions.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "421c13339b1c086ae0cf319884ee8418f81ebbff"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/extractor-revisions.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b246b2ddefaee8e70abea9967138f4e0639d33bd"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/pom.xml",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8085e347aed390474469246a7d9802db838d16f9"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/model/BaseEntity.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "995472666cc7284f5f56131654d9e8ba4a1f3ed9"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/model/Named.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "08dbd49a225e36929279cffe573fcfa9abb38c8f"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/owner/Owner.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e8dd90d94db650c602e6fb9698ab4c3bd934f254"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/owner/Pet.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e18905100e493b0dd6ed5cc08706ce55b393ecb7"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/owner/PetValidator.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "092187f69f7f2360409d65f678ef2828cfd1a4dd"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/owner/Visit.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0cb107b0b8e847807316f3fdb89733d9f09aacbf"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/main/java/com/example/util/Escaped.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "32a18cca6c70d78ed1998d6016c38b3dd311b06e"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/java-basic/src/test/java/com/example/owner/OwnerTest.java",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "db2fdf2e5f8d5d9969cb657eade46b9c575bd8a5"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/jsx-project/jsconfig.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3e0fb06e75aa09b8f26a5e3f916fad67c5c71c9d"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/jsx-project/package.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "034335eb7b66d1d59eed8a478a9c3550dc2a4496"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/jsx-project/src/Button.jsx",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "56e04bc7596e7c80a6eda56f08a54399a4c4b05c"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/jsx-project/src/direct.js",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a4abaf7953a28f77f2c07b5fe142847581fe5a75"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/jsx-project/src/main.jsx",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5e7d71e2a92d00a40d2ca7fb617cb97b6c3e4a1f"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/mixed/a.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cc798ff50da9473effe8bdb31c8c120fe42b61e3"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/mixed/a.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "21b405d8c2dac873e9063b1dff87e46c3876aa58"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/app/__init__.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4e23bdee2566ad81fdee5f2599b1df710ab8747f"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/app/core.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cd2479925aa13876cae1c7bebc415666e21a2c0a"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/app/util/__init__.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/app/util/text.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "20badbf2e7dc5ee116afe38b9de71ec82230de5b"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/broken.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d1700283fd9244fc9ccccdd5f99a54646a7897fe"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/expected.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ff0a776d63f705c677567aa206f81dbf045118e9"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/ns/mod.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b15b1b0797d64623135bb2d04a67bae078fa44c2"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/sibling.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9f511a3979947f5096feccb41887d11435e948f2"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-basic/tests/test_core.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f39592e98a1e48a4741151f7ab674cc4c8acad18"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/analysis.config.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "95f73f8844f4dc9487963c4b21d25800c14eee4a"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/app/__init__.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/app/a.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3345d25b11196d3c1514c94dd3ce0aaa91c17b3f"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/app/b.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "bbabf598c2ee3e5d990ab7024b07117c5a47f489"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/app/engine.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1b1ac57593a64e9fc68afcd582cb4307a71f6fbd"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/domain/__init__.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/domain/model.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "823911efbd0172a4c18d98ae87def97f7a372964"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/domain/order.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "70f59e575e9b4edb1c4609f4791558b958efd606"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/README.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ef659947ed6209423431fb235e65956dd5d6c862"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/ui/__init__.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/py-tasks/ui/view.py",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f38fe81d92e9c71e3d323a72ff1aa877a0b6721b"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/boundary.task.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9e11b8f03f9485c14ea66532b878d6e5a6723b74"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/boundary.task.md",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4537e33f54aae1f740d39b0c1eeb1283349b9527"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/boundary.task.missing.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "dabb0f9f1e85fd537bb9d066db421def9cfef48e"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/complexity.task.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2cfbe5647c2257b4d5d8424a68200d7f8877af43"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/complexity.task.md",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "86d5cfd8535f785f76ed3064fabe31e33ffc3b63"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/complexity.task.valid.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "03b912861fcf3f876952a096401548b94d567be2"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/findings.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "118e54e7d79ae80aac715bc4d486c05f73b3720a"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/import-cycle.task.changed.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "107c21be79720af264b642655b8f02513d5013b4"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/import-cycle.task.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a2b8de3c7aeb3b0d9ce218afaac95492afd2e297"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/import-cycle.task.md",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "31478ce140124c40b3938b3891cfd0ef354b7bea"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/module-cycle.task.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6bd5c5b051ca1ba3619ac53409a4551d21f0260c"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/module-cycle.task.md",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2eb2694b8dd60c3f3312234f8fbf956dc812d362"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/tasks/raw-facts.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8036ade17f2514acf35b607bb9536793125923d2"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/expected.json",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "aafc2c523bba2ffdb11b0fc34fabd77bcbfce70a"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/src/generated-table.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "78f8ad28bd7fc0398c4177073a272d2d2926ea1e"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/src/index.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "98c9c71a4f6b34a266fd770c67ada23458958c14"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/src/lib/helper.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b5e08b667a1064a63eed7aa217b283a42aba32d5"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/src/lib/lazy.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9b9bdb1a273abdf80efaaba93fbade4d665c1918"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/ts-basic/test/index.test.mjs",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9a973fffb6030841585125092a021cbb5260d1ec"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/vue-2532-base-processExpression.ts",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d6e2d151f36912d1bd8205979cb94658541c2b7f"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/vue-2532-head-processExpression.ts",
+      "status": "added",
+      "kind": "fixture",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "00c70c3e9cdd23aae54d8b46ed727fcf6e57e52c"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/vue-2532.LICENSE",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "15f1f7e7a490fec6e4a4016624325debfd9458a9"
+    },
+    {
+      "path": "modules/code-analysis/test/fixtures/vue-2532.README.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c97469dbd1d1d4015f3e4eccef07ba23752b41b7"
+    },
+    {
+      "path": "modules/code-analysis/test/function-source-range.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f1d79a535811fe8cfe5151648044b4a802bd7ec4"
+    },
+    {
+      "path": "modules/code-analysis/test/go-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "7051f5c4e6aebdfc023807dcf1d7c80fddcd6cc8"
+    },
+    {
+      "path": "modules/code-analysis/test/go-module.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "737ce9cb3b877ebf82cf66abbe8b2ada72eea9f6"
+    },
+    {
+      "path": "modules/code-analysis/test/graphs.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5cc54c16050869663dbf2ae6a9d409664dc587b6"
+    },
+    {
+      "path": "modules/code-analysis/test/helpers.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "da4f58d41a2a3e536d41a1cbc3b230aba946a525"
+    },
+    {
+      "path": "modules/code-analysis/test/import-review.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "28e5f52d1dbbc53dad91fcacfabaaf1537fd25b4"
+    },
+    {
+      "path": "modules/code-analysis/test/import-semantics.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "493beca9155dcc6838a1c384b9efad49747c49f3"
+    },
+    {
+      "path": "modules/code-analysis/test/imported-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d338b68f8ce3ebbf7ea6e21f16fa936765eac5c7"
+    },
+    {
+      "path": "modules/code-analysis/test/interactive.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5a63957d90d25cf0ab518741883a4ed78821b38f"
+    },
+    {
+      "path": "modules/code-analysis/test/internal-leak.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6beedbd8cf6b3378f0cf5da1f0f70c6ec51b0da0"
+    },
+    {
+      "path": "modules/code-analysis/test/java-projects.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8876d6fec5caacb5064b7193efdad25e54462d4c"
+    },
+    {
+      "path": "modules/code-analysis/test/java-qualified-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9908fecdca74b7f0328ceb45f428742b11c88c9a"
+    },
+    {
+      "path": "modules/code-analysis/test/java-semantic.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "afd9b57742472083db6d172148162340d033de22"
+    },
+    {
+      "path": "modules/code-analysis/test/module-summary.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2b23e5b39cfa3892887c0f02961faa7b6c5f4d72"
+    },
+    {
+      "path": "modules/code-analysis/test/nested-source-roots.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f7a5cccf9b00273f2494dcd17ff8370a3caa5cf5"
+    },
+    {
+      "path": "modules/code-analysis/test/overlay.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f983c868de21661b548c3e4f330936bd7feb6014"
+    },
+    {
+      "path": "modules/code-analysis/test/overview.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "177cb2ee9e3746f74901bc54d8d745af30af5302"
+    },
+    {
+      "path": "modules/code-analysis/test/pull-request-impact.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4214f0648bf69846fd05223fd5dc8475157969ff"
+    },
+    {
+      "path": "modules/code-analysis/test/pull-request.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3d9e7aa844c1e73e1bad802efcf0e9d8e42da809"
+    },
+    {
+      "path": "modules/code-analysis/test/python-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "76cb1c21f0d40daf047020311c5d9ae490bcec60"
+    },
+    {
+      "path": "modules/code-analysis/test/python-launcher.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "514824a02a8692862c912f91f94e2017a6a97ddf"
+    },
+    {
+      "path": "modules/code-analysis/test/python-source.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5920fda7474d7d77bdce99d227e557299b1290ba"
+    },
+    {
+      "path": "modules/code-analysis/test/question-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "99e7674ff1a73f2ee82995214d68da506e729b88"
+    },
+    {
+      "path": "modules/code-analysis/test/question-incoming.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "48a867dec4edb7a2d72ab19f0abe6d29dcd7722d"
+    },
+    {
+      "path": "modules/code-analysis/test/review-regressions.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4ca907c4ed42ca10fadc7cec5c6ff6ee5a423bfe"
+    },
+    {
+      "path": "modules/code-analysis/test/review.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "38f7337de52788bbc9a0770c5f95642babf16356"
+    },
+    {
+      "path": "modules/code-analysis/test/run-extract.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ea25c1b8527a8ca185837b54bbb2a0023cd5cd8e"
+    },
+    {
+      "path": "modules/code-analysis/test/rust-calls.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "a824d68ce0d84434a91866118e01f81756b2ee40"
+    },
+    {
+      "path": "modules/code-analysis/test/scc.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b057cdb4fd1d2a33aa1807af48c5693d6decb5ea"
+    },
+    {
+      "path": "modules/code-analysis/test/self-check.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "700971cfbad27516b22ba11dc3bccfffe4092bad"
+    },
+    {
+      "path": "modules/code-analysis/test/source-changes.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "84ee2e8951319d5552c4214d66096e811578a91c"
+    },
+    {
+      "path": "modules/code-analysis/test/source-identity.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e8f5ed98288bf1f302a21238b6bef54fcc65e51b"
+    },
+    {
+      "path": "modules/code-analysis/test/source-panel.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c5528e44201faf6f40fb96f83c9c1b2e28c01e62"
+    },
+    {
+      "path": "modules/code-analysis/test/standalone.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "895483e7d91de25ed32fcd67723ae7534ca525d9"
+    },
+    {
+      "path": "modules/code-analysis/test/task-command-shell.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "42bb7569d1ce1a27f1618d56dc185430519ccbb3"
+    },
+    {
+      "path": "modules/code-analysis/test/task-fixtures.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c484624959d71b438b97c755caf660503a535b29"
+    },
+    {
+      "path": "modules/code-analysis/test/task.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "50e4b99461b527907d80dded3397437e45e87a1d"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-multi-repo-probe.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "80aca4ace6649ba68724d626c01147dda6ce2e66"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-cases.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1991b2a476f0bb70a5f84d2226145a229e4e634c"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-definitions.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9ae2b2c133beefe5280a5cc2f3f094e77c32a3ad"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-modules.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b5f48908dd4ada4190e08b9fdfbb3e1e144f5578"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-oracle.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "76a55106c6d4ab933d2e9ed04430d23f35521945"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-projects.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1469a62f2b5c552a52088123520124f4107a8393"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-official-syntax.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3107076289cf77e64dbac05e86e0a69ad06d2b0e"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-projects.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c8d53fd5e88bd5dfee09640ffd69df88f16f97ba"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-real-project-acceptance.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "06a269deb6340319ec4609eb12859c58230f6fd9"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-real-repo-probe.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "eb11ae33ba657ab6bbba6e9de33e6e9c12787353"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-sdk.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ca06da288f95963d97cb6437e15b26d9946f3350"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-snapshot.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "d59567f0da281775a83f1fa0525838f6d3f3e88c"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-upstream-alignment.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "803af2dde8a0548f94830b709e05011b47482ed5"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-upstream-cases.json",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2fb7f4474cffd8d6cbc33364afd108e0963de9f7"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-upstream-inventory.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "64c7b5d48e2f60307a2011788518b1ddfe1082e0"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-upstream-ledger.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e5b850e64db28f3b2f795347014a35b5d3933ef5"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-upstream-syntax-probe.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "887d0a6a06bba6d2cdc4a7455f702f6a03c455a2"
+    },
+    {
+      "path": "modules/code-analysis/test/ts-version-probe.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "26c4ae6af0add4707f554833c73b9c266bd0b329"
+    },
+    {
+      "path": "modules/code-analysis/test/verification.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4604e756737beb5eae392c2f39be4d44867b23a3"
+    },
+    {
+      "path": "modules/code-analysis/test/workbench.test.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fa906d20ff8e00e869a3eb8fd0b3f08e561dfa98"
+    },
+    {
+      "path": "modules/code-analysis/vendor/deps.cjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "303a80b08f50e7aae91870010fd75a00014eddd6"
+    },
+    {
+      "path": "modules/code-analysis/vendor/LICENSES.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6d9338cc95e876dc8674c5fd0c170a74948b0c98"
+    },
+    {
+      "path": "modules/code-analysis/vendor/typescript.cjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ca5b3942798cf75815c319232b0ba176910423e4"
+    },
+    {
+      "path": "NOTICE",
+      "status": "changed",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/NOTICE",
+      "old_blob": "b63fbccce2291058a9f4abec9d64b57b527e44d7",
+      "new_blob": "c9e0c0446c91b02c49e2b9c5479878ae24b0a052"
+    },
+    {
+      "path": "package-lock.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/package-lock.json",
+      "old_blob": "76508e46c633bba67016575fa8786fc04ad4f506",
+      "new_blob": "9ea4f046fdf254aefab535b2c21b373aadaf36ff"
+    },
+    {
+      "path": "package.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/package.json",
+      "old_blob": "06b0e30235de37b99b9cf52e8d164383e90fcd98",
+      "new_blob": "d57a63ac22bae465411f28dd676db5f90d488df0"
+    },
+    {
+      "path": "pr/attach-common.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "01d4074704c47d684632cb44cd1c7c9b492f7479"
+    },
+    {
+      "path": "pr/attach-gitlab.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0139364f5c62fcc83209fec61eac20498b0aca8e"
+    },
+    {
+      "path": "pr/attach.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "16cd6baf445d3ec8f03bb05bf46c99fa48b9bd4c"
+    },
+    {
+      "path": "pr/build.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "acf286bd6ca08ce447c5c07bbde47509d0e8a25d"
+    },
+    {
+      "path": "pr/cli.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4a991cb6b2dfc1b32a3dbf68308ceaf45db1470d"
+    },
+    {
+      "path": "pr/errors.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "604291207e056d9041a17068d006c58dd282d368"
+    },
+    {
+      "path": "pr/manifest.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "47cdee83bf69fbb5754509f7f63bcfebb770dd5b"
+    },
+    {
+      "path": "pr/markdown.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4fe0d0be50415428cb0dcc5d6b99acdb80afbab2"
+    },
+    {
+      "path": "pr/metadata.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8470c4dde9964055bb84b71a6cfef47dce004968"
+    },
+    {
+      "path": "pr/preflight.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3e8781e9921f761b0d1a1f9cff6ce6c9474af5cc"
+    },
+    {
+      "path": "pr/story-svg.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b5b36b8220db383f6424ab60306a72d491ca5efc"
+    },
+    {
+      "path": "recipes/scenarios.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/recipes/scenarios.mjs",
+      "old_blob": "1f082fc91d0fafc382c4eb73211db971d4e9bf96",
+      "new_blob": "bfa764d3cd0dcafb466c7447b0ce7578e9e06871"
+    },
+    {
+      "path": "references/architecture-layout-repair.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/references/architecture-layout-repair.md",
+      "old_blob": "d7792cff9de3b6b462b1feab78347f97c2d45e2d",
+      "new_blob": "bdcbdc13d497ec7d43c1887152c4678480f47529"
+    },
+    {
+      "path": "references/authoring-contract.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/references/authoring-contract.md",
+      "old_blob": "1e821f24b6e93273eac47242f116c4cd3e0798c8",
+      "new_blob": "a33ee4f37a43afa7957f64d65af10f2b9c7da358"
+    },
+    {
+      "path": "references/authoring-defaults.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/references/authoring-defaults.md",
+      "old_blob": "4e7f30d6c684b7d1737854c29a645448771f4ca1",
+      "new_blob": "3adbe2f2088a69f4b939272593ab55579c734245"
+    },
+    {
+      "path": "references/brand-marks.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/references/brand-marks.md",
+      "old_blob": "d8369e0dd1cca6765c1569cebf52166f6f7c2630",
+      "new_blob": "46c64f82cac359128d9c519a5178b584c7c3e0bc"
+    },
+    {
+      "path": "references/delivery-contract.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/references/delivery-contract.md",
+      "old_blob": "bc7265d45afbf379c81b795a08459e3fb013b966",
+      "new_blob": "080642ac3c9ec0ba83cb768bdef32b362f908dc4"
+    },
+    {
+      "path": "references/explainer-authoring.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/references/explainer-authoring.md",
+      "old_blob": "814f76f1d4f87faccbe09bfa963b0af55947b858",
+      "new_blob": "67e21b07831bd15a414c40363624e06582eb82f4"
+    },
+    {
+      "path": "references/pr-review.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "22378b9651511e2dddeee0f99e3fb765e85a4a07"
+    },
+    {
+      "path": "references/repository-authoring.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/references/repository-authoring.md",
+      "old_blob": "38d06a6173042da3557e4d447330a7c3a56ad60c",
+      "new_blob": "56c79c64ad3b75d88f3c75dad87d21e97531e4ac"
+    },
+    {
+      "path": "references/story-authoring.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "4fc079383cfb28804d5deb7f064cfb7fbc765112"
+    },
+    {
+      "path": "references/update-awareness.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/references/update-awareness.md",
+      "old_blob": "50e6bdeb6980b00f6b50359e9b4f805592dcf875",
+      "new_blob": "3011d592eecf13914ced0e26de73817790d009a8"
+    },
+    {
+      "path": "references/viewer-runtime.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/references/viewer-runtime.md",
+      "old_blob": "ea150622eb057534c7ccc7608c8f661ddc13a378",
+      "new_blob": "7a23e09888c39ff2771364d525fd06a7a8e042d8"
+    },
+    {
+      "path": "renderers/architecture/automatic-placement-candidates.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "da143fe59188cae837a6c3760cf843629644a271"
+    },
+    {
+      "path": "renderers/architecture/automatic-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9fe67bd800ea6b6864c6dd7bb5410302e95fe0fd"
+    },
+    {
+      "path": "renderers/architecture/crossed-leaf-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fa8c7296be701ff1f8e97cb582fe1981ae243de6"
+    },
+    {
+      "path": "renderers/architecture/frame-attachment-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "fc94dd3228076a9ee92b3b7083e3bfebbc276fb0"
+    },
+    {
+      "path": "renderers/architecture/frame-lane-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "5dbfd9a96b3fee0d45297cd640c3322bb538abf0"
+    },
+    {
+      "path": "renderers/architecture/junction-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ea158d6b5f826b8b3ad703ffc4a930a610cd3fab"
+    },
+    {
+      "path": "renderers/architecture/label-spacing-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "032faba71fac2920a65cc1de9a94f734f9cf6272"
+    },
+    {
+      "path": "renderers/architecture/parallel-path-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "03f01a6ffa7df196ae8960a8187e9753290d3ed0"
+    },
+    {
+      "path": "renderers/architecture/render-architecture.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/architecture/render-architecture.mjs",
+      "old_blob": "8269df98b54d55c1ecce3027a51e323bc24e04b9",
+      "new_blob": "1aa571909a33f2d7e2bcacbe3e4d1b109a659322"
+    },
+    {
+      "path": "renderers/architecture/routing.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/architecture/routing.mjs",
+      "old_blob": "31c86024dad4854f78c32fdfde078081ca9456b1",
+      "new_blob": "fbc019fdb9c1d4da0ba3e9f6bb0ce9a8fc0a9fda"
+    },
+    {
+      "path": "renderers/architecture/straight-chain-placement.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8fafacfe5a9fb4348579429c63805944063a70d4"
+    },
+    {
+      "path": "renderers/class/render-class.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/class/render-class.mjs",
+      "old_blob": "58705d95cbae41f700e1614f04587bbcaa99faa1",
+      "new_blob": "4ac55517bcb6a69ae2a5ddf303279b4996b1a279"
+    },
+    {
+      "path": "renderers/dataflow/dataflow-compiler.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/dataflow/dataflow-compiler.mjs",
+      "old_blob": "753829eb2515e8ac6a30437c603eac1f71ecc8a2",
+      "new_blob": "63d005d7a9502f5855d1b002e7108a18aefd01c9"
+    },
+    {
+      "path": "renderers/dataflow/label-capacity.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/dataflow/label-capacity.mjs",
+      "old_blob": "a7d4246e181e4cfbbc09cb77fa291d65ef2a72e7",
+      "new_blob": "c2da75499b16fc388c94d78ad2eff3e3e6ece124"
+    },
+    {
+      "path": "renderers/dataflow/render-dataflow.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/dataflow/render-dataflow.mjs",
+      "old_blob": "fe9fc1443b697809f6aa72b7bdcad6f6034968cf",
+      "new_blob": "c223d62862944372c46fb02d952027ea7f5169de"
+    },
+    {
+      "path": "renderers/erd/grid.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/erd/grid.mjs",
+      "old_blob": "3233d2934aaccb7c5b7bb02ad8908f39069cf541",
+      "new_blob": "2f3aa12a48a9b92b7cb570a646577ec4e391e01b"
+    },
+    {
+      "path": "renderers/erd/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/erd/README.md",
+      "old_blob": "1713bd684bec22235c401a2d02972a103d9501e3",
+      "new_blob": "ece40631052e9854484292309009ff74e1d1e727"
+    },
+    {
+      "path": "renderers/erd/render-erd.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/erd/render-erd.mjs",
+      "old_blob": "95200370fd9596cbbca5fb90f6a5a1ed13b7806f",
+      "new_blob": "a7d6a1f365e0ebe3d3682fee4430f98b7d19450c"
+    },
+    {
+      "path": "renderers/lifecycle/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/lifecycle/README.md",
+      "old_blob": "397d169c86ddeee00fc8b790b552cf6b3d4ec956",
+      "new_blob": "50f6a60c40c07a8025befa04ffd48694800df8d5"
+    },
+    {
+      "path": "renderers/lifecycle/render-lifecycle.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/lifecycle/render-lifecycle.mjs",
+      "old_blob": "2d948b7d196d61b1deaeea2c988e182eca17dc91",
+      "new_blob": "082747cfee454743afa09a4ec1f4e162ab4d8b85"
+    },
+    {
+      "path": "renderers/sequence/render-sequence.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/sequence/render-sequence.mjs",
+      "old_blob": "34c6d4e918ce742f5bbe6f82ceb9013a60725344",
+      "new_blob": "c022149d04d7fcac00dfc07b3d29413534594d26"
+    },
+    {
+      "path": "renderers/shared/arrowhead.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "de4b282fa9cecb70f9af8a6df6292ee627ab3c71"
+    },
+    {
+      "path": "renderers/shared/atomic-output.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "67aac906ba5fca0452d23ac060a51b907fd453d1"
+    },
+    {
+      "path": "renderers/shared/atomic-output.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/atomic-output.mjs",
+      "old_blob": "8895d70d9d524394d6db375755977421bd39e20b",
+      "new_blob": "a45ae5b13cebed3450d8b21532e034f379a90483"
+    },
+    {
+      "path": "renderers/shared/automatic-labels.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/automatic-labels.mjs",
+      "old_blob": "85b1bd17f4b1cb0fd759bf40d0ed1022210167eb",
+      "new_blob": "899577a97f3d6ef5c94f56f0fbdcc5be2267ba2c"
+    },
+    {
+      "path": "renderers/shared/brand-marks.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/brand-marks.mjs",
+      "old_blob": "869feaef416a163fb82e2ad7bbd825a343f10745",
+      "new_blob": "671def2f357435a8a065af2fb9cff7cc845158cf"
+    },
+    {
+      "path": "renderers/shared/change-marks.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c537426c36168973b87f7578925efcbdf0ed5f74"
+    },
+    {
+      "path": "renderers/shared/cli.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/cli.mjs",
+      "old_blob": "d6589ed557908c2d596a25e1cd94dc1116372b45",
+      "new_blob": "1b6967e8f7639be2bbb6075578b3b7f2c0908307"
+    },
+    {
+      "path": "renderers/shared/generated-validators.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/generated-validators.mjs",
+      "old_blob": "2ce023ef13b3aa5df7f81def9219ab8798a5bd66",
+      "new_blob": "68f42b6cae85b8d709a854ff6a83eb519ba120cc"
+    },
+    {
+      "path": "renderers/shared/geometry.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/geometry.mjs",
+      "old_blob": "2568540140f1964307d7dbe3a1619c3f6d315339",
+      "new_blob": "011fd64b5ea4f049fc932504858b8523e80a4218"
+    },
+    {
+      "path": "renderers/shared/layout-report.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/layout-report.mjs",
+      "old_blob": "6043316d5e4a6754d0af6975db7bf55e7d0a197d",
+      "new_blob": "ffaaa57014687cbc83abfbabe093922e23f16edb"
+    },
+    {
+      "path": "renderers/shared/owned-temp-directory.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/owned-temp-directory.mjs",
+      "old_blob": "cc910f094828fac6beb150d40f6af4a3bdf71ebd",
+      "new_blob": "948f36bb3ded0d685eeca736b726c779f57897bb"
+    },
+    {
+      "path": "renderers/shared/path-semantics.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/path-semantics.mjs",
+      "old_blob": "59dc039c1737122b0fd116f40a51155cf267ffd8",
+      "new_blob": "590db1dd9768797267aa65b7a302f369c72445e2"
+    },
+    {
+      "path": "renderers/shared/repository-evidence.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/repository-evidence.mjs",
+      "old_blob": "3368d1308f70e7bb5496d9d25187c0c8fe07fe0f",
+      "new_blob": "9f9533b4a2c8f27a59be865c1673be7120f69f7a"
+    },
+    {
+      "path": "renderers/shared/repository-location.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/repository-location.mjs",
+      "old_blob": "7a36226d2144cdbe0ded72e2bfb192c0e209771f",
+      "new_blob": "8e2a37434424deef33e873f44eca91c77c927046"
+    },
+    {
+      "path": "renderers/shared/route-crossings.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6131a8d98d4b3b48ffaf6c589594f8d1a6e3563f"
+    },
+    {
+      "path": "renderers/shared/svg-bake.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2600c7a93fd78b9e8e059636e1750b84d16d84a0"
+    },
+    {
+      "path": "renderers/shared/svg-export.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "13f4cb2db7b47572aad6af802a5b804f69e0d13d"
+    },
+    {
+      "path": "renderers/shared/svg-path-analysis.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/svg-path-analysis.mjs",
+      "old_blob": "e77c2b691a86850e8bdad3c4c01070fd46822ed3",
+      "new_blob": "359d47d603df981299277bf56c553c143d7904df"
+    },
+    {
+      "path": "renderers/shared/utils.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/utils.mjs",
+      "old_blob": "81c1249387ef479be33599e0b2b40d24fc824c4f",
+      "new_blob": "aca2141d1f216a45f99c1256ed9e27577fe6c13e"
+    },
+    {
+      "path": "renderers/shared/validator.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/shared/validator.mjs",
+      "old_blob": "ad0a331c3d69024096ecf77a3a2baf1c569ce9ce",
+      "new_blob": "48620af2cad8c74f177037015dddc617aec40d59"
+    },
+    {
+      "path": "renderers/timeline/render-timeline.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/timeline/render-timeline.mjs",
+      "old_blob": "dfa390c2f4032db67e7198e35142996aa659097d",
+      "new_blob": "196eb590f931e329714aed413947b4304df0e8af"
+    },
+    {
+      "path": "renderers/tree/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/tree/README.md",
+      "old_blob": "87b1b9ade6baf73bbb03ab3dfd3f697aaf4dd9a8",
+      "new_blob": "6b1388bc55afb024097290b3fb425044f0192248"
+    },
+    {
+      "path": "renderers/tree/render-tree.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/tree/render-tree.mjs",
+      "old_blob": "2fd00e1e0570674be2298aed1f72c86cfee38b12",
+      "new_blob": "ed772dbec03d26b14edd3ef523837003f4ea1fa1"
+    },
+    {
+      "path": "renderers/waterfall/render-waterfall.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/waterfall/render-waterfall.mjs",
+      "old_blob": "71c4f4063ee49c29595f0921f9c94587f0244f45",
+      "new_blob": "520ef9e71a8f68c1e694465dab9ab885edfd1a51"
+    },
+    {
+      "path": "renderers/workflow/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/workflow/README.md",
+      "old_blob": "cd20dc8a2d22725c6cc10ce320717c0871fbcdca",
+      "new_blob": "1701ae33e68e521f9d53607a16a4b12c33b228d4"
+    },
+    {
+      "path": "renderers/workflow/render-workflow.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/workflow/render-workflow.mjs",
+      "old_blob": "1030238a24fe624b87481e3d316412348714e23c",
+      "new_blob": "3930d5524614916e8f66721a1615f62d4770b7e4"
+    },
+    {
+      "path": "renderers/workflow/workflow-compiler.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/renderers/workflow/workflow-compiler.mjs",
+      "old_blob": "df754514ac805132c0db275205639ec51322ea46",
+      "new_blob": "0fb038fcf10e9a11b3929ed9f3d750b599938ccc"
+    },
+    {
+      "path": "schemas/architecture.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/architecture.schema.json",
+      "old_blob": "5fe3b8ecec4c76b7229bef83a13cb170fcc3fed5",
+      "new_blob": "9181e4343fe7f0779a58c7a877570eea0b329ae1"
+    },
+    {
+      "path": "schemas/class.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/class.schema.json",
+      "old_blob": "2ef8b84266fe98dc4b1b1a04b828cf343f7a18bf",
+      "new_blob": "370a682000d5a7c02b42bedc4a02ba98be814dad"
+    },
+    {
+      "path": "schemas/common.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/common.schema.json",
+      "old_blob": "a8a0ccc19b6392b3a78435abc2afbde9889ae3b2",
+      "new_blob": "ffed61d548882c0593fec4de5924daa13788ca5c"
+    },
+    {
+      "path": "schemas/dataflow.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/dataflow.schema.json",
+      "old_blob": "4d8eecf5d8ae87b3d84d8a4ac3065764d32976b7",
+      "new_blob": "5f8438fe98dce67b4c3cb46d8bca7d3f32f5b924"
+    },
+    {
+      "path": "schemas/erd.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/erd.schema.json",
+      "old_blob": "0153501ebb7f8032c67e4fe65c060c7f6a55404e",
+      "new_blob": "f1ce2a4aa4db385ec0fd1f65268ac5798fc56180"
+    },
+    {
+      "path": "schemas/explainer.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/explainer.schema.json",
+      "old_blob": "0f6f237dabf0866fe1aca2fdeb11dc4d3f023b19",
+      "new_blob": "95034f5cc394999b690208dcb7e9519bed8067e5"
+    },
+    {
+      "path": "schemas/lifecycle.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/lifecycle.schema.json",
+      "old_blob": "9fc20bc689dd12c91f6eb899e8457220599b045c",
+      "new_blob": "1ca7fe6875f310df6d98b953c97605c1c7f413a8"
+    },
+    {
+      "path": "schemas/pr-pack.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c4b9264e0767ee709840c88ddf6caaa619560e0c"
+    },
+    {
+      "path": "schemas/README.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/README.md",
+      "old_blob": "151f7c7e79158540a86623dffa8d2ca7e0c400b8",
+      "new_blob": "8605e3440b0b76e2abc55835393dad05d4738d48"
+    },
+    {
+      "path": "schemas/sequence.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/sequence.schema.json",
+      "old_blob": "abda525d72a0332e909bd8d77a08530c5e9bbcd5",
+      "new_blob": "571ca727c4aaea8791a32048d67bd1d72e2dec20"
+    },
+    {
+      "path": "schemas/story-choreography.schema.json",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "cc2c15797f2aa1d04f7cc4cbae8398a50c60e1a6"
+    },
+    {
+      "path": "schemas/timeline.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/timeline.schema.json",
+      "old_blob": "7cc4b7ce168ac7ee5e058d22383a5a4388b94db4",
+      "new_blob": "d46ac8ebbb6abb7f22dcc09f89bb69272af76444"
+    },
+    {
+      "path": "schemas/tree.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/tree.schema.json",
+      "old_blob": "05106a1c2f945c44c15111fb0994f912f0bf865c",
+      "new_blob": "99a4907dd6e8c40810d4be304320ee330fd20d58"
+    },
+    {
+      "path": "schemas/waterfall.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/waterfall.schema.json",
+      "old_blob": "f6a37397d83dba739b273f6ffba0f1df3129203c",
+      "new_blob": "7e3a794ccb2eea70a5e3e15b8423a133ba6c3654"
+    },
+    {
+      "path": "schemas/workflow.schema.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/schemas/workflow.schema.json",
+      "old_blob": "dad1457f275645ba441157de52e28f126744d929",
+      "new_blob": "1ba2293295de909b2d7547ce793d21a61f445033"
+    },
+    {
+      "path": "scripts/check-render-output.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/scripts/check-render-output.mjs",
+      "old_blob": "60c2fb6ccc6bfe35c32f084e3b4f880123dafe90",
+      "new_blob": "304228b7da35abde81866def2ec5fa4eab8bb0bd"
+    },
+    {
+      "path": "scripts/check-update.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/scripts/check-update.mjs",
+      "old_blob": "24f54f2988cb4072054de6f7f7bf726ad1301380",
+      "new_blob": "07e71164767d3e2c1f3de3cba7fe042f1dd06172"
+    },
+    {
+      "path": "scripts/delivery-update-child.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/scripts/delivery-update-child.mjs",
+      "old_blob": "7c998f0ab32dd0720cb92ea60a81050481b15043",
+      "new_blob": "755bf5a786a518c967cd8e204309f0bbb7fd567c"
+    },
+    {
+      "path": "scripts/generate-validators.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/scripts/generate-validators.mjs",
+      "old_blob": "72a0120ec0d060056101730fb68e65ca2f47ac41",
+      "new_blob": "61cfedd6f1c5e355dc6bc1f3c229fada86779acf"
+    },
+    {
+      "path": "scripts/render-examples.mjs",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/scripts/render-examples.mjs",
+      "old_blob": "78b7ef1bc1c7909429ddb31520d5fa4ea0050488",
+      "new_blob": "a221fb4ee23e3aa1501e4d13daec209bc84b496c"
+    },
+    {
+      "path": "skill-release.json",
+      "status": "changed",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/skill-release.json",
+      "old_blob": "edce1e91712595d02beda9d341109398fe800f4b",
+      "new_blob": "d7706de08154d5a8fdf8fbefaee421ea73cadde7"
+    },
+    {
+      "path": "SKILL.md",
+      "status": "changed",
+      "kind": "document",
+      "language": "mixed",
+      "runtime_paths": "upstream-skills/zh-archify/SKILL.md",
+      "old_blob": "380de2c1016ee24910d425d74cc0efc91d426be9",
+      "new_blob": "fe65809c03a37e43d9c635ddb046fbfb60a7afb4"
+    },
+    {
+      "path": "story/brand.svg",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "77268223a66446f25cd75b20d219117213065149"
+    },
+    {
+      "path": "story/choreography-plan.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "ffe8fdee5224c1ac0173977e967458579a135792"
+    },
+    {
+      "path": "story/cli.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f7664604a66fd5cd2c9b9213e59499e653c99a46"
+    },
+    {
+      "path": "story/code-highlight.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "259af7c57b955b3beaff4f67ed66a760373dab63"
+    },
+    {
+      "path": "story/component-stage.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "e98c050ae7dce3a251045fe5536da361ec0e9621"
+    },
+    {
+      "path": "story/messages.json",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "6faf9bbc8c7ba350f209cbeeb6ddafa9681549c4"
+    },
+    {
+      "path": "story/native-motion.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f10b8bc0123ed3f0d7fff50d676099f1527b36bc"
+    },
+    {
+      "path": "story/output.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "df24dd6a6bc8f261a6b43af07b8e012b32e254f2"
+    },
+    {
+      "path": "story/scope-field.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "341e941065505ae16259f4d99e5eb46dbe4b6d77"
+    },
+    {
+      "path": "story/story-attachment.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "44a2e22644b40265fd9dd1d8458e20d2b1960f2b"
+    },
+    {
+      "path": "story/story-attachment.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "67432c546a6cfd96fa51471f7f4a49fdc2b4e1c5"
+    },
+    {
+      "path": "story/story-attachment.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3e668404ee56a4647b53642475afbed07f75bc20"
+    },
+    {
+      "path": "story/story-audio.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "2a49302fec201fd2e80242b44e81b36374aeaec2"
+    },
+    {
+      "path": "story/story-container.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1fdcc18530284445c2959931aed616e6d77e7bea"
+    },
+    {
+      "path": "story/story-export.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "1f1afd66c81eabcd93c13a005dd262bef718bbe1"
+    },
+    {
+      "path": "story/story-plan.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "b152d0e39f4ea7368933221bbc5cd741ee414bd7"
+    },
+    {
+      "path": "story/story-stage-html.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "669e913daff1078e092b138301845224a201e630"
+    },
+    {
+      "path": "story/story-stage-runtime.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "83f0a5a69a49deb2326fbc857890f6e55d86a128"
+    },
+    {
+      "path": "story/story-svg.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "090eb083217477883f6899189b8efc4e1001585f"
+    },
+    {
+      "path": "story/story.css",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "0b606b235a0b2b378ab10a410bc6d156aa86615b"
+    },
+    {
+      "path": "story/story.js",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "367952ebc6a3749db279396be89d43bdea8e7177"
+    },
+    {
+      "path": "story/svg-bake.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "none",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "9deca2ee6e6ea985966f8118472bbac7d6679317"
+    },
+    {
+      "path": "story/tool.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "mixed",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "3df675ef242b3f4962f569d3509c28c46ff75583"
+    },
+    {
+      "path": "story/vendor/entities-LICENSE.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "c464f863ea2b18a15ca3883bc5d98065ed5d039a"
+    },
+    {
+      "path": "story/vendor/html-parser.mjs",
+      "status": "added",
+      "kind": "code",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "8c20db5504baf4e675ba83d481664ae63e3972eb"
+    },
+    {
+      "path": "story/vendor/parse5-LICENSE.txt",
+      "status": "added",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "f3265d4b88f7aac271ec21679195adff8446855e"
+    },
+    {
+      "path": "story/vendor/README.md",
+      "status": "added",
+      "kind": "document",
+      "language": "en",
+      "runtime_paths": "",
+      "old_blob": "",
+      "new_blob": "60f645c711a11cfe4c3f3fed393663b57c4eedfe"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "status": "changed",
+      "kind": "legal",
+      "language": "en",
+      "runtime_paths": "upstream-skills/zh-archify/THIRD_PARTY_NOTICES.md",
+      "old_blob": "4060ce3d7ad11ab81a2f3915d970a8f951dcfc28",
+      "new_blob": "9328e185f785490a7dfbe0780eaa7bed6b54b18f"
+    }
+  ]
+}

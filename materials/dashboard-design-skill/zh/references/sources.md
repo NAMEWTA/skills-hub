@@ -27,6 +27,8 @@
 
 ## 设计师
 
+2026 年对设计师在 X 发布的 64 条仪表盘帖的研究（Marcel Kargul、Sajibur Rahman、Sujon、ln_dev7、Toby Belhome、Salung Prastyo、Bagus Fikri 等），包括统计与值得借鉴的做法，见 [inspiration.md](inspiration.md)。
+
 - **Marcel Kargul**（Kargul Studio；x.com/marcelkargul）— 大量已交付的仪表盘作品：浅灰页面与白色卡片、胶囊形工具栏、单色图标方块和单词基准的 KPI 卡片、圆角数字胶囊热力图、中心数值和百分比图例的环形图（表示一个占比，而不是当仪表盘）、带实色端帽的浅色堆叠柱、仅展示一个大数值的深色工具提示，以及表示总体构成的分段胶囊。它是“页面自己就能说清楚”的最佳例子。
 
 ## 分析类产品（在线演示）

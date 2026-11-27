@@ -17,7 +17,7 @@ description: 设计或审查失败、错误类与代码、工具失败、恢复�
 
 ## 工具失败
 
-生产者提供时，工具注册表在 `tool/result` 上保留 `error.name` 和 `error.code`：工具主体抛出的 `HarnessError`，执行前 `deny`、guard 拒绝或带 `info` 的执行后阻止（包括注册表自身审批拒绝，即带 `APPROVAL_REJECTED`、`APPROVAL_CANCELLED` 或 `APPROVAL_UNAVAILABLE` 的 `ApprovalError`），注册表自身的取消结果（带 `ABORTED` 或 `ABORTED_BEFORE_DISPATCH` 的 `AbortError`；也适用于取消后主体抛出的 signal reason 或名为 `AbortError` 的 `Error`），以及 `tools/execute` 包装结果（如超时策略的 `TOOL_TIMEOUT`）。其他任何抛出值，以及不带 `info` 的 guard 拒绝或阻止，只持久化文字，重试策略、UI 和分析都无法据此路由。因此，工具主体可达的每种预期失败都应抛出 `HarnessError`，通常是负责领域的子类：
+生产者提供时，工具注册表在 `tool/result` 上保留 `error.name` 和 `error.code`：工具主体抛出的 `HarnessError`，执行前 `deny`、guard 拒绝或带 `info` 的执行后阻止（包括注册表自身审批拒绝，即带 `APPROVAL_REJECTED`、`APPROVAL_CANCELLED` 或 `APPROVAL_UNAVAILABLE` 的 `ApprovalError`），注册表自身的取消结果（带 `ABORTED` 或 `ABORTED_BEFORE_DISPATCH` 的 `AbortError`；也适用于取消后主体或 `tools/execute` 包装器抛出的 signal reason 或名为 `AbortError` 的 `Error`），以及 `tools/execute` 包装结果（如超时策略的 `TOOL_TIMEOUT`）。其他任何抛出值，以及不带 `info` 的 guard 拒绝或阻止，只持久化文字，重试策略、UI 和分析都无法据此路由。因此，工具主体可达的每种预期失败都应抛出 `HarnessError`，通常是负责领域的子类：
 
 - 手工检查的参数约束抛出 `dsh-tools` 中的 `ToolArgsError`（`INVALID_ARGS`）。
 - 缺少组合或调用上下文，例如缺少 Agent、服务或开放 turn，抛出 `dsh-tools` 中的 `ToolContextUnavailableError`（`TOOL_CONTEXT_UNAVAILABLE`）。
@@ -33,6 +33,48 @@ description: 设计或审查失败、错误类与代码、工具失败、恢复�
 对每种失败，在其负责 API 文档中定义处理与报告负责者、隔离范围及保证：有效不变量，副作用是未发生／部分发生／已提交／未知，以及清理责任。后台工作也保留这些义务。
 
 捕获限制的是异常传播，不是状态修改。只有受影响状态的拥有者能确认安全继续。否则停止依赖工作，丢弃无效状态或实例，或升级处理。仅记录日志不是恢复。重试要求可安全重复、支持取消且有明确负责者；有限操作需要预算，持续监督需要生命周期责任归属与可观察的降级。
+
+### 空 catch 子句
+
+空 `catch` 的块内除了 `;` 没有其他语句，它会丢弃 `try` 抛出的所有失败。只有每种失败都不会破坏拥有者的状态，且任何调用者都无法据此采取行动时才使用，例如删除一个不被任何地方读取的临时文件失败。记录日志、报告、重新抛出或返回后备值的 `catch` 不为空，下列规则不适用于它。[`verify-empty-catch`](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/scripts/verify-empty-catch.ts) 检查第一方 JavaScript 和 TypeScript 中的每条 `try`／`catch` 语句，包括测试；它不检查 `promise.catch()` 回调。检查器检查形式；评审检查名称和理由是否真实。
+
+**`try` 中只有一条语句。** 一条语句指一个语法上的语句，例如一次调用或一次赋值，无论跨多少行；不等于一行。包含多条语句时，理由可能只涵盖一种预期失败，子句却把其他失败也丢弃，包括 `TypeError` 等缺陷；早期语句失败还会跳过后续语句，而调用者看到的仍是成功：
+
+```ts
+// 拒绝：一个 try 中有三条语句。
+try {
+  await unlink(tempFile)
+  registry.delete(id)
+  emit('removed', id)
+} catch (_cleanupFailed) {
+  // 遗留临时文件不保存任何会被读取的状态。
+}
+
+// 接受：只丢弃 unlink 的失败。
+try {
+  await unlink(tempFile)
+} catch (_cleanupFailed) {
+  // 遗留临时文件不保存任何会被读取的状态。
+}
+registry.delete(id)
+emit('removed', id)
+```
+
+多条语句各自都允许失败时，为每条语句单独编写 `try` 和理由。检查器把一个块或一条复合语句（例如一个 `if`）计为一条语句；但如果这样的 `try` 包含多个操作，评审应拒绝。
+
+**绑定名称说明预期失败。** 写 `catch (_cleanupFailed)`，不写 `catch {}` 或 `catch (_)`。Lint 要求未使用的绑定以 `_` 开头，而单独的 `_` 没有说明任何含义。
+
+**用注释说明为什么可以安全地丢弃失败。** 注释放在 `catch` 块中，或子句结束 `}` 后的同一行。`try` 块内或 `try` 上方的注释不算。`// ignore` 和 `// expected` 只是重述空块；应说明预期的是哪种失败，以及为什么状态仍然有效。
+
+**只接受部分失败时要检查它们。** 如果只有部分失败可安全丢弃，例如文件不存在，而权限错误仍必须报告，则编写非空 `catch` 检查 `code` 或 `name`，重新抛出其他错误；检查器不检查这样的子句。
+
+```ts
+try {
+  await unlink(tempFile)
+} catch (error) {
+  if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+}
+```
 
 ## 本地化、可操作、可见的报告
 

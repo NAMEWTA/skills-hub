@@ -8,6 +8,8 @@
 
 `finalize` 在第一道未通过的门禁停止。使用精简 stdout 或 `evidence.summaryReceipt`；只有摘要缺少连贯修复所需证据时，才阅读完整 sidecar。只有四项产物检查的回执是基础验证，不是 showcase 验收：要求全部九项检查、零构图错误、零警告。几何之前先修复 `meta.quality_profile` 和 schema 错误。密集的完整 schema ERD 首次展示全部字段时，可以保留 `standard`：要求零结构错误、没有边穿节点失败、完整字段行和可读分组网格，并记录构图警告，不为它们投入无界时间。
 
+第一次内嵌校验的所有诊断均为 `repository-evidence/line-out-of-range` 时，`finalize` 可把已有引用的 `end_line` 缩减到其固定文件的末行，并完整重试全部门禁一次。起始行必须已经存在于该非空文件；来源路径、版本、起始行和其他全部编写内容保持不变。自动修复要求原始字节与 `JSON.stringify(parsed, null, 2)` 加一个 LF 完全一致。其他格式、BOM、CRLF，或解析再序列化时会变化的数字写法，都需要作者修复，以免重新序列化改变无关字节或数值精度。文件缺失、起始行无效以及混合失败也需要作者修复。此操作只限定引用范围，不会确认或纠正所引事实。`autoRepair` 在两份回执中记录变化范围及原始/修复后哈希。重试通过时保留修复后的候选。之后任何失败或异常都会尝试逐字节恢复原件，并以修复后候选的身份及字节为保护条件；只使本次重试的 current-delivery sidecar 失效。外部编辑会保留；无法安全完成恢复时，返回的回执报告 `restore-failed`。失败诊断与 `specification` 描述本次检查的重试；`autoRepair.outcome` 说明是否恢复了原件。抛出的异常仍属于命令失败，可能使最后持久化的回执停留在较早阶段；只有完整执行并通过的命令才构成交付。
+
 校验失败时，重跑命令前，先编辑现有 JSON 中诊断指出的相连邻域。保留请求语义、有意义标签、源证据和固定或约定拓扑。多条路由共享节点时，应做一次摆放修复；此情况阅读[架构布局修复](architecture-layout-repair.md)。重排受阻主路径，不要微调无关标签。无关几何的构图已经清晰时保留它。只有精简证据缺少所需测量值时，才在编辑前用 `--layout-json`。Workflow v2 以稳定编译器回执作为创作证据，不使用求解器内部状态。
 
 视口修复前，保留已经通过路由检查的最佳候选。如果视口修复引入新路由碰撞，恢复该实测布局，再处理剩余画布或文字约束。
@@ -21,6 +23,8 @@
 ## 校验与交付
 
 `render` 和直接渲染器入口，将分类后的创作失败以可读诊断输出到 stderr，并退出 1。输入读取／JSON 解析失败使用 `input/read` 或 `input/json-parse`；输出文件系统失败使用 `output/write` 并指出输出路径。schema 和布局失败保留既有规则码。需要机器回执时，使用文档说明的 `validate --json` 或 `deliver --json` 接口；`render` 没有 `--json` 标志。意外实现失败在人类模式保留调试信息，在机器回执中保持 `internal/unclassified`。
+
+声明的本地 Explainer 图表数据和原生图规格文件均是受保护输入，包括物理别名。Delivery 和 finalize 会拒绝覆盖这些输入的 sidecar，即使资源准备失败时也如此；无法检查的草稿不能发布失败证据。
 
 每个交付输出有两个产物专属元数据路径。如果输出 stem 对这些派生文件名而言太长，Archify 会缩短它并附加稳定 hash：
 
@@ -92,7 +96,7 @@ Archify 刻意区分持久的作者路径与命令行路径：
 node bin/archify.mjs deliver <type> <candidate.json> <output.html> --quality showcase --json
 ```
 
-Deliver 只读取一次 specification，将相同字节写入同目录私有候选快照，渲染该快照，运行完整产物检查器；只有全部产物检查通过才替换目标。JSON 回执同时包含 `specification` 和 `artifact` 的 SHA-256 与字节数。
+Deliver 只读取规格一次，将这些精确字节写入同目录的私有候选快照，渲染该快照，运行完整制品检查器，并仅在全部制品检查通过后替换目标。JSON 回执包含 `specification` 和 `artifact` 各自的 SHA-256 与字节数。Deliver 在运行检查器之前添加必需的[更新通知](update-awareness.md)。哈希绑定交付字节，回执记录 `updateNotice`。可关闭通知在较宽 Viewer 图上、标题和工具栏留有空间时使用顶栏，否则使用页脚。它包含一键复制按钮，可复制本地化的 Agent 更新提示，并提供官方发布说明链接。打开页面和复制提示均可离线进行，不产生任何网络请求。
 
 普通 agent 交接路径优先使用 finalizer：
 
@@ -151,6 +155,44 @@ node bin/archify.mjs finalize <type> <candidate.json> <output.html> --quality sh
 4. 感知视觉审阅记录人类或具备图像能力的审阅者判断。
 
 一项通过绝不暗示其他项通过。绝不声称确定性回执包含浏览器或感知审阅证据。
+
+<a id="architecture-diagnosis-offer"></a>
+
+## 架构诊断提议
+
+使用 `--repo-root` 的 `finalize architecture` 通过后，如果有界扫描发现符合默认分析条件的源码，完整回执和简短摘要会包含 `codeAnalysisOffer`。提议包含 finalize 的有效 `quality`，并将其传入 `start.argv`；同时记录 `dependencies` 状态为 `installed` 或 `missing`。Finalize 进行这些检查时，不会启动分析，也不会安装任何东西。
+
+在交付摘要末尾，用用户语言添加下方能力章节，同一任务中每个仓库只出现一次。它是摘要的一部分，不是单独的问题，因此即使用户从不回复，也能了解 Diagnosis 的作用。如果用户在当前任务已请求或拒绝分析，则跳过。保留各条项目，只调整措辞，不改变论断。如果 `dependencies` 为 `missing`，说明已安装的 Skill 副本不完整：把收尾句替换为重新安装提示，因为分析无法启动。如果提议包含 `linkedDiagrams: true`，补充说明同级图链接应从最初交付的图打开，而不是从 Diagnosis 服务器打开。仅当 `codeAnalysisOffer.diagramButton` 为 `true` 时才提到图中的按钮；否则去掉那句。只有用户同意后才启动。
+
+**中文**
+
+**还可以：架构诊断**（Archify 自带，在本机运行）
+- **环形星图**：几千个文件、几万个函数之间的依赖一眼看全
+- **可旋转的 3D 模型**：换个角度看模块怎么连在一起
+- **组件问题数**：直接标在这张架构图上，哪里最拥挤、哪里有循环依赖、哪些依赖图里没画
+- 每条发现都能点开看源码，也能一键交给 AI 修
+
+回复「好」我就启动。图右上角的「架构诊断」按钮也随时能看到这个功能。
+（依赖缺失时，最后一句改为：分析组件缺失，需要先重新安装 Archify 才能使用。）
+
+**英语**
+
+**还可以：架构诊断**（Archify 内置，在本地运行）
+- **环形星图**：一眼查看数千文件和函数之间的依赖
+- **可旋转的 3D 模型**：从任意角度查看模块如何连接
+- **各组件的问题数量**直接显示在这张图上：哪里最拥挤、哪里存在循环依赖，以及图中没有画出的依赖
+- 每项发现都能打开对应源码，并可交给 AI 作为修复任务
+
+回复“yes”，我就启动。图右上角的 **Code Analysis** 按钮随时提供这一功能。
+（依赖缺失时，收尾句改为：分析组件缺失，请重新安装 Archify 后使用。）
+
+用户同意后，运行 `start.argv`。需要时，为中文添加 `--locale zh-CN`，为英语添加 `--locale en`。仓库含多种受支持语言时，按 [Code Analysis 指南](../modules/code-analysis/docs/USAGE.md#agent-entry-and-investigation)使用 `--language` 选择适配器。分享命令打印的本地 URL。首先显示原始架构图。点击 **Code Analysis**（中文为**架构诊断**）运行分析，并打开组件发现、环形星图和 Atlas 3D 视图。
+
+<a id="comparison-presentation-changes"></a>
+
+## 比较中的呈现变化
+
+架构比较会把作者编写的 `meta.translations` 纳入呈现变化。添加、删除或修改翻译会改变 `summary.presentationChanged`；仅调整翻译键顺序不会。对于呈现分类，空翻译对象等同于省略语言目录；规范来源摘要仍记录作者实际编写的表示。组件、关系、边界和仓库来源分类彼此独立。
 
 <a id="recovering-a-failed-comparison"></a>
 
@@ -268,7 +310,7 @@ Preview 在 loopback 上监视一个显式输入，将每个稳定摘要绑定�
 
 ## 感知审阅
 
-自动化路径以确定性浏览器门禁结束，报告 `visual_review: not_requested`。普通生成不要求截图或读取图片步骤，新创作或重新摆放的 Architecture 也一样。感知审阅是可选的；明确请求或具体视觉调查时使用。可能原因包括：
+自动化路径以确定性的浏览器门禁结束，并报告 `visual_review: not_requested`。普通生成无需截图或图像阅读步骤，新编写或重新放置的 Architecture 也如此。输出用于 README 或项目文档时，应按预期阅读尺寸打开，并沿回答读者问题的路径阅读。项目 README 默认交付静态 SVG，除非用户明确要求链接或交互式 HTML。其他项目文档在请求静态图片时交付 SVG。运行 `node <skill-dir>/bin/export-svg.mjs <diagram.html> <image.svg> [auto|light|dark]`。该命令使用独立 Viewer 的 SVG 导出，需要 Chrome 或 Chromium（可用 `ARCHIFY_CHROME` 指定可执行文件）。它拒绝替换已有输出。在文档栏中按自然尺寸和最大宽度 100% 检查导出图片。答案依赖小标签或 Viewer 卡片时，提供可直接粘贴的 Markdown 图片，再附简短图注。将所要求的名称、结果或条件写在普通文档文字中。为了可复现的视觉审查而截图的理由包括：
 
 - 精简 finalizer 包含关于交叉或绕路的 `visualReviewRecommendation`（建议，不是交付门禁）；
 - 用户明确请求美感或视觉审阅；

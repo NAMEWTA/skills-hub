@@ -30,7 +30,7 @@ disable-model-invocation: true
 
 - 工作开始前构建验证驱动，从变更前状态捕获基线，让检查呈现“旧值与新值”。
 - 对难以逆转的设计决定运行 **architect** 技能，它会运行 **arena**。形态已经明确的机械工作跳过。已定设计再跑一次 arena 属于过度设计，遵循 **laziness-protocol** 原则技能。
-- 决定什么可以扇出。只沿接缝并行，每个执行者有独立工作树或分支，遵循 **separate-before-serializing-shared-state**。不要过度扇出。按 **poteto-mode** 的“子智能体”章节为每个子智能体选择推理级别及快速或标准速度。
+- 确定如何分散工作。仅在明确的边界之间并行，并为每名工作者分配自己的 worktree 或分支（参见 **separate-before-serializing-shared-state** 原则技能）。避免过度分散。按照 **poteto-mode** 技能的 Subagents 部分，为每个子代理选择适合任务的推理级别。
 - 写下设计出的阶段清单。这份清单就是人审查的对象。
 
 然后执行设计。在待办阶段 C 与 D 之间插入具体步骤，每步都按阶段 C 的循环纪律执行，阶段 D 的日志穿插其中，每步落地写一行，不把全部记录拖到最后。
