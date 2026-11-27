@@ -176,10 +176,20 @@ npx @namewta/skills-hub@latest install --domain ops
 在目标项目根目录使用包含 `dev-program` 的版本。整组安装使用 `--domain dev`。从当前源码按名更新调用者和方法所属包时，将下方路径换成源码安装器的位置。
 
 ```sh
-node /path/to/skills-hub/install.mjs install --skill dev-workflow dev-help dev-program dev-parallel dev-deploy
+node /path/to/skills-hub/install.mjs install --skill dev-workflow dev-help dev-program dev-parallel dev-pr dev-deploy
 ```
 
 单独编排可只安装 `dev-program`。原有批次与子 Change 记录沿用真实位置，按任务使用的其他开发阶段技能仍可单独选取。
+
+## 视频回顾、PR 和技能编写入口迁移
+
+当前源码已将视频回顾、PR 交付、通用技能编写分别移到 `dev-status-video`、`dev-pr`、`dev-skill-authoring`。单独安装时选所需新包；旧入口保留转介。希望同步移除旧包中的重复资源时，在项目根按本次使用范围同时更新对应的旧包和新包：
+
+```sh
+node /path/to/skills-hub/install.mjs install --skill dev-status dev-status-video dev-deploy dev-pr dev-personalize dev-skill-authoring
+```
+
+整组安装使用 `--domain dev`，可同时更新开发阶段和帮助入口。已有状态简报、发布记录与偏好证据保留原路径。已直接调用旧 `watch-pr` 路径的本地命令更新为 `.agents/skills/dev-pr/scripts/local-tools/watch-pr/watch-pr.mjs`。
 
 ## 开发交接入口迁移
 

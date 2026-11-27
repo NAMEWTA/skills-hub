@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import { expect } from "./assertions.mjs";
-import { WatcherQueryError } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/github.mjs";
+import { WatcherQueryError } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/github.mjs";
 import {
   applyQueueSnapshot,
   assessGitHubMerge,
@@ -13,7 +13,7 @@ import {
   runQueued,
   runSimple,
   selectTierMajorStackDecision,
-} from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/policy.mjs";
+} from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/policy.mjs";
 import {
   fakeReader,
   failedCheck,
@@ -21,7 +21,7 @@ import {
   pendingCheck,
 } from "./fakes.test-helper.mjs";
 
-import { parsePrNumber } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/types.mjs";
+import { parsePrNumber } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/types.mjs";
 
 const context = (number        )            => ({
   owner: "owner",

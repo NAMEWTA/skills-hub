@@ -91,7 +91,7 @@
 | `dev-plan`、`dev-program` | 复用已有预算或按实际主机核对，区分依赖就绪与资源排队；跨 Change 共用预留 |
 | `dev-parallel`、`dev-build`、`dev-review` | 启动前复测并取得预留，控制嵌套 Agent、构建与测试 worker |
 | `dev-worktree` | 创建和初始化前核对容量；集成树也计入；按唯一清理方法回收 |
-| `dev-deploy` | 本地/CI 构建及指定部署目标按实际执行位置核验 |
+| `dev-pr`、`dev-deploy` | PR 的本地/CI 验证与目标环境的部署负载各按实际执行位置核验 |
 | `dev-handoff` | 传递预算位置和未退出实例，恢复前重新采样 |
 | `dev-archive` | 核实剩余占用，将已结束检出交回清理方法 |
 

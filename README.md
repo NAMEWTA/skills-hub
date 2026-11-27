@@ -63,8 +63,11 @@ npx @namewta/skills-hub install --domain upstream-skills --dry-run
 | 补齐可独立实施、审查与验收的行为约定 | `dev-spec`：行为规格 |
 | 改写请求的表达、目标、材料和验证方式 | `dev-sharpen`：请求改写 |
 | 对报告分类、查重和分流 | `dev-issue-triage` |
-| 创建或跟进 PR、合并已验证改动；或发布到指定环境 | `dev-deploy`：PR 交付与环境部署两个分支 |
-| 编写项目技能；或从授权记录提炼稳定工作偏好 | `dev-personalize`：技能编写与偏好提炼两个分支 |
+| 创建、跟进或合并 PR，推进独立或堆叠队列 | `dev-pr` |
+| 发布指定版本到某个环境，核对服务或回滚 | `dev-deploy` |
+| 编写或修改项目技能 | `dev-skill-authoring` |
+| 从授权记录提炼稳定工作偏好 | `dev-personalize` |
+| 书面汇报进展 / 明确要求制作进展视频 | `dev-status` / `dev-status-video` |
 
 这些入口按需调用。当前负责人沿用同一份权威行为契约、决定记录和有效证据，已有充分结果直接继续；可视化原型仍独立作为体验依据。完整边界见[开发流程](docs/development/workflow.md)。
 

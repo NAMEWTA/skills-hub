@@ -26,12 +26,15 @@ test('整个开发领域没有重复方法和内嵌执行包', () => {
     'visual-equivalence.md': 'dev-verify', 'investigation.md': 'dev-learn',
     'source-adapter.md': 'dev-issue-setup', 'autonomous-execution.md': 'dev-workflow',
     'worktree-cleanup.md': 'dev-worktree', 'program-coordination.md': 'dev-parallel',
-    'autonomous-queue.md': 'dev-deploy', 'autopilot-stack.md': 'dev-deploy',
+    'autonomous-queue.md': 'dev-pr', 'autopilot-stack.md': 'dev-pr',
+    'status-video.md': 'dev-status-video',
+    'authoring-a-skill.md': 'dev-skill-authoring', 'skill-authoring.md': 'dev-skill-authoring',
     'handoff-method.md': 'dev-handoff', 'session-resume.md': 'dev-handoff',
     'safe-pause.md': 'dev-handoff',
     'prototype-method.md': 'dev-prototype', 'ui-prototype.md': 'dev-prototype',
     'logic-prototype.md': 'dev-prototype', 'prototype.md': 'dev-prototype',
   })) assert.deepEqual(paths.filter(p => p.endsWith(path.join('references', name))), [path.join(owner, 'references', name)]);
+  assert.deepEqual(paths.filter(p => path.basename(p) === 'storyboard.md'), [path.join('dev-status-video', 'assets', 'storyboard.md')]);
 });
 
 test('全部迁移记录指向保留的完整资源', () => {

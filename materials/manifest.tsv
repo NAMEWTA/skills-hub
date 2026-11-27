@@ -13,4 +13,4 @@ openai-sentry	https://github.com/openai/skills	main	49f948faa9258a0c61caceaf225e
 archify	https://github.com/tt-a1i/archify.git	main	d6b0f71f25a3337ed2fcd09c973cacf67be7baba	archify	archify/manifest.tsv
 modern-web-guidance	https://github.com/GoogleChrome/modern-web-guidance.git	main	2b4aa13a72dd47cd135b06ce5abfccd92e19b24f	skills	modern-web-guidance/manifest.tsv
 dashboard-design-skill	https://github.com/abdiraimov-otabek/dashboard-design-skill.git	main	57f96688862668b482f647fa1e370efb5d3ddd31	skills/dashboard-design	dashboard-design-skill/manifest.tsv
-nanobot-memory	https://github.com/HKUDS/nanobot.git	main	c360a10e8ca8afd18916b73b7575f015941a33d9	nanobot/skills/memory	nanobot-memory/manifest.tsv
+nanobot-memory	https://github.com/HKUDS/nanobot.git	main	db21f04d2c9380f25d9ac343b33be5a415fd143b	nanobot/skills/memory	nanobot-memory/manifest.tsv

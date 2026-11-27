@@ -1,6 +1,6 @@
 
 
-import { parsePrNumber } from "../../skills/dev/dev-deploy/scripts/local-tools/watch-pr/types.mjs";
+import { parsePrNumber } from "../../skills/dev/dev-pr/scripts/local-tools/watch-pr/types.mjs";
 
 function toRawThread(thread              )                  {
   return { id: thread.id, firstComment: thread.firstComment, resolved: false };
