@@ -79,7 +79,7 @@ node /path/to/skills-hub/install.mjs install --domain dev
 
 安装器为每个本次选中的技能规划 Claude 入口 `.claude/skills/<name>`。新链接使用相对路径 `../../.agents/skills/<name>`，指向同仓的完整技能目录，移动整个项目后仍然有效。两个入口共享同一份本体。`.claude/skills/` 本身是普通目录。未选中的技能和用户自有入口保持原样。Home 与各项目分别安装、分别更新。
 
-业务目录只由本次最终选中技能的 domain 决定。选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 和 home 技能分别触发本领域根导航。Home 只更新明确标记的基础区，其他领域沿用固定模板；内容相同不重写，根 `AGENTS.md` 和业务记录保持原样。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
+业务目录只由本次最终选中技能的 domain 决定。选择任意 dev 技能会生成或更新开发根及 changes、notes、deploy、archive、project、context、两类 change 归档目录的托管 `AGENTS.md`。ops 和 Home 技能分别触发本领域根导航。Home 入口只在缺失时创建，已有文件原样保留。目录职责与自定义规则位置见[持久化规范](../reference/persistence-roots.md)。
 
 只选 Home 不创建 dev、ops 或 system。仅装上游独立技能不创建四个业务域；混选建立对应集合，`--all` 才明确选择所有业务域。技能文档提到其他 domain 不构成安装依赖。旧目录保留在原处，未选领域的导航与业务内容不补齐、不更新、不删除。全局 npm 安装或升级只更新工具，项目领域仍需实际安装选择。
 
@@ -139,16 +139,15 @@ npx @namewta/skills-hub@latest install --domain home
 
 ### Home 入口更新与迁移
 
-Home 入口格式和语义由 `home-knowledge` 维护，安装器基础模板唯一位于 `scripts/persistence/home.md`。自定义长期约定和真实知识指针保存在基础区外。基础区边界是独占行的 `<!-- skills-hub:home-entry:start v1 -->` 与 `<!-- skills-hub:home-entry:end -->`。
+Home 安装器在缺少 `.agents/home/AGENTS.md` 时使用 `scripts/persistence/home.md` 创建初始入口。各技能的当前执行方法随已安装的 `SKILL.md` 和包内参考更新。入口记录用户约定和实际资料指针，由 `home-knowledge` 按授权维护。
 
 | 安装前状态 | 结果 |
 | --- | --- |
-| 主入口不存在 | 创建最小基础区，不创建 profile、SOUL 或空知识文件 |
-| 精确等于已知 v0.1.35 官方模板 | 自动迁移到基础区结构 |
-| 唯一完整 v1 基础区及用户内容 | 只替换基础区，保留区外原字节与顺序；内容相同不改 mtime |
-| 未标记自定义内容，半缺/重复/嵌套/行内标记或未知版本 | `HOME_ENTRY_CONFLICT`，退出 1，预检失败使整次安装零写入 |
+| 主入口不存在 | 创建初始入口。profile、SOUL 和知识正文按任务建立 |
+| 已有普通文件，包括历史模板与自定义文件 | 原样保留，继续更新技能。安装器跳过正文读取 |
+| 路径类型异常 | 报告文件、目录或链接冲突，保留现场 |
 
-冲突由 knowledge 在已有授权内读取和保留有效内容，整理非托管正文及已知版本标记，再重跑原安装命令填入基础区。不能猜测任意 Markdown 的可覆盖范围，也不能将未知较新版本改成 v1 降级。基础区暂为空、重装未完成或修复失败时仍是待恢复状态。安装中的陈旧写入检查和失败恢复沿用原事务；这种保护不承诺与外部编辑器的全局锁。
+入口为空、指针失效或内容过期时，按需用 `home-doctor` 核查，由 `home-knowledge` 在编辑授权范围内直接修正文档。旧安装标记可作为原有注释保留。安装事务继续检查目标文件类型、并发写入与恢复条件。
 
 ## 独立 ops 领域
 

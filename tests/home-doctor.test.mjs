@@ -6,7 +6,7 @@ import path from 'node:path';
 import { diagnoseHome } from '../skills/home/home-doctor/scripts/doctor.mjs';
 import { inspectRegistry, saveRegistry } from '../skills/home/home-setup/scripts/registry.mjs';
 
-const validEntry = '<!-- skills-hub:home-entry:start v1 -->\n# Home 资料\n\n按任务读取已存在的正式资料。\n<!-- skills-hub:home-entry:end -->\n';
+const validEntry = '# Home 资料\n\n按任务读取已存在的正式资料。\n';
 
 function fixture(t, { entry = validEntry } = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'home-doctor-'));
@@ -120,55 +120,35 @@ test('unselected domains do not require Home entry and optional Home documents m
   assert.deepEqual(fs.readFileSync(file('.agents/home/AGENTS.md')), before);
 });
 
-test('the exact legacy installer entry is reported for migration without rewriting user documents', t => {
-  const legacy = '# Home 资料\n\n相对本文件，资料按需建立。缺索引查正文。\n\n- home-setup `./repos.json`、`./local.json`、`./context/preferences.md`\n- home-route 定位，home-workflow 派遣验收\n- home-knowledge `./notes/index.md`、`./notes/`、`./inbox/`、`./archive/notes/`、`./exclusions.md`\n- home-history `./history/index.md`、`./history/`、`./archive/history/`\n- home-map `./relations.md`\n- home-tasks `./coordination/all.status.tsv`、`./coordination/`\n- home-integrate 联调，home-doctor 诊断\n';
-  const { root, file } = fixture(t, { entry: legacy });
-  const result = diagnoseHome(root);
-  assert.equal(result.status, 'attention');
-  assert.ok(result.findings.some(item => item.code === 'HOME_ENTRY_LEGACY' && item.owner === '用户所选安装方法'));
-  assert.equal(fs.readFileSync(file('.agents/home/AGENTS.md'), 'utf8'), legacy);
-});
-
-test('main entry rejects empty, damaged, duplicate, nested and unknown markers while preserving bytes', t => {
+test('main entry checks readable content independently of historical installer markers', t => {
   const { root, file, write } = fixture(t);
   const start = '<!-- skills-hub:home-entry:start v1 -->';
   const end = '<!-- skills-hub:home-entry:end -->';
-  const cases = [
-    [' \n\t', 'HOME_ENTRY_EMPTY'],
-    [`${start}\n${end}\n`, 'HOME_ENTRY_BASE_EMPTY'],
-    [`${start}\n<!-- 只有注释 -->\n${end}\n`, 'HOME_ENTRY_BASE_EMPTY'],
-    [`${start}\n# 缺尾标记\n`, 'HOME_ENTRY_MARKERS'],
-    [`${end}\n# 顺序错误\n${start}\n`, 'HOME_ENTRY_MARKERS'],
-    [`${validEntry}${validEntry}`, 'HOME_ENTRY_MARKERS'],
-    [`${start}\n${start}\n# 嵌套\n${end}\n${end}\n`, 'HOME_ENTRY_MARKERS'],
-    [`前缀 ${start}\n# 非独占行\n${end}\n`, 'HOME_ENTRY_MARKERS'],
-    [`<!-- skills-hub:home-entry:start v2 -->\n# 较新版本\n${end}\n`, 'HOME_ENTRY_VERSION'],
-  ];
-  for (const [content, code] of cases) {
+  for (const content of [' \n\t', `${start}\n<!-- 只有注释 -->\n${end}\n`]) {
     write('.agents/home/AGENTS.md', content);
     const result = diagnoseHome(root);
-    assert.equal(result.status, 'issues', code);
-    const expectedOwner = ['HOME_ENTRY_EMPTY', 'HOME_ENTRY_MARKERS'].includes(code) ? 'home-knowledge' : '用户所选安装方法';
-    assert.ok(result.findings.some(item => item.code === code && item.owner === expectedOwner), JSON.stringify(result));
-    if (code === 'HOME_ENTRY_VERSION') assert.match(result.findings.find(item => item.code === code).message, /不降级/);
+    assert.equal(result.status, 'issues');
+    assert.ok(result.findings.some(item => item.code === 'HOME_ENTRY_EMPTY' && item.owner === 'home-knowledge'));
     assert.equal(fs.readFileSync(file('.agents/home/AGENTS.md'), 'utf8'), content);
   }
-  write('.agents/home/AGENTS.md', `\uFEFF${validEntry.replaceAll('\n', '\r\n')}`);
-  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
-  write('.agents/home/AGENTS.md', `${validEntry}\n这里只讨论 skills-hub:home-entry: 的名称。\n`);
-  assert.equal(diagnoseHome(root).status, 'clear-within-scope');
-  write('.agents/home/AGENTS.md', `${validEntry}\n<!-- skills-hub:home-entry:unknown -->\n`);
-  assert.ok(diagnoseHome(root).findings.some(item => item.code === 'HOME_ENTRY_MARKERS'));
+  for (const content of [
+    `\uFEFF${validEntry.replaceAll('\n', '\r\n')}`,
+    `${start}\n${validEntry}\n${end}\n`,
+    `${start}\n${validEntry}`,
+    `<!-- skills-hub:home-entry:start v2 -->\n${validEntry}\n${end}\n`,
+  ]) {
+    write('.agents/home/AGENTS.md', content);
+    assert.equal(diagnoseHome(root).status, 'clear-within-scope');
+    assert.equal(fs.readFileSync(file('.agents/home/AGENTS.md'), 'utf8'), content);
+  }
 });
 
 test('unmarked custom entry belongs to knowledge while its relative links resolve from the entry file', t => {
   const { root, write } = fixture(t, { entry: '# 自有入口\n[现行结论](notes/current.md)\n' });
   const unmarked = diagnoseHome(root);
   assert.equal(unmarked.status, 'attention');
-  assert.ok(unmarked.findings.some(item => item.code === 'HOME_ENTRY_UNMANAGED' && item.owner === 'home-knowledge'));
   assert.ok(unmarked.findings.some(item => item.code === 'BROKEN_LINK' && item.owner === 'home-knowledge'));
   write('.agents/home/notes/current.md', '# 已确认结论\n');
-  write('.agents/home/AGENTS.md', `${validEntry}\n[现行结论](notes/current.md)\n`);
   assert.equal(diagnoseHome(root).status, 'clear-within-scope');
 });
 

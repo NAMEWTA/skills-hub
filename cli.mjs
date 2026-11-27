@@ -54,7 +54,7 @@ export async function interactive({ argv = [], project = process.cwd(), ui = pro
     const domains = [...new Set(selected.map(skill => skill.domain).filter(domain => ['dev', 'system', 'ops', 'home'].includes(domain)))].sort();
     ui.note(domains.length ? domains.join('、') : '无；独立上游技能不初始化业务领域。', '本次最终涉及的领域');
     if (domains.length) {
-      ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md；Home 只更新基础区，区外内容保留；其他领域沿用固定模板。预览不写入。', '领域初始化');
+      ui.note('将补齐所选领域的持久化目录和简短 AGENTS.md。Home 入口缺失时创建，已有文件原样保留。预览不写入。', '领域初始化');
     }
     if (selected.some(skill => skill.domain === 'dev' || skill.domain === 'system')) {
       ui.note('如缺少规则，将补项目根 .gitignore 的 /temp/ 默认规则，保留项目例外；运行附件目录按需创建。', '临时取证');

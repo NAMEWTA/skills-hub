@@ -15,26 +15,6 @@ function owner(relative) {
   return relative.endsWith('relations.md') ? 'home-map' : 'home-setup';
 }
 
-const entryStart = '<!-- skills-hub:home-entry:start v1 -->';
-const entryEnd = '<!-- skills-hub:home-entry:end -->';
-// Exact legacy installer template at f23ba949; user documents are not inferred from headings.
-const legacyEntryHash = 'sha256:b9c3332a066c7a681a62c5a773e118fa6e9490da76c9b3c44e7a322e6dc9b18f';
-
-function entryStructure(content) {
-  const lines = content.replace(/^\uFEFF/u, '').split(/\r?\n/u);
-  if (!lines.join('\n').trim()) return { code: 'HOME_ENTRY_EMPTY', owner: 'home-knowledge', message: 'Home 必读入口为空；先由知识方法核对原状态并整理明确边界，再由所选安装方法填入基础模板。' };
-  const markers = lines.flatMap((line, index) => /<!--[\t ]*skills-hub:home-entry:/u.test(line) ? [{ line, index }] : []);
-  if (!markers.length && sha(content) === legacyEntryHash) return { code: 'HOME_ENTRY_LEGACY', severity: 'warning', owner: '用户所选安装方法', message: 'Home 使用已知旧版基础模板；按所选安装方法迁移入口，保持业务资料原位。' };
-  if (!markers.length) return { code: 'HOME_ENTRY_UNMANAGED', severity: 'warning', owner: 'home-knowledge', message: '现有 Home 入口未标记基础区；保留正文，由知识方法核对归属和迁移，不能全文覆盖。' };
-  if (markers.length !== 2 || !/^<!-- skills-hub:home-entry:start v\d+ -->$/u.test(markers[0].line) || markers[1].line !== entryEnd) {
-    return { code: 'HOME_ENTRY_MARKERS', owner: 'home-knowledge', message: 'Home 基础区标记不完整、重复、嵌套或不独占一行；知识方法先核对版本及边界、保留用户内容，再交安装方法。未知版本原样保留。' };
-  }
-  if (markers[0].line !== entryStart) return { code: 'HOME_ENTRY_VERSION', owner: '用户所选安装方法', message: 'Home 基础区版本不受当前工具支持；核对匹配版本的安装机制或明确兼容依据，保留原文，不降级覆盖。' };
-  const body = lines.slice(markers[0].index + 1, markers[1].index).join('\n').replace(/<!--[\s\S]*?-->/gu, '').trim();
-  if (!body) return { code: 'HOME_ENTRY_BASE_EMPTY', owner: '用户所选安装方法', message: 'Home 基础区没有可读取的内容；按所选安装方法恢复基础入口，保留区外资料。' };
-  return null;
-}
-
 function links(markdown) {
   const output = [];
   let fence = null;
@@ -110,8 +90,9 @@ export function diagnoseHome(inputHome, { requiredSkills = [], maxFiles = 2000, 
   } else {
     try {
       navigationText = fs.readFileSync(entryFile, 'utf8');
-      const problem = entryStructure(navigationText);
-      if (problem) add(problem.severity || 'error', problem.code, entryFile, problem.owner, problem.message);
+      if (!navigationText.replace(/<!--[\s\S]*?-->/gu, '').trim()) {
+        add('error', 'HOME_ENTRY_EMPTY', entryFile, 'home-knowledge', 'Home 必读入口没有正文，请由 home-knowledge 按授权补齐真实资料入口。');
+      }
     } catch (error) {
       complete = false;
       add('error', 'HOME_ENTRY_UNREADABLE', entryFile, '用户所选安装方法', `Home 必读入口不可读：${error.code || '读取失败'}；核对文件与当前读取权限。`);

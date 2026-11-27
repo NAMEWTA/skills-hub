@@ -29,7 +29,7 @@ description: 查询或维护 Home 的现行长期知识、AGENTS 入口与可选
 
 ## 维护范围
 
-本技能维护 `.agents/home/notes/`、`inbox/`、`archive/notes/`、`exclusions.md` 和知识索引，也负责 Home `AGENTS.md` 的组织方法、非托管内容及可选 `SOUL.md`。安装器拥有 AGENTS 基础区，setup 应用入口规范并维护配置。普通主题使用 Markdown；工具辅助字段不要求用户把既有文档迁成固定 schema。
+本技能维护 `.agents/home/notes/`、`inbox/`、`archive/notes/`、`exclusions.md` 和知识索引，也负责 Home `AGENTS.md` 的组织方法、资料指针及可选 `SOUL.md`。安装器只创建缺失的入口，已有正文按用户授权维护。本包 `SKILL.md` 与参考维护现行执行方法，setup 维护配置。普通主题使用 Markdown。
 
 知识 CLI 的路径白名单、`--expect` 和写锁只覆盖其支持的主题、候选、归档等文件。入口与 SOUL 依[入口方法](references/agent-entry.md)读取基线、最小编辑、写前复核、写后回读；不通过放宽 `put` 路径把它们纳入主题索引。
 

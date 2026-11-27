@@ -26,7 +26,7 @@ description: 从 Home 向一个或多个已登记项目派发工作、查询项�
 
 ## 执行
 
-1. 确定实际 Home 根，先读 `./.agents/home/AGENTS.md`，再按本次目标、范围、完成条件和已有任务打开对应资料。读取失败时交 `home-doctor` 核对 Home 根及安装状态。需要 Home 项目背景或长期决定时，用 `home-knowledge` 按 repo ID 或主题查询。已有背景足够回答时直接作答。
+1. 确定实际 Home 根，从 `./.agents/home/AGENTS.md` 读取用户约定和资料指针。按当前已安装技能的入口选择方法，再结合本次目标、范围和完成条件打开对应资料。读取失败交 `home-doctor` 核对 Home 根及安装状态。需要 Home 项目背景或长期决定时用 `home-knowledge` 按 repo ID 或主题查询。
 2. 复合任务只补真实缺口，按上表调用；始终沿用同一目标和证据。缺少登记或配置时让 `home-setup` 处理有关分支，不重新做全套初始化。
 3. 向登记项目派发工作或查询项目内部资料时，读取[项目任务与多级自治](references/delegation.md)。用 `home-route` 核对 checkout，从 Home 偏好选定派遣方式和 team，按目标 repo ID 核对 CLI、模型和推理参数。
 4. 按[协调与接续](references/coordination.md)使用 `home-tasks` 管理主题、派发、回执和项目占用。核对发送前的占用与依赖后，调用选定入口。尚未能派发的工作先记录为待派。需要新派发而缺 `home-tasks` 时说明缺项。恢复既有会话时查原方法。

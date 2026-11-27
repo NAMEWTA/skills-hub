@@ -35,11 +35,11 @@
 
 ## Home 入口与合作约定
 
-Home 的 AGENTS 格式、渐进式披露、读取条件与语义维护由 [home-knowledge](../../skills/home/home-knowledge/SKILL.md) 负责。根短入口由 setup 在完整初始化中合并，安装器只更新 Home AGENTS 的已标记基础区；知识正文和用户约定保留在各自真源，区外只写实际资料指针。
+Home 的 AGENTS 格式、渐进式披露、读取条件与语义维护由 [home-knowledge](../../skills/home/home-knowledge/SKILL.md) 负责。根短入口由 setup 在完整初始化中合并。安装器首次补缺时创建 Home 入口，之后沿用用户文件。知识正文和用户约定保留在各自真源，入口保存实际资料指针。
 
 profile 保存 Home 职责和用户背景，preferences 保存语言、时区及执行默认。只有用户明确要求保存、且既有位置尚未承担的合作原则或表达风格，才按需建立 SOUL。已有等价文档原地引用，不新增同义 USER/MEMORY 文件。文件缺省合法，启用后由入口说明何时读取，不假定宿主自动加载。
 
-AGENTS 非托管内容与 SOUL 不进入主题工具的通用 `put` 白名单，也不由知识索引收录。普通编辑先读取基线，写前重新核对并最小合并，写后回读；原知识/历史 CLI 的锁和 `--expect` 仍仅保护它们明确支持的文件。更正或忘记时处理实际 owner 与派生入口，未触达的原生记忆、Git 历史及备份分别说明。完整方法见[入口与合作约定](../../skills/home/home-knowledge/references/agent-entry.md)。
+AGENTS 与 SOUL 用普通文件编辑，先读取基线，写前重新核对并最小合并，写后回读。知识/历史 CLI 的锁和 `--expect` 只保护其白名单内的文件。更正或忘记时处理实际 owner 与派生入口，说明覆盖范围。详见[入口与合作约定](../../skills/home/home-knowledge/references/agent-entry.md)。
 
 ## 证据优先级不等于“代码永远正确”
 

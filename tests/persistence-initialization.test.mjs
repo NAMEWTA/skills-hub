@@ -140,7 +140,7 @@ test('home local defaults preserve explicit Git exceptions and leave business re
   const navigation = path.join(root, home);
   fs.writeFileSync(navigation, legacyHome);
   success(run(root, 'install', '--domain', 'home'));
-  assert.deepEqual(fs.readFileSync(navigation), fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md')));
+  assert.deepEqual(fs.readFileSync(navigation), legacyHome);
   assert.deepEqual(fs.readFileSync(rootRules), originalRootRules);
   assert.equal(fs.readFileSync(dispatch, 'utf8'), '# 当前宿主原生派遣\n');
   assert.equal(fs.readFileSync(team, 'utf8'), '# Home 项目负责人\n');
@@ -157,9 +157,6 @@ test('home local defaults preserve explicit Git exceptions and leave business re
 for (const redirected of ['parent', 'file']) test(`link failure rollback does not follow a replaced persistence ${redirected}`, t => {
   const root = project(t);
   const outside = project(t);
-  const original = legacyHome;
-  fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
-  fs.writeFileSync(path.join(root, '.agents/home/AGENTS.md'), original);
   fs.writeFileSync(path.join(outside, 'AGENTS.md'), '# Outside content must survive\n');
   const previous = snapshot(outside);
   const regular = createInstaller();
@@ -182,23 +179,31 @@ for (const redirected of ['parent', 'file']) test(`link failure rollback does no
     fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md'), 'utf8'));
 });
 
-test('Home upgrades only its marked base block and preserves surrounding bytes and repeat mtime', t => {
+test('Home replacement preserves the whole navigation byte-for-byte and never reads it', t => {
   const root = project(t);
   fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
   const navigation = path.join(root, home);
   const prefix = Buffer.from('\uFEFF# 用户的现行约定\r\n本文记录 skills-hub:home-entry: 的使用方法。\r\n\r\n');
   const suffix = Buffer.concat([Buffer.from('\r\n\r\n## 知识入口\r\n[发布规则](notes/release.md)\r\n'), Buffer.from([0xff])]);
-  fs.writeFileSync(navigation, Buffer.concat([prefix, Buffer.from(`${homeStart}\r\n旧基础说明\r\n${homeEnd}`), suffix]));
+  const original = Buffer.concat([prefix, Buffer.from(`${homeStart}\r\n旧基础说明\r\n${homeEnd}`), suffix]);
+  fs.writeFileSync(navigation, original);
+  const installed = path.join(root, '.agents/skills/home-knowledge');
+  fs.mkdirSync(installed, { recursive: true });
+  fs.writeFileSync(path.join(installed, 'SKILL.md'), '# Old installed skill\n');
   const before = snapshot(root);
-  assert.match(success(run(root, 'install', '--skill', 'home-knowledge', '--dry-run')).stdout, /would update\s+\.agents\/home\/AGENTS\.md/);
+  assert.match(success(run(root, 'install', '--skill', 'home-knowledge', '--dry-run')).stdout, /preserve\s+\.agents\/home\/AGENTS\.md/);
   assert.deepEqual(snapshot(root), before);
-  success(run(root, 'install', '--skill', 'home-knowledge'));
-  const template = fs.readFileSync(path.join(repositoryRoot, 'scripts/persistence/home.md'));
-  const block = template.subarray(0, template.length - 1);
-  assert.equal(template[template.length - 1], 10, 'the installed base template has one final newline');
-  assert.deepEqual(fs.readFileSync(navigation), Buffer.concat([prefix, block, suffix]));
   const mtime = fs.statSync(navigation, { bigint: true }).mtimeNs;
+  const installer = createInstaller({ fsOps: { ...fs, readFileSync(filename, ...args) {
+    assert.notEqual(filename, navigation, 'an existing Home entry must not be read by the installer');
+    return fs.readFileSync(filename, ...args);
+  } } });
+  const selected = installer.catalog().filter(skill => skill.name === 'home-knowledge');
+  const { actions } = installer.apply(selected, root);
+  assert.equal(actions[0].kind, 'replace');
+  assert.deepEqual(fs.readFileSync(path.join(installed, 'SKILL.md')), fs.readFileSync(path.join(selected[0].source, 'SKILL.md')));
   success(run(root, 'install', '--skill', 'home-knowledge'));
+  assert.deepEqual(fs.readFileSync(navigation), original);
   assert.equal(fs.statSync(navigation, { bigint: true }).mtimeNs, mtime);
   assert.equal(fs.existsSync(path.join(root, 'AGENTS.md')), false);
   assert.equal(fs.existsSync(path.join(root, '.agents/system')), false);
@@ -207,27 +212,26 @@ test('Home upgrades only its marked base block and preserves surrounding bytes a
 for (const [label, content] of [
   ['unmarked user navigation', '# 我自己维护的 Home 入口\n'],
   ['modified legacy template', Buffer.concat([legacyHome, Buffer.from('\n用户补充\n')])],
-  ['legacy with different line endings', legacyHome.toString('utf8').replaceAll('\n', '\r\n')],
-  ['missing end', `${homeStart}\n未闭合\n`],
-  ['missing start', `只有结尾\n${homeEnd}\n`],
+  ['empty file', ''],
+  ['unclosed legacy marker', `${homeStart}\n未闭合\n`],
   ['unknown version', `<!-- skills-hub:home-entry:start v2 -->\n较新的格式\n${homeEnd}\n`],
-  ['duplicate blocks', `${homeStart}\nA\n${homeEnd}\n${homeStart}\nB\n${homeEnd}\n`],
-  ['nested blocks', `${homeStart}\n${homeStart}\nA\n${homeEnd}\n${homeEnd}\n`],
-  ['reversed markers', `${homeEnd}\nA\n${homeStart}\n`],
-  ['inline marker', `用户正文 ${homeStart}\nA\n${homeEnd}\n`],
-]) test(`Home ${label} stops the complete selected installation before any writes`, t => {
+]) test(`Home ${label} is preserved during a mixed-domain installation`, t => {
   const root = project(t);
   fs.mkdirSync(path.join(root, '.agents/home'), { recursive: true });
-  fs.writeFileSync(path.join(root, home), content);
-  fs.writeFileSync(path.join(root, 'AGENTS.md'), '# 根规则\n');
+  const navigation = path.join(root, home);
+  const rootRules = path.join(root, 'AGENTS.md');
+  fs.writeFileSync(navigation, content);
+  fs.writeFileSync(rootRules, '# 根规则\n');
+  const mtime = fs.statSync(navigation, { bigint: true }).mtimeNs;
   const before = snapshot(root);
-  for (const flags of [[], ['--dry-run'], ['--replace']]) {
-    const result = run(root, 'install', '--skill', 'home-setup', 'dev-intake', ...flags);
-    assert.equal(result.status, 1, result.stdout + result.stderr);
-    assert.match(result.stderr, /HOME_ENTRY_CONFLICT/);
-    assert.match(result.stderr, /home-knowledge/);
-    assert.deepEqual(snapshot(root), before);
-  }
+  const args = ['install', '--skill', 'home-setup', 'dev-intake'];
+  assert.match(success(run(root, ...args, '--dry-run')).stdout, /preserve\s+\.agents\/home\/AGENTS\.md/);
+  assert.deepEqual(snapshot(root), before);
+  success(run(root, ...args, '--replace'));
+  assert.deepEqual(fs.readFileSync(navigation), Buffer.from(content));
+  assert.equal(fs.statSync(navigation, { bigint: true }).mtimeNs, mtime);
+  assert.equal(fs.readFileSync(rootRules, 'utf8'), '# 根规则\n');
+  assert.deepEqual(fs.readdirSync(path.join(root, '.agents/skills')), ['dev-intake', 'home-setup']);
 });
 
 test('selecting another domain neither validates nor repairs a conflicting Home entry', t => {
@@ -264,26 +268,21 @@ test('Home installation preserves old unselected domain navigation and business 
   assert.equal(fs.existsSync(path.join(root, 'AGENTS.md')), false);
 });
 
-test('a Home edit after the locked plan is not overwritten by installation or rollback', t => {
+test('installation preserves a concurrent edit to an existing Home entry', t => {
   const root = project(t);
   const navigation = path.join(root, home);
   fs.mkdirSync(path.dirname(navigation), { recursive: true });
-  fs.writeFileSync(navigation, `${homeStart}\n旧基础说明\n${homeEnd}\n`);
+  const original = '# 当前 Home 入口\n';
+  const edit = '\n用户同时新增的决定\n';
+  fs.writeFileSync(navigation, original);
   const selected = createInstaller().catalog().filter(skill => skill.name === 'home-setup');
-  let expected;
   const installer = createInstaller({ fsOps: { ...fs, cpSync(source, target, options) {
     fs.cpSync(source, target, options);
-    if (!expected) {
-      fs.appendFileSync(navigation, '\n用户同时新增的决定\n');
-      expected = snapshot(root);
-      delete expected['.agents/.skills-wta-install.lock'];
-      delete expected['.agents/.skills-hub-install.lock'];
-      for (const relative of Object.keys(expected)) if (relative.startsWith('.agents/.skills-hub-stage-')) delete expected[relative];
-    }
+    fs.appendFileSync(navigation, edit);
   } } });
-  assert.throws(() => installer.apply(selected, root), /rolled back.*安装目标在安装期间变化/);
-  assert.ok(expected);
-  assert.deepEqual(snapshot(root), expected);
+  installer.apply(selected, root);
+  assert.equal(fs.readFileSync(navigation, 'utf8'), original + edit);
+  assert.ok(fs.existsSync(path.join(root, '.agents/skills/home-setup/SKILL.md')));
 });
 
 test('system installation adds a default without rewriting user bytes on reinstall', t => {

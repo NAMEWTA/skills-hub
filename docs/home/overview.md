@@ -13,7 +13,7 @@ npx @namewta/skills-hub@latest install --domain home
 
 随后可直接说“把这个目录作为我的 Home，管理 A 和 B，沿用我现在的派遣方式”，也可用 `$home-setup 初始化 Home`。完整初始化会合并或复用根短入口、建立 Home Git 白名单，按真实路径和 Git 身份登记项目，并保存已确认的默认派遣方式与 team。只发 `$home-setup` 时，先只读检查当前状态，再选完整初始化、项目登记、补 Git 或补派遣等操作。维护知识或历史也可单选对应技能。
 
-安装任一 Home 技能都会建立或补齐 `.agents/home/AGENTS.md` 和 `/.agents/home/local.json` 忽略规则。只选 Home 就只初始化 Home 域；技能正文提到其他领域不会扩大安装范围。初始化和日常使用都先读 Home 主入口，再按任务读取正文。普通安装、查询登记或局部配置保留根 `AGENTS.md`；完整初始化合并其中的 Home 短指针，保留原有规则。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接，详见[安装契约](../usage/installation.md)。
+安装任一 Home 技能时，安装器创建缺失的 `.agents/home/AGENTS.md`，并补齐 `/.agents/home/local.json` 忽略规则。只选 Home 就只初始化 Home 域。Home 技能先读实际入口，再沿各自 `SKILL.md` 及当前任务找到相关正文。普通安装、查询登记或局部配置保留根 `AGENTS.md`，完整初始化合并其中的 Home 短指针。每个所选技能以 `.agents/skills/<name>/` 为本体，`.claude/skills/<name>` 提供同仓目录符号链接。详见[安装契约](../usage/installation.md)。
 
 当前实际宿主已是已知选择，不要求重复报出厂商。默认复用根 AGENTS 和现有技能发现，不生成额外厂商文件、全局设置或 hooks。确需且已有授权允许的宿主薄入口属于本机接入适配，不扩大 Home Git 白名单；换机后按实际宿主重新核验并重建。只允许 AGENTS 的环境继续由已发现技能显式读取 Home 主入口，实际原生装载能力按[验证说明](validation.md)记录。
 
@@ -28,7 +28,7 @@ npx @namewta/skills-hub@latest install --domain home
 
 同一上下文已读相同 Home 根和版本时可复用；新会话、压缩后缺失、换根或入口更新时重读。链接相对包含它的文件解析。缺索引可查询正文，可选资料尚未创建不报故障；必读入口无法读取则先核对根、路径与安装状态，由 doctor 只读诊断。
 
-`home-knowledge` 维护入口格式、渐进式披露、非托管知识指针和可选合作约定。安装器只更新一对 v1 标记内的基础区，区外原字节和顺序保留。精确旧官方模板自动迁移；未标记自定义、损坏或未知标记会使本次安装在写入前失败，交 knowledge 保留内容、整理已知边界后重装。相同内容不重写。具体恢复规则见[Home 入口更新](../usage/installation.md#home-入口更新与迁移)。
+`home-knowledge` 按用户授权维护入口格式、资料指针和可选合作约定。技能升级原样保留整个已有入口，旧模板和手写入口均可直接使用。任务路由与执行方法以已安装技能为依据，实际用户规则和权威资料仍从 Home 读取。详见[Home 入口更新](../usage/installation.md#home-入口更新与迁移)。
 
 安装完成、Home 接入完成和本次工作完成分别报告。技能文件提供方法，项目路径、实际派遣工具、模型能力与组合结果仍以当前环境证据为准。直接调用专门技能可独立工作，无需强制经过 workflow 或先补齐不相关配置。
 

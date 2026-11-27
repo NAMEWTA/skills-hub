@@ -7,7 +7,7 @@
 | 内容 | 处理方式 |
 | --- | --- |
 | 用户已确认的语言、时区、执行默认、Home 职责 | 调用 `home-setup` 更新已有配置真源，知识可保留理由和指针 |
-| Home AGENTS 的信息分层、读取条件、知识指针；尚无 owner 的长期合作原则 | 按[入口与合作约定](agent-entry.md)维护非托管入口或可选 SOUL；已有 profile/preferences 的同项内容继续交 setup |
+| Home AGENTS 的信息分层、读取条件、知识指针及尚无 owner 的长期合作原则 | 按[入口与合作约定](agent-entry.md)维护主入口或可选 SOUL；已有 profile/preferences 的同项内容继续交 setup |
 | 项目用途、基本背景、交付边界和管理经验 | 在 Home 保留必要概况，来源指向项目报告或用户决定 |
 | 跨项目关系和契约 owner | 调用 `home-map` 维护关系结构，主题记录有关理由 |
 | 当时事件、阶段结果、会话摘要 | 调用 `home-history`，现行主题按实际长期价值提炼 |

@@ -12,9 +12,9 @@
 | 实际路径、Git root/common dir、worktree、HEAD 与 remote 身份核验 | home-route | 按主 remote 首 fetch URL 核验，报告其他 remote 漂移；登记变更交 setup，不读取项目内部知识正文 |
 | `relations.md` 与基于项目证据的影响分析 | home-map | workflow/integrate 引用方向、边界和证据，不从登记分组推断关系 |
 | `notes/`、`inbox/`、`archive/notes/`、`exclusions.md`、知识派生索引 | home-knowledge | 保留来源、范围、核验与更正边界；配置更正交 setup |
-| Home AGENTS 的格式、渐进式披露、读取条件、非托管指针与可选 SOUL | home-knowledge | 入口写法与语义由 knowledge 维护，已有配置真源继续由 setup 维护 |
+| Home AGENTS 的格式、渐进式披露、读取条件、资料指针与可选 SOUL | home-knowledge | 按授权直接维护 Home 文档，配置继续由 setup 维护 |
 | Home 根 AGENTS 的短指针及实际宿主接入 | home-setup | 完整初始化合并或复用，普通安装与局部配置保留根；遵循 knowledge 入口规范 |
-| Home AGENTS 标记内基础区 | 安装器及唯一 `scripts/persistence/home.md` 模板 | 按 knowledge 格式确定性更新，区外内容保留；未知或损坏边界先报告冲突 |
+| Home AGENTS 首次创建 | 安装器及 `scripts/persistence/home.md` 模板 | 仅补缺，技能升级保留已有入口 |
 | `history/`、`archive/history/`、事件与历史查询入口 | home-history | 记录当时理由和结果，不以摘要替代当前任务状态 |
 | 联合验证执行者、组合条件和真实结果核对 | home-integrate | 执行和原件归实际项目；Home 协调摘要由 workflow 保持 |
 | 导航、登记、路径、结构和链接的只读检查 | home-doctor | 报告准确缺口，修复交所属 owner，不重复知识语义判断 |
@@ -41,7 +41,7 @@ Home 默认只在用户定义的 Home 作用范围内生效。项目收到上层
 
 ## 安装与宿主
 
-安装器负责部署完整本体、逐技能 Claude 兼容链接、按所选 domain 的导航及安装忽略规则。Home 主入口采用基础区更新，其他 domain 保持原合同。home-setup 维护业务资料、Home Git 范围、完整初始化的根短入口和换机恢复。Home 提交可保存 `.agents/skills/` 本体，新机直接使用同仓技能。home-doctor 诊断必读入口及实际结构，语义修复交 knowledge，安装损坏交原安装机制。技能内容不依赖源码仓库的 `materials/`、`docs/` 或兄弟包内部实现。
+安装器负责部署完整技能、逐技能 Claude 兼容链接、按所选 domain 的导航及忽略规则。Home 主入口仅缺失时创建。home-setup 维护业务资料、Home Git 范围、完整初始化的根短入口和换机恢复。Home 提交可保存 `.agents/skills/` 本体，新机直接使用同仓技能。home-doctor 诊断实际入口及链接，语义修复交 knowledge，技能安装损坏交原安装机制。
 
 入口 owner 不构成强制安装依赖。每个 Home 技能自带必要读取步骤，单装可执行本职责；只有确需其他方法的分支才调用其已安装入口。AGENTS/SOUL 的普通编辑不受原知识 CLI 主题写锁保护，按 knowledge 的读基线、最小编辑和回读方法处理。
 
