@@ -1,0 +1,144 @@
+[
+  {
+    "path": "materials/archify/zh/modules/code-analysis/README.md",
+    "codeFences": 2,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": [
+      "docs/USAGE.md",
+      "docs/USAGE.md#agent-entry-and-investigation",
+      "docs/USAGE.md#review-architecture-drift-between-two-commits",
+      "docs/USAGE.md#first-look-at-an-unfamiliar-repository",
+      "docs/TECH-GUIDE.md#project-sdk-and-configuration",
+      "../../../upstream/modules/code-analysis/docs/TS-UPSTREAM-LEDGER.md",
+      "../../../upstream/modules/code-analysis/docs/TS-REAL-PROJECT-ACCEPTANCE.md",
+      "docs/USAGE.md#duplicate-code-c6-optional",
+      "docs/TECH-GUIDE.md"
+    ]
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/ARCHITECTURE.md",
+    "codeFences": 1,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": [
+      "docs/USAGE.md",
+      "docs/TECH-GUIDE.md#module-resolution",
+      "docs/TECH-GUIDE.md#explicit-esm-call-forwarding",
+      "docs/USAGE.md#severity-levels"
+    ]
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/C_CPP.md",
+    "codeFences": 4,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/LANGUAGE-REFERENCE.md",
+    "codeFences": 6,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/GO.md",
+    "codeFences": 2,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/PYTHON.md",
+    "codeFences": 4,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      13,
+      13
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/JAVA.md",
+    "codeFences": 2,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": [
+      "USAGE.md#first-look-at-an-unfamiliar-repository",
+      "TECH-GUIDE.md#5-the-four-kinds-of-unresolved-why-they-are-counted-separately",
+      "USAGE.md#severity-levels"
+    ]
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/RUST.md",
+    "codeFences": 3,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/RUST-RA-PARITY.md",
+    "codeFences": 1,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      48,
+      48
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/FUNCTION-ANALYSIS.md",
+    "codeFences": 2,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      0,
+      0
+    ],
+    "missingLinks": []
+  },
+  {
+    "path": "materials/archify/zh/modules/code-analysis/docs/EXTERNAL-DIAGNOSTICS.md",
+    "codeFences": 11,
+    "codeEqual": true,
+    "literalsEqual": true,
+    "tableRows": [
+      23,
+      23
+    ],
+    "missingLinks": [
+      "../import/vendor/README.md"
+    ]
+  }
+]

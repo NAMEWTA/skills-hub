@@ -9,11 +9,11 @@ description: 在 deepseek-harness 中新增、审计、精简、归档、恢复�
 
 ## 阅读约定
 
-分类前阅读 [Agent Note 规则](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md)、[归档说明](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/archived/AGENTS.md)以及适用的活动生命周期说明。使用当前代码、配置、包文档、生成的目录、较新的 Agent Notes 和入站链接，判断某段理由是否仍然负责或约束任何事物。
+分类前阅读 [Agent Note 规则](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md)、[归档说明](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/archived/AGENTS.md)以及适用的活动生命周期说明。使用当前代码、配置、包文档、生成的目录、较新的 Agent Notes 和入站链接，判断某段理由是否仍然负责或约束任何事物。
 
 ## 新增笔记时检查替代关系
 
-起草前应用[创建标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md#when-to-write-one)。每篇新 Agent Note 都会触发一次范围明确的活动笔记审计，覆盖同一决策、机制或被拒绝方案。撰写新笔记时，对每项完全替代或部分替代进行分类：符合条件的已实施三文件组在同一个 PR 中归档；部分替代或仍有独立价值的理由保留并交叉链接；拒绝过时提案；删除不再能阻止合理误判的已拒绝笔记。新责任记录吸收了全部独特论点时，应用 Agent Note 合并规则；不要把已知的对应关系拖到以后的全资料审计。
+起草前应用[创建标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md#when-to-write-one)。每篇新 Agent Note 都会触发一次范围明确的活动笔记审计，覆盖同一决策、机制或被拒绝方案。撰写新笔记时，对每项完全替代或部分替代进行分类：符合条件的已实施三文件组在同一个 PR 中归档；部分替代或仍有独立价值的理由保留并交叉链接；拒绝过时提案；删除不再能阻止合理误判的已拒绝笔记。新责任记录吸收了全部独特论点时，应用 Agent Note 合并规则；不要把已知的对应关系拖到以后的全资料审计。
 
 ## 按未来价值分类
 

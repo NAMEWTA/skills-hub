@@ -1,6 +1,6 @@
 ---
 name: software-factory
-description: 设计软件工厂的共享语言：它运行的任务，以及接入的服务。
+description: "设计软件工厂的共享语言：它运行的任务，以及接入的服务。"
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,7 @@ disable-model-invocation: true
 
 **任务（Task）**：
 工厂执行的一类工作，定义一次、运行多次：审查、探索、实现、棘轮迁移。任务可以处理工单、PR 或整个代码库。
-_避免_：job、workflow、action
+_避免_：用 job、workflow、action 命名任务。CI 厂商的 workflow 文件及其 job 是接入任务的位置，不是任务本身。
 
 **触发器（Trigger）**：
 启动一次运行的事件：工单跟踪器或 Git 托管平台中的变更、编排器中的时钟，或另一次运行。

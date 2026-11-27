@@ -9,10 +9,10 @@ description: 设计、审查及诊断 DeepSeek Harness 中可能因 CI 并发、
 
 ## 阅读负责规则
 
-- 用[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/testing.md)选择单元、覆盖率、预期输出、快照、浏览器或真实 API 证据。
-- 生命周期、子进程、取消和拆除行为遵循[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/general.md)。
+- 用[测试政策](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/testing.md)选择单元、覆盖率、预期输出、快照、浏览器或真实 API 证据。
+- 生命周期、子进程、取消和拆除行为遵循[防御模式](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/general.md)。
 - worker 或任务拓扑影响测试时，阅读实际 Vitest 配置与 GitHub 工作流。
-- 录制会话场景还遵循[快照说明](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/snapshots/AGENTS.md)。
+- 录制会话场景还遵循[快照说明](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/snapshots/AGENTS.md)。
 - 测试设计正确后，用 [dsh-pre-push-checks](../dsh-pre-push-checks/SKILL.md)选择待推送验证。
 
 ## 建模执行拓扑

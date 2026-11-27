@@ -1,0 +1,184 @@
+{
+  "schema_version": 1,
+  "method": "Read-only Git blob SHA-1 comparison against fixed latest Git trees; selected current notices/README fetched and byte-hash verified. No license, source or runtime files modified.",
+  "licenses": [
+    {
+      "project": "pstack",
+      "repository": "cursor/plugins",
+      "revision": "b1fbf4b60ac6813b4583ccc356850dafcf492665",
+      "source_path": "harness/pstack/claude-code/LICENSE",
+      "local_path": "licenses/pstack-MIT.txt",
+      "local_bytes": 1067,
+      "local_git_blob": "6b5400237fdf6545be0b8fae370d6f2fcff8fb25",
+      "latest_git_blob": "6b5400237fdf6545be0b8fae370d6f2fcff8fb25",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/cursor/plugins/blob/b1fbf4b60ac6813b4583ccc356850dafcf492665/harness/pstack/claude-code/LICENSE"
+    },
+    {
+      "project": "mattpocock-skills",
+      "repository": "mattpocock/skills",
+      "revision": "6f7f7831a625f040a8e06a0e7954826b87ce775a",
+      "source_path": "LICENSE",
+      "local_path": "licenses/mattpocock-skills-MIT.txt",
+      "local_bytes": 1068,
+      "local_git_blob": "f1dd2c09108dde1a5f56097cee8461b3ea834499",
+      "latest_git_blob": "f1dd2c09108dde1a5f56097cee8461b3ea834499",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/mattpocock/skills/blob/6f7f7831a625f040a8e06a0e7954826b87ce775a/LICENSE"
+    },
+    {
+      "project": "deepseek-harness",
+      "repository": "deepseek-ai/deepseek-harness",
+      "revision": "4b399c39a6d1479cd84ca591b4d7c88e24d38a96",
+      "source_path": "LICENSE",
+      "local_path": "licenses/deepseek-harness-MIT.txt",
+      "local_bytes": 1065,
+      "local_git_blob": "c1f7a78e89e4e4dc7b86664c3b3c76eb5eee1785",
+      "latest_git_blob": "c1f7a78e89e4e4dc7b86664c3b3c76eb5eee1785",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/LICENSE"
+    },
+    {
+      "project": "modern-web-guidance",
+      "repository": "GoogleChrome/modern-web-guidance",
+      "revision": "2b4aa13a72dd47cd135b06ce5abfccd92e19b24f",
+      "source_path": "LICENSE",
+      "local_path": "licenses/modern-web-guidance/LICENSE",
+      "local_bytes": 11358,
+      "local_git_blob": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "latest_git_blob": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/GoogleChrome/modern-web-guidance/blob/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/LICENSE"
+    },
+    {
+      "project": "dashboard-design-skill",
+      "repository": "abdiraimov-otabek/dashboard-design-skill",
+      "revision": "57f96688862668b482f647fa1e370efb5d3ddd31",
+      "source_path": "LICENSE",
+      "local_path": "licenses/dashboard-design-skill-MIT.txt",
+      "local_bytes": 1074,
+      "local_git_blob": "8d6c98b71c5781d212af80702df416013cae041a",
+      "latest_git_blob": "8d6c98b71c5781d212af80702df416013cae041a",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/abdiraimov-otabek/dashboard-design-skill/blob/57f96688862668b482f647fa1e370efb5d3ddd31/LICENSE"
+    },
+    {
+      "project": "herdr",
+      "repository": "herdrdev/herdr",
+      "revision": "e8d7d9705a7a2c89cef4dd42079379f05685af87",
+      "source_path": "LICENSE",
+      "local_path": "licenses/herdr-Apache-2.0.txt",
+      "local_bytes": 11357,
+      "local_git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "latest_git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/herdrdev/herdr/blob/e8d7d9705a7a2c89cef4dd42079379f05685af87/LICENSE"
+    },
+    {
+      "project": "herdr-core",
+      "repository": "herdrdev/herdr-core",
+      "revision": "329cb66ebce5eca3d917fcf7364a099046979b49",
+      "source_path": "LICENSE",
+      "local_path": "licenses/herdr-Apache-2.0.txt",
+      "local_bytes": 11357,
+      "local_git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "latest_git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/herdrdev/herdr-core/blob/329cb66ebce5eca3d917fcf7364a099046979b49/LICENSE"
+    },
+    {
+      "project": "nanobot-memory",
+      "repository": "HKUDS/nanobot",
+      "revision": "c360a10e8ca8afd18916b73b7575f015941a33d9",
+      "source_path": "LICENSE",
+      "local_path": "licenses/nanobot-MIT.txt",
+      "local_bytes": 1102,
+      "local_git_blob": "e06eb24cf4abdc5b46d354fc7d1c9531b2f52dfa",
+      "latest_git_blob": "e06eb24cf4abdc5b46d354fc7d1c9531b2f52dfa",
+      "identical_to_latest": true,
+      "source_url": "https://github.com/HKUDS/nanobot/blob/c360a10e8ca8afd18916b73b7575f015941a33d9/LICENSE"
+    }
+  ],
+  "notices": [
+    {
+      "project": "deepseek-harness",
+      "path": "THIRD_PARTY_NOTICES.md",
+      "baseline_git_blob": "c38e1a3cead980111422dd79a70f210f440a722a",
+      "latest_git_blob": "9faa18b7e9dd771935007861e6a1a0a7a223be84",
+      "changed": true,
+      "scope": "Only npm/workspace/Host and bundled Python dependency lists changed; source scope .agents/skills contains none of these implementations. Root MIT is identical. Existing repository attribution already excludes these implementation trees.",
+      "action": "Record change and fixed source link; no replacement of current MIT or unrelated runtime notices.",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/THIRD_PARTY_NOTICES.md"
+    },
+    {
+      "project": "nanobot-memory",
+      "path": "THIRD_PARTY_NOTICES.md",
+      "baseline_git_blob": "df3fd21f59bcb127e02f2f7f87ee84126828f557",
+      "latest_git_blob": "df3fd21f59bcb127e02f2f7f87ee84126828f557",
+      "changed": false,
+      "scope": "Repository-wide implementation dependencies; selected memory skill stays unchanged.",
+      "action": "No change."
+    }
+  ],
+  "modern_web_readme": {
+    "project": "modern-web-guidance",
+    "local_path": "licenses/modern-web-guidance/SOURCE-README.txt",
+    "baseline_git_blob": "6d3cd6f52e887bab122adc7fef313a30fd0f0df3",
+    "latest_git_blob": "07c719cb040f12bb1fbe2ac37919a60e885ae5aa",
+    "whole_readme_changed": true,
+    "license_section_identical": true,
+    "license_section": "\n## <img src=\"https://github.com/GoogleChrome/modern-web-guidance/raw/main/.github/img/file-text.svg\" width=\"24\" height=\"24\" style=\"vertical-align: middle; margin-right: 4px;\">  License\n\nUnless otherwise noted:\n* Software code in this project is licensed under the [Apache License 2.0](https://github.com/GoogleChrome/modern-web-guidance-src/blob/main/LICENSE).\n* Documentation and guide content under `guides/` are licensed under [Creative Commons Attribution 4.0 International (CC-BY 4.0)](https://creativecommons.org/licenses/by/4.0/).\n\nPortions of the documentation in this project are derived from [MDN Web Docs](https://developer.mozilla.org/) by Mozilla Contributors and [W3C](https://www.w3.org/), [WHATWG](https://whatwg.org), and [IETF](https://www.ietf.org) specifications.\n",
+    "latest_url": "https://github.com/GoogleChrome/modern-web-guidance/blob/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/README.md#license",
+    "action": "Retain old runtime SOURCE-README as its version record; current materials can cite latest pinned README. CC-BY-4.0 declaration and upstream attribution remain identical. No separate Creative Commons site re-fetch performed."
+  },
+  "archify_runtime_legal_context": [
+    {
+      "local_path": "licenses/archify/LICENSE",
+      "source_path": "archify/LICENSE",
+      "local_git_blob": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "latest_git_blob": "d645695673349e3947e8e5ae42332d0ac3164cd7",
+      "identical_to_latest": true,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    },
+    {
+      "local_path": "licenses/archify/NOTICE",
+      "source_path": "archify/NOTICE",
+      "local_git_blob": "b63fbccce2291058a9f4abec9d64b57b527e44d7",
+      "latest_git_blob": "c9e0c0446c91b02c49e2b9c5479878ae24b0a052",
+      "identical_to_latest": false,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    },
+    {
+      "local_path": "licenses/archify/LICENSE-MIT",
+      "source_path": "archify/LICENSE-MIT",
+      "local_git_blob": "0f9f9397a0496ef63c7d555d36b40c3f932aff84",
+      "latest_git_blob": "0f9f9397a0496ef63c7d555d36b40c3f932aff84",
+      "identical_to_latest": true,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    },
+    {
+      "local_path": "licenses/archify/THIRD_PARTY_NOTICES.md.txt",
+      "source_path": "archify/THIRD_PARTY_NOTICES.md",
+      "local_git_blob": "4060ce3d7ad11ab81a2f3915d970a8f951dcfc28",
+      "latest_git_blob": "9328e185f785490a7dfbe0780eaa7bed6b54b18f",
+      "identical_to_latest": false,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    },
+    {
+      "local_path": "licenses/archify/assets/JetBrainsMono-OFL.txt",
+      "source_path": "archify/assets/JetBrainsMono-OFL.txt",
+      "local_git_blob": "675d198b74b6f10b5ca149e6a21cf06dcc46b676",
+      "latest_git_blob": "675d198b74b6f10b5ca149e6a21cf06dcc46b676",
+      "identical_to_latest": true,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    },
+    {
+      "local_path": "licenses/archify/explainer/vendor/pele/LICENSE",
+      "source_path": "archify/explainer/vendor/pele/LICENSE",
+      "local_git_blob": "fd6f9c893d2feb140f6d1e853a8bc0908b3bdf5b",
+      "latest_git_blob": "fd6f9c893d2feb140f6d1e853a8bc0908b3bdf5b",
+      "identical_to_latest": true,
+      "action": "Retain actual runtime version; latest materials retain their own legal files and notices at original paths."
+    }
+  ]
+}

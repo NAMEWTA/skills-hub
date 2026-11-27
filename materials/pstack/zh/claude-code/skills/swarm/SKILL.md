@@ -21,7 +21,7 @@ disable-model-invocation: true
 
 1. 陈述完成判据，以及群体必须交还的产物或报告。
 2. 选择形态：拆成切片、让 N 位执行者竞赛同一份简报，或两者混用。竞赛或混合形态在派生前声明 `first pass`、`rank all` 或 `best-of`。
-3. 从 `~/.cursor/rules/pstack-models.mdc` 的 `swarm workers` 行选执行模型。规则或该行缺失时使用 `grok-4.7-xhigh-fast`。值为 `auto` 或 `inherit-parent` 时省略 `model`，让执行者继承父模型。若 Task 工具拒绝标识，使用默认值并说明；若默认值也被拒绝，采用错误消息中同系列最接近的有效标识。模型竞赛时预先指出每一路的模型。按 **poteto-mode** 技能“子智能体”一节，按任务选择每位子智能体的推理级别和快速或标准速度。
+3. 从 `~/.cursor/rules/pstack-models.mdc` 的 `swarm workers` 行选择工作者模型。如果规则或该行不存在，使用 `claude-opus-5-5-high-fast`。对于 `auto` 或 `inherit-parent`，省略 `model`，使工作者使用父模型。如果 Task 工具拒绝某个标识，使用默认值并说明情况。如果它也拒绝默认值，从错误消息中选择同系列最接近的有效标识。对于模型竞赛，事先说明每组使用的模型。按照 **poteto-mode** 技能的 Subagents 部分，为每个子代理选择适合任务的推理级别。
 4. 执行者需要写入时，为其分配独立可写输出。验证或测量提交时，每份简报写明精确 SHA。测量简报还要指出方法（样本量、一个样本是什么、顺序）。执行者在结果中记录这两者。
 
 ## 阶段 B：扇出

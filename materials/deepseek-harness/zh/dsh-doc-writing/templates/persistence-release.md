@@ -23,7 +23,7 @@ kind: persistence-release
 
 ## 快照与历史规则
 
-[档案参考](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/persistence-changes/releases/README.md)负责固定发布清单与提取限制。首份记录包含每个提取的根；后续模式配套文件只含发生变化且仍存在的根，以及它们所有可达的类型定义。没有类型变化的发布，也通过空变化及快照保留。每份记录引用清单中的紧邻前一条目。
+[档案参考](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/persistence-changes/releases/README.md)负责固定发布清单与提取限制。首份记录包含每个提取的根；后续模式配套文件只含发生变化且仍存在的根，以及它们所有可达的类型定义。没有类型变化的发布，也通过空变化及快照保留。每份记录引用清单中的紧邻前一条目。
 
 索引表、清单单元格及结构变化事实使用 `persistence-release-index`、`persistence-release-inventory` 和 `persistence-release-changes` 起止注释标记。人工解释不放进这些生成区域。`pnpm run verify-persistence-releases --write` 验证所有机器数据后，才刷新事实区域与配对记录；保留人工文字、机器声明及模式文件。默认验证拒绝过期的生成事实及缺失的固定索引文件。
 

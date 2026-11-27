@@ -5,7 +5,7 @@
 一份裁决覆盖一个补丁，绿色 CI 覆盖一个头提交。第 4 步完整群体验证一次，只有重大变化才再跑。`playbooks/shipping.md` 的 patch-id 规则可以延续某通道结果，但每个新头提交都需要自己的绿色 CI。
 
 1. **操作人的门禁优先。** 授权仅覆盖队列事项，操作人指定归自己处理的事项及队列外 PR 停在可合并状态。要求说明计划不等于开始执行。
-2. **每个 PR 派一位负责人，让替代者找得到其工作。** 项目一次性确定托管工具。默认 GitHub CLI（`gh`）。若 `command -v origin` 成功且 Origin 能解析仓库，则所有 PR 操作用 `origin pr`。否则继续 `gh`，记录回退。永远不要求 Graphite（`gt`）。每位负责人是 Cursor 云智能体，构建，按 `playbooks/opening-a-pr.md` 打开 PR，在真实产物证明改动，按 `playbooks/babysit.md` 跟进到绿色，步骤 4、5 放行后合并。
+2. **每个 PR 启动一名负责人，并将其工作保存在替代者能够找到的位置。** 为整个计划一次性确定代码托管服务。默认使用 GitHub CLI（`gh`）。如果 `command -v origin` 成功且 Origin 能解析该仓库，所有 PR 操作都使用 `origin pr`。否则继续使用 `gh`，并记录回退情况。绝不要求 Graphite（`gt`）。每名负责人都是 Cursor cloud agent，负责构建、按 `playbooks/opening-a-pr.md` 创建 PR、在真实产物上证明改动、按 `playbooks/babysit.md` 看护至全绿，并在第 4 和第 5 步放行后合并。如果该 playbook 要求报告 rebase，负责人应 rebase 自己的分支，并用 `git push --force-with-lease` 发布。
 
    尽早打开 PR，让 CI 和机器人与工作并行。只有执行 `cursor-team-kit` 的 `deslop`（`/deslop`）及 `/no-comments` 后，代码才就绪，以便完整群体验证面对完成代码。之后变基到最新主干，在自证前报告代码就绪头提交，使验证在补丁落地的基线上执行。报告每个后续头提交，自证、CI、跟进完成后报告可合并。修复轮次保持该基线，除非主干冲突、使 CI 失败、或有已知并发改动落在相同文件，因为每次变基都会重启 CI。代码就绪推送前，以及后续需要验证者的推送前，在已提交头上运行仓库对触及路径的检查。
 

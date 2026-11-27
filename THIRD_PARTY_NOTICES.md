@@ -20,7 +20,7 @@
 | [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit)，Anthropic 及贡献者 | `skills/triage`、`templates`、`eval`；分别用于事故调查、经验手册和回放评估方法。 | [Apache 2.0](licenses/oncall-kit/LICENSE)；[调查](materials/oncall-triage/manifest.tsv)、[模板](materials/oncall-templates/manifest.tsv)、[回放](materials/oncall-replay/manifest.tsv)清单 |
 | [openai/skills — Sentry](https://github.com/openai/skills/tree/main/skills/.curated/sentry)，OpenAI 及贡献者 | `skills/.curated/sentry`；只读错误观测、范围核对与脱敏方法用于 `ops-inspect`。 | [Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)；[清单](materials/openai-sentry/manifest.tsv) |
 | [HumanLayer](https://github.com/humanlayer/humanlayer) / [Dex Horthy](https://github.com/dexhorthy)，QueryTale, Inc. d/b/a HumanLayer | 既有 PR 视觉说明中的 show-me 方法；已作中文翻译和流程适配。NOTICE 中列出的其他程序组件未因此一并收录。 | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) |
-| [abdiraimov-otabek/dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)，Otabek Abdiraimov | 固定版本 `skills/dashboard-design/` 的 11 份 Markdown；完整翻译后独立提供 `zh-dashboard-design`。不包含来源仓库根部的示例页面、图片与 Claude 插件配置。 | [MIT](licenses/dashboard-design-skill-MIT.txt)；[清单](materials/dashboard-design-skill/manifest.tsv) |
+| [abdiraimov-otabek/dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)，Otabek Abdiraimov | `skills/dashboard-design/` 当前材料共 14 份 Markdown，附完整中文对照；独立运行包 `zh-dashboard-design` 仍采用下表所列旧版本的 11 份文件。未收录来源根部的示例页面、图片与 Claude 插件配置。 | [MIT](licenses/dashboard-design-skill-MIT.txt)；[清单](materials/dashboard-design-skill/manifest.tsv) |
 | [HKUDS/nanobot](https://github.com/HKUDS/nanobot)，Xubin Ren 与 nanobot 贡献者 | `nanobot/skills/memory` 的完整短技能及中文底稿；采用按需读取、来源边界、已确认长期知识、读后更新、修复引用和历史检索方法。 | [MIT](licenses/nanobot-MIT.txt)；[清单](materials/nanobot-memory/manifest.tsv) |
 
 ### 整合内容的修改范围
@@ -52,6 +52,8 @@
 
 上述中文化与名称调整是本项目的修改，原作者和相关组织未因此为译文提供背书。项目补充的来源与修改说明集中在本文，技能目录不额外添加 `UPSTREAM.md` 或翻译声明段落。清单中的 `zh_path`、`runtime_paths` 和摘要可用于逐文件核对。
 
+2026-11-26 的材料同步已将 Archify、Google modern-web-guidance 和 Dashboard Design 的原件及中文底稿推进到父清单中的新提交；上表仍记录实际运行包的采用版本。未完成运行适配的文件保留原 `runtime_reviewed_blob`。新材料不自动进入运行包，中文文档也不把上游自身的矛盾改写为已验证结论。
+
 ### Archify
 
 版权归 tt-a1i (Archify)、Cocoon AI 及各组件作者。Archify 源自 [Cocoon-AI/architecture-diagram-generator](https://github.com/Cocoon-AI/architecture-diagram-generator)。默认许可为 Apache 2.0；转换前取得的 MIT 代码和既有发布继续保留原授权，详见原始 NOTICE。
@@ -66,15 +68,30 @@
 
 这六份文件既有集中原文，也在 `zh-archify` 中按上游原路径保留。字体、图标和品牌的单独条件不因软件采用 Apache 2.0 而改变。
 
+当前 Archify 材料新增 Code Analysis 与 Story 资源，相关法律文本按该固定提交原样保留于材料树。它们尚未进入上述独立运行包，不能用旧运行包的六份声明概括新增材料的全部许可。当前适用的来源说明见[材料 NOTICE](materials/archify/upstream/NOTICE)与[材料第三方声明](materials/archify/upstream/THIRD_PARTY_NOTICES.md)；旧运行包的集中副本继续保留。新增对应关系如下：
+
+| 新增材料 | 原始声明 |
+| --- | --- |
+| Code Analysis 模块 | [LICENSE](materials/archify/upstream/modules/code-analysis/LICENSE)、[NOTICE](materials/archify/upstream/modules/code-analysis/NOTICE) |
+| Python 分析来源 | [LICENSE.txt](materials/archify/upstream/modules/code-analysis/extract/py/upstream/LICENSE.txt) |
+| CodeQL 行指纹算法与 OASIS SARIF schema | [CODEQL-LICENSE.txt](materials/archify/upstream/modules/code-analysis/import/vendor/CODEQL-LICENSE.txt)、[OASIS-LICENSE.md](materials/archify/upstream/modules/code-analysis/import/vendor/OASIS-LICENSE.md) |
+| Three.js 与分析模块随附依赖 | [THREE-LICENSE.txt](materials/archify/upstream/modules/code-analysis/overlay/vendor/THREE-LICENSE.txt)、[LICENSES.txt](materials/archify/upstream/modules/code-analysis/vendor/LICENSES.txt) |
+| Vue 回归摘录 | [vue-2532.LICENSE](materials/archify/upstream/modules/code-analysis/test/fixtures/vue-2532.LICENSE) |
+| Story HTML 解析器 | [parse5-LICENSE.txt](materials/archify/upstream/story/vendor/parse5-LICENSE.txt)、[entities-LICENSE.txt](materials/archify/upstream/story/vendor/entities-LICENSE.txt) |
+
+Archify 中文材料完整翻译说明文档；程序、生成代码、内置目录与 schema 沿用该来源已有的原字节保留策略，代码对照不称为译文。机器夹具、二进制和法律原文同样保留原字节。
+
 ### Google modern-web-guidance
 
 归属 GoogleChrome/modern-web-guidance 贡献者。固定版本的 [README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/README.md#license)区分软件代码的 [Apache 2.0](licenses/modern-web-guidance/LICENSE) 与 `guides/` 文档内容的 [CC-BY 4.0](licenses/modern-web-guidance/CC-BY-4.0.txt)，另有声明的内容从其声明。原 README 全文保存在 [SOURCE-README.txt](licenses/modern-web-guidance/SOURCE-README.txt)。
 
 按其归属声明，部分文档源自 [MDN Web Docs](https://developer.mozilla.org/) 的 Mozilla Contributors，以及 [W3C](https://www.w3.org/)、[WHATWG](https://whatwg.org/) 和 [IETF](https://www.ietf.org/) 规范。两个中文包的文档和指南保留这些来源及适用许可；商店、隐私文案模板中的自然语言也翻译为中文，原占位符和结构保留。本仓库 MIT 不替代这些许可。
 
+当前材料所固定的[新版本 README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/README.md#license)与上述旧版许可节逐字一致；根 README 其他内容虽有变化，仍保留旧运行采用版本的完整副本，不将其冒称为新版本全文。
+
 ### Dashboard Design
 
-版权归 Otabek Abdiraimov（2026）。原仓库根目录的 [MIT 许可原文](licenses/dashboard-design-skill-MIT.txt) 已按原字节保存，适用于收录的技能内容。所选 `skills/dashboard-design/` 子树共有 1 个入口文件和 10 个参考文件；没有额外复制仓库外层 `examples/`、`docs/`、`.claude-plugin/` 或原仓库 README。中文底稿保留上游 `dashboard-design` 身份，安装运行版的名称为 `zh-dashboard-design`，并在原作者的完成署名中同步使用该运行名；作者的 Halo、Shedi 介绍链接及用户可请求取消的条件保持。所有代码围栏、数据格式和阈值保持原义。本项目的译文并不意味着得到原作者背书。
+版权归 Otabek Abdiraimov（2026）。原仓库根目录的 [MIT 许可原文](licenses/dashboard-design-skill-MIT.txt) 已按原字节保存，适用于收录的技能内容。当前材料的 `skills/dashboard-design/` 子树共有 1 个入口文件和 13 个参考文件；实际运行版本仍为 1 个入口和 10 个参考文件。没有额外复制仓库外层 `examples/`、`docs/`、`.claude-plugin/` 或原仓库 README。中文底稿保留上游 `dashboard-design` 身份，安装运行版的名称为 `zh-dashboard-design`，并在原作者的完成署名中同步使用该运行名；作者的 Halo、Shedi 介绍链接及用户可请求取消的条件保持。所有代码围栏、数据格式和阈值保持原义。本项目的译文并不意味着得到原作者背书。
 
 ## Speculo 内嵌内容
 

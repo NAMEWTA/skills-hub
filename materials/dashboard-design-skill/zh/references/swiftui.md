@@ -14,7 +14,7 @@ SKILL.md 的规则与 components.md 的组件模式适用于所有平台。本�
 extension Double {
     var compact: String { formatted(.number.notation(.compactName).precision(.fractionLength(0...1))) } // 1.2K
     var usd: String { formatted(.currency(code: "USD").precision(.fractionLength(0))) }
-    /// Share of a total in percent: never "0.0%" for a real but tiny share.
+    /// 总数百分比：真实但极小的占比绝不显示为 0.0%。
     var share: String { self == 0 ? "0%" : self < 0.1 ? "<0.1%" : self < 1 ? String(format: "%.1f%%", self) : "\(Int(rounded()))%" }
 }
 ```
@@ -25,20 +25,20 @@ extension Double {
 
 ```swift
 struct KPITile: View {
-    let label: String, value: String, explain: String, delta: Text?, series: [Double]   // delta: "▲ 13% vs Sep"
+    let label: String, value: String, explain: String, delta: Text?, series: [Double]   // 涨跌，例如 ▲ 13% vs Sep。
     let selected: Bool, money: Bool
     var tint: Color { money ? Color("Money") : .accentColor }
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack { Text(label).fontWeight(selected ? .medium : .regular); Spacer(); delta }.font(.subheadline)
             Text(value).font(.title.weight(.semibold)).monospacedDigit().foregroundStyle(selected ? .primary : .secondary)
-            Sparkline(values: series, color: selected ? tint : .secondary)   // same window as the main chart
+            Sparkline(values: series, color: selected ? tint : .secondary)   // 与主图相同的时间窗口。
         }
         .padding(12)
         .background(selected ? tint.opacity(0.06) : .clear, in: .rect(cornerRadius: 12))
         .overlay { if selected { RoundedRectangle(cornerRadius: 12).strokeBorder(tint.opacity(0.22)) } }
         .contentShape(.rect)
-        .help(explain)                                  // the explanation is a tooltip, never a sub-line
+        .help(explain)                                  // 说明放在工具提示内，不用副行。
         .accessibilityHint(explain)
         .accessibilityAddTraits(selected ? [.isButton, .isSelected] : .isButton)
     }
@@ -51,7 +51,7 @@ struct KPITile: View {
 
 ```swift
 Chart {
-    ForEach(previous) { p in                                     // the period before: grey, dashed, behind
+    ForEach(previous) { p in                                     // 上一周期：灰色、虚线、位于后方。
         LineMark(x: .value("Day", p.day), y: .value("Value", p.value), series: .value("Period", "Before"))
             .foregroundStyle(.gray.opacity(0.6)).lineStyle(StrokeStyle(lineWidth: 1.5, dash: [4, 3]))
     }
@@ -61,12 +61,12 @@ Chart {
         LineMark(x: .value("Day", p.day), y: .value("Value", p.value), series: .value("Period", "Now"))
             .foregroundStyle(tint).lineStyle(StrokeStyle(lineWidth: 2))
     }
-    if let day = selectedDay {                                   // hover / scrub hairline with the value
+    if let day = selectedDay {                                   // 悬停或拖动查看时显示细线与数值。
         RuleMark(x: .value("Day", day)).foregroundStyle(.secondary.opacity(0.4))
             .annotation(position: .top, overflowResolution: .init(x: .fit, y: .disabled)) { Tooltip(day: day) }
     }
 }
-.chartYScale(domain: 0...ticks.last!)                            // ticks = niceTicks(max), ported from snippets.md
+.chartYScale(domain: 0...ticks.last!)                            // ticks = niceTicks(max)，从 snippets.md 移植。
 .chartYAxis { AxisMarks(position: .leading, values: ticks) { AxisGridLine(); AxisValueLabel() } }
 .chartXAxis { AxisMarks(values: .automatic(desiredCount: 6)) }
 .chartXSelection(value: $selectedDay)
@@ -110,9 +110,9 @@ Grid(horizontalSpacing: 6, verticalSpacing: 6) {
                     Text("\(Int(rate.rounded()))").font(.caption.weight(.semibold)).monospacedDigit()
                         .frame(maxWidth: .infinity, minHeight: 34)
                         .background(tierFill(rate), in: .rect(cornerRadius: 9))
-                        .foregroundStyle(.primary)                         // never accent text on an accent tint
-                        .underline(rate < 85)                              // non-colour cue for the problem tier
-                } else {                                                   // not marked: the cell is the action
+                        .foregroundStyle(.primary)                         // 不要在强调色浅底上使用强调色文字。
+                        .underline(rate < 85)                              // 异常等级的非颜色提示。
+                } else {                                                   // 尚未登记：单元格本身就是操作入口。
                     Button { remind(row) } label: { Image(systemName: "bell").frame(maxWidth: .infinity, minHeight: 34) }
                         .buttonStyle(.plain).foregroundStyle(Color("Warn"))
                         .overlay(RoundedRectangle(cornerRadius: 9).strokeBorder(Color("Warn"), style: StrokeStyle(lineWidth: 1.5, dash: [4, 3])))
@@ -123,7 +123,7 @@ Grid(horizontalSpacing: 6, verticalSpacing: 6) {
     }
 }
 
-func tierFill(_ rate: Double) -> Color {                                   // intensity grows toward the problem
+func tierFill(_ rate: Double) -> Color {                                   // 越接近问题，颜色越强。
     rate >= 95 ? .accentColor.opacity(0.07) : rate >= 90 ? .accentColor.opacity(0.15)
         : rate >= 85 ? .accentColor.opacity(0.26) : Color("Warn").opacity(0.30)
 }
@@ -133,7 +133,7 @@ func tierFill(_ rate: Double) -> Color {                                   // in
 
 ```swift
 Chart {
-    ForEach(ranges.indices.reversed(), id: \.self) { i in                // good (light) behind, poor (dark) in front
+    ForEach(ranges.indices.reversed(), id: \.self) { i in                // 良好区间（浅色）在后，较差区间（深色）在前。
         BarMark(xStart: .value("From", 0), xEnd: .value("To", ranges[i]), y: .value("Metric", label), height: .ratio(1))
             .foregroundStyle(.primary.opacity([0.40, 0.25, 0.10][i]))
     }
@@ -153,12 +153,12 @@ Chart(days) { d in
         RuleMark(x: .value("Selected", selected, unit: .day))
             .foregroundStyle(.gray.opacity(0.3)).zIndex(-1)
             .annotation(position: .top, overflowResolution: .init(x: .fit(to: .chart), y: .disabled)) {
-                ValuePopover(day: d)                           // big exact value, muted date line
+                ValuePopover(day: d)                           // 大的精确值与淡化日期行。
             }
     }
 }
-.chartXSelection(value: $selected)                             // hover on macOS, touch on iOS
-.chartScrollableAxes(.horizontal)                              // a year of days scrolls; 30 are visible
+.chartXSelection(value: $selected)                             // macOS 使用悬停，iOS 使用触摸。
+.chartScrollableAxes(.horizontal)                              // 一年日期可滚动，显示 30 天。
 .chartXVisibleDomain(length: 3600 * 24 * 30)
 ```
 
@@ -206,3 +206,32 @@ xcrun simctl io booted screenshot ~/Desktop/qa-iphone-dark-ax5.png
 - 一次开启 Increase Contrast（`xcrun simctl ui booted increase_contrast enabled`），另一次开启 Reduce Motion（模拟器 Settings › Accessibility › Motion）。
 - 打开每张截图，执行 qa.md 的一致性检查与异味清单；它们在原生端仍完全适用。
 - 使用固定示例数据的 `#Preview` 覆盖每种状态（空、小样本、加载、错误），可在进入模拟器之前抓到大部分问题。
+
+
+## 漏斗、cohort 与可用性
+
+```swift
+// 漏斗：水平条，宽度表示占第一步的比例；流失最严重的一步用暖色。
+Chart(steps) { s in
+    BarMark(x: .value("People", s.count), y: .value("Step", s.label))
+        .foregroundStyle(s.id == worstStep ? Color.orange : Color.accentColor)
+        .annotation(position: .trailing) { Text(s.count, format: .number.notation(.compactName)).font(.caption).monospacedDigit() }
+}
+.chartXAxis(.hidden)
+
+// Cohort 网格：每个 cohort/week 对应一个 RectangleMark；未来周直接缺席，绝不写为 0。
+Chart(cells) { c in
+    RectangleMark(x: .value("Week", c.week), y: .value("Cohort", c.cohort))
+        .foregroundStyle(Color.accentColor.opacity(c.pct >= 40 ? 0.7 : c.pct >= 25 ? 0.4 : c.pct >= 15 ? 0.2 : 0.08))
+        .annotation(position: .overlay) { Text("\(Int(c.pct))%").font(.caption2).monospacedDigit() }
+}
+
+// 可用性：每天一个胶囊，除降级或停机外都用灰色。
+HStack(spacing: 2) {
+    ForEach(days) { d in
+        Capsule().fill(d.state == .down ? Color.red : d.state == .degraded ? Color.orange : Color.secondary.opacity(0.25))
+            .frame(height: 28).help("\(d.date.formatted(date: .abbreviated, time: .omitted)): \(d.note)")
+    }
+}
+.accessibilityElement(children: .ignore).accessibilityLabel("\(name): \(pct, specifier: "%.2f")% uptime")
+```

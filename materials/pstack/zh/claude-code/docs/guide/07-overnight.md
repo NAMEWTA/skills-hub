@@ -71,7 +71,7 @@ flowchart TD
 
 ## 夜间要处理的是队列，而非单个任务
 
-上述约定让一个任务走向一个完成条件。有些夜晚任务更多，是独立变更队列或完整项目。三份规程扩大相同信任机制的适用范围。
+上述约定让一个任务走向一个完成条件。有些夜晚任务更多，是独立变更队列或完整项目。两份规程和一个技能扩大相同信任机制的适用范围。
 
 [Autopilot-full](../../skills/poteto-mode/playbooks/autopilot-full.md) 将独立 PR 队列运行到合并。每个 PR 有一个负责智能体，从构建一路负责到合并，负责人不能只凭自己的判断合并。一组新验证者检查负责人的代码就绪版本。后续变基或小修只需一位新验证者；只有新行为或大量新差异才再次调用完整验证组。只有对实际合并补丁给出的干净结论才能授权合并：
 
@@ -85,15 +85,15 @@ flowchart TD
 /poteto-mode 自动处理这五项变更，但不要合并。我早上自己落地。
 ```
 
-[Orchestrate](../../skills/poteto-mode/playbooks/orchestrate.md) 面向比任何单个智能体存活更久的项目：跨多天、很多堆叠 PR，以及由一个持续协调聊天管理的子智能体群。协调者决定谁做哪部分，检查各自产物，从不亲自写代码。如果一个智能体能在一次会话完成，规程会让你回到上述夜间运行约定：
+完整项目，例如跨许多包的迁移，没有独立专用规程。`/poteto-mode` 将大型或跨领域工作路由到 [`/figure-it-out`](../../skills/figure-it-out/SKILL.md)，由它设计一次严谨的执行流程：
 
 ```text
-/poteto-mode 编排存储迁移。持续负责，直到每个包都迁移并合并。我每天查看两次。
+/poteto-mode migrate every package to the new store. own it until each one is converted and merged. i'll check in twice a day.
 ```
 
 ## 并行运行多个项目
 
-[Cursor Project](https://cursor.com/blog/projects) 为一个协调智能体提供持久线程。协调者不写代码，只指挥子智能体；子智能体默认在云端运行，因此关闭笔记本后工作仍继续。这是 Orchestrate 规程预期的结构。向协调者发提示时，以 `/poteto-mode` 开头；它创建的子智能体会遵循相应规程。
+[Cursor Project](https://cursor.com/blog/projects) 为一个协调智能体提供持久线程。协调者不写代码，只指挥子智能体；子智能体默认在云端运行，因此关闭笔记本后工作仍继续。向协调者发提示时，以 `/poteto-mode` 开头；它创建的子智能体会遵循相应规程。它启动的每个智能体都先读 [`worker.md`](../../skills/poteto-mode/worker.md)，因此执行者会遵守任务简报的验收标准，自行决定可逆选择而不询问你，并创建可审查的 PR。
 
 几个习惯有帮助：
 
@@ -115,7 +115,7 @@ flowchart TD
 - 每个阶段都可以停止流程。分诊可判定报告属于预期行为，复现可能无法复现，修复者也可判断变更风险太高。这些结果都有价值，因为它们阻止坏工作进入撤销代价更高的下一阶段。
 - 每个阶段都交付证据。复现附上损坏状态的截图与视频，修复附上前后对比证据。这样人类无需先读代码，就能判断智能体是否修对了问题。
 
-pstack 将它作为面向 Slack 问题报告的休眠[自动化包](https://github.com/cursor/plugins/blob/2eaf46574b25cdf7ef8c849837099b866b7438ce/pstack/automations/benny/README.md)提供。一个自动化逐个分诊报告，另一个复现已确认 bug，并可能准备小型修复草稿。把它的 [`FOR_AGENTS.md`](https://github.com/cursor/plugins/blob/2eaf46574b25cdf7ef8c849837099b866b7438ce/pstack/automations/benny/FOR_AGENTS.md)交给智能体，并指定目标仓库，即可进行配置。
+pstack 将它作为面向 Slack 问题报告的休眠[自动化包](https://github.com/cursor/plugins/blob/b1fbf4b60ac6813b4583ccc356850dafcf492665/pstack/automations/benny/README.md)提供。一个自动化逐个分诊报告，另一个复现已确认 bug，并可能准备小型修复草稿。把它的 [`FOR_AGENTS.md`](https://github.com/cursor/plugins/blob/b1fbf4b60ac6813b4583ccc356850dafcf492665/pstack/automations/benny/FOR_AGENTS.md)交给智能体，并指定目标仓库，即可进行配置。
 
 **易错点：**时长不是完成条件。“在这上面工作 4 小时”没有可检查的目标，醒来后你只会看到四小时活动，而非结果。给 `/loop` 一个可以判定通过或失败的条件。
 

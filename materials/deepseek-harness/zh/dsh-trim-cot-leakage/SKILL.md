@@ -5,7 +5,7 @@ description: 审计或修复像泄漏推理记录的文字时使用，包括失�
 
 # 清理思维链泄漏
 
-思维链泄漏指从写作会话而非仓库视角出发的文字：引用只有该会话可见的产物，叙述变化而非状态，或与已离场评审者争论。有事实子句时，绝不能只删；先重述每项使其在 HEAD 独立成立，再删周围记录。没有事实的段落（审计码、控制流叙述）直接删除。**必读背景：** [dsh-prose-standard](../dsh-prose-standard/SKILL.md)负责本技能应用的完整命题规则；[已归档提交产物引用笔记](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/archived/process/2026-08-09-committed-artifact-citations.md)记录引用规则历史理由。这是指导，不是脚本。
+思维链泄漏指从写作会话而非仓库视角出发的文字：引用只有该会话可见的产物，叙述变化而非状态，或与已离场评审者争论。有事实子句时，绝不能只删；先重述每项使其在 HEAD 独立成立，再删周围记录。没有事实的段落（审计码、控制流叙述）直接删除。**必读背景：** [dsh-prose-standard](../dsh-prose-standard/SKILL.md)负责本技能应用的完整命题规则；[已归档提交产物引用笔记](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/archived/process/2026-08-09-committed-artifact-citations.md)记录引用规则历史理由。这是指导，不是脚本。
 
 ## 唯一检验
 
@@ -27,7 +27,7 @@ description: 审计或修复像泄漏推理记录的文字时使用，包括失�
 无辅助的引用清理会双向出错：删持久引用、留失效引用。严格按下列保留规则；[示例](references/examples.md)逐项校准：
 
 - **Issue 引用**——`#1470`、`TODO(name):`、“后续由 issue #N 负责”在 HEAD 可解析；任何表面包括 README 都保留，不搬去 Agent Notes。
-- **Agent Notes 及复盘内已合并 PR 和 Issue 引用**——是[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md)变更故事路由允许的证据。
+- **Agent Notes 及复盘内已合并 PR 和 Issue 引用**——是[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md)变更故事路由允许的证据。
 - **抑制理由**——`oxlint-disable … -- reason`、覆盖忽略理由、空 catch 解释是必需文字；错误理由应修，不删。
 - **现在时反事实回归固定说明**——“没有 X，Y 会发生”“朴素 X 会……”。
 - **测得边界**——“（实测：512 层嵌套 ≈ 0.15s）”校准常量；“实测”是承重证据词。
@@ -40,6 +40,6 @@ description: 审计或修复像泄漏推理记录的文字时使用，包括失�
 
 1. 范围及排除按 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)：必须有明确范围，绝不碰 `vendor/` 或 `.agents/notes/archived/`。记录夹具及快照是派生物，不是文字目标：只有获授权行为变化需新证据时，改负责源码或场景并重新生成。
 2. 先只读审计：运行[召回探针组](references/recall-batteries.md)（加 `--hidden` 搜索 `.agents/`）；信任输出前，每个探针对已知正例及近似反例校准，再语义判断每个命中。探针不是定义；最初清理每轮都发现漏检案例，因此还要不带模式阅读范围内最密文字（模块 JSDoc、README、Agent Notes）。
-3. 按表面先修负责者：生成目录 → 追踪全部消费者，修源 JSDoc 或生成器模板，再生成全部派生物；类型等价围栏 → 修源 JSDoc，重新粘贴双语页（`verify-type-equiv` 固定它们）；双语文字 → 最小更新对应页，按[轻量流程](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md#writing-rules)重新记录；双语围栏 → 按 [dsh-doc-writing](../dsh-doc-writing/SKILL.md)将修正原文块逐字节复制到两侧，再记录配对；模型或用户可见字符串 → 通过 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)，只有负责行为证据才修改，否则保持并报告延后。
+3. 按表面先修负责者：生成目录 → 追踪全部消费者，修源 JSDoc 或生成器模板，再生成全部派生物；类型等价围栏 → 修源 JSDoc，重新粘贴双语页（`verify-type-equiv` 固定它们）；双语文字 → 最小更新对应页，按[轻量流程](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md#writing-rules)重新记录；双语围栏 → 按 [dsh-doc-writing](../dsh-doc-writing/SKILL.md)将修正原文块逐字节复制到两侧，再记录配对；模型或用户可见字符串 → 通过 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)，只有负责行为证据才修改，否则保持并报告延后。
 4. 删除任何内容前，列举段落命题（prose-standard），检查[过度纠正陷阱](references/examples.md#过度纠正陷阱)：把义务变成背书、把假设提升成已交付功能、删真实事实或丢证据来源。
 5. 验证：重跑探针组，预期只剩获准保留、本技能自身目录及负责笔记引用证据；确认残留引用均在 HEAD 可解析；运行受影响表面门禁（文档 `doc-sync`、`verify-type-equiv`、`verify-translation-pairing`）。

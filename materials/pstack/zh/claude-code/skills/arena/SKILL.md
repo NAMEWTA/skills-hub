@@ -16,7 +16,7 @@ disable-model-invocation: true
 
 1. 说明每个候选要产出什么。
 2. 制定评分准则，包含 3—6 个具体、可以评分的成功标准，针对*本次*任务。它供阶段 D 的选择者使用，候选只看到任务。
-3. 选择执行者。使用 `~/.cursor/rules/pstack-models.mdc` 中的 `arena runners` 行。规则或该行缺失时，默认分别使用一个 `claude-opus-5-5-xhigh` 和一个 `grok-4.7-xhigh-fast`。该行中的 `auto` 或 `inherit-parent` 表示父模型，因此省略 `model`。如果 Task 工具拒绝配置项，改用该模型家族的默认项执行这个席位，并说明。家族按前缀划分：`claude-*` 为一类；`grok-*`、`cursor-grok-*` 和 `composer-*` 为另一类。被拒绝的 `composer-*` 项改用 `grok-4.7-xhigh-fast`。如果家族没有默认项，或 Task 工具也拒绝了默认项，使用错误消息中同一家族最接近的有效标识；没有时移除该席位并说明。如果移除后少于两个执行者，补充到两个；配置行原本只有一项时则保留一个。补充执行者使用某个剩余执行者的模型；没有剩余项时省略 `model`，让其使用父模型，并说明。方案竞技覆盖多个设计方向时增加执行者。工作受生成能力限制而非判断敏感度限制时，可将同一模型使用 N 次。按 **poteto-mode** 技能的子智能体一节，为任务选择推理级别及快速或标准速度。
+3. 从 `~/.cursor/rules/pstack-models.mdc` 的 `arena runners` 行选择执行者，默认使用 `claude-fable-5-2-high`、`claude-opus-5-5-high-fast` 和 `gemini-4-neon-xhigh`。`auto` 或 `inherit-parent` 条目表示父模型，此时省略 `model`，启动 `generalPurpose`。如果 Task 工具拒绝某个标识，使用同系列最接近的有效标识，或取消该席位；至少保留两名执行者，并说明情况。模型系列按前缀划分，最长匹配优先：去掉开头的 `cursor-` 后，匹配 `claude-fable-*`、`claude-*` 和 `gemini-*`。其他标识的系列是第一个连字符前的文本。存在多种设计方向时可以增加执行者；工作主要受生成能力限制、而不依赖敏感判断时，可以重复使用同一个模型。按照 **poteto-mode** 技能的 Subagents 部分，为每个子代理选择推理级别。
 4. 给每个候选独立输出位置：可用时使用 git worktree，否则使用 `/tmp/arena-<slug>/candidate-<n>/`；遵循 **separate-before-serializing-shared-state** 原则技能。
 
 ## 阶段 B：展开
@@ -27,7 +27,7 @@ disable-model-invocation: true
 
 ## 阶段 C：交叉评审
 
-阶段 B 的全部候选完成后，从 `~/.cursor/rules/pstack-models.mdc` 的 `arena cross-judge pool` 行选择一个模型。规则或该行缺失时，从 `claude-opus-5-5-xhigh` 和 `grok-4.7-xhigh-fast` 中选择。启动一位只读评审子智能体。评审者绝不来自父模型所属家族，家族定义见阶段 A 第 3 步。按池中顺序，只尝试其他家族的配置项。`auto` 或 `inherit-parent` 是父模型，因此不能担任评审。默认池中，Claude 父模型使用 `grok-4.7-xhigh-fast`；其他家族的父模型首先使用 `claude-opus-5-5-xhigh`。如果 Task 工具拒绝某项，根据错误消息使用同一模型、最接近推理级别或速度的有效标识；没有时尝试下一项。如果其他家族的配置项都无法运行，以同样方式尝试默认池中其他家族的项。若仍无法运行，跳过评审，阶段 D 由自己选择基础方案，并说明。如果不知道父模型，按池顺序尝试真实标识，并说明没有完成家族检查。评审者看到评分准则和以路径标记的候选，逐项评分，并附理由推荐基础方案。它与阶段 D 中你的阅读并行运行。候选仍在写入时不要启动它。
+所有阶段 B 的候选方案完成后，从 `~/.cursor/rules/pstack-models.mdc` 的 `arena cross-judge pool` 行启动一名只读裁判，默认池为 `claude-opus-5-5-high-fast`、`gemini-4-neon-xhigh`。裁判不得与父模型来自同一家供应商，且在这项检查中 Fable 算作 Claude，因此选择第一条来自其他供应商的条目。`auto` 或 `inherit-parent` 表示父模型。如果不知道父模型是什么，使用第一个实际标识，并说明未进行供应商检查。如果 Task 工具拒绝某个标识，先使用同系列最接近的有效标识，再尝试下一个符合条件的条目，或跳过裁判，并说明情况。当你在阶段 D 阅读时，裁判按路径标签对每个候选方案的各项评分标准打分，并推荐一个基底。
 
 ## 阶段 D：选择基础方案
 

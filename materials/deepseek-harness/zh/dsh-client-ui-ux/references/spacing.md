@@ -16,4 +16,4 @@
 
 匹配两个可见间隙时，指出两对端点，计入每个容器的内边距、边框和文本行框。相等的可见间隙可能需要不相等的 margin。控件绘制边缘与文字字形边缘是不同端点；审查过程中保持选择一致。
 
-复用页面间距与[样式设计变量](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/web-styling.md)，保留[对齐](alignment.md)轴，不确定的判断查阅[案例](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#grouping)。本技能不定义数字比例尺。
+复用页面间距与[样式设计变量](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/web-styling.md)，保留[对齐](alignment.md)轴，不确定的判断查阅[案例](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#grouping)。本技能不定义数字比例尺。

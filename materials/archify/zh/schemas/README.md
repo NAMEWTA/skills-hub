@@ -24,11 +24,11 @@
 
 每个图表 schema 都要求 `schema_version`、`diagram_type`、`meta`（包含 `title` 和持久、可移植的 `output`），以及相应结构数组——`segments`、`activations`、ERD 和 Class 的 `relationships`、`cards` 除外，它们是可选的——并在每一层设置 `additionalProperties: false`，因此未知字段会被拒绝，而不会被静默忽略。
 
-每个 `meta` 对象还接受 `animation: "trace"`，以选择启用生成 HTML 中的 SVG／CSS 动效。省略它或设为 `"none"`，得到默认静态输出。它还接受 `locale`，其值为格式合法的语言标签（schema 模式为 `^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$`）。该字段选择固定的查看器 UI、渲染器负责的默认图例与可访问性文案、文档标题后缀以及 `<html lang>` 值；不会翻译作者输入的字符串。`locales/manifest.json` 登记的随包语言目录（`en`、`zh-CN`、`zh-TW`、`es`、`ko`、`ar`）按照标签选择，不区分大小写；地区和文字变体是独立标签。任何其他标签都需要匹配的 `translations` 对象（见下文），否则渲染器会回退为英文并披露。省略 `locale` 会保留旧行为，解析为英文。格式错误的语言标签会导致 schema 校验失败，不会猜测或静默改写。
+每个 `meta` 对象还接受 `animation: "trace"`，以选择启用生成 HTML 中的 SVG／CSS 动效。省略它或设为 `"none"`，得到默认静态输出。它还接受 `locale`，其值为格式合法的语言标签（schema 模式为 `^[a-z]{2,3}(-[A-Za-z0-9]{2,8})*$`）。该字段选择固定的查看器 UI、渲染器负责的默认图例与可访问性文案、文档标题后缀以及 `<html lang>` 值；不会翻译作者输入的字符串。`locales/manifest.json` 登记的随包语言目录（`en`、`zh-CN`、`zh-TW`、`es`、`ko`、`ar`、`ru`）按照标签选择，不区分大小写；地区和文字变体是独立标签。任何其他标签都需要匹配的 `translations` 对象（见下文），否则渲染器会回退为英文并披露。省略 `locale` 会保留旧行为，解析为英文。格式错误的语言标签会导致 schema 校验失败，不会猜测或静默改写。
 
 `meta.translations` 是可选的逐键覆盖数据：把规范消息键（`locales/en.json`）映射到译文字符串的对象，其中 `{placeholder}` token 必须与英文来源匹配。每条消息按以下顺序解析：有效的 `translations` 值 → `locale` 对应的随包目录 → 英文。未知键或占位符不匹配，绝不会覆盖优先级更低但有效的消息，也不会使渲染失败；`validate`／`render`／`deliver` 会将被拒绝的条目和最终解析覆盖率报告到 stderr。
 
-`visual_preset` 接受 `classic`（稳定默认值）、`signal-flow`（发光、偏重动效的呈现）、`blueprint`（高对比度工程评审）或 `editorial`（暖色出版式设计评审与文档）。预设只改变查看器样式，不改变语义 ID 或几何。Sequence 的 `meta` 还接受 `column_fit`。无论是否提供 `meta.viewBox`，默认值都是 `spread`。显式 `fixed` 保留历史的 108px 列间距和 86px 参与者盒子。`spread` 根据 viewBox 推导列间距和盒子宽度，在参与者卡片间至少保留 16px 沟槽，把宽画布转化为列间距和标签空间，而不是右侧空白。两种方式都不改变泳道顺序、ID 和消息语义。
+`visual_preset` 接受 `classic`（稳定默认值）、`signal-flow`（发光、偏重动效的呈现）、`blueprint`（高对比度工程评审）或 `editorial`（暖色出版式设计评审与文档）。预设只改变查看器样式，不改变语义 ID 或几何。每张图页面和 Explainer 页脚都以一行低调的链接结尾，指向邮件反馈、GitHub Issues 和 GitHub 仓库（star）。设置 `meta.feedback_links: false` 可省略它，例如用于面向客户的文档；Explainer 简写使用 `@meta feedback_links=false`。此行绝不会出现在 SVG、图片或视频导出中。Sequence 的 `meta` 还接受 `column_fit`。无论是否提供 `meta.viewBox`，默认值都是 `spread`。显式 `fixed` 保留历史的 108px 列间距和 86px 参与者盒子。`spread` 根据 viewBox 推导列间距和盒子宽度，在参与者卡片间至少保留 16px 沟槽，把宽画布转化为列间距和标签空间，而不是右侧空白。两种方式都不改变泳道顺序、ID 和消息语义。
 
 `meta.views` 已退役。schema 仍接受旧的引导视图结构，使现有文件继续通过校验，但渲染器会忽略它；不要创作该字段。
 
@@ -96,6 +96,7 @@ Workflow 还接受可选 `semanticChecks`。`allowedRoots` 和 `allowedTerminals
 - `legendMode` 和 `legendEntry` — 每个渲染器拥有的键映射所使用的共享严格模式与标签／可见性覆盖结构。
 - `guidedViews` — 已退役的 `meta.views` 结构，仍被接受但会忽略。
 - `cards` — 渲染在 SVG 下方的摘要卡片块。
+- `drilldowns` / `href` / `parentHref` — 跨 HTML 导航。目标为同目录的 `*.html` 文件（可带 `?` / `#`）。节点上的 `href` 是单条 `drilldowns` 列表的简写（标签默认为节点标签）；两者同时存在时，`drilldowns` 优先。Passport 列出全部目标。只有一个子项时，使用原生 SVG `<a>` + 可见标记，点击跟随链接，Alt-click 聚焦。多个子项时，点击聚焦，Ctrl/双击打开第一项。子图可设置 `meta.parentHref` 提供 Back（运行时也接受 `?from=`）。
 
 Lifecycle 状态的 `type` 是模式专属的（`start`／`active`／`waiting`／……），保留在 `lifecycle.schema.json` 中。
 
