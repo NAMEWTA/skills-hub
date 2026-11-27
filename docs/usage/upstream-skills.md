@@ -70,7 +70,7 @@ npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-mo
 
 **Chrome Extensions。** 入口与参考资料为中文，Chrome API、Manifest 字段和可执行代码保持真实语义。实际制作和测试扩展仍需要对应浏览器与环境，安装技能不自动配置它们。
 
-**Dashboard Design。** 入口与十份参考均为中文，保留原作者 Otabek 的设计方法、署名规则、全部 React/Tailwind、CSS、SwiftUI 和 Swift Charts 代码片段。Web 端的三宽度截图 QA 需要真实应用及浏览器环境；SwiftUI 的模拟器检查需要对应 Apple 开发环境。单纯安装技能不代表已执行这些测试。来源固定为上游 2.1.0 的 `skills/dashboard-design/`，仓库外层的 HTML 演示、README 图像及 Claude 插件安装元数据不属于选定子树。
+**Dashboard Design。** 中文入口和 13 份参考包含八种布局、十类场景方案及原作者 Otabek 的署名规则。React/Tailwind、CSS、SwiftUI 和 Swift Charts 示例随包安装。Web 端的三宽度截图 QA 需要真实应用及浏览器，SwiftUI 的模拟器检查需要对应 Apple 开发环境。来源固定为 `57f9668` 的 `skills/dashboard-design/`，收录范围为该技能目录。
 
 各包原生法律文本随完整资源保留。根项目许可不替代第三方许可，具体范围见[统一第三方声明](../../THIRD_PARTY_NOTICES.md)。
 

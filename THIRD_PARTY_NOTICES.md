@@ -20,7 +20,7 @@
 | [anthropics/oncall-kit](https://github.com/anthropics/oncall-kit)，Anthropic 及贡献者 | `skills/triage`、`templates`、`eval`；分别用于事故调查、经验手册和回放评估方法。 | [Apache 2.0](licenses/oncall-kit/LICENSE)；[调查](materials/oncall-triage/manifest.tsv)、[模板](materials/oncall-templates/manifest.tsv)、[回放](materials/oncall-replay/manifest.tsv)清单 |
 | [openai/skills — Sentry](https://github.com/openai/skills/tree/main/skills/.curated/sentry)，OpenAI 及贡献者 | `skills/.curated/sentry`；只读错误观测、范围核对与脱敏方法用于 `ops-inspect`。 | [Apache 2.0](licenses/openai-sentry-Apache-2.0.txt)；[清单](materials/openai-sentry/manifest.tsv) |
 | [HumanLayer](https://github.com/humanlayer/humanlayer) / [Dex Horthy](https://github.com/dexhorthy)，QueryTale, Inc. d/b/a HumanLayer | 既有 PR 视觉说明中的 show-me 方法；已作中文翻译和流程适配。NOTICE 中列出的其他程序组件未因此一并收录。 | [Apache 2.0](licenses/humanlayer-Apache-2.0.txt)、[NOTICE](licenses/humanlayer-NOTICE.txt) |
-| [abdiraimov-otabek/dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)，Otabek Abdiraimov | `skills/dashboard-design/` 当前材料共 14 份 Markdown，附完整中文对照；独立运行包 `zh-dashboard-design` 仍采用下表所列旧版本的 11 份文件。未收录来源根部的示例页面、图片与 Claude 插件配置。 | [MIT](licenses/dashboard-design-skill-MIT.txt)；[清单](materials/dashboard-design-skill/manifest.tsv) |
+| [abdiraimov-otabek/dashboard-design-skill](https://github.com/abdiraimov-otabek/dashboard-design-skill)，Otabek Abdiraimov | `skills/dashboard-design/` 共 14 份 Markdown，附完整中文对照，独立运行包 `zh-dashboard-design` 采用同一提交。收录范围为该技能目录。 | [MIT](licenses/dashboard-design-skill-MIT.txt)、[清单](materials/dashboard-design-skill/manifest.tsv) |
 | [HKUDS/nanobot](https://github.com/HKUDS/nanobot)，Xubin Ren 与 nanobot 贡献者 | `nanobot/skills/memory` 的完整短技能及中文底稿；采用按需读取、来源边界、已确认长期知识、读后更新、修复引用和历史检索方法。 | [MIT](licenses/nanobot-MIT.txt)；[清单](materials/nanobot-memory/manifest.tsv) |
 
 ### 整合内容的修改范围
@@ -47,13 +47,13 @@
 | 中文运行包 | 固定来源 | 逐文件对应 |
 | --- | --- | --- |
 | `zh-archify` | [tt-a1i/archify，a7ed6fd 的 archify/](https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify) | [Archify 清单](materials/archify/manifest.tsv) |
-| `zh-modern-web-guidance` | [GoogleChrome/modern-web-guidance，64a6d70 的 skills/modern-web-guidance/](https://github.com/GoogleChrome/modern-web-guidance/tree/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/modern-web-guidance) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
-| `zh-chrome-extensions` | [同版 skills/chrome-extensions/](https://github.com/GoogleChrome/modern-web-guidance/tree/64a6d708f5a43f2cd3fde5d4d7db3905ba1bdf65/skills/chrome-extensions) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
-| `zh-dashboard-design` | [abdiraimov-otabek/dashboard-design-skill 2.1.0，463b8fd 的 skills/dashboard-design/](https://github.com/abdiraimov-otabek/dashboard-design-skill/tree/463b8fdf62c640180ec1ba731f3616c2319bf68c/skills/dashboard-design) | [仪表盘技能清单](materials/dashboard-design-skill/manifest.tsv) |
+| `zh-modern-web-guidance` | [GoogleChrome/modern-web-guidance，2b4aa13 的 skills/modern-web-guidance/](https://github.com/GoogleChrome/modern-web-guidance/tree/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/skills/modern-web-guidance) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
+| `zh-chrome-extensions` | [同版 skills/chrome-extensions/](https://github.com/GoogleChrome/modern-web-guidance/tree/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/skills/chrome-extensions)，与上一固定版本的目录内容一致 | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
+| `zh-dashboard-design` | [abdiraimov-otabek/dashboard-design-skill，57f9668 的 skills/dashboard-design/](https://github.com/abdiraimov-otabek/dashboard-design-skill/tree/57f96688862668b482f647fa1e370efb5d3ddd31/skills/dashboard-design) | [仪表盘技能清单](materials/dashboard-design-skill/manifest.tsv) |
 
 上述中文化与名称调整是本项目的修改，原作者和相关组织未因此为译文提供背书。项目补充的来源与修改说明集中在本文，技能目录不额外添加 `UPSTREAM.md` 或翻译声明段落。清单中的 `zh_path`、`runtime_paths` 和摘要可用于逐文件核对。
 
-2026-11-26 的材料同步已将 Archify、Google modern-web-guidance 和 Dashboard Design 的原件及中文底稿推进到父清单中的新提交；上表仍记录实际运行包的采用版本。未完成运行适配的文件保留原 `runtime_reviewed_blob`。新材料不自动进入运行包，中文文档也不把上游自身的矛盾改写为已验证结论。
+Archify 材料已推进到 `d6b0f71`，运行包沿用上表中 `a7ed6fd` 的 3.2 版。清单保留已核对文件的 `runtime_reviewed_blob`，使两份版本的适用范围可追溯。
 
 ### Archify
 
@@ -88,11 +88,11 @@ Archify 中文材料完整翻译说明文档；程序、生成代码、内置目
 
 按其归属声明，部分文档源自 [MDN Web Docs](https://developer.mozilla.org/) 的 Mozilla Contributors，以及 [W3C](https://www.w3.org/)、[WHATWG](https://whatwg.org/) 和 [IETF](https://www.ietf.org/) 规范。两个中文包的文档和指南保留这些来源及适用许可；商店、隐私文案模板中的自然语言也翻译为中文，原占位符和结构保留。本仓库 MIT 不替代这些许可。
 
-当前材料所固定的[新版本 README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/README.md#license)与上述旧版许可节逐字一致；根 README 其他内容虽有变化，仍保留旧运行采用版本的完整副本，不将其冒称为新版本全文。
+运行包固定版本的[新版 README 许可节](https://github.com/GoogleChrome/modern-web-guidance/blob/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/README.md#license)与 `64a6d70` 的许可节逐字一致。集中副本保存的是 `64a6d70` 的完整 README。
 
 ### Dashboard Design
 
-版权归 Otabek Abdiraimov（2026）。原仓库根目录的 [MIT 许可原文](licenses/dashboard-design-skill-MIT.txt) 已按原字节保存，适用于收录的技能内容。当前材料的 `skills/dashboard-design/` 子树共有 1 个入口文件和 13 个参考文件；实际运行版本仍为 1 个入口和 10 个参考文件。没有额外复制仓库外层 `examples/`、`docs/`、`.claude-plugin/` 或原仓库 README。中文底稿保留上游 `dashboard-design` 身份，安装运行版的名称为 `zh-dashboard-design`，并在原作者的完成署名中同步使用该运行名；作者的 Halo、Shedi 介绍链接及用户可请求取消的条件保持。所有代码围栏、数据格式和阈值保持原义。本项目的译文并不意味着得到原作者背书。
+版权归 Otabek Abdiraimov（2026）。原仓库根目录的 [MIT 许可原文](licenses/dashboard-design-skill-MIT.txt) 已按原字节保存，适用于收录的技能内容。材料和运行包各含 1 个入口文件和 13 个参考文件。中文底稿保留 `dashboard-design` 身份，安装运行版及完成署名使用 `zh-dashboard-design`。完成署名保留 Gold Master Kit、Halo、Shedi 的原链接和用户可取消的条件。可执行示例保留技术标识、行为和数值，代码注释与布局示意文字翻译为中文。
 
 ## Speculo 内嵌内容
 
