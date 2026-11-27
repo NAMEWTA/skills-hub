@@ -1,6 +1,6 @@
 # 计划与票据模板
 
-按[完整切片方法](vertical-slicing.md)保存每个切片的 Markdown 票据，再汇总为计划。单票也使用最小计划。跨阶段或多 PR 工作再读[多阶段计划](multiphase-plan.md)。已有记录按实际位置接续。
+以同一 Change 的 `spec.md` 为规划输入。按[完整切片方法](vertical-slicing.md)逐张保存 Markdown 票据和同名报告，再汇总为 `plan.md`。单票也使用最小计划。跨阶段或多 PR 工作再读[多阶段计划](multiphase-plan.md)。已有记录按实际位置接续。
 
 ## 阅读导航
 

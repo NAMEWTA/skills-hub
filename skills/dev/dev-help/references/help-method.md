@@ -101,7 +101,7 @@
 
 容易混淆的选择：
 
-- `$dev-intake` 整理需求材料，`$dev-grill` 解决未决产品选择，`$dev-spec` 补全行为契约，`$dev-sharpen` 改写请求表达。按真实缺口调用，已有充分结果直接复用。
+- `$dev-intake` 整理需求材料，`$dev-grill` 逐轮保存产品选择和理由，`$dev-spec` 写入正式的 `spec.md`，`$dev-sharpen` 改写请求表达。按真实缺口调用，已有充分结果直接复用。
 - 按预期产物区分 Issue 相关请求：完整正文的撰写与维护、增量评论由 `$dev-issue` 负责，来源、目标与缺口整理用 `$dev-intake`，分类、查重与分流用 `$dev-issue-triage`。要求复现或修复时才交 `$dev-debug` 或满足报告流程前提的 `$dev-issue-fix`；材料来自 Issue 不决定路线。
 - 独立 PR 交付使用 `$dev-pr`，独立环境部署使用 `$dev-deploy`；通用项目技能直接使用 `$dev-skill-authoring`。
 - `$dev-formal-verify` 按属性选择工具；只有 TLA+/TLC 模型与结果交 `$dev-statechart`，JS 模型采用兼容展示。应用验证生成 `dev-verify-<app>`，形式属性验证生成 `dev-formal-verify-<area>`。
@@ -131,7 +131,7 @@
 
 相近名称可能被宿主匹配到其他技能，执行前应读取实际内容并核对目标。`dev-workflow`（`dev-workflow`） 的 Playbooks 部分列出全部流程及适用条件。[指南第 6 页](guide-verification.md) 说明开启、跟进和落地 PR。
 
-本项目有按任务选择的规格、计划与实施方法，宿主提供的计划模式可配合使用。`$dev-workflow` 通过 `dev-plan` 保存实施票据并汇总 DAG；跨阶段或堆叠 PR 再按实际交付分组。只要求计划时交付票据和计划。已授权持续实施时，核对后交给 `dev-build`。设计问题按实际缺口通过研究、Prototype 流程或 `$dev-architecture` 厘清，沿用有效的决定。
+宿主的计划模式可配合项目方法。`$dev-workflow` 通过 `dev-plan` 以 `spec.md` 为输入，保存实施票据、同名报告和 `plan.md`。跨阶段或堆叠 PR 按实际交付分组。已授权持续实施时，核对后交给 `dev-build`。设计问题按实际缺口通过研究、Prototype 流程或 `$dev-architecture` 厘清。
 
 原则全文由 `dev-guardrails` 维护，按任务需要调用；在它改变决定时说明实际作用，不要求每轮机械引用全部原则。用户通常用名称引导，例如“apply prove it works. show me the real output.”，执行者再读取该原则的完整方法。[指南第 8 页](guide-principles.md) 列出了这些原则。
 
