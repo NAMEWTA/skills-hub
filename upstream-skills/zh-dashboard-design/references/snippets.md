@@ -8,9 +8,9 @@
 const compact = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 }); // 1.2k, 3.4M
 export const int = (n: number) => Math.round(n).toLocaleString('en');
 export const usd = (n: number, digits = 0) => n.toLocaleString('en', { style: 'currency', currency: 'USD', maximumFractionDigits: digits });
-/** Share of a total: never "0.0%" for a real but tiny share. */
+/** 总数占比：真实但极小的占比绝不显示为 0.0%。 */
 export const share = (v: number) => (v === 0 ? '0%' : v < 0.1 ? '<0.1%' : v < 1 ? v.toFixed(1) + '%' : Math.round(v) + '%');
-/** Seconds as a duration; round first, so 119.6 is "2m 0s", not "1m 60s". */
+/** 将秒数格式化为时长；先四舍五入，让 119.6 显示为 2m 0s，而非 1m 60s。 */
 export const duration = (s: number) => { const t = Math.round(s); return t >= 60 ? `${Math.floor(t / 60)}m ${t % 60}s` : `${t}s`; };
 export const plural = (n: number, word: string) => `${int(n)} ${word}${n === 1 ? '' : 's'}`;
 ```
@@ -18,22 +18,22 @@ export const plural = (n: number, word: string) => `${int(n)} ${word}${n === 1 ?
 ## 圆整的坐标轴刻度
 
 ```ts
-/** 0 and evenly spaced round ticks covering max: 0, 500, 1k, 1.5k… (steps of 1, 2, 2.5 or 5 × 10^n). */
+/** 从 0 开始、覆盖 max 的等距圆整刻度：0、500、1k、1.5k…，步长为 1、2、2.5 或 5 × 10^n。 */
 export function niceTicks(max: number, count = 4): number[] {
   if (!(max > 0)) return [0];
   const raw = max / count, pow = 10 ** Math.floor(Math.log10(raw));
   const step = [1, 2, 2.5, 5, 10].map(m => m * pow).find(s => s >= raw)!;
   return Array.from({ length: Math.ceil(max / step) + 1 }, (_, i) => +(i * step).toFixed(10));
 }
-// chart top = last tick, label each with compact.format(tick)
+// 图表顶部等于最后一个刻度，用 compact.format(tick) 标注各刻度。
 ```
 
 ## 涨跌差标签
 
 ```tsx
-/** Change vs the previous period. Tiny bases say what they were instead of shouting a percentage. */
+/** 与上期的变化。基数极小时，写明原数值，而非用醒目的百分比。 */
 export function Delta({ cur, prev, format = int, min = 5, invert = false, vs }: { cur: number; prev: number; format?: (n: number) => string; min?: number; invert?: boolean; vs?: string }) {
-  if (!prev) return null;                                                     // nothing to compare with
+  if (!prev) return null;                                                     // 没有可供比较的对象。
   if (prev < min) return <span className="text-[12px] text-muted tnum">was {format(prev)}</span>;
   const d = ((cur - prev) / prev) * 100, r = Math.round(d);
   if (r === 0) return <span className="text-[12px] text-muted">±0%</span>;
@@ -41,7 +41,7 @@ export function Delta({ cur, prev, format = int, min = 5, invert = false, vs }: 
   return (
     <span className="inline-flex items-center gap-1.5 text-[12px] tnum" title={`${vs ?? 'Previous period'}: ${format(prev)}`}>
       <span className={`font-medium ${good ? 'text-up' : 'text-down'}`}>{text}</span>
-      {vs && <span className="text-muted">{vs}</span>}{/* one or two words: "vs Sep", "yesterday" */}
+      {vs && <span className="text-muted">{vs}</span>}{/* 一到两个词，例如 vs Sep、yesterday。 */}
     </span>
   );
 }
@@ -50,10 +50,9 @@ export function Delta({ cur, prev, format = int, min = 5, invert = false, vs }: 
 ## 按相同已过去时长比较的周期窗口
 
 ```ts
-/** Previous window for a range starting at local midnight `start` and ending at `end` (now, for "last N days"):
- *  the same number of days right before it, cut at the same elapsed time. Today 00:00–15:00 → yesterday 00:00–15:00. */
+/** 从本地午夜 start 到 end（最近 N 天时为当前时间）的上一窗口：紧接之前的相同天数，并截取相同已过去时长。今天 00:00–15:00 对应昨天 00:00–15:00。 */
 export function previousWindow(start: number, end: number, days: number, midnightOf: (daysBefore: number) => number) {
-  const prevStart = midnightOf(days);                       // local midnight `days` days before `start` (DST-safe)
+  const prevStart = midnightOf(days);                       // start 之前 days 天的本地午夜，兼容夏令时。
   return { start: prevStart, end: Math.min(start, prevStart + (end - start) + 1) };
 }
 ```
@@ -68,8 +67,8 @@ export function previousWindow(start: number, end: number, days: number, midnigh
     : 'group-hover:bg-soft/70'}`}>
     <div className={`flex items-center justify-between gap-2 text-[14px] ${selected ? 'font-medium text-ink' : 'text-ink-2'}`}>{label}<Delta cur={cur} prev={prev} format={format} /></div>
     <div className={`mt-1 text-[32px] font-semibold leading-[1.15] tracking-[-.03em] tnum ${selected ? 'text-ink' : 'text-ink-2'}`}>{format(cur)}</div>
-    {/* no explanatory sub-line: `explain` ("3% of visitors") is the tile's title / tooltip */}
-    <Spark values={series /* same window as the main chart */} color={!selected ? 'var(--color-muted)' : money ? 'var(--color-money)' : 'var(--color-accent)'} />
+    {/* 不加解释性副行；explain（例如 3% of visitors）用作卡片 title / 工具提示。 */}
+    <Spark values={series /* 与主图相同的时间窗口。 */} color={!selected ? 'var(--color-muted)' : money ? 'var(--color-money)' : 'var(--color-accent)'} />
   </div>
 </button>
 ```
@@ -102,13 +101,13 @@ const DAY = 864e5, ymd = (t: number) => new Date(t).toISOString().slice(0, 10);
 const monthOf = (d: string) => d.slice(0, 7) + '-01';
 const addMonths = (first: string, n: number) => { const d = new Date(first); d.setUTCMonth(d.getUTCMonth() + n); return ymd(d.getTime()); };
 
-/** Click the first day, then the last; a click before the start moves the start. Dates are YYYY-MM-DD at UTC midnight. */
+/** 先点开始日，再点结束日；点击早于开始日的日期会移动开始日。日期为 UTC 午夜的 YYYY-MM-DD。 */
 export function RangeCalendar({ from, to, max, min, onChange }: { from: string; to: string; max: string; min?: string; onChange: (from: string, to: string) => void }) {
   const [month, setMonth] = useState(() => monthOf(to || from || max));
   const [hover, setHover] = useState('');
-  const start = Date.parse(month), lead = (new Date(start).getUTCDay() + 6) % 7;           // Monday first
-  const days = Array.from({ length: 42 }, (_, i) => ymd(start + (i - lead) * DAY));          // 6 rows: no height jump
-  const end = to || (from && hover > from ? hover : '');                                    // band follows the pointer
+  const start = Date.parse(month), lead = (new Date(start).getUTCDay() + 6) % 7;           // 星期一为一周起点。
+  const days = Array.from({ length: 42 }, (_, i) => ymd(start + (i - lead) * DAY));          // 六行，避免高度跳动。
+  const end = to || (from && hover > from ? hover : '');                                    // 高亮带跟随指针。
   const pick = (d: string) => (!from || to || d < from ? onChange(d, '') : onChange(from, d));
   const title = new Date(start).toLocaleDateString('en', { month: 'long', year: 'numeric', timeZone: 'UTC' });
   return (
@@ -153,7 +152,7 @@ const seq = useRef(0);
 async function load() {
   const n = ++seq.current;
   const body = await fetch(url).then(r => (r.ok ? r.json() : null)).catch(() => null);
-  if (n !== seq.current) return;          // a newer request started: this answer is for a site/range no longer shown
+  if (n !== seq.current) return;          // 新请求已经开始；此响应属于不再显示的站点/时间范围。
   body ? setData(body) : setError('Couldn’t refresh. These are the last numbers loaded; retrying in a minute.');
 }
 ```
@@ -161,12 +160,12 @@ async function load() {
 ## 热力图分档与单元格
 
 ```tsx
-/** Classed tiers at meaningful thresholds; the problem tier is warm, so the worst cell is the most visible. */
-/** Intensity grows toward the problem: healthiest palest. Ink text everywhere (accent on accent fails 4.5:1). */
+/** 按有意义阈值分级；异常等级用暖色，使最严重单元格最醒目。 */
+/** 越接近问题，颜色越强；最健康最浅。所有文字用墨色，强调色叠加强调色不满足 4.5:1。 */
 const tier = (rate: number) => rate >= 95 ? 't1' : rate >= 90 ? 't2' : rate >= 85 ? 't3' : 'warn';
 const TIER = {
   t1: 'bg-accent/[.07] text-ink-2', t2: 'bg-accent/15 text-ink', t3: 'bg-accent/25 text-ink',
-  warn: 'bg-warn/30 text-ink underline decoration-2 underline-offset-2',   // non-colour cue survives greyscale
+  warn: 'bg-warn/30 text-ink underline decoration-2 underline-offset-2',   // 在灰度下仍然可见的非颜色提示。
 };
 
 <div role="table" aria-label="Attendance by class and day, %" className="grid gap-2"
@@ -187,10 +186,10 @@ const TIER = {
 ## 子弹图
 
 ```tsx
-/** Few's spec: bar a third of the track, target as a perpendicular line, ranges darker for poor. */
+/** Few 的规格：条宽为轨道的三分之一，目标用垂直线，较差区间更深。 */
 export function Bullet({ value, target, ranges, max, label }: { value: number; target: number; ranges: number[]; max: number; label: string }) {
   const pct = (v: number) => `${Math.min(100, (v / max) * 100)}%`;
-  const shade = ['bg-ink/40', 'bg-ink/25', 'bg-ink/10'];   // ranges = ends of poor, fair, good; drawn poor on top
+  const shade = ['bg-ink/40', 'bg-ink/25', 'bg-ink/10'];   // ranges 是较差、一般、良好区间的终点；较差区间绘制在上层。
   return (
     <div className="relative isolate h-6" role="img" aria-label={`${label}: ${value} of target ${target}`}>
       {ranges.map((r, i) => <span key={i} className={`absolute inset-y-0 left-0 ${shade[i]}`} style={{ width: pct(r), zIndex: -i }} />)}
@@ -215,17 +214,113 @@ export function Bullet({ value, target, ranges, max, label }: { value: number; t
 ## 全屏共用一个工具提示
 
 ```ts
-/** Any element with data-tip gets the same dark tooltip, on hover and on keyboard focus. */
+/** 任意带 data-tip 的元素在悬停和键盘聚焦时使用同一个深色工具提示。 */
 const tip = document.getElementById('tip')!;
 const show = (el: HTMLElement) => {
   tip.textContent = el.dataset.tip!; tip.classList.add('show');
   const r = el.getBoundingClientRect(), w = tip.offsetWidth, h = tip.offsetHeight;
   tip.style.left = `${Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2))}px`;
-  tip.style.top = `${r.top - h - 8 < 8 ? r.bottom + 8 : r.top - h - 8}px`;   // flip below near the top edge
+  tip.style.top = `${r.top - h - 8 < 8 ? r.bottom + 8 : r.top - h - 8}px`;   // 靠近顶部边缘时翻到下方。
 };
 const hide = () => tip.classList.remove('show');
 for (const type of ['pointerover', 'focusin'] as const)
   document.addEventListener(type, e => { const el = (e.target as Element).closest<HTMLElement>('[data-tip]'); el ? show(el) : hide(); });
 document.addEventListener('scroll', hide, true);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') hide(); });
+```
+
+
+## 漏斗（步骤用条形图，不用梯形）
+
+```tsx
+/** 每步宽度是它占第一步的比例；相对自身正常值下降最严重的一步使用暖色等级。 */
+export function Funnel({ steps, normal }: { steps: { label: string; n: number }[]; normal?: number[] }) {
+  const first = steps[0]?.n || 1;
+  const drops = steps.slice(1).map((s, i) => s.n / (steps[i].n || 1));            // 相对于前一步的转化率。
+  const worst = normal ? drops.map((d, i) => d / normal[i]).reduce((w, r, i, a) => (r < a[w] ? i : w), 0) : -1;
+  return (
+    <ol className="grid gap-3">
+      {steps.map((s, i) => (
+        <li key={s.label} className="grid grid-cols-[8rem_1fr_6rem] items-center gap-3 text-sm">
+          <span className="text-ink-2">{s.label}</span>
+          <span className="h-3 rounded-full bg-ink/10">
+            <span className={`block h-full rounded-full ${i - 1 === worst ? 'bg-warn' : 'bg-accent'}`}
+              style={{ width: `${(100 * s.n) / first}%` }} />
+          </span>
+          <span className="text-right tnum">{compact.format(s.n)}
+            {i > 0 && <span className="ml-1.5 text-ink-2">−{share(100 * (1 - drops[i - 1]))}</span>}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+```
+
+## Cohort 留存网格
+
+```tsx
+/** 行表示 cohort（最新在最后），列表示注册后周数。未来单元格留空，不写 0%。数值高是好事，因此越深越好。 */
+const tier = (p: number) => (p >= 40 ? 'bg-accent/70 text-white' : p >= 25 ? 'bg-accent/40' : p >= 15 ? 'bg-accent/20' : 'bg-accent/8');
+export function Cohorts({ rows }: { rows: { label: string; size: number; pct: (number | null)[] }[] }) {
+  return (
+    <table className="text-xs tnum">
+      <tbody>{rows.map(r => (
+        <tr key={r.label}>
+          <th className="pr-3 text-left font-normal text-ink-2">{r.label} · {r.size}</th>
+          {r.pct.map((p, w) => (
+            <td key={w} className="p-0.5">
+              {p == null ? <span className="block h-7 w-11" /> :
+                <span className={`grid h-7 w-11 place-items-center rounded-md ${tier(p)}`} data-tip={`${r.label} · week ${w}: ${p}%`}>{Math.round(p)}%</span>}
+            </td>
+          ))}
+        </tr>
+      ))}</tbody>
+    </table>
+  );
+}
+```
+
+## 可用性条带
+
+```tsx
+/** 每天一条细条；只有异常日期使用强色。 */
+const dayColor = { up: 'bg-ink/15', degraded: 'bg-warn', down: 'bg-down', none: 'bg-ink/5' } as const;
+export function Uptime({ name, days, pct }: { name: string; days: { date: string; state: keyof typeof dayColor; note?: string }[]; pct: number }) {
+  return (
+    <div className="grid gap-1.5">
+      <div className="flex justify-between text-sm"><span>{name}</span><span className="tnum text-ink-2">{pct.toFixed(2)}%</span></div>
+      <div className="flex h-8 gap-[2px]">
+        {days.map(d => <span key={d.date} className={`flex-1 rounded-[2px] ${dayColor[d.state]}`} data-tip={`${d.date}: ${d.note ?? d.state}`} />)}
+      </div>
+      <div className="flex justify-between text-xs text-ink-2"><span>{days.length} days ago</span><span>today</span></div>
+    </div>
+  );
+}
+```
+
+## 排行榜行
+
+```tsx
+/** 排名 · 标志 · 名称 + 详情 · 数值 · 标明对比对象的涨跌胶囊。 */
+<li className="grid grid-cols-[1.5rem_2rem_1fr_auto_auto] items-center gap-3 py-2">
+  <span className="text-xs text-ink-2 tnum">{rank}</span>
+  <img src={logo} alt="" className="size-7 rounded-md" />
+  <span className="min-w-0"><span className="block truncate">{name}</span><span className="block truncate text-xs text-ink-2">{detail}</span></span>
+  <span className="text-right tnum">{compact.format(value)}</span>
+  {isNew ? <span className="rounded-full bg-ink/8 px-2 text-xs">new</span> : <Delta cur={value} prev={prev} vs="wk" />}
+</li>
+```
+
+## 图表注释
+
+```tsx
+/** 对应时点一条细线，顶部放 2–3 个词的胶囊，完整说明在工具提示内。x 将日期映射为像素。 */
+{notes.slice(0, 5).map(n => (
+  <g key={n.at} transform={`translate(${x(n.at)},0)`}>
+    <line y1={18} y2={plotHeight} className="stroke-ink/25" strokeDasharray="2 3" />
+    <foreignObject x={-40} y={0} width={80} height={18}>
+      <span className="mx-auto block w-fit rounded-full bg-ink/8 px-1.5 text-[10px] leading-[18px]" data-tip={n.note}>{n.label}</span>
+    </foreignObject>
+  </g>
+))}
 ```

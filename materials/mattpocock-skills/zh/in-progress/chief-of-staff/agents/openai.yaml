@@ -1,5 +1,5 @@
 interface:
   display_name: "Chief Of Staff"
-  short_description: "通过协调子代理，在单次会话中持续推进长期目标"
+  short_description: "把工作派给全新上下文的子代理，并将获得的知识保存在带日期的 wiki 中"
 policy:
   allow_implicit_invocation: false

@@ -246,6 +246,50 @@ test("状态图只终止本次创建的分离子进程组", { timeout: 10_000 },
   await killGroup(-1);
 });
 
+test("状态图显示 UTF-8 的 SANY 错误并保留原有输出边界", (t) => {
+  const folder = temporary(t);
+  const java = path.join(folder, "chart-java-fixture.mjs");
+  const adapter = path.join(folder, "chart-adapter.mjs");
+  const spec = path.join(folder, "Example.tla");
+  const jar = path.join(folder, "fixture.jar");
+  const output = path.join(folder, "chart");
+  fs.writeFileSync(spec, "---- MODULE Example ----\n====\n");
+  fs.writeFileSync(path.join(folder, "Example.cfg"), "");
+  fs.writeFileSync(jar, "");
+  fs.writeFileSync(java, `
+    const args = process.argv.slice(2);
+    if (args.includes("-version")) process.exit(0);
+    if (!args.includes("-Dstdout.encoding=UTF-8") || !args.includes("-Dstderr.encoding=UTF-8")) process.exit(3);
+    if (args.includes("tla2sany.xml.XMLExporter")) {
+      process.stdout.write("incomplete XML output\\r\\n");
+      process.exitCode = 1;
+    } else if (args.includes("tla2sany.SANY")) {
+      process.stdout.write("SANY header\\r\\n*** Errors\\r\\n规格诊断：缺少定义\\r\\n");
+      process.exitCode = 1;
+    }
+  `);
+  fs.writeFileSync(adapter, `
+    import childProcess from "node:child_process";
+    import { syncBuiltinESMExports } from "node:module";
+    for (const name of ["spawn", "execFile"]) {
+      const original = childProcess[name];
+      childProcess[name] = (file, args, ...rest) => file === "statechart-java-fixture"
+        ? original(process.execPath, [${JSON.stringify(java)}, ...args], ...rest)
+        : original(file, args, ...rest);
+    }
+    syncBuiltinESMExports();
+  `);
+  const child = spawnSync(process.execPath, ["--import", pathToFileURL(adapter).href, absolute(chart), spec, "--out", output], {
+    cwd: folder, encoding: "utf8", timeout: 10_000,
+    env: { ...process.env, JAVA: "statechart-java-fixture", TLA2TOOLS: jar, TMPDIR: folder, TEMP: folder, TMP: folder },
+  });
+  assert.equal(child.status, 2, child.stderr);
+  assert.match(child.stderr, /SANY 无法读取[^\n]+\n\*\*\* Errors\n规格诊断：缺少定义/);
+  assert.doesNotMatch(child.stderr, /incomplete XML output|SANY header/);
+  assert.equal(fs.existsSync(output), false);
+  assert.deepEqual(fs.readdirSync(folder).filter((name) => name.includes("statechart-")), []);
+});
+
 test("TLC 包装器保留实际子进程参数、日志和非零退出码", (t) => {
   const folder = temporary(t);
   const java = path.join(folder, "java-fixture.mjs");

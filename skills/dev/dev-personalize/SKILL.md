@@ -32,7 +32,7 @@ description: 编写或修改项目技能，明确触发条件、完整方法与�
 | 目标 | 本地完整方法 |
 | --- | --- |
 | 形成个人工作风格 | [偏好提炼](references/derive-preferences.md) 与 [最小技能模板](assets/personal-mode.md) |
-| 从本次使用发现个人方式需要怎样调整 | `dev-archive`（会话反思） |
+| 从本次使用发现 Agent 方法需要怎样调整 | `dev-reflect`（会话反思） |
 | 判断问题是否更适合由工程结构预防 | `dev-guardrails`（重复纠正治理），需要代码约束时以 `dev-guardrails` 为主 |
 | 编写项目技能或修订个人模式技能 | [技能编写](references/authoring-a-skill.md) 与 [本地结构规则](references/skill-authoring.md) |
 | 判断个人模式变化是否改善行为 | `dev-review`（独立评测） |

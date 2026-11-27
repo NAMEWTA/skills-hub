@@ -46,7 +46,7 @@
 
 ## 参考示例
 
-`session-persistence-jsonl` 的 README 双语对（[英文](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/session/session-persistence-jsonl/README.md)、[中文](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/session/session-persistence-jsonl/README.zh.md)）展示生产中的格式：可搜索 YAML，其 `kind` 选择本 package-reference 标准；四句 Summary；带链接目录；面向用户的使用章节，覆盖选择、配置、布局、持久性及读取；面向开发者设计和存储细节的 GitHub 原生 `<details>` 折叠区；Further Exploration；规范 Model Experience 和 Known Limitations 章节；最后的 Dev Note。以其结构、证据标准和双语对齐作为包 README 与跨包页面的范本；每个主张都基于其负责来源及证据。
+`session-persistence-jsonl` 的 README 双语对（[英文](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/session/session-persistence-jsonl/README.md)、[中文](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/session/session-persistence-jsonl/README.zh.md)）展示生产中的格式：可搜索 YAML，其 `kind` 选择本 package-reference 标准；四句 Summary；带链接目录；面向用户的使用章节，覆盖选择、配置、布局、持久性及读取；面向开发者设计和存储细节的 GitHub 原生 `<details>` 折叠区；Further Exploration；规范 Model Experience 和 Known Limitations 章节；最后的 Dev Note。以其结构、证据标准和双语对齐作为包 README 与跨包页面的范本；每个主张都基于其负责来源及证据。
 
 ## 验证
 

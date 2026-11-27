@@ -22,4 +22,4 @@ kind: persistence-format
 7. **验证与限制：** 陈述实际提取证据、覆盖限制及离线校验器。保留历史可选字段和不透明声明，不声称编解码器会接纳，也不声称迁移安全。
 8. **开发笔记：** 留作非权威工作上下文，或写 `None.`。
 
-[格式索引](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/persistence-changes/historical-formats/README.md)负责覆盖与维护。`pnpm run verify-persistence-formats --write` 先验证模式，再刷新生成区域与配对记录。它不能创造历史证据或修复机器数据。当前写入器版本前进时，继续记录每个较旧整数版本；不要用历史文件名复制当前目录。
+[格式索引](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/persistence-changes/historical-formats/README.md)负责覆盖与维护。`pnpm run verify-persistence-formats --write` 先验证模式，再刷新生成区域与配对记录。它不能创造历史证据或修复机器数据。当前写入器版本前进时，继续记录每个较旧整数版本；不要用历史文件名复制当前目录。

@@ -16,7 +16,7 @@ disable-model-invocation: true
 <skill dir>/scripts/statechart SPEC.tla [--config FILE] [--view FILE] [--out DIR]
 ```
 
-`scripts/statechart.ts` 是 TypeScript，因此要使用能够执行 TypeScript 的运行时。
+`scripts/statechart.ts` 是 TypeScript，因此应使用能执行 TypeScript 的运行时。`scripts/statechart` 是负责选择运行时的 POSIX shell 脚本。在原生 Windows 上，使用 Node 22.18 至 22.x，或 Node 23.6 及以上版本，运行 `node --disable-warning=ExperimentalWarning <skill dir>/scripts/statechart.ts`。
 
 第一次运行会通过 mise 安装 TLC 和 Java，需要联网。
 
@@ -32,7 +32,7 @@ disable-model-invocation: true
 
 要使用读者的语言，视图应导出 `state(vars)`。`state()` 的返回值决定图表形式：
 
-- 字符串生成平面图：`export const state = (v) => (v.paid ? "已支付" : "支付中");`
+- 字符串生成平面图：`export const state = (v) => (v.paid ? "Paid" : "Paying");`
 - 数组生成父状态：`export const state = (v) => v.main.split(".");`
 - 对象为每个键生成一个并行区域：`export const state = (v) => ({ Playback: v.playback, Volume: v.volume });`
 

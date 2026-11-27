@@ -2,7 +2,7 @@
 
 # 创作契约
 
-只有快速创作路径要求更多细节时，才阅读本参考。schema 和示例仍是权威依据。
+仅当原生图编写要求更多细节时才阅读本参考。Schema 和示例仍是权威依据。
 
 <a id="composition-repair"></a>
 
@@ -53,7 +53,7 @@
 
 `meta.locale` 只控制渲染器拥有的阅读界面：`<html lang>`、文档标题后缀、默认 SVG 描述与聚焦标签、默认图例标签，以及固定查看器控件、状态、可访问名称和错误。它绝不翻译作者内容。应另外将主要语言应用于标题、副标题、节点与关系文案、边界、泳道、分组、图例标签覆盖和卡片。双语图仍为查看器选择一种主要 locale；先遵循明确的主要语言请求，再依据提示顺序或对话主导语言。
 
-随包查看器语言目录登记在 `locales/manifest.json`：当前为 `en`、`zh-CN`、`zh-TW`、`es`、`ko`、`ar`。这些语言仅设置 `meta.locale` 就可选择完整目录。标签匹配不区分大小写（`zh-cn` 选择 `zh-CN`），但地区和文字变体是独立的：`zh-Hant`、`es-MX` 或 `ko-KR` 不会选择任何随包目录。
+随附 Viewer 语言目录登记在 `locales/manifest.json`：目前为 `en`、`zh-CN`、`zh-TW`、`es`、`ko`、`ar` 和 `ru`。这些语言只需 `meta.locale` 就能选中完整目录。标签匹配不区分大小写（`zh-cn` 选择 `zh-CN`），但地区和文字变体彼此不同：`zh-Hant`、`es-MX` 或 `ko-KR` 不会选中任何随附目录。
 
 `meta.translations` 是可选逐键覆盖：将渲染器规范消息键（`locales/en.json`，或 `renderers/shared/i18n.mjs` 中的 `catalogKeys()`）映射到译文字符串的对象，`{placeholder}` token 必须与英文来源完全一致。每条消息按以下顺序解析：有效的 `meta.translations` 值 → 所选随包目录 → 英文。随包 locale 只需提供图表需要改变措辞的键；其余语言内容保持原样。省略字段或提供 `{}`，表示无覆盖。没有随包目录的语言，在此提供目录。复用 `examples/locales/` 或先前已审阅目录中的适当译文，翻译缺失键，并用英文来源检查键和占位符。
 
@@ -143,13 +143,13 @@ label mask width ≈ 6.5px × ASCII units + 13px
 CJK characters count as two units
 ```
 
-关系标签是语义数据。间隙太小时，移动标签，调整路由或间距，再在保留含义的前提下缩短措辞。只有两个端点已完整暗示，且不承载协议、动作、方向、同步／异步行为或跨边界机制的文字，才能省略。保留每个有意义标签。删除标签不是间距修复。关系最初未带标签，因为端点已完整暗示时，说明文字为什么冗余；这属于语义创作选择，不是间距修复。Workflow v2 中，先让编译器分配实测遮罩，再应用诊断所需的 `labelAt`、`labelDx`／`labelDy` 或 `labelSegment`。除非多条边共享受约束通道，否则一次只应用一个诊断几何控制；共享通道时，依据实测几何规划最小的耦合修改，并一起验证。Architecture／Workflow 通过 `validate <type> <candidate.json> --layout-json` 提供布局证据；其他类型使用校验诊断与渲染后的 SVG 几何。添加手动路由前，检查是否有不必要的 agent 添加控制禁用了自动端口分散；保留用户要求的路由意图。依据上述实测净空规则，不猜坐标。
+关系标签是语义数据。如果间距太小，先移动标签、调整路由或间距，再在保留含义的前提下缩短措辞。只有两个端点已完全表达、且不携带协议、动作、方向、同步/异步行为或跨边界机制的信息，才可省略。保留每个有意义的标签。删除标签不是间距修复。如果某条关系从一开始就因端点完全隐含其含义而没有标签，应解释为何措辞冗余；这是语义编写选择，不是间距修复。Workflow v2 中，应先让编译器分配测量后的遮罩，再应用诊断所需的 `labelAt`、`labelDx`/`labelDy` 或 `labelSegment`。每次只应用一个由诊断支持的几何控制，除非多条边共享受限通道；此时根据测量几何规划最小联动改动，并一起验证。Architecture、workflow、sequence、dataflow 和 lifecycle 通过 `validate <type> <candidate.json> --layout-json` 提供布局证据（sequence/dataflow/lifecycle 会报告节点框和边路由点）；其他类型使用校验诊断和渲染后的 SVG 几何。添加手动路由前，检查 agent 增加的不必要控制是否关闭了自动端口展开；保留用户要求的路由意图。采用上述实测净空规则，不要猜坐标。
 
 <a id="repair-evidence"></a>
 
 ### 修复证据
 
-Architecture 的 `validate architecture <input.json> --layout-json` 暴露已解析组件盒子、边界框、连接点和标签位置。可测量但被拒绝的布局也会返回这些字段，并带 `ok: false`、`contract: "archify-architecture-layout-v1"`、诊断和退出码 1。这是修复证据，不是产物验收；不会写 HTML。输入格式错误或实现失败时，保留不含布局的普通失败回执。
+对于 architecture，`validate architecture <input.json> --layout-json` 会暴露解析后的组件框、边界框、连接点和标签位置。可测量但被拒绝的布局也会返回这些字段，以及 `ok: false`、`contract: "archify-architecture-layout-v1"`、诊断，并以状态 1 退出。这是修复证据，不是制品验收；它不写 HTML。输入格式错误或实现失败时，保留普通失败回执，不含布局。每种原生图类型都接受 `validate <type> <input.json> --layout-json`；各报告包含 `ok`、`diagram_type`、`viewBox` 及该类型测量后的元素几何（workflow、sequence、dataflow、lifecycle 为节点和边路由；其余类型为实体、类型、片段或条形）。
 
 对 `layout/boundary-out-of-bounds`，使用实测失败侧。左／上负坐标需要向内移动；增加 viewBox 宽／高只能解决右／下溢出。边界可以跨行包围成员。移动成员时保留真实成员关系，并复查相连路由。
 
@@ -180,7 +180,22 @@ Architecture 的 `validate architecture <input.json> --layout-json` 暴露已解
 
 依据[组成与含义](authoring-defaults.md#composition-and-meaning)选择概览或机制细节。使用一条明显的主要阅读路径；请求的拓扑需要空间时，可以经过有意义的行。在选定抽象层次保持概览可读；实现细节确实回答读者问题时再展开。只为真实的归属、信任、进程或部署边界分组。边界不能替代关系。
 
-schema 支持时优先网格摆放。自由位置适合有界例外，不适合用文字规划坐标。事实确实如此时，将外部执行者放在系统边界之外。边界按全部成员周围带内边距的盒子绘制，因此把成员放成一个紧凑、轴对齐的组（不留能让非成员坐进带内边距边框的空湾），并让所有非成员处于该盒子之外；showcase 质量下，`layout/boundary-encloses-non-member` 报告被盒子吞进去的组件。standard 保留现有接受行为。
+新建 Architecture 时，在顶层设置 `"layout": {"mode": "auto"}`。提供真实组件和有向连接。渲染器为没有 `pos` 的组件计算位置，并根据文字测量没有 `size` 的卡片。省略 `meta.viewBox` 可让它自动适配画布。例如，以下顶层字段会放置一条关系的两个端点：
+
+```json
+{
+  "layout": {"mode": "auto"},
+  "components": [
+    {"id": "client", "type": "frontend", "label": "Client"},
+    {"id": "api", "type": "backend", "label": "API"}
+  ],
+  "connections": [{"from": "client", "to": "api", "label": "HTTP"}]
+}
+```
+
+用户提供的绝对位置应保留在组件的 `pos` 中。显式尺寸、连接侧、途经点和标签位置仍会约束绘图。需要行/列分配时使用 `mode: "grid"`。省略布局模式的文档保留原有坐标契约。分支难以追踪时，使用 `validate architecture <source.json> --layout-json` 检查解析后的组件框和连接路径。
+
+事实如此时，应将外部参与者放在系统边界之外。边界绘制为包围所有成员并带内边距的矩形，因此成员应构成一个紧凑、与坐标轴对齐的簇（不能留出让非成员落入带内边距边框的空位），所有非成员都应位于该框之外；在 showcase 质量下，`layout/boundary-encloses-non-member` 会报告被框吞入的组件。Standard 保留已有验收行为。
 
 <a id="workflow"></a>
 
@@ -238,7 +253,9 @@ stage 表达转换或保管阶段。row 区分并行流。为每条 flow 给出�
 
 树图回答“它如何拆分”：一个根节点，其他每个节点恰好指明一个 `parent`。链接只表示包含关系；不要用树图表示调用、数据移动或跨分支依赖。不会推断任何关系：缺失父节点（`tree/missing-parent`）、零个或多个根（`tree/root-count`）、parent 环（`tree/cycle`，也覆盖困在环下方的每个节点），以及重复 ID 都会被拒绝。子节点按声明顺序读取。
 
-较浅且平衡的拆解使用 `layout.direction: "down"`（默认），较深或叶子较多的树（例如仓库布局）使用 `"right"`；向右树图使每个父节点与第一个子节点对齐，并在阅读器中纵向滚动。标签按词换行。`collapsed: true` 使分支在查看器中初始折叠；绝不从产物移除内容，所有导出都是完整树。真实代码库的每个节点都基于已观察路径，并附 `sources`。参见 [`../renderers/tree/README.md`](../renderers/tree/README.md)。
+浅层分解使用 `layout.direction: "down"`（默认）；仓库布局等深层或叶节点较多的树使用 `"right"`。向右的树若自动画布高于宽度，会从根附近开始，并在阅读器中纵向滚动。标签按词换行。`collapsed: true` 使分支在 Viewer 中初始折叠。每种导出都包含完整树。真实代码库的每个节点都应基于观察到的路径，并附 `sources`。
+
+用户要求决策树时，如果每个结果都恰有一个父节点，且条件适合写在子节点标签中，就使用 Tree。需要带标签的转换、汇合或循环时使用 Workflow。参见 [`../renderers/tree/README.md`](../renderers/tree/README.md)。
 
 <a id="class"></a>
 

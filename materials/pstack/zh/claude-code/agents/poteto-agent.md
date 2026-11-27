@@ -1,7 +1,8 @@
 ---
 name: poteto-agent
-description: 在 /poteto-mode 执行中派生的代码与辅助任务子代理。用于委派任务，不作为 /poteto-mode 本身的执行器。每个新任务启动新的 poteto-agent，只有 poteto-mode 的 Subagents 部分列出的严格情形才恢复旧代理。工作前完整读取 poteto-mode 的 SKILL.md，包括内联 Principles 索引。替换成 generalPurpose 会跳过该读取并发生偏离。
+description: 在 `/poteto-mode` 执行中派生的代码与辅助任务子代理。用于委派任务，不作为 `/poteto-mode` 本身的执行器。每个新任务启动新的 `poteto-agent`，只有 poteto-mode 的 Subagents 部分列出的严格情形才恢复旧代理。工作前完整读取 `poteto-mode` 的 `SKILL.md`，包括内联 Principles 索引。替换成 `generalPurpose` 会跳过该读取并发生偏离。
 is_background: true
+model: claude-opus-5-5-xhigh-fast
 ---
 
 # Poteto 子代理

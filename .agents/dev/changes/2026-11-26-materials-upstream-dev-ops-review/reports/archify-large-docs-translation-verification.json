@@ -1,0 +1,24 @@
+[
+  {
+    "path": "/workspace/scratch/c53f21c9a825/skills-hub/materials/archify/zh/modules/code-analysis/docs/TECH-GUIDE.md",
+    "translatedBlocks": 189,
+    "fencedBlocks": 7,
+    "headings": 70,
+    "explicitEnglishAnchors": 68,
+    "links": 12,
+    "missingInlineTokens": [],
+    "sha256": "18c82974a6bdeeb16ec645b7111e77dcd2602b3a2d4f7f1534cef8bcb09a3e11",
+    "bytes": 70146
+  },
+  {
+    "path": "/workspace/scratch/c53f21c9a825/skills-hub/materials/archify/zh/modules/code-analysis/docs/USAGE.md",
+    "translatedBlocks": 153,
+    "fencedBlocks": 20,
+    "headings": 24,
+    "explicitEnglishAnchors": 24,
+    "links": 16,
+    "missingInlineTokens": [],
+    "sha256": "916ee39dd4f88670c0141e2388a63abd6b107e5c34ded9a5a23131c7f8b91067",
+    "bytes": 55901
+  }
+]

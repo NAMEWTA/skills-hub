@@ -8,7 +8,7 @@ pstack 技能使用 Cursor 的名称。在 Claude Code 中，每个会话读取�
 | --- | --- |
 | `Task` | `Agent` |
 | `AskQuestion` | `AskUserQuestion`。`-p` 模式下没有该工具，因此用普通文字询问。 |
-| 打开待办清单 | 会话提供 `TodoWrite` 时使用它；否则在回复中维护清单，每个阶段更新。 |
+| 打开待办清单，或把步骤复制进待办工具 | 会话提供 `TodoWrite` 时使用它；否则在回复中维护清单，每个阶段更新。 |
 | 运行另一个 pstack 技能（`/name` 或“**name** 技能”） | 用 `Read` 读取 `<pstack>/skills/<name>/SKILL.md` 并遵循它。`Skill` 工具会拒绝大多数 pstack 技能。告诉用户如何输入时，写 `/pstack:<name>`。 |
 | `Grep`、`Glob` | 会话没有 `Grep` 或 `Glob` 时，用 `Bash` 运行 `rg`。 |
 
@@ -18,6 +18,7 @@ pstack 技能使用 Cursor 的名称。在 Claude Code 中，每个会话读取�
 | --- | --- |
 | `subagent_type: generalPurpose` | `subagent_type: "general-purpose"` |
 | `poteto-agent`、`comment-sicko` | `pstack:poteto-agent`、`pstack:comment-sicko` |
+| `poteto-agent` 文件中的 `model:` 行 | 它保存的是 Cursor slug。每次通过 `Agent` 启动 `pstack:poteto-agent` 时，都按 Models 表映射并传入 `model` 和 `effort`，确保这个 slug 不会直接传到 API。 |
 | `readonly: true` | `subagent_type: "Explore"`。它仍保留 `Bash`，因此任务说明也要写“不要编辑文件”，并在事后检查 `git status`。 |
 | `readonly: false` | `general-purpose`。它保留本次会话的 MCP 服务器。 |
 | `environment: "cloud"` | `isolation: "worktree"`。指定工作智能体要检出的分支或提交。 |
@@ -32,7 +33,7 @@ pstack 技能使用 Cursor 的名称。在 Claude Code 中，每个会话读取�
 | Cursor | Claude Code |
 | --- | --- |
 | `claude-<family>-<version>-<effort>[-fast]`，如 `claude-opus-5-5-xhigh` | `model: "opus"` 和 `effort: "xhigh"`。`model` 只接受 `opus`、`sonnet`、`haiku`、`fable`。省略 `-fast`。 |
-| `grok-*`、`gpt-*` 或其他非 Claude slug | 省略 `model`，让智能体使用会话模型，并说明这一点。 |
+| `gemini-*` 或其他非 Claude slug | 省略 `model`，让智能体使用会话模型，并说明这一点。 |
 | `auto` 或 `inherit-parent` | 省略 `model`。 |
 | `pstack-models.mdc` 规则，即 `~/.cursor/rules/pstack-models.mdc` | `~/.claude/rules/pstack-models.md`。Claude Code 会将它加载到每个新会话，因此各角色行已在上下文中；若没有，读取该文件。文件或对应角色行缺失时，使用技能默认 slug。 |
 | 角色值 `<model> <effort>`，如 `opus high` | `model: "opus"` 和 `effort: "high"`。 |
@@ -42,7 +43,7 @@ pstack 技能使用 Cursor 的名称。在 Claude Code 中，每个会话读取�
 Claude Code 会把 `~/.claude/rules/` 中所有 `.md` 文件加载到每个新会话，所以 `setup-pstack` 把规则写在那里。按其步骤执行，但作以下调整：
 
 - 检测。已检测的模型是 `Agent` 工具 schema 列出的 `model` 值，每个模型搭配其 `effort` 值之一。真实模型写为 `<model> <effort>`，如 `opus xhigh`。推理级别是最后一个标记，所以预算步骤可直接沿用。
-- 默认值。按上表映射每个默认 slug：`claude-opus-5-5-xhigh` 对应 `opus xhigh`，`grok-4.7-xhigh-fast` 对应 `inherit-parent`。
+- 默认值。按上表映射每个默认 slug：`claude-opus-5-5-xhigh-fast` 对应 `opus xhigh`，`claude-opus-5-5-high-fast` 对应 `opus high`，`claude-fable-5-2-high` 对应 `fable high`，`gemini-4-neon-xhigh` 对应 `inherit-parent`。
 - 写入。写入 `~/.claude/rules/pstack-models.md`，不带 frontmatter，随后是注释行、`# budget` 行，以及第 5 步每个角色各一行。覆盖整个文件。绝不把角色行写进 `CLAUDE.md` 或 `AGENTS.md`。
 
 ## 路径

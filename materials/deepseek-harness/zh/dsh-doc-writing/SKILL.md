@@ -27,7 +27,7 @@ DeepSeek Harness 文档标准：每页可搜索、新人可读、足够精确以
 
 每个请求范围按此顺序。常见读者路径保持简短，但不为减字删除失败、责任归属、限制或其他必需约定。
 
-1. 阅读根及更具体的 `AGENTS.md`、[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md)、目标页、其源码／测试、导航负责者及双语记录。
+1. 阅读根及更具体的 `AGENTS.md`、[文档标准](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md)、目标页、其源码／测试、导航负责者及双语记录。
 2. 按一个主要任务及读者分类页面：产品快速入门、用户任务指南、贡献者教程、架构概览、包／子系统参考、生成参考、agent 指令、决策记录或临时材料。
 3. 放在最近的负责位置。包约定紧邻包代码；跨包学习、用户、开发者、架构、讨论及有期限临时材料放 `docs/`。
 4. 写细节前定义读者起点、可观察结果、可能失败、恢复路径及下一层有用深度。
@@ -86,7 +86,7 @@ frontmatter 的 `kind` 恰好选择一个 README 模板。[元数据参考](refe
 
 ## 语料审计
 
-阅读而非重写摘要：层级、教程／参考形式、分类、预算及杂乱清单由 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md)负责；Agent Note 生命周期由 [.agents/notes/README.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/README.md)负责；双语配对规则由 [docs/i18n/README.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/i18n/README.md)负责；常设指令见[根 AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/AGENTS.md)。审计与编辑排除 `.agents/notes/archived/`，归档笔记是冻结历史。
+阅读而非重写摘要：层级、教程／参考形式、分类、预算及杂乱清单由 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md)负责；Agent Note 生命周期由 [.agents/notes/README.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/README.md)负责；双语配对规则由 [docs/i18n/README.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/i18n/README.md)负责；常设指令见[根 AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/AGENTS.md)。审计与编辑排除 `.agents/notes/archived/`，归档笔记是冻结历史。
 
 对范围内每份面向人的文档（不是 Agent Notes）应用标准写作顺序：定位文档，说明自己的主题；设允许细节层级，将更深解释移到负责的下级页面并链接；按预期用途而非路径分类教程或参考；教程按前提及难度排序概念；拆分实质混合形式。再查位置约束：双语文档每次编辑都需更新对应页及 `--write` 重新记录；生成目录绝不手改；移动必须与所有入链修复在同次变更原子完成。
 
@@ -94,11 +94,11 @@ frontmatter 的 `kind` 恰好选择一个 README 模板。[元数据参考](refe
 
 ## 字数预算
 
-`pnpm run verify-doc-budgets` 将常设文档与 [scripts/doc-budgets.manifest.json](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/scripts/doc-budgets.manifest.json) 上限比较；红门禁按 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/AGENTS.md#wordcount-budgets)中搬迁、压缩、提高上限的顺序处理。上限是护栏，不是缩减目标：在目标以内时保留至少 5% 余量；仅当文字确实需要空间才提高上限，并在 PR 说明清单差异理由。
+`pnpm run verify-doc-budgets` 将常设文档与 [scripts/doc-budgets.manifest.json](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/scripts/doc-budgets.manifest.json) 上限比较；红门禁按 [docs/AGENTS.md](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/AGENTS.md#wordcount-budgets)中搬迁、压缩、提高上限的顺序处理。上限是护栏，不是缩减目标：在目标以内时保留至少 5% 余量；仅当文字确实需要空间才提高上限，并在 PR 说明清单差异理由。
 
 ## 网站发布
 
-网站是经过测试的投影，不是第二份副本：[website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/website/docs.ts) 是显式公开允许清单，将规范 `docs/` 来源映射到路由树；[scripts/project-doc-site.ts](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/scripts/project-doc-site.ts) 重写到可丢弃 `website/.generated/` 树，VitePress 构建该树。仓库 Markdown 始终是唯一可编辑内容来源；译文保持同目录双语组（`foo.md`、`foo.zh.md`、`foo.i18n.yaml`），不用语言目录。已发布页只改规范来源；新页加一条清单；移动或删除原子更新来源、清单条目及入链；绝不编辑 `website/.generated/`、`website/.cache/` 或 `website/.dist/`。有意设置每个 `DocsPage` 字段并遵守投影器链接规则；字段、侧栏集合及预览命令见 [references/website-sync.md](references/website-sync.md)。同步内容进入构建不等于发布：部署仍是单独、需明确请求的步骤。
+网站是经过测试的投影，不是第二份副本：[website/docs.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/website/docs.ts) 是显式公开允许清单，将规范 `docs/` 来源映射到路由树；[scripts/project-doc-site.ts](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/scripts/project-doc-site.ts) 重写到可丢弃 `website/.generated/` 树，VitePress 构建该树。仓库 Markdown 始终是唯一可编辑内容来源；译文保持同目录双语组（`foo.md`、`foo.zh.md`、`foo.i18n.yaml`），不用语言目录。已发布页只改规范来源；新页加一条清单；移动或删除原子更新来源、清单条目及入链；绝不编辑 `website/.generated/`、`website/.cache/` 或 `website/.dist/`。有意设置每个 `DocsPage` 字段并遵守投影器链接规则；字段、侧栏集合及预览命令见 [references/website-sync.md](references/website-sync.md)。同步内容进入构建不等于发布：部署仍是单独、需明确请求的步骤。
 
 ## 详细参考
 
@@ -112,7 +112,7 @@ frontmatter 的 `kind` 恰好选择一个 README 模板。[元数据参考](refe
 
 [`templates/`](templates/) 每个 `kind` 提供一个可用骨架；写作前打开文档 kind 指定的模板。
 
-句子级约定覆盖及编辑判断使用 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)。`session-persistence-jsonl` README 双语对（[英文](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/session/session-persistence-jsonl/README.md)、[中文](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/session/session-persistence-jsonl/README.zh.md)）是参考示例：可搜索 YAML、Summary 及目录、从用户到开发者渐进并折叠开发者章节、Further Exploration、规范 Model Experience 与 Known Limitations 节，以及最后 Dev Note。
+句子级约定覆盖及编辑判断使用 [dsh-prose-standard](../dsh-prose-standard/SKILL.md)。`session-persistence-jsonl` README 双语对（[英文](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/session/session-persistence-jsonl/README.md)、[中文](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/session/session-persistence-jsonl/README.zh.md)）是参考示例：可搜索 YAML、Summary 及目录、从用户到开发者渐进并折叠开发者章节、Further Exploration、规范 Model Experience 与 Known Limitations 节，以及最后 Dev Note。
 
 ## 验证
 

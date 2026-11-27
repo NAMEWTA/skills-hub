@@ -5,7 +5,7 @@ description: 在 DeepSeek Harness 中设计、实现或审查响应式客户端�
 
 # 响应式客户端 UI
 
-视觉审查时，先选择[影响范围](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/cookbook/reviewing-ui-design.md#review-scope)，再应用这些行为要求及 [UI 审查基线](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/ui-design-review-cases.md#review-baseline)。在完整页面或模态框的语境下，比较受影响的换行与布局关系，同时保留草稿、焦点和动作可达性。明确要求全界面审查时，检查所有区域。例子不定义覆盖范围；仅仅适配视口还不够。
+视觉审查时，先选择[影响范围](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/cookbook/reviewing-ui-design.md#review-scope)，再应用这些行为要求及 [UI 审查基线](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/ui-design-review-cases.md#review-baseline)。在完整页面或模态框的语境下，比较受影响的换行与布局关系，同时保留草稿、焦点和动作可达性。明确要求全界面审查时，检查所有区域。例子不定义覆盖范围；仅仅适配视口还不够。
 
 ## 1. 最小视口
 

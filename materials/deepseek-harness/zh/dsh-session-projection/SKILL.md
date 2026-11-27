@@ -7,7 +7,7 @@ description: 创建、扩展或审查 DeepSeek Harness 会话投影，或将会�
 
 ## 概要
 
-将可恢复的会话事实保存在 Projection 中，通过拥有它们的服务暴露。阅读 [API 与生命周期](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/packages/session/session-projection/README.md)，了解受支持的准备、注册、读取和清理约定。
+将可恢复的会话事实保存在 Projection 中，通过拥有它们的服务暴露。阅读 [API 与生命周期](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/packages/session/session-projection/README.md)，了解受支持的准备、注册、读取和清理约定。
 
 1. 所有持久化或可恢复的会话派生状态都放入 Projection，包括仅 Host 使用的状态。合适时复用已有拥有者。外部资源与进程级责任归属不放进持久化状态。持久化事实，而不是注册句柄、Promise 或运行资源。
 
@@ -21,7 +21,7 @@ description: 创建、扩展或审查 DeepSeek Harness 会话投影，或将会�
 
 5. 优先固定大小或次线性状态。增长只有足够缓慢、仍可忽略时才可接受。必要的线性状态必须有当前用途，并明确内存、回放及单事件成本。不要习惯性保留与历史规模同阶的索引，包括事件序列集合。不要为了缩小体积而丢弃必需数据或改变行为。先做完整实现，再为具体需求优化。
 
-6. 缓存必须能够丢弃并重建，且不改变行为。同步消费者需要引用的负载时，仅保存序列引用不够。在第 5 条限制内保存必需的当前值，或通过显式异步路径准备负载。不要把完整日志读取藏在缓存未命中里。不新增 `snapshotEvents`、`eventAt`、`ownEvents` 或等效包装：历史不必常驻内存。异步包装不会让同步历史读取变成异步。现有 Host 回放可为具名的受支持调用者保留，但必须有拥有者和移除条件；这并不允许[客户端缓存未命中时读取完整日志](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/docs/defensive-patterns/conversation-and-session.md#cold-reads-are-the-last-resort)。删除被替代的恢复辅助函数；缓存重建不得重复恢复规则。
+6. 缓存必须能够丢弃并重建，且不改变行为。同步消费者需要引用的负载时，仅保存序列引用不够。在第 5 条限制内保存必需的当前值，或通过显式异步路径准备负载。不要把完整日志读取藏在缓存未命中里。不新增 `snapshotEvents`、`eventAt`、`ownEvents` 或等效包装：历史不必常驻内存。异步包装不会让同步历史读取变成异步。现有 Host 回放可为具名的受支持调用者保留，但必须有拥有者和移除条件；这并不允许[客户端缓存未命中时读取完整日志](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/docs/defensive-patterns/conversation-and-session.md#cold-reads-are-the-last-resort)。删除被替代的恢复辅助函数；缓存重建不得重复恢复规则。
 
 7. 暴露同步读取器或安装使用句柄的回调之前，等待必需注册完成，通常放在 `[Service.init]` 中。注册拒绝应让本次激活失败。等待期间可能有事件到达；只有为避免漏事件确有需要时才提前安装监听器。只在支持等待的回调中等待。不要机械地移动监听器或增加等待。保留 fiber 清理责任，等待显式释放，拥有者释放后不再创建副作用。
 

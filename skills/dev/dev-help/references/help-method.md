@@ -92,7 +92,7 @@
 | 将自己的工作习惯变成个人模式技能 | [`$dev-personalize`](capabilities.md) |
 | 创建 PR、跟进 CI/审查或合并已验证改动 | [`$dev-deploy`](capabilities.md)（PR 交付分支） |
 | 将指定版本发布到指定环境 | [`$dev-deploy`](capabilities.md)（环境部署分支） |
-| 从完成任务中提炼经验 | `dev-archive`（完整反思方法）；项目知识归 `$dev-archive`，个人方式归 `$dev-personalize`，结构约束归 `$dev-guardrails` |
+| 从完成任务中提炼经验 | `dev-reflect`（完整反思方法）；项目知识归 `$dev-archive`，个人方式归 `$dev-personalize`，结构约束归 `$dev-guardrails` |
 | 阻止代理在本仓库重复同样错误 | `dev-guardrails`（`$dev-guardrails`） |
 | 构建按钮连接已支持 webhook 的操作页面 | `$dev-build`，使用`dev-build`（操作界面方法） |
 | 熟悉 本项目技能 的使用方式 | `$dev-help` |
@@ -153,7 +153,7 @@
 ## 将 本项目技能 变成自己的工作方式
 
 - [`$dev-personalize`](capabilities.md) 从用户明确提供或授权的项目记录起草个人模式技能，与 `$dev-workflow` 一起使用。
-- 一次会话后按`dev-archive`（反思方法）提炼有证据的经验，按项目知识、个人方式或结构约束选择归属；只有已授权修改的对象才实际编辑。
+- 一次会话后按`dev-reflect`（反思方法）提炼有证据的经验，按项目知识、个人方式或结构约束选择归属；只有已授权修改的对象才实际编辑。
 - `$dev-workflow write a skill for <workflow>` 运行技能编写流程；eval 流程盲测技能变化。
 - 技能修正与产品功能的范围分别说明；只有项目流程或用户目标需要时开 PR，直接推送授权不强制改成 PR。
 

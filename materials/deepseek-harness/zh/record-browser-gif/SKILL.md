@@ -7,7 +7,7 @@ description: 通过可用浏览器控制流程、可选的较高捕获帧率 Pla
 
 产出简短、真实的本地 UI 演示 GIF；只有任务包含附到 PR 时，才通过技能末尾附件流程发布。优先可用浏览器控制流程。该流程支持更高帧率连续捕获时，使用 [Playwright Videos](https://playwright.dev/docs/videos)；裁剪、播放速度、尾部停留、尺寸及大小使用随附编码器。
 
-[已归档证据链决定](https://github.com/deepseek-ai/deepseek-harness/blob/e8f7b93a344964de3dca1ace9e72b6e4d6de87cb/.agents/notes/archived/process/2026-08-08-browser-gif-evidence-chain.md)记录为何一个故事板来自一次隔离运行，以及发布为何重新验证产物与演示的 PR 分支头。
+[已归档证据链决定](https://github.com/deepseek-ai/deepseek-harness/blob/4b399c39a6d1479cd84ca591b4d7c88e24d38a96/.agents/notes/archived/process/2026-08-08-browser-gif-evidence-chain.md)记录为何一个故事板来自一次隔离运行，以及发布为何重新验证产物与演示的 PR 分支头。
 
 ## 每个 GUI PR 都含 GIF
 

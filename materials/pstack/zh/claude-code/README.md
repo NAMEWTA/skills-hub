@@ -40,7 +40,7 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 
 第一次使用？[pstack 指南](./docs/guide/README.md)会带你完成第一个真实任务，从设置和提示词，到验证和通宵运行。卡住了，或者不确定该用哪个技能？问 [`/poteto-help`](./skills/poteto-help/SKILL.md)。
 
-就这些。其他技能用于特定场景，模式技能会按需为你调用。默认情况下，这个模式按模型强项分工：代码委派任务，包括功能、重构、缺陷修复、性能和爬坡优化，交给 Grok；最难的改动、文字和判断交给 Opus 5.5。默认评审组是 Opus 5.5 / Grok。[`/setup-pstack`](./skills/setup-pstack/SKILL.md) 可以修改其中任意配置。
+就这些。其他技能用于特定场景，模式技能会按需为你调用。默认情况下，代码委派任务（功能、重构、缺陷修复、性能和爬坡优化）、文字和判断都交给使用 xhigh 的 Opus 5.5，没有角色超过 xhigh。评审组之外，只有你点名要求，或 Opus 5.5 对同一任务简报连续两次未能通过检查时，才使用 Fable 5.2。默认评审组是 Fable 5.2 / Opus 5.5 / Gemini 4 Neon。[`/setup-pstack`](./skills/setup-pstack/SKILL.md) 可以修改其中任意配置。
 
 ## 用法
 
@@ -50,7 +50,7 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 
 ### 直接使用 [`/poteto-mode`](./skills/poteto-mode/SKILL.md)
 
-这个技能是主要快捷入口。只要需要智能体开展严谨的工程工作，我就使用它。它带有二十三份手册：
+这个技能是主要快捷入口。只要需要智能体开展严谨的工程工作，我就使用它。它带有二十二份手册：
 
 ```
 /poteto-mode 这个 PR 有一个隐蔽的缺陷，即使空闲，滚动位置也会每 750ms 漂移一次。先复现，
@@ -63,7 +63,7 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 ```
 
 <details>
-<summary>二十三份手册</summary>
+<summary>二十二份手册</summary>
 
 | 手册 | 适用情况 |
 |---|---|
@@ -82,7 +82,6 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 | [跟进](./skills/poteto-mode/playbooks/babysit.md) | 处理冲突、评审讨论和 CI，推动一个 PR 或一个堆叠达到可合并状态。 |
 | [交付](./skills/poteto-mode/playbooks/shipping.md) | 独立验证已经全绿的堆叠，然后自底向上落地连续通过验证的部分，默认通过 GitHub；Origin 可用时使用 Origin。 |
 | [自主运行](./skills/poteto-mode/playbooks/autonomous-run.md) | 不停下，推动长期任务直至完成。 |
-| [统筹](./skills/poteto-mode/playbooks/orchestrate.md) | 将持续项目交给一个协调对话：跨多天、多个堆叠 PR、大量子智能体。 |
 | [autopilot-full](./skills/poteto-mode/playbooks/autopilot-full.md) | 为每个独立 PR 分配一位负责人，推进到合并。一组智能体验证每个代码就绪的最新提交，此后每次补丁变更都重新检查。 |
 | [autopilot-stack](./skills/poteto-mode/playbooks/autopilot-stack.md) | 不执行合并的 autopilot-full。构建并验证 PR，由操作者评审和落地；只有依赖某个 PR 的工作才堆叠在其上。 |
 | [会话接续](./skills/poteto-mode/playbooks/session-pickup.md) | 恢复或接手此前智能体进行中的工作。 |
@@ -109,7 +108,7 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 
 ## 技能
 
-步骤需要时，[`/poteto-mode`](./skills/poteto-mode/SKILL.md) 会为你运行其中大多数技能，包括 `how`、`why`、`architect`、`arena`、`swarm`、`interrogate`、`unslop`、`no-comments`、`technical-writing`、`tdd` 和各项原则。下表用于你想直接调用某个技能时：
+步骤需要时，[`/poteto-mode`](./skills/poteto-mode/SKILL.md) 会为你运行其中大多数技能，包括 `why`、`architect`、`arena`、`swarm`、`interrogate`、`unslop`、`no-comments`、`technical-writing`、`tdd` 和各项原则。下表用于你想直接调用某个技能时：
 
 ```
 /how 我们如何取消运行？查找每个待取消的运行时，是否存在 n+1？
@@ -127,9 +126,10 @@ Claude Code 从仓库根目录下的 [`harness/pstack/`](https://github.com/curs
 | [`/poteto-mode`](./skills/poteto-mode/SKILL.md) | 任何非简单任务的默认入口。 |
 | [`/poteto-help`](./skills/poteto-help/SKILL.md) | 你刚开始使用 pstack，或不确定哪个技能、手册或原则合适。它了解你想做什么，回答相关部分，给你一条可以输入的提示词。只有输入 `/poteto-help` 才运行。 |
 | [`/in-your-own-words`](./skills/in-your-own-words/SKILL.md) | 希望智能体开始之前，先复述你的目标和问题。只有输入 `/in-your-own-words` 才运行。 |
-| [`/sharpen`](./skills/sharpen/SKILL.md) | 发送提示词之前，希望它变得更深入，而非更庞大：一位顶尖专业人士会做哪些你没有要求的事情，会从哪些原始材料开始，使用什么方法和工具，以及如何从外部检验结果是否正确。它返回改写后的提示词，保留你的选择空间，不执行任务。只有输入 `/sharpen` 才运行。 |
+| [`/sharpen`](./skills/sharpen/SKILL.md) | 发送提示词之前，希望它变得更深入，而非更庞大：一位顶尖专业人士会做哪些你没有要求的事情，会从哪些原始材料开始，使用什么方法和工具，以及如何从外部检验结果是否正确。它返回改写后的提示词，要求智能体对能用实验决定的选择制作原型，把产品和偏好选择留给你。它不执行任务。只有输入 `/sharpen` 才运行。 |
+| [`/reframe`](./skills/reframe/SKILL.md) | 你说不清正在构建的东西叫什么，因此无法清楚地向智能体提出要求。它从你的文件和原话开始；若可能描述多个问题，先列出两三个候选、各自的区分信号，并选择最可能的一项。随后按对实现的影响给出 8 至 12 个专业术语，每个术语对应你描述中的具体部分和一个已核实链接的真实项目。它还从两个或三个以其他名称解决相同问题的邻近领域借用术语，说明各类比何时失效，再用新术语重写描述。只有输入 `/reframe` 才运行。 |
 | [`/how`](./skills/how/SKILL.md) | 希望有人带你了解一个子系统如何工作。 |
-| [`/why`](./skills/why/SKILL.md) | 想知道为什么这样构建。它在运行时发现可用 MCP，并行查询每一类证据：源码管理、工单跟踪器、长文档、实时聊天、基础设施可观测性、错误追踪和分析仓库。 |
+| [`/why`](./skills/why/SKILL.md) | 想知道为什么这样构建。它依据记录而非代码回答：阅读引入该实现以及后续每次变更的提交和 PR 讨论，线索不足时再查其他来源。引用作者原话，标明自己的推断，并说明记录没有回答什么。 |
 | [`/recall`](./skills/recall/SKILL.md) | 开始或恢复工作，希望根据自己的聊天历史和共享记录，重建某个主题的近期背景，返回一份精练的当前状态简报。 |
 | [`/ketchup`](./skills/ketchup/SKILL.md) | 想知道自上次发消息以来，这段对话中发生了哪些变化；用朴素语言和小型图示说明，列出每一项等待你决定的事情，并让你只读这份回复就能做决定，即使回复因此变长。 |
 | [`/ketchup-video`](./skills/ketchup-video/SKILL.md) | 希望把 `/ketchup` 进展回顾做成带字幕的幻灯片短视频，并在视频下方用文字列出等待你决定的事项。 |
@@ -277,13 +277,13 @@ Cursor 已经有一个很好的计划模式，与 pstack 配合得很好。不�
 
 模型也可以配置。输入 [`/setup-pstack`](./skills/setup-pstack/SKILL.md)。它检测你能访问的模型，写入一条始终应用的简短规则，将各个角色，包括代码、判断、评审组，映射到模型。每个技能都会读取它，规则不存在时回退到合理默认值，因此你只需覆盖想改的部分。
 
-默认值变化时，变化之前写入的规则仍会固定在旧默认值。删除对应角色的行，或删除整个文件，再运行 `/setup-pstack`。重新运行会保留模型与默认值不同的角色。
+默认值变化后，之前写入的规则仍锁定旧默认值，直到你再次运行 `/setup-pstack`。这次运行会替换它识别出的旧默认值，并保留其他模型不同于默认值的角色配置。若要移除它无法识别的固定配置，先删除对应角色行或整个文件。
 
 ## 自动化
 
-pstack 还随附了一个默认不启用的 [benny 自动化包](https://github.com/cursor/plugins/tree/2eaf46574b25cdf7ef8c849837099b866b7438ce/pstack/automations/benny)。benny 对 Slack 问题报告进行分流，再用真实 UI 证据复现并修复已确认的缺陷。它的文件没有注册为斜杠技能。
+pstack 还随附了一个默认不启用的 [benny 自动化包](https://github.com/cursor/plugins/tree/b1fbf4b60ac6813b4583ccc356850dafcf492665/pstack/automations/benny)。benny 对 Slack 问题报告进行分流，再用真实 UI 证据复现并修复已确认的缺陷。它的文件没有注册为斜杠技能。
 
-要设置它，请让 Cursor 阅读 [`FOR_AGENTS.md`](https://github.com/cursor/plugins/blob/2eaf46574b25cdf7ef8c849837099b866b7438ce/pstack/automations/benny/FOR_AGENTS.md)。设置过程把自动化包复制到目标仓库的 `.cursor/automations/benny/`，在目标仓库启用 pstack 以提供共享技能，并把用户配置保留在复制的包之外。benny 运行在 Cursor Automations 上，因此仅适用于 Cursor。
+要设置它，请让 Cursor 阅读 [`FOR_AGENTS.md`](https://github.com/cursor/plugins/blob/b1fbf4b60ac6813b4583ccc356850dafcf492665/pstack/automations/benny/FOR_AGENTS.md)。设置过程把自动化包复制到目标仓库的 `.cursor/automations/benny/`，在目标仓库启用 pstack 以提供共享技能，并把用户配置保留在复制的包之外。benny 运行在 Cursor Automations 上，因此仅适用于 Cursor。
 
 ## 许可证
 

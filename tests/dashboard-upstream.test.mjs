@@ -15,8 +15,11 @@ const paths = [
   'references/case-study-datafast.md',
   'references/case-study-school-dashboard.md',
   'references/components.md',
+  'references/inspiration.md',
+  'references/layout-ideas.md',
   'references/layout.md',
   'references/perception.md',
+  'references/playbooks.md',
   'references/qa.md',
   'references/snippets.md',
   'references/sources.md',
@@ -43,7 +46,12 @@ function read(dir, path) {
 }
 
 function codeBlocks(markdown) {
-  return [...markdown.matchAll(/^```[^\n]*\n[\s\S]*?^```/gm)].map(match => match[0]);
+  return [...markdown.matchAll(/^```([^\n]*)\n[\s\S]*?^```/gm)]
+    .filter((match) => match[1] && match[1] !== 'text')
+    .map((match) => match[0]
+      .replace(/\{?\/\*[\s\S]*?\*\/\}?/g, '')
+      .replace(/(^|[ \t]+)\/\/[^\n]*/gm, '')
+      .split('\n').map(line => line.trimEnd()).filter(Boolean).join('\n'));
 }
 
 function headings(markdown) {
@@ -78,7 +86,7 @@ test('Dashboard Design fixed source, complete Chinese mirror and runtime are one
 
 test('Dashboard Design local links stay inside the independently installed package', () => {
   for (const path of paths) {
-    const content = read(runtime, path);
+    const content = read(runtime, path).replace(/`[^`\n]+`/g, '');
     for (const match of content.matchAll(/!?\[[^\]]*\]\(([^)\s]+)(?:\s+[^)]*)?\)/g)) {
       const target = decodeURIComponent(match[1]).split('#')[0];
       if (!target || /^[a-z][a-z\d+.-]*:/i.test(target) || target.startsWith('/')) continue;

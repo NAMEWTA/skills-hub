@@ -1,0 +1,15 @@
+[
+  {
+    "path": "modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+    "kind": "document",
+    "language": "en",
+    "source_git_mode": "100644",
+    "source_git_blob": "8ea2441587b308dc4e670580e14a8b12490ae366",
+    "upstream_sha256": "f9a4607b1e34c271afe47085bea7d0d6fdc00a85fa7b93bb123cd4a99286b17b",
+    "zh_path": "zh/modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+    "zh_sha256": "852bff8d616ea7e2b2f672697c5d81e09bec41474126193de71541c47824e10b",
+    "runtime_paths": "upstream-skills/zh-modern-web-guidance/guides/visual-design/soft-edge-content-fade.md",
+    "runtime_reviewed_blob": "8ea2441587b308dc4e670580e14a8b12490ae366",
+    "adaptation": "完整中文翻译，保留原可执行代码块、命令、技术标识、参考链接与表格，并补原英文标题锚点。"
+  }
+]

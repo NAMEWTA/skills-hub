@@ -94,3 +94,7 @@ AGENTS 非托管内容与 SOUL 不进入主题工具的通用 `put` 白名单，
 ## 本地操作资料
 
 归档与知识维护的完整步骤在 [dev-archive](../../skills/dev/dev-archive/SKILL.md) 及其包内参考中；理解模块的方法在 [dev-learn](../../skills/dev/dev-learn/SKILL.md)。每个技能安装后都保留自己的完整资源，使用时不用回到本仓库或访问外部文档。资料对照与适配规则见[资源组织](resources.md)。长期面向使用者的架构、接口和操作契约放在 `docs/`；本次调查、验证流水与工作进度留在 change，避免把每次执行记录追加到长期说明。
+
+## 会话证据的归属
+
+开发会话由宿主保存。`dev-session-history` 指引读取限定项目的原件，`dev-recall` 校正历史中的工作状态，`dev-reflect` 找出工作方法的改进点。能用工程机制防止复发的交 `dev-guardrails`；稳定项目事实仍由 `dev-archive` 写入实际知识位置。保留结论和必要事件指针，原始聊天留在原处。

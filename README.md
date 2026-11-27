@@ -143,3 +143,5 @@ Home 了解各项目基本背景和管理关系。涉及项目内部知识、代
 ## 致谢与许可
 
 项目许可、第三方来源、贡献者归属与适用法律文本统一见[第三方声明](THIRD_PARTY_NOTICES.md)。
+
+按主题找回近期开发背景使用 `dev-recall`；复盘一次开发对话使用 `dev-reflect`。两者与防错技能共用 `dev-session-history` 提供的 Claude Code、Codex、Pi 本地会话定位方法。见[开发方法归属](docs/development/method-ownership.md)。
