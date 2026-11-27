@@ -36,10 +36,15 @@ test('the scoped tarball installs offline and exposes the skills-hub command', (
   write(path.join(root, 'upstream-skills/zh-sample/assets/font.bin'), Buffer.from([0, 128, 255]));
   const executable = write(path.join(root, 'upstream-skills/zh-sample/scripts/tool.sh'), '#!/bin/sh\nprintf "upstream"\n');
   fs.chmodSync(executable, 0o755);
+  const archify = path.join(root, 'upstream-skills/zh-archify');
+  write(path.join(archify, 'SKILL.md'), '---\nname: zh-archify\ndescription: 验证上游忽略文件的安装路径。\n---\n');
+  for (const directory of ['modules/code-analysis', 'modules/code-analysis/extract/rust']) {
+    write(path.join(archify, directory, '.gitignore'), 'out/\n!.gitignore\n');
+  }
   const packed = checkPackage(root);
   assert.equal(packed.name, '@namewta/skills-hub');
   assert.equal(packed.version, '0.0.2');
   assert.equal(packed.filename, 'namewta-skills-hub-0.0.2.tgz');
-  assert.equal(packed.skills, 3);
-  assert.equal(packed.links, 3);
+  assert.equal(packed.skills, 4);
+  assert.equal(packed.links, 4);
 });

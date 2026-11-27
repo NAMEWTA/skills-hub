@@ -6,7 +6,7 @@
 
 | 安装名 | 原技能名 | 用途 |
 | --- | --- | --- |
-| [zh-archify](../../upstream-skills/zh-archify/SKILL.md) | `archify` | 架构、流程、时序、状态、ERD 等交互图及单页解释 |
+| [zh-archify](../../upstream-skills/zh-archify/SKILL.md) | `archify` | 交互图、单页解释、引导演示、仓库架构分析和 PR 变更图 |
 | [zh-modern-web-guidance](../../upstream-skills/zh-modern-web-guidance/SKILL.md) | `modern-web-guidance` | HTML、CSS、客户端 JavaScript 的现代 Web 实践和指南检索 |
 | [zh-chrome-extensions](../../upstream-skills/zh-chrome-extensions/SKILL.md) | `chrome-extensions` | Chrome 扩展、Manifest V3、权限、存储、消息及发布检查 |
 | [zh-dashboard-design](../../upstream-skills/zh-dashboard-design/SKILL.md) | `dashboard-design` | 数据分析与监测仪表盘、KPI、图表、热力图、SwiftUI、截图质量检查 |
@@ -64,7 +64,7 @@ npx @namewta/skills-hub@latest install --skill dev-architecture zh-archify zh-mo
 
 ## 运行前提与中文边界
 
-**Archify。** 本地 Node 工具、渲染资源、模板、示例、字体和校验工具随包安装。完整 finalize 包含真实浏览器检查，需要可启动的 Chrome/Chromium；只生成 HTML 不能视为全部检查完成。中文更新使用 skills-hub 安装命令，避免原版更新覆盖中文适配。图表的 viewer locale 与说明语言分别设置。
+**Archify。** 当前运行包采用 `d6b0f71` 的 3.3.2。本地 Node 工具、渲染资源、示例、字体及 Code Analysis 随包安装。`finalize` 的浏览器检查需要可启动的 Chrome/Chromium。中文更新使用 skills-hub 安装命令，图表 viewer locale 与说明语言分别设置。Code Analysis 可通过 `prepare` 生成独立 HTML，通过 `--base`、`--head` 比较本地 Git 提交。JS/TS 默认使用内置 TypeScript SDK，显式加载项目 SDK 需确认该 SDK 可信。外部诊断导入读取已有报告。`pr build` 构建本地图包，远端发布由 `pr attach` 单独执行，需要对应平台权限。 [Code Analysis 用法](../../upstream-skills/zh-archify/modules/code-analysis/docs/USAGE.md) [PR 图包](../../upstream-skills/zh-archify/references/pr-review.md)
 
 **Modern Web Guidance。** 入口和随包静态指南为中文，搜索、检索及版本检查继续使用 `npx -y modern-web-guidance@latest ...`。首次取得 CLI 通常需要网络，最新响应可能是英文。先遵循原有 search/retrieve 与策略检查，再按相同指南 ID 使用本地中文资料；有冲突时以本次 CLI 结果为准，并用中文解释。本地译文不替代最新检索或浏览器支持策略。
 

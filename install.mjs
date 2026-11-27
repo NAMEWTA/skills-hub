@@ -53,11 +53,15 @@ export function regularFiles(directory, fsOps = fs) {
   return files.sort();
 }
 
-export function treeDigest(directory, fsOps = fs) {
+export function treeDigest(directory, fsOps = fs, sourceNames = new Map()) {
   const digest = createHash('sha256');
   const length = (value) => { const bytes = Buffer.alloc(8); bytes.writeBigUInt64BE(BigInt(value)); return bytes; };
-  for (const filename of regularFiles(directory, fsOps)) {
-    const relative = Buffer.from(path.relative(directory, filename).split(path.sep).join('/'));
+  const files = regularFiles(directory, fsOps);
+  const originals = new Map([...sourceNames].map(([file, canonical]) => [canonical, file]));
+  const paths = sourceNames.size ? files.map(file => sourceNames.get(file) ?? file).sort() : files;
+  for (const canonical of paths) {
+    const filename = originals.get(canonical) ?? canonical;
+    const relative = Buffer.from(path.relative(directory, canonical).split(path.sep).join('/'));
     const content = fsOps.readFileSync(filename);
     digest.update(length(relative.length)).update(relative).update(length(content.length)).update(content);
     if (process.platform !== 'win32') {
@@ -82,6 +86,19 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs, platf
   const upstreamRoot = path.join(repository, 'upstream-skills');
   const licenseRoot = path.join(repository, 'licenses');
   const exists = (filename) => fsOps.lstatSync(filename, { throwIfNoEntry: false });
+
+  // npm unpack can rename these upstream resources. Restore their names only
+  // in our staged copy, never in node_modules or a consumer's existing skill.
+  function sourceNames(item) {
+    const names = new Map();
+    if (item.name !== 'zh-archify') return names;
+    for (const dir of ['modules/code-analysis', 'modules/code-analysis/extract/rust']) {
+      const original = path.join(item.source, dir, '.gitignore');
+      const unpacked = path.join(item.source, dir, '.npmignore');
+      if (!exists(original) && exists(unpacked)?.isFile()) names.set(unpacked, original);
+    }
+    return names;
+  }
 
   function catalog() {
     const skills = [];
@@ -221,7 +238,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs, platf
         checkDirectory(item.destination);
         let kind;
         if (!exists(item.destination)) kind = 'install';
-        else if (treeDigest(item.source, fsOps) === treeDigest(item.destination, fsOps)) kind = 'unchanged';
+        else if (treeDigest(item.source, fsOps, sourceNames(item)) === treeDigest(item.destination, fsOps)) kind = 'unchanged';
         else if (replace) kind = 'replace';
         else throw new InstallError(`Existing packages differ: ${item.name}. Inspect them first; --replace saves backups before replacement.`);
         actions.push({ ...item, kind, link: planLink(item.name, project, item.destination) });
@@ -276,7 +293,11 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs, platf
       if (actions.some(action => action.kind !== 'unchanged')) staging = fsOps.mkdtempSync(path.join(agents, '.skills-hub-stage-'));
       for (const action of actions) {
         if (action.kind !== 'unchanged') {
-          fsOps.cpSync(action.source, path.join(staging, action.name), { recursive: true, errorOnExist: true, force: false });
+          const staged = path.join(staging, action.name);
+          fsOps.cpSync(action.source, staged, { recursive: true, errorOnExist: true, force: false });
+          for (const [from, to] of sourceNames(action)) {
+            fsOps.renameSync(path.join(staged, path.relative(action.source, from)), path.join(staged, path.relative(action.source, to)));
+          }
         }
       }
       ensureDirectory(path.join(agents, 'skills'));
@@ -323,7 +344,7 @@ export function createInstaller({ repository = repositoryRoot, fsOps = fs, platf
       }
       for (const action of actions) {
         verifyLink(action, project);
-        if (treeDigest(action.source, fsOps) !== treeDigest(action.destination, fsOps)) {
+        if (treeDigest(action.source, fsOps, sourceNames(action)) !== treeDigest(action.destination, fsOps)) {
           throw new InstallError(`Installed skill verification failed: ${action.destination}`);
         }
       }

@@ -46,14 +46,12 @@
 
 | 中文运行包 | 固定来源 | 逐文件对应 |
 | --- | --- | --- |
-| `zh-archify` | [tt-a1i/archify，a7ed6fd 的 archify/](https://github.com/tt-a1i/archify/tree/a7ed6fd6657da90414831d1d42cf95987188750c/archify) | [Archify 清单](materials/archify/manifest.tsv) |
+| `zh-archify` | [tt-a1i/archify 3.3.2，d6b0f71 的 archify/](https://github.com/tt-a1i/archify/tree/d6b0f71f25a3337ed2fcd09c973cacf67be7baba/archify) | [Archify 清单](materials/archify/manifest.tsv) |
 | `zh-modern-web-guidance` | [GoogleChrome/modern-web-guidance，2b4aa13 的 skills/modern-web-guidance/](https://github.com/GoogleChrome/modern-web-guidance/tree/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/skills/modern-web-guidance) | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
 | `zh-chrome-extensions` | [同版 skills/chrome-extensions/](https://github.com/GoogleChrome/modern-web-guidance/tree/2b4aa13a72dd47cd135b06ce5abfccd92e19b24f/skills/chrome-extensions)，与上一固定版本的目录内容一致 | [Google 技能清单](materials/modern-web-guidance/manifest.tsv) |
 | `zh-dashboard-design` | [abdiraimov-otabek/dashboard-design-skill，57f9668 的 skills/dashboard-design/](https://github.com/abdiraimov-otabek/dashboard-design-skill/tree/57f96688862668b482f647fa1e370efb5d3ddd31/skills/dashboard-design) | [仪表盘技能清单](materials/dashboard-design-skill/manifest.tsv) |
 
 上述中文化与名称调整是本项目的修改，原作者和相关组织未因此为译文提供背书。项目补充的来源与修改说明集中在本文，技能目录不额外添加 `UPSTREAM.md` 或翻译声明段落。清单中的 `zh_path`、`runtime_paths` 和摘要可用于逐文件核对。
-
-Archify 材料已推进到 `d6b0f71`，运行包沿用上表中 `a7ed6fd` 的 3.2 版。清单保留已核对文件的 `runtime_reviewed_blob`，使两份版本的适用范围可追溯。
 
 ### Archify
 
@@ -67,18 +65,21 @@ Archify 材料已推进到 `d6b0f71`，运行包沿用上表中 `a7ed6fd` 的 3.
 | JetBrains Mono 字体 | [SIL OFL 1.1](licenses/archify/assets/JetBrainsMono-OFL.txt) |
 | Pele Mermaid 渲染组件，kepano | [MIT](licenses/archify/explainer/vendor/pele/LICENSE) |
 
-这六份文件既有集中原文，也在 `zh-archify` 中按上游原路径保留。字体、图标和品牌的单独条件不因软件采用 Apache 2.0 而改变。
+这些声明既有集中原文，也在 `zh-archify` 中按上游原路径保留。字体、图标和品牌分别适用各自条款。历史版本 `a7ed6fd` 的 [NOTICE](licenses/archify/a7ed6fd/NOTICE) 和[第三方声明](licenses/archify/a7ed6fd/THIRD_PARTY_NOTICES.md.txt)随集中副本保留。
 
-当前 Archify 材料新增 Code Analysis 与 Story 资源，相关法律文本按该固定提交原样保留于材料树。它们尚未进入上述独立运行包，不能用旧运行包的六份声明概括新增材料的全部许可。当前适用的来源说明见[材料 NOTICE](materials/archify/upstream/NOTICE)与[材料第三方声明](materials/archify/upstream/THIRD_PARTY_NOTICES.md)；旧运行包的集中副本继续保留。新增对应关系如下：
+3.3.2 新增 Code Analysis 与 Story 资源。法律原文保留在材料及运行包中，集中副本随 npm 包分发。
 
-| 新增材料 | 原始声明 |
+| 随 3.3.2 分发的组件 | 原始声明 |
 | --- | --- |
-| Code Analysis 模块 | [LICENSE](materials/archify/upstream/modules/code-analysis/LICENSE)、[NOTICE](materials/archify/upstream/modules/code-analysis/NOTICE) |
-| Python 分析来源 | [LICENSE.txt](materials/archify/upstream/modules/code-analysis/extract/py/upstream/LICENSE.txt) |
-| CodeQL 行指纹算法与 OASIS SARIF schema | [CODEQL-LICENSE.txt](materials/archify/upstream/modules/code-analysis/import/vendor/CODEQL-LICENSE.txt)、[OASIS-LICENSE.md](materials/archify/upstream/modules/code-analysis/import/vendor/OASIS-LICENSE.md) |
-| Three.js 与分析模块随附依赖 | [THREE-LICENSE.txt](materials/archify/upstream/modules/code-analysis/overlay/vendor/THREE-LICENSE.txt)、[LICENSES.txt](materials/archify/upstream/modules/code-analysis/vendor/LICENSES.txt) |
-| Vue 回归摘录 | [vue-2532.LICENSE](materials/archify/upstream/modules/code-analysis/test/fixtures/vue-2532.LICENSE) |
-| Story HTML 解析器 | [parse5-LICENSE.txt](materials/archify/upstream/story/vendor/parse5-LICENSE.txt)、[entities-LICENSE.txt](materials/archify/upstream/story/vendor/entities-LICENSE.txt) |
+| Code Analysis 模块 | [MIT](licenses/archify/modules/code-analysis/LICENSE)、[NOTICE](licenses/archify/modules/code-analysis/NOTICE) |
+| Python 分析来源 Pyright | [MIT](licenses/archify/modules/code-analysis/extract/py/upstream/LICENSE.txt) |
+| CodeQL 行指纹算法 | [MIT](licenses/archify/modules/code-analysis/import/vendor/CODEQL-LICENSE.txt) |
+| OASIS SARIF 2.1.0 schema 与 Errata 01 | [固定版本仓库许可](licenses/archify/modules/code-analysis/import/vendor/OASIS-LICENSE.md)、[规范 Notices 原文](licenses/archify/modules/code-analysis/import/vendor/OASIS-SARIF-2.1.0-Errata01-NOTICES.html) |
+| Three.js 与分析模块随附依赖 | [Three.js MIT](licenses/archify/modules/code-analysis/overlay/vendor/THREE-LICENSE.txt)、[DEPENDENCY LICENSES](licenses/archify/modules/code-analysis/vendor/LICENSES.txt) |
+| Vue 回归摘录 | [vue-2532.LICENSE](licenses/archify/modules/code-analysis/test/fixtures/vue-2532.LICENSE) |
+| Story HTML 解析器 | [parse5 MIT](licenses/archify/story/vendor/parse5-LICENSE.txt)、[entities BSD-2-Clause](licenses/archify/story/vendor/entities-LICENSE.txt) |
+
+SARIF schema 与 OASIS 发布件的 SHA-256 一致。技能包把原仓库许可和 Errata 01 的完整 Notices 随原路径 schema 一起分发。OASIS 对该规范采用 RF on RAND Terms Mode。 [官方 schema](https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/schemas/sarif-schema-2.1.0.json) [规范及 Notices](https://docs.oasis-open.org/sarif/sarif/v2.1.0/errata01/os/sarif-v2.1.0-errata01-os-complete.html)
 
 Archify 中文材料完整翻译说明文档；程序、生成代码、内置目录与 schema 沿用该来源已有的原字节保留策略，代码对照不称为译文。机器夹具、二进制和法律原文同样保留原字节。
 
